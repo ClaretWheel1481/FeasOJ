@@ -4,10 +4,10 @@
         <div class="restrictbulletin">
             <tiny-collapse v-model="activeNames">
                 <tiny-collapse-item title="公告" name="1">
-                    <p>现在处于测试阶段。</p>
+                    <h3>现在处于测试阶段。</h3>
                 </tiny-collapse-item>
                 <tiny-collapse-item title="更新日志" name="3">
-                    <p>现在处于测试阶段。</p>
+                    <h3>现在处于测试阶段。</h3>
                 </tiny-collapse-item>
             </tiny-collapse>
         </div>
@@ -23,12 +23,7 @@ const activeNames = ref(['1', '3'])
 </script>
 
 <style scoped>
-.demo-collapse-wrap {
-  .tiny-collapse-item__content > * {
-    line-height: 18;
-  }
-}
-/* 限制公告栏长度为屏幕20% */
+/* 限制公告栏长度为屏幕70% */
 .restrictbulletin {
   min-width: 70%;
   max-width: 70%;
