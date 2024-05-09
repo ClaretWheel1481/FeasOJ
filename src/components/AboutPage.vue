@@ -13,8 +13,6 @@ function opengithub(){
     <div class="parent">
         <div class="githublogo" @click="opengithub"></div>
     </div>
-
-    
 </template>
 
 <style scoped>
