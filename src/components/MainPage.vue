@@ -2,8 +2,11 @@
     <h1>FeasOJ</h1>
     <div class="parent">
         <div class="restrictbulletin">
-            <tiny-collapse class="demo-collapse-wrap" v-model="activeNames">
+            <tiny-collapse v-model="activeNames">
                 <tiny-collapse-item title="公告" name="1">
+                    <p>现在处于测试阶段。</p>
+                </tiny-collapse-item>
+                <tiny-collapse-item title="更新日志" name="3">
                     <p>现在处于测试阶段。</p>
                 </tiny-collapse-item>
             </tiny-collapse>
@@ -27,11 +30,14 @@ const activeNames = ref(['1', '3'])
 }
 /* 限制公告栏长度为屏幕20% */
 .restrictbulletin {
-  min-width: 20%;
-  max-width: 20%;
+  min-width: 70%;
+  max-width: 70%;
   display: inline-block;
+  
 }
 .parent{
     display: flex;
+    margin: 15px;
+    justify-content: center;
 }
 </style>

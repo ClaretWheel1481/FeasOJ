@@ -2,9 +2,11 @@
 import { ref } from 'vue'
 import { NavMenu as TinyNavMenu } from '@opentiny/vue'
 const dataset = ref([
-  { title: '首页', url: '#/' },
-  { title: '排名', url: '#/top'},
-  { title: '关于', url: '#/about'},
+  { title: '首页', url: '/' },
+  { title: '排名', url: '/top'},
+  { title: '题目', url: '/problemset'},
+  { title: '竞赛', url: '/contest'},
+  { title: '关于', url: '/about'},
 ])
 </script>
 
@@ -12,6 +14,7 @@ const dataset = ref([
   <div class="preview">
     <tiny-nav-menu :data="dataset">
       <template #toolbar >
+        
       </template>
     </tiny-nav-menu>
   </div>
