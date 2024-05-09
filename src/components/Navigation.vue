@@ -80,5 +80,6 @@ const dataset = ref([
   margin-bottom: 20px;
   fill: white;
   font-size: 26px;
+  cursor: pointer;
 }
 </style>

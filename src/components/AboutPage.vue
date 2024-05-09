@@ -10,11 +10,10 @@ function opengithub(){
         <h1>关于</h1>
         <p>反馈问题？前往Github!</p>
     </div>
-    <router-link >
-        <div class="parent">
-            <div class="githublogo" @click="opengithub"></div>
-        </div>
-    </router-link>
+    <div class="parent">
+        <div class="githublogo" @click="opengithub"></div>
+    </div>
+
     
 </template>
 
@@ -24,5 +23,6 @@ function opengithub(){
     height: 40px;
     background-image: url('https://res.hc-cdn.com/tinyui-design-common/1.0.5.20240401143336/assets/github.svg');
     background-size: cover;
+    cursor: pointer;
 }
 </style>
