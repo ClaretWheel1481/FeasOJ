@@ -1,0 +1,37 @@
+<template>
+    <h1>FeasOJ</h1>
+    <div class="parent">
+        <div class="restrictbulletin">
+            <tiny-collapse class="demo-collapse-wrap" v-model="activeNames">
+                <tiny-collapse-item title="公告" name="1">
+                    <p>现在处于测试阶段。</p>
+                </tiny-collapse-item>
+            </tiny-collapse>
+        </div>
+        <!-- 组件待扩展 -->
+    </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
+
+const activeNames = ref(['1', '3'])
+</script>
+
+<style scoped>
+.demo-collapse-wrap {
+  .tiny-collapse-item__content > * {
+    line-height: 18;
+  }
+}
+/* 限制公告栏长度为屏幕20% */
+.restrictbulletin {
+  min-width: 20%;
+  max-width: 20%;
+  display: inline-block;
+}
+.parent{
+    display: flex;
+}
+</style>
