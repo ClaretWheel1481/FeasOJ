@@ -13,6 +13,12 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.parent{
+  display: flex;
+  margin: 15px;
+  justify-content: center;
+}
+
 body {
   margin: 0px !important;
 }
@@ -29,10 +35,6 @@ a:hover {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-.card {
-  padding: 2em;
 }
 
 #app {

@@ -32,11 +32,11 @@ const dataset = ref([
           <!-- TODO:打开菜单栏 -->
           <tiny-icon-setting class="icons-nav" @click="fn" type="primary"></tiny-icon-setting>
           <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event">
-            <div>
-              <br />
-              <br />
-              <span>内容区域</span>
-            </div>
+          <div>
+            <br />
+            <!-- TODO：设置待处理 -->
+            <span>待处理</span>
+          </div>
           </tiny-drawer>
       </template>
     </tiny-nav-menu>
@@ -49,7 +49,7 @@ const dataset = ref([
 }
 
 .preview .tiny-nav-menu {
-  --ti-common-color-bg-navigation: linear-gradient(134deg, #5167f1 0%, #4e71f6 100%);
+  --ti-common-color-bg-navigation: linear-gradient(134deg, #6176ff 0%, #6176ff 100%);
   --ti-nav-menu-item-hover-bg-color: rgba(12, 36, 127, 0.12);
   --ti-nav-menu-item-selected-underline-width: 8px;
   --ti-nav-menu-item-selected-underline-height: 2px;
