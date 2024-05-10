@@ -7,7 +7,7 @@ const route = useRoute();
 </script>
 
 <template>
-  <Navigation v-if="route.path !== '/login'"></Navigation>
+  <Navigation></Navigation>
   <router-view></router-view>
   <Filing></Filing>
 </template>

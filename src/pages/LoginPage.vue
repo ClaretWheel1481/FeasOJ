@@ -5,7 +5,7 @@ import { Input as TinyInput } from '@opentiny/vue'
 import { Button as TinyButton } from '@opentiny/vue'
 
 const username = ref('')
-const input = ref('')
+const passwords = ref('')
 </script>
 
 <template>
@@ -23,7 +23,7 @@ const input = ref('')
                     <h3>密码</h3>
                 </div>
                 <div class="input">
-                    <tiny-input type="password" v-model="input" show-password placeholder="Password"></tiny-input>
+                    <tiny-input type="password" v-model="passwords" show-password placeholder="Password"></tiny-input>
                 </div>
                 <div style="height: 12px"></div>
                 <!-- TODO:跳转待处理 -->
@@ -32,7 +32,7 @@ const input = ref('')
                 <div>
                     <!-- TODO:跳转待处理 -->
                     <tiny-button type="primary" @click="$router.push('/')">登录</tiny-button>
-                    <tiny-button @click="$router.push('/')">注册</tiny-button>
+                    <tiny-button @click="$router.push('/register')">注册</tiny-button>
                 </div>
             </tiny-card>
         </div>

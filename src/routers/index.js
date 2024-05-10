@@ -1,12 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
-    { path: '/', component: () => import('../components/MainPage.vue')}, 
-    { path: '/about', component: () => import('../components/AboutPage.vue')},
-    { path: '/rank', component: () => import('../components/Rank.vue')},
-    { path: '/problemset', component: () => import('../components/ProblemSetPage.vue')},
-    { path: '/contest', component: () => import('../components/Contest.vue')},
-    { path: '/login', component: () => import('../components/LoginPage.vue')},
+    { path: '/', component: () => import('../pages/MainPage.vue')}, 
+    { path: '/about', component: () => import('../pages/AboutPage.vue')},
+    { path: '/rank', component: () => import('../pages/RankPage.vue')},
+    { path: '/problemset', component: () => import('../pages/ProblemSetPage.vue')},
+    { path: '/contest', component: () => import('../pages/ContestPage.vue')},
+    { path: '/login', component: () => import('../pages/LoginPage.vue')},
+    { path: '/register', component: () => import('../pages/RegisterPage.vue')},
+    { path: '/profile', component: () => import('../pages/ProfilePage.vue')},
+    { path: '/problem/:id', component: () => import('../pages/ProblemInfoPage.vue')},
+    { path: '/admin', component: () => import('../pages/BackendManagementPage.vue')},
 ];
 
 const router = createRouter({
