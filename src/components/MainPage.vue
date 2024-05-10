@@ -4,7 +4,7 @@
         <div class="restrictmaincomponents">
             <tiny-carousel height="400px" autoplay>
                 <!-- TODO:轮播IMG -->
-                <tiny-carousel-item class="carousel-item-demo" v-for="item in 4" :key="item">
+                <tiny-carousel-item class="carousel-item-demo" v-for="item in 2" :key="item">
                 <h3>{{ item }}</h3>
                 </tiny-carousel-item>
             </tiny-carousel>

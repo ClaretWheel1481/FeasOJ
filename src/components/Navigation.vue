@@ -26,7 +26,7 @@ const dataset = ref([
     <tiny-nav-menu :data="dataset">
       <template #toolbar >
         <!-- TODO:跳转到登陆、注册页面 -->
-          <router-link to="/">
+          <router-link to="/login">
             <tiny-icon-administrator class="icons-nav" ></tiny-icon-administrator>
           </router-link>
           <!-- TODO:打开菜单栏 -->
