@@ -7,7 +7,7 @@ const pagerConfig = ref({
     currentPage: 1,
     pageSize: 40,
     total: 0,
-    align: 'center', // 可选值：['left', 'center', 'right']
+    align: 'center',
     layout: 'prev, pager, next'
   }
 })

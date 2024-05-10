@@ -27,7 +27,7 @@ const passwords = ref('')
                 </div>
                 <div style="height: 12px"></div>
                 <!-- TODO:跳转待处理 -->
-                <tiny-button type="text" text="找回密码" @click="$router.push('/reset')"> </tiny-button>
+                <tiny-button type="text" text="忘记密码?" @click="$router.push('/reset')"> </tiny-button>
                 <div style="height: 12px"></div>
                 <div>
                     <!-- TODO:跳转待处理 -->
@@ -38,9 +38,3 @@ const passwords = ref('')
         </div>
     </div>
 </template>
-
-<style scoped>
-.input .tiny-input {
-  width: 250px;
-}
-</style>

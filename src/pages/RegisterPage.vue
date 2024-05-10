@@ -11,6 +11,7 @@ const passwords = ref('')
 const confirmpassword = ref('')
 const verificationcode = ref('')
 
+// 图标
 const TinyIconMailContent = iconMailContent()
 
 // function SendEmail(){
@@ -59,9 +60,3 @@ const TinyIconMailContent = iconMailContent()
             </tiny-card>
         </div>
 </template>
-
-<style>
-.input .tiny-input {
-  width: 250px;
-}
-</style>

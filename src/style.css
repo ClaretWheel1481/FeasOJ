@@ -19,6 +19,10 @@
   max-width: 70%;
 }
 
+.input .tiny-input {
+  width: 250px;
+}
+
 .parent{
   display: flex;
   margin: 15px;

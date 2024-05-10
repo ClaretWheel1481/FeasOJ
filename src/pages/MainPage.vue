@@ -35,8 +35,4 @@ const activeNames = ref(['1'])
 .carousel-item-demo:nth-child(2n + 1) {
   background-color: #edf0f3;
 }
-
-.pfont{ 
-    font-size: 14px;
-}
 </style>

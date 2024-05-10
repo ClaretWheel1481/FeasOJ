@@ -9,7 +9,7 @@ const route = useRoute();
 <template>
   <Navigation v-if="route.path !== '/admin'"></Navigation>
   <router-view></router-view>
-  <Filing></Filing>
+  <Filing v-if="route.path !== '/admin'"></Filing>
 </template>
 
 <style scoped>
