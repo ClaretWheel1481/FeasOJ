@@ -9,9 +9,9 @@ const passwords = ref('')
 </script>
 
 <template>
-    <!-- TODO:新的Navigator -->
+    <h1>登录</h1>
     <div class="parent">
-        <div class="card-wrap">
+        <div>
             <tiny-card size="large">
                 <div>
                     <h3>邮箱</h3>
@@ -27,7 +27,7 @@ const passwords = ref('')
                 </div>
                 <div style="height: 12px"></div>
                 <!-- TODO:跳转待处理 -->
-                <tiny-button type="text" text="找回密码" @click="$router.push('/')"> </tiny-button>
+                <tiny-button type="text" text="找回密码" @click="$router.push('/reset')"> </tiny-button>
                 <div style="height: 12px"></div>
                 <div>
                     <!-- TODO:跳转待处理 -->
@@ -40,11 +40,6 @@ const passwords = ref('')
 </template>
 
 <style scoped>
-.card-wrap {
-  background: #f5f5f5;
-  padding: 16px;
-}
-
 .input .tiny-input {
   width: 250px;
 }

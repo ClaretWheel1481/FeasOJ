@@ -12,10 +12,6 @@
                 <tiny-collapse-item title="公告" name="1">
                     <h2>现在处于测试阶段</h2>
                 </tiny-collapse-item>
-                <tiny-collapse-item title="更新日志" name="2">
-                    <h2>2023.05.09</h2>
-                    <p class="pfont">初步外观框架构建完毕</p>
-                </tiny-collapse-item>
             </tiny-collapse>
         </div>
         <!-- TODO:组件待扩展 -->

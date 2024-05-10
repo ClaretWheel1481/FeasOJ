@@ -11,6 +11,7 @@ const routes = [
     { path: '/profile', component: () => import('../pages/ProfilePage.vue')},
     { path: '/problem/:id', component: () => import('../pages/ProblemInfoPage.vue')},
     { path: '/admin', component: () => import('../pages/BackendManagementPage.vue')},
+    { path: '/reset', component: () => import('../pages/PasswordResetPage.vue')},
 ];
 
 const router = createRouter({

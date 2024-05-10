@@ -1,8 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { NavMenu as TinyNavMenu } from '@opentiny/vue'
+import { Divider, NavMenu as TinyNavMenu } from '@opentiny/vue'
 import { iconAdministrator,iconSetting } from '@opentiny/vue-icon'
 import { Drawer as TinyDrawer } from '@opentiny/vue'
+import { Button as TinyButton } from '@opentiny/vue'
 
 function fn() {
   visible.value = true
@@ -33,9 +34,11 @@ const dataset = ref([
           <tiny-icon-setting class="icons-nav" @click="fn" type="primary"></tiny-icon-setting>
           <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event">
           <div>
-            <br />
             <!-- TODO：设置待处理 -->
-            <span>待处理</span>
+            <div style="display: block; margin-top: 20px;">
+              <tiny-button type="text" text="后台管理" @click="$router.push('/admin')"> </tiny-button>
+            </div>
+            <Divider></Divider>
           </div>
           </tiny-drawer>
       </template>
