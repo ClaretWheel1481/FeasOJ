@@ -10,7 +10,7 @@
             </tiny-carousel>
             <tiny-collapse v-model="activeNames">
                 <tiny-collapse-item title="公告" name="1">
-                    <h2>现在处于测试阶段</h2>
+                    <h2>现在处于开发阶段</h2>
                 </tiny-collapse-item>
             </tiny-collapse>
         </div>

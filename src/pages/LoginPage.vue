@@ -11,7 +11,6 @@ const passwords = ref('')
 <template>
     <h1>登录</h1>
     <div class="parent">
-        <div>
             <tiny-card size="large">
                 <div>
                     <h3>邮箱</h3>
@@ -35,6 +34,5 @@ const passwords = ref('')
                     <tiny-button @click="$router.push('/register')">注册</tiny-button>
                 </div>
             </tiny-card>
-        </div>
     </div>
 </template>

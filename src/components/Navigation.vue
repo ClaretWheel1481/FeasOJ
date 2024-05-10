@@ -32,7 +32,7 @@ const dataset = ref([
           </router-link>
           <!-- TODO:打开菜单栏 -->
           <tiny-icon-setting class="icons-nav" @click="fn" type="primary"></tiny-icon-setting>
-          <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event">
+          <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event" width="35%">
           <div>
             <!-- TODO：设置待处理 -->
             <div style="display: block; margin-top: 20px;">
