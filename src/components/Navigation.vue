@@ -17,7 +17,7 @@ const dataset = ref([
   { title: '首页', url: '/' },
   { title: '排名', url: '/rank'},
   { title: '题目', url: '/problemset'},
-  { title: '竞赛', url: '/contest'},
+  // { title: '竞赛', url: '/contest'},
   { title: '关于', url: '/about'},
 ])
 </script>

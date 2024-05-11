@@ -11,7 +11,6 @@ const passwords = ref('')
 const confirmpassword = ref('')
 const verificationcode = ref('')
 
-// 图标
 const TinyIconMailContent = iconMailContent()
 
 // function SendEmail(){

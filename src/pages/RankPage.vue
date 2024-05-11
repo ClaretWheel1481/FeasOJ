@@ -14,7 +14,7 @@ const tableData = reactive([
     </div>
     <div class="parent">
         <div class="restrictmaincomponents">
-            <tiny-grid :data="tableData" border min-height="500" header-align="center" size="medium" align="center">
+            <tiny-grid :data="tableData" min-height="500" header-align="center" size="medium" align="center">
                 <tiny-grid-column type="index" title="Rank"></tiny-grid-column>
                 <tiny-grid-column field="username" title="用户名称"></tiny-grid-column>
                 <tiny-grid-column field="score" title="Score"></tiny-grid-column>

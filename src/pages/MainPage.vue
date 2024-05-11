@@ -4,7 +4,7 @@
         <div class="restrictmaincomponents">
             <tiny-carousel height="400px" autoplay>
                 <!-- TODO:轮播IMG -->
-                <tiny-carousel-item class="carousel-item-demo" v-for="item in 2" :key="item">
+                <tiny-carousel-item class="carousel-item" v-for="item in 2" :key="item">
                 <h3>{{ item }}</h3>
                 </tiny-carousel-item>
             </tiny-carousel>
@@ -27,12 +27,7 @@ const activeNames = ref(['1'])
 </script>
 
 <style scoped>
-
-.carousel-item-demo:nth-child(2n) {
-  background-color: #fafafa;
-}
-
-.carousel-item-demo:nth-child(2n + 1) {
+.carousel-item {
   background-color: #edf0f3;
 }
 </style>

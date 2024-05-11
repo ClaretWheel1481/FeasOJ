@@ -1,4 +1,4 @@
-<!-- TODO:个人资料页，包括用户名、头像、邮箱、简介、Score、答题记录、修改密码、退出登录 -->
+<!-- TODO:个人资料页，包括用户名、头像、邮箱、简介、Score、提交记录记录、修改密码、退出登录 -->
 <!-- 根据用户UID来显示所有内容 -->
 <script setup>
 import { UserHead as TinyUserHead } from '@opentiny/vue'
@@ -9,4 +9,6 @@ import { UserHead as TinyUserHead } from '@opentiny/vue'
     <h1>个人资料</h1>
   </div>
   <tiny-user-head type="icon" round></tiny-user-head>
+  <h3>Username</h3>
+  <p>简介组件</p>
 </template>

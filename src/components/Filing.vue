@@ -7,7 +7,7 @@
 <style scoped>
 .filing {
     align-items: center;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 70px;
     flex: 0;
 }
