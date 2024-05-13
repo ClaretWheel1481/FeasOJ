@@ -34,20 +34,10 @@ type Problem struct {
 	Submit_history string `gorm:"not null"`
 }
 
-// 排行榜表：rank, uid, username, score
-// 按照User表的score进行排序
-// 每10分钟更新一次，将User表的score更新到Rank表中
-type Rank struct {
-	Rank     int    `gorm:"primaryKey"`
-	Uid      int    `gorm:"not null"`
-	Username string `gorm:"not null"`
-	Score    int    `gorm:"not null"`
-}
-
 // 连接数据库、创建表
 func initSql(db *gorm.DB) {
 	fmt.Println("[FeasOJ]初始化数据库中...")
-	db.AutoMigrate(&User{}, &Problem{}, &Rank{})
+	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]初始化数据库成功。")
 }
 
@@ -64,6 +54,7 @@ func main() {
 	r := gin.Default()
 	fmt.Println("[FeasOJ]启动服务器中...")
 	// 设置路由
+	//TODO:响应前端部分功能待实现
 	r.GET("/", func(c *gin.Context) {
 
 	})

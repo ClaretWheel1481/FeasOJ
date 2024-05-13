@@ -1,4 +1,3 @@
-import { TimelineItem } from '@opentiny/vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [

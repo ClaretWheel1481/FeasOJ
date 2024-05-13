@@ -3,15 +3,12 @@ import { Card as TinyCard } from '@opentiny/vue'
 import { ref } from 'vue'
 import { Input as TinyInput } from '@opentiny/vue'
 import { Button as TinyButton } from '@opentiny/vue'
-import { iconMailContent } from '@opentiny/vue-icon'
 
 const username = ref('')
 const mails = ref('')
 const passwords = ref('')
 const confirmpassword = ref('')
 const verificationcode = ref('')
-
-const TinyIconMailContent = iconMailContent()
 
 // function SendEmail(){
 //     // TODO:发送验证码并限制60秒内只能点击一次

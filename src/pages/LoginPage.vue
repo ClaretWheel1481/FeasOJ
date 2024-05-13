@@ -25,7 +25,6 @@ const passwords = ref('')
                     <tiny-input type="password" v-model="passwords" show-password placeholder="Password"></tiny-input>
                 </div>
                 <div style="height: 12px"></div>
-                <!-- TODO:跳转待处理 -->
                 <tiny-button type="text" text="忘记密码?" @click="$router.push('/reset')"> </tiny-button>
                 <div style="height: 12px"></div>
                 <div>

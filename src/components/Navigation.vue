@@ -26,11 +26,9 @@ const dataset = ref([
   <div class="preview">
     <tiny-nav-menu :data="dataset">
       <template #toolbar >
-        <!-- TODO:跳转到登陆、注册页面 -->
           <router-link to="/login">
             <tiny-icon-administrator class="icons-nav" ></tiny-icon-administrator>
           </router-link>
-          <!-- TODO:打开菜单栏 -->
           <tiny-icon-setting class="icons-nav" @click="fn" type="primary"></tiny-icon-setting>
           <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event" width="35%">
           <div>

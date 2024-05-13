@@ -2,10 +2,10 @@
 import { Grid as TinyGrid, GridColumn as TinyGridColumn } from '@opentiny/vue'
 import { reactive } from 'vue'
 
-const tableData = reactive([
-//   TODO:数据库传入前50Score数据
+// const tableData = reactive([
+// TODO:数据库传入前50名 Score数据
     
-])
+// ])
 </script>
 
 <template>
