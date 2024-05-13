@@ -35,7 +35,8 @@ type Problem struct {
 }
 
 // 排行榜表：rank, uid, username, score
-// 按照score进行排序
+// 按照User表的score进行排序
+// 每10分钟更新一次，将User表的score更新到Rank表中
 type Rank struct {
 	Rank     int    `gorm:"primaryKey"`
 	Uid      int    `gorm:"not null"`
@@ -46,9 +47,7 @@ type Rank struct {
 // 连接数据库、创建表
 func initSql(db *gorm.DB) {
 	fmt.Println("[FeasOJ]初始化数据库中...")
-	db.AutoMigrate(&User{})
-	db.AutoMigrate(&Problem{})
-	db.AutoMigrate(&Rank{})
+	db.AutoMigrate(&User{}, &Problem{}, &Rank{})
 	fmt.Println("[FeasOJ]初始化数据库成功。")
 }
 
