@@ -1,8 +1,7 @@
-package main
+package backendsrc
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
