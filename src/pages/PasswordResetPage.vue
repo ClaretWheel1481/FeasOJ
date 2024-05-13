@@ -30,8 +30,13 @@ const TinyIconMailContent = iconMailContent()
                 <div>
                     <h3>邮箱验证码</h3>
                 </div>
-                <div class="input">
-                    <tiny-input v-model="verificationcode" placeholder="点击右侧按钮获取验证码"></tiny-input>
+                <div>
+                    <div class="input" style="display: inline-block; margin-left: 80px;">
+                        <tiny-input v-model="verificationcode" placeholder="点击右侧按钮获取验证码"></tiny-input>
+                    </div>
+                    <div style="display: inline-block;">
+                        <tiny-button type="text">发送验证码</tiny-button>
+                    </div>
                 </div>
                 <div style="height: 18px"></div>
                 <tiny-button type="primary" @click="$router.push('/login')">下一步</tiny-button>

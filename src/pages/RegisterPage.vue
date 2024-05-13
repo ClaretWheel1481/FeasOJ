@@ -43,7 +43,7 @@ const TinyIconMailContent = iconMailContent()
                         <tiny-input v-model="verificationcode" placeholder="点击右侧按钮获取验证码"></tiny-input>
                     </div>
                     <div style="display: inline-block;">
-                        <tiny-button type="text">获取验证码</tiny-button>
+                        <tiny-button type="text">发送验证码</tiny-button>
                     </div>
                 </div>
                 <!-- TODO:右侧“获取验证码”按钮 -->
