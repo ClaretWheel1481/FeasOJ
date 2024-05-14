@@ -1,3 +1,17 @@
+<script setup>
+import { ref } from 'vue'
+import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
+import { Carousel as TinyCarousel, CarouselItem as TinyCarouselItem } from '@opentiny/vue'
+
+const activeNames = ref(['1'])
+</script>
+
+<style scoped>
+.carousel-item {
+  background-color: #edf0f3;
+}
+</style>
+
 <template>
     <h1>FeasOJ</h1>
     <div class="parent">
@@ -17,17 +31,3 @@
         <!-- TODO:组件待扩展 -->
     </div>
 </template>
-
-<script setup>
-import { ref } from 'vue'
-import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
-import { Carousel as TinyCarousel, CarouselItem as TinyCarouselItem } from '@opentiny/vue'
-
-const activeNames = ref(['1'])
-</script>
-
-<style scoped>
-.carousel-item {
-  background-color: #edf0f3;
-}
-</style>

@@ -1,18 +1,31 @@
 <script setup>
-import { Input as TinyInput } from '@opentiny/vue'
 import { Card as TinyCard } from '@opentiny/vue'
-import { iconMailContent } from '@opentiny/vue-icon'
-import { ref } from 'vue'
-import { Button as TinyButton } from '@opentiny/vue'
+import { ref, reactive } from 'vue'
+import { Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Button as TinyButton } from '@opentiny/vue'
 
-const mails = ref('')
-const verificationcode = ref('')
+const ruleFormRef = ref()
+const createData = reactive({
+  email: '',
+})
+const emailcode = ref('')
 
-const TinyIconMailContent = iconMailContent()
-// function SendEmail(){
-//     // TODO:发送验证码并限制60秒内只能点击一次
-//     console.log('图标被点击了!')
-// }
+const isValidate = ref(true)
+const rules = ref({
+  email: [
+    { required: true, message: '必填', trigger: 'blur' },
+    { type: 'email', message: '请输入正确的邮箱地址', trigger: ['change', 'blur'] }
+  ],
+  emailcode: [
+    { required: true, message: '必填', trigger: 'blur' },
+    { min: 4, max: 4, message: '长度必须为4', trigger: ['change', 'blur'] }
+  ],
+})
+
+function handleSubmit() {
+  ruleFormRef.value.validate(() => {
+    // TODO:验证输入后调用转移至新的组建，旧组件隐藏
+  })
+}
 </script>
 
 <template>
@@ -20,28 +33,22 @@ const TinyIconMailContent = iconMailContent()
       <h1>忘记密码</h1>
     </div>
     <div class="parent">
-            <tiny-card size="large">
-                <div>
-                    <h3>邮箱</h3>
-                </div>
-                <div class="input">
-                    <tiny-input v-model="mails" placeholder="Email"></tiny-input>
-                </div>
-                <div>
-                    <h3>邮箱验证码</h3>
-                </div>
-                <div>
-                    <div class="input" style="display: inline-block; margin-left: 80px;">
-                        <tiny-input v-model="verificationcode" placeholder="点击右侧按钮获取验证码"></tiny-input>
-                    </div>
-                    <div style="display: inline-block;">
-                        <tiny-button type="text">发送验证码</tiny-button>
-                    </div>
-                </div>
-                <div style="height: 18px"></div>
-                <tiny-button type="primary" @click="$router.push('/login')">下一步</tiny-button>
-                <tiny-button  @click="$router.push('/login')">返回</tiny-button>
-            </tiny-card>
+        <tiny-card size="large">
+            <tiny-form ref="ruleFormRef" :label-align="true" label-position="right" label-width=80px :inline="true" :model="createData" :rules="rules" :validate-on-rule-change="isValidate" validate-type="text" class="input">
+                <tiny-form-item label="邮箱" prop="email">
+                    <tiny-input v-model="createData.email"></tiny-input>
+                </tiny-form-item>
+                <tiny-row>
+                    <tiny-form-item label="验证码" prop="emailcode" style="margin-left: 80px;">
+                        <tiny-input v-model="emailcode"></tiny-input>
+                    </tiny-form-item>
+                    <!-- TODO:发送验证码待处理 -->
+                    <tiny-button type="text">发送验证码</tiny-button>
+                </tiny-row>
+                <br>
+                <tiny-button type="primary" @click="handleSubmit()">下一步</tiny-button>
+                <tiny-button @click="$router.push('/login')">返回</tiny-button>
+            </tiny-form>
+        </tiny-card>
     </div>
-    <!-- TODO:按下下一步后弹出新的组件 -->
 </template>

@@ -4,7 +4,3 @@
     </div>
     <h2>因后端实现较为困难，暂不开放。</h2>
 </template>
-
-<style scoped>
-
-</style>

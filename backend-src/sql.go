@@ -22,13 +22,12 @@ type Config struct {
 // 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid           int       `gorm:"primaryKey;autoIncrement"`
-	Avartar       string    `gorm:"not null"`
-	Username      string    `gorm:"not null"`
+	Avartar       string    `gorm:"comment:头像"`
+	Username      string    `gorm:"not null;unique"`
 	Password      string    `gorm:"not null"`
 	Email         string    `gorm:"not null"`
-	Score         int       `gorm:"not null"`
-	Synopsis      string    `gorm:"not null"`
-	SubmitHistory string    `gorm:"not null"`
+	Synopsis      string    `gorm:"comment:简介"`
+	SubmitHistory string    `gorm:"comment:提交记录"`
 	CreateAt      time.Time `gorm:"not null"`
 }
 
@@ -43,7 +42,7 @@ type Problem struct {
 	Input          string `gorm:"not null"`
 	Output         string `gorm:"not null"`
 	Contest        int    `gorm:"not null"`
-	Submit_history string `gorm:"not null"`
+	Submit_history string `gorm:"comment:提交记录"`
 }
 
 func writeConfig(dbName, dbUser, dbPassword, dbAddress string) error {
@@ -86,40 +85,62 @@ func inputSqlInfo() bool {
 	return true
 }
 
+func loadConfig() string {
+	// 读取config.xml文件
+	configFile, err := os.Open("config.xml")
+	if err != nil {
+		return ""
+	}
+	defer configFile.Close()
+	var config Config
+	err = xml.NewDecoder(configFile).Decode(&config)
+	if err != nil {
+		return ""
+	}
+	dbName := config.DbName
+	dbUser := config.DbUser
+	dbPassword := config.DbPassword
+	dbAddress := config.DbAddress
+	dsn := dbUser + ":" + dbPassword + "@tcp(" + dbAddress + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	return dsn
+}
+
 // 连接数据库、创建表
 func initSql() bool {
 	//判断是否有config.xml文件，没有则输入
 	if _, err := os.Stat("config.xml"); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-
-	// 读取config.xml文件并赋值
-	configFile, err := os.Open("config.xml")
-	if err != nil {
-		return false
-	}
-	defer configFile.Close()
-	var config Config
-	err = xml.NewDecoder(configFile).Decode(&config)
-	if err != nil {
-		return false
-	}
-	dbName := config.DbName
-	dbUser := config.DbUser
-	dbPassword := config.DbPassword
-	dbAddress := config.DbAddress
-
+	dsn := loadConfig()
 	fmt.Println("[FeasOJ]连接数据库中...")
-
-	dsn := dbUser + ":" + dbPassword + "@tcp(" + dbAddress + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-
 	}
 	fmt.Println("[FeasOJ]数据库连接成功。")
 	fmt.Println("[FeasOJ]创建数据表中...")
 	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]创建数据表成功。")
+	fmt.Println("[FeasOJ]断开数据库连接。")
+	return true
+}
+
+// 注册用户添加至数据库
+func register(username, password, email string) bool {
+	dsn := loadConfig()
+	fmt.Println("[FeasOJ]连接数据库中...")
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	fmt.Println("[FeasOJ]数据库连接成功。")
+	fmt.Println("[FeasOJ]添加用户中...")
+	time := time.Now()
+	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time}).Error
+	if err != nil {
+		fmt.Println("[FeasOJ]添加用户失败，请检查用户名是否重复。")
+		return false
+	}
+	fmt.Println("[FeasOJ]添加用户成功。")
 	return true
 }
