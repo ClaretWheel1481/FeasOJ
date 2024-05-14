@@ -21,28 +21,28 @@ type Config struct {
 
 // 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
-	Uid           int       `gorm:"primaryKey;autoIncrement"`
+	Uid           int       `gorm:"comment:Uid;primaryKey;autoIncrement"`
 	Avartar       string    `gorm:"comment:头像"`
-	Username      string    `gorm:"not null;unique"`
-	Password      string    `gorm:"not null"`
-	Email         string    `gorm:"not null"`
+	Username      string    `gorm:"comment:用户名;not null;unique"`
+	Password      string    `gorm:"comment:密码;not null"`
+	Email         string    `gorm:"comment:电子邮件;not null"`
 	Synopsis      string    `gorm:"comment:简介"`
 	SubmitHistory string    `gorm:"comment:提交记录"`
-	CreateAt      time.Time `gorm:"not null"`
-	Role          int       `gorm:"not null"` // 0: 普通用户, 1: 管理员
+	CreateAt      time.Time `gorm:"comment:创建时间;not null"`
+	Role          int       `gorm:"comment:角色;not null"` // 0: 普通用户, 1: 管理员
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
 // contest为0则不属于任何比赛
 type Problem struct {
-	Pid            int    `gorm:"primaryKey;autoIncrement"`
-	Title          string `gorm:"not null"`
-	Content        string `gorm:"not null"`
-	Time_limit     int    `gorm:"not null"`
-	Memory_limit   int    `gorm:"not null"`
-	Input          string `gorm:"not null"`
-	Output         string `gorm:"not null"`
-	Contest        int    `gorm:"not null"`
+	Pid            int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
+	Title          string `gorm:"comment:题目标题;not null"`
+	Content        string `gorm:"comment:题目详细;not null"`
+	Time_limit     int    `gorm:"comment:运行时间限制;not null"`
+	Memory_limit   int    `gorm:"comment:内存大小限制;not null"`
+	Input          string `gorm:"comment:输入样例;not null"`
+	Output         string `gorm:"comment:输出样例;not null"`
+	Contestid      int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
 	Submit_history string `gorm:"comment:提交记录"`
 }
 

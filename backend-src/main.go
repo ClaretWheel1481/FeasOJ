@@ -51,7 +51,7 @@ func VerifyToken(tokenString string) string {
 
 func main() {
 	if initSql() {
-		fmt.Println("[FeasOJ]数据库初始化成功！")
+		fmt.Println("[FeasOJ]数据库初始化完毕！即将启动服务器...")
 	} else {
 		fmt.Println("[FeasOJ]数据库初始化失败，请确认数据库连接是否正确！")
 		return
