@@ -29,6 +29,7 @@ type User struct {
 	Synopsis      string    `gorm:"comment:简介"`
 	SubmitHistory string    `gorm:"comment:提交记录"`
 	CreateAt      time.Time `gorm:"not null"`
+	Role          int       `gorm:"not null"` // 0: 普通用户, 1: 管理员
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
@@ -121,22 +122,21 @@ func initSql() bool {
 	fmt.Println("[FeasOJ]创建数据表中...")
 	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]创建数据表成功。")
+	fmt.Println("[FeasOJ]创建管理员账户中...")
+	register("Admin", "admin123", "admin@example.com", 1)
 	fmt.Println("[FeasOJ]断开数据库连接。")
 	return true
 }
 
 // 注册用户添加至数据库
-func register(username, password, email string) bool {
+func register(username, password, email string, role int) bool {
 	dsn := loadConfig()
-	fmt.Println("[FeasOJ]连接数据库中...")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
-	fmt.Println("[FeasOJ]数据库连接成功。")
-	fmt.Println("[FeasOJ]添加用户中...")
 	time := time.Now()
-	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time}).Error
+	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time, Role: role}).Error
 	if err != nil {
 		fmt.Println("[FeasOJ]添加用户失败，请检查用户名是否重复。")
 		return false

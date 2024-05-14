@@ -83,7 +83,8 @@ func main() {
 		})
 	}
 
-	fmt.Println("服务器启动成功，API地址：http://localhost:37881/api/")
-	fmt.Println("若要修改数据库连接信息，请修改config.xml文件。")
+	fmt.Println("[FeasOJ]服务器启动成功，API地址：http://localhost:37881/api/")
+	fmt.Println("[FeasOJ]若要修改数据库连接信息，请修改config.xml文件。")
+	fmt.Println("[FeasOJ]注意：请及时修改管理员账户信息。")
 	r.Run("0.0.0.0:37881")
 }
