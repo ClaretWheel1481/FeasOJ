@@ -29,7 +29,7 @@ const passwords = ref('')
                 <div style="height: 12px"></div>
                 <!-- TODO:若密码不正确，显示“用户名或密码错误，请检查并重试。” -->
                 <div>
-                    <!-- TODO:跳转待处理 -->
+                    <!-- TODO:跳转登录待处理 -->
                     <tiny-button type="primary" @click="$router.push('/')">登录</tiny-button>
                     <tiny-button @click="$router.push('/register')">注册</tiny-button>
                 </div>

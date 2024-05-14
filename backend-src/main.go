@@ -2,39 +2,11 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 //消息队列RabbitMQ
-
-// 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
-type User struct {
-	Uid           int       `gorm:"primaryKey;autoIncrement"`
-	Avartar       string    `gorm:"not null"`
-	Username      string    `gorm:"not null"`
-	Password      string    `gorm:"not null"`
-	Email         string    `gorm:"not null"`
-	Score         int       `gorm:"not null"`
-	Synopsis      string    `gorm:"not null"`
-	SubmitHistory string    `gorm:"not null"`
-	CreateAt      time.Time `gorm:"not null"`
-}
-
-// 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
-// contest为0则不属于任何比赛
-type Problem struct {
-	Pid            int    `gorm:"primaryKey;autoIncrement"`
-	Title          string `gorm:"not null"`
-	Content        string `gorm:"not null"`
-	Time_limit     int    `gorm:"not null"`
-	Memory_limit   int    `gorm:"not null"`
-	Input          string `gorm:"not null"`
-	Output         string `gorm:"not null"`
-	Contest        int    `gorm:"not null"`
-	Submit_history string `gorm:"not null"`
-}
 
 func main() {
 	if initSql() {
