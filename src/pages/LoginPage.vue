@@ -13,10 +13,10 @@ const passwords = ref('')
     <div class="parent">
             <tiny-card size="large">
                 <div>
-                    <h3>邮箱</h3>
+                    <h3>用户名</h3>
                 </div>
                 <div class="input">
-                    <tiny-input v-model="username" placeholder="Email"></tiny-input>
+                    <tiny-input v-model="username" placeholder="Username"></tiny-input>
                 </div>
                 <div>
                     <h3>密码</h3>
@@ -27,6 +27,7 @@ const passwords = ref('')
                 <div style="height: 12px"></div>
                 <tiny-button type="text" text="忘记密码?" @click="$router.push('/reset')"> </tiny-button>
                 <div style="height: 12px"></div>
+                <!-- TODO:若密码不正确，显示“用户名或密码错误，请检查并重试。” -->
                 <div>
                     <!-- TODO:跳转待处理 -->
                     <tiny-button type="primary" @click="$router.push('/')">登录</tiny-button>

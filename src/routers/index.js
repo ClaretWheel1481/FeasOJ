@@ -16,13 +16,6 @@ const routes = [
         }
     },
     { 
-        path: '/rank', 
-        component: () => import('../pages/RankPage.vue'),
-        meta: {
-            title: 'FeasOJ - 排名'
-        }
-    },
-    { 
         path: '/problemset', 
         component: () => import('../pages/ProblemSetPage.vue'),
         meta: {

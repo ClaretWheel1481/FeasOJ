@@ -4,9 +4,17 @@ import { Divider, NavMenu as TinyNavMenu } from '@opentiny/vue'
 import { iconAdministrator,iconSetting } from '@opentiny/vue-icon'
 import { Drawer as TinyDrawer } from '@opentiny/vue'
 import { Button as TinyButton } from '@opentiny/vue'
+import { useRouter } from 'vue-router'
 
-function fn() {
+const router = useRouter()
+
+function showDrawer() {
   visible.value = true
+}
+
+function goToProfile(){
+  router.push('/profile')
+  visible.value = false
 }
 
 const visible = ref(false)
@@ -15,9 +23,8 @@ const TinyIconSetting = iconSetting()
 
 const dataset = ref([
   { title: '首页', url: '/' },
-  { title: '排名', url: '/rank'},
   { title: '题目', url: '/problemset'},
-  // { title: '竞赛', url: '/contest'},
+  { title: '竞赛', url: '/contest'},
   { title: '关于', url: '/about'},
 ])
 </script>
@@ -29,12 +36,16 @@ const dataset = ref([
           <router-link to="/login">
             <tiny-icon-administrator class="icons-nav" ></tiny-icon-administrator>
           </router-link>
-          <tiny-icon-setting class="icons-nav" @click="fn" type="primary"></tiny-icon-setting>
+          <tiny-icon-setting class="icons-nav" @click="showDrawer" type="primary"></tiny-icon-setting>
           <tiny-drawer title="设置" :visible="visible" @update:visible="visible = $event" width="35%">
           <div>
             <!-- TODO：设置待处理 -->
             <div style="display: block; margin-top: 20px;">
               <tiny-button type="text" text="后台管理" @click="$router.push('/admin')"> </tiny-button>
+            </div>
+            <Divider></Divider>
+            <div style="display: block; margin-top: 20px;">
+              <tiny-button type="text" text="个人主页" @click="goToProfile"> </tiny-button>
             </div>
             <Divider></Divider>
           </div>

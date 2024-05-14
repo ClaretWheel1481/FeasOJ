@@ -2,28 +2,30 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
 
-// 用户表：uid, avartar, username, password, email, score, synopsis, submit_history
+//消息队列RabbitMQ
+
+// 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
-	Uid           int    `gorm:"primaryKey"`
-	Avartar       string `gorm:"not null"`
-	Username      string `gorm:"not null"`
-	Password      string `gorm:"not null"`
-	Email         string `gorm:"not null"`
-	Score         int    `gorm:"not null"`
-	Synopsis      string `gorm:"not null"`
-	SubmitHistory string `gorm:"not null"`
+	Uid           int       `gorm:"primaryKey;autoIncrement"`
+	Avartar       string    `gorm:"not null"`
+	Username      string    `gorm:"not null"`
+	Password      string    `gorm:"not null"`
+	Email         string    `gorm:"not null"`
+	Score         int       `gorm:"not null"`
+	Synopsis      string    `gorm:"not null"`
+	SubmitHistory string    `gorm:"not null"`
+	CreateAt      time.Time `gorm:"not null"`
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
 // contest为0则不属于任何比赛
 type Problem struct {
-	Pid            int    `gorm:"primaryKey"`
+	Pid            int    `gorm:"primaryKey;autoIncrement"`
 	Title          string `gorm:"not null"`
 	Content        string `gorm:"not null"`
 	Time_limit     int    `gorm:"not null"`
@@ -34,30 +36,36 @@ type Problem struct {
 	Submit_history string `gorm:"not null"`
 }
 
-// 连接数据库、创建表
-func initSql(db *gorm.DB) {
-	fmt.Println("[FeasOJ]初始化数据库中...")
-	db.AutoMigrate(&User{}, &Problem{})
-	fmt.Println("[FeasOJ]初始化数据库成功。")
-}
-
 func main() {
-	fmt.Println("[FeasOJ]连接数据库中...")
-	db, err := gorm.Open(mysql.Open("FeasOJ:YE8cimwfC5KxpN6N@tcp(cloud.claret.space:9936)/FeasOJ?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败。")
-	}
-	fmt.Println("[FeasOJ]数据库连接成功。")
-	initSql(db)
-
+	initSql()
 	// 启动服务器
+	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	fmt.Println("[FeasOJ]启动服务器中...")
-	// 设置路由
 	//TODO:响应前端部分功能待实现
-	r.GET("/", func(c *gin.Context) {
+	// 设置路由组
+	router := r.Group("/api")
+	{
+		// 登录API
+		router.POST("/login", func(c *gin.Context) {
+			var loginInfo struct {
+				Username string `json:"username"`
+				Password string `json:"password"`
+			}
+			if err := c.ShouldBindJSON(&loginInfo); err != nil {
+				c.JSON(400, gin.H{"error": "请求格式错误。"})
+				return
+			}
+			// TODO:登录成功则生成Token返回至前端
+		})
 
-	})
-	fmt.Println("服务器启动成功，端口号为37881。")
+		// 注册API
+		router.POST("/register", func(c *gin.Context) {
+			// TODO：注册功能待实现
+		})
+	}
+
+	fmt.Println("服务器启动成功，API地址：http://localhost:37881/api/")
+
 	r.Run("0.0.0.0:37881")
 }

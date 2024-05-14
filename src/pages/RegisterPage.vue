@@ -24,12 +24,14 @@ const verificationcode = ref('')
                     <h3>昵称</h3>
                 </div>
                 <div class="input">
+                    <!-- TODO:限制不超过16个字符 -->
                     <tiny-input v-model="username" placeholder="Username"></tiny-input>
                 </div>
                 <div>
                     <h3>邮箱</h3>
                 </div>
                 <div class="input">
+                    <!-- TODO:邮箱格式验证 -->
                     <tiny-input v-model="mails" placeholder="Email"></tiny-input>
                 </div>
                 <div>
@@ -48,15 +50,18 @@ const verificationcode = ref('')
                     <h3>密码</h3>
                 </div>
                 <div class="input">
+                    <!-- TODO:密码安全性验证 -->
                     <tiny-input type="password" v-model="passwords" show-password placeholder="Password"></tiny-input>
                 </div>
                 <div>
                     <h3>确认密码</h3>
                 </div>
                 <div class="input">
+                    <!-- TODO:检验密码是否相同 -->
                     <tiny-input type="password" v-model="confirmpassword" show-password placeholder="Confirm Password"></tiny-input>
                 </div>
                 <div style="height: 18px"></div>
+                <!-- TODO:若以上校验条件不达成，按下后跳转至不达成项 -->
                 <tiny-button type="primary" @click="$router.push('/login')">确认</tiny-button>
             </tiny-card>
         </div>
