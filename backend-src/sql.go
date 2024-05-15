@@ -91,6 +91,7 @@ func initAdminAccount() {
 		fmt.Println("[FeasOJ]管理员已存在，退出创建。")
 		return
 	}
+
 	//创建管理员
 	var adminUsername string
 	var adminPassword string
@@ -163,23 +164,6 @@ func register(username, password, email string, role int) bool {
 	return true
 }
 
-// 查询用户
-func selectUser(username string) bool {
-	// 查询用户
-	dsn := loadConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-	}
-	var user User
-	err = db.Where("username = ?", username).First(&user).Error
-	if err != nil {
-		fmt.Println("[FeasOJ]用户不存在。")
-		return false
-	}
-	return true
-}
-
 // 查询管理员用户
 func selectAdminUser(role int) bool {
 	// role = 1表示管理员
@@ -192,4 +176,17 @@ func selectAdminUser(role int) bool {
 	var user User
 	err = db.Where("role = ?", role).First(&user).Error
 	return err == nil
+}
+
+// 查询指定用户的password值
+func selectPassword(username string) string {
+	// 查询用户
+	dsn := loadConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	var user User
+	db.Where("username = ?", username).First(&user)
+	return user.Password
 }

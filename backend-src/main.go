@@ -64,20 +64,27 @@ func main() {
 	router := r.Group("/api")
 	{
 		// 登录API
-		router.POST("/login", func(c *gin.Context) {
-			var loginInfo struct {
-				Username string `json:"username"`
-				Password string `json:"password"`
-			}
-			if err := c.ShouldBindJSON(&loginInfo); err != nil {
-				c.JSON(400, gin.H{"error": "请求格式错误。"})
-				return
-			}
-			// TODO:登录成功则生成Token返回至前端
+		router.GET("/login", func(c *gin.Context) {
+			//TODO：登录接口逻辑待修改
+			// // 验证账号密码是否正确
+			// userExist := selectPassword(loginInfo.Username)
+			// if userExist != "" {
+			// 	userPHash := selectPassword(loginInfo.Username)
+			// 	// 校验密码是否正确
+			// 	if verifyPassword(loginInfo.Password, userPHash) {
+			// 		// 生成Token
+			// 		token := GenerateToken(loginInfo.Username)
+			// 		c.JSON(200, gin.H{"token": token})
+			// 	} else {
+			// 		c.JSON(401, gin.H{"error": "密码错误"})
+			// 	}
+			// } else {
+			// 	c.JSON(401, gin.H{"error": "用户不存在"})
+			// }
 		})
 
 		// 注册API
-		router.POST("/register", func(c *gin.Context) {
+		router.GET("/register", func(c *gin.Context) {
 			// TODO：注册功能待实现
 		})
 	}
