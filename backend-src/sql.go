@@ -86,6 +86,25 @@ func inputSqlInfo() bool {
 	return true
 }
 
+func initAdminAccount() {
+	if selectAdminUser(1) {
+		fmt.Println("[FeasOJ]管理员已存在，退出创建。")
+		return
+	}
+	//创建管理员
+	var adminUsername string
+	var adminPassword string
+	var adminEmail string
+	fmt.Println("[FeasOJ]创建管理员账户")
+	fmt.Print("[FeasOJ]请输入管理员账号:")
+	fmt.Scanln(&adminUsername)
+	fmt.Print("[FeasOJ]请输入管理员密码:")
+	fmt.Scanln(&adminPassword)
+	fmt.Print("[FeasOJ]请输入管理员邮箱:")
+	fmt.Scanln(&adminEmail)
+	register(adminUsername, encryptPassword(adminPassword), adminEmail, 1)
+}
+
 func loadConfig() string {
 	// 读取config.xml文件
 	configFile, err := os.Open("config.xml")
@@ -122,8 +141,7 @@ func initSql() bool {
 	fmt.Println("[FeasOJ]创建数据表中...")
 	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]创建数据表成功。")
-	fmt.Println("[FeasOJ]创建管理员账户中...")
-	register("Admin", "admin123", "admin@example.com", 1)
+	initAdminAccount()
 	fmt.Println("[FeasOJ]断开数据库连接。")
 	return true
 }
@@ -143,4 +161,35 @@ func register(username, password, email string, role int) bool {
 	}
 	fmt.Println("[FeasOJ]添加用户成功。")
 	return true
+}
+
+// 查询用户
+func selectUser(username string) bool {
+	// 查询用户
+	dsn := loadConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	var user User
+	err = db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		fmt.Println("[FeasOJ]用户不存在。")
+		return false
+	}
+	return true
+}
+
+// 查询管理员用户
+func selectAdminUser(role int) bool {
+	// role = 1表示管理员
+	dsn := loadConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	// 查询是否有role = 1，有则返回true，否则返回false
+	var user User
+	err = db.Where("role = ?", role).First(&user).Error
+	return err == nil
 }

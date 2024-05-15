@@ -32,7 +32,7 @@ func VerifyToken(tokenString string) string {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// 验证签名
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		// 返回用于验证签名的密钥
 		return []byte("secret"), nil
@@ -59,7 +59,6 @@ func main() {
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	fmt.Println("[FeasOJ]启动服务器中...")
 	//TODO:响应前端部分功能待实现
 	// 设置路由组
 	router := r.Group("/api")
@@ -85,6 +84,5 @@ func main() {
 
 	fmt.Println("[FeasOJ]服务器启动成功，API地址：http://localhost:37881/api/")
 	fmt.Println("[FeasOJ]若要修改数据库连接信息，请修改config.xml文件。")
-	fmt.Println("[FeasOJ]注意：请及时修改管理员账户信息。")
 	r.Run("0.0.0.0:37881")
 }
