@@ -58,7 +58,7 @@ func writeConfig(dbName, dbUser, dbPassword, dbAddress string) error {
 	if err != nil {
 		return err
 	}
-	err = os.WriteFile("config.xml", configXml, 0644)
+	err = os.WriteFile("sqlconfig.xml", configXml, 0644)
 	return err
 }
 
@@ -108,7 +108,7 @@ func initAdminAccount() {
 
 func loadConfig() string {
 	// 读取config.xml文件
-	configFile, err := os.Open("config.xml")
+	configFile, err := os.Open("sqlconfig.xml")
 	if err != nil {
 		return ""
 	}
@@ -129,7 +129,7 @@ func loadConfig() string {
 // 连接数据库、创建表
 func initSql() bool {
 	//判断是否有config.xml文件，没有则输入
-	if _, err := os.Stat("config.xml"); os.IsNotExist(err) {
+	if _, err := os.Stat("sqlconfig.xml"); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
 	dsn := loadConfig()
@@ -143,7 +143,6 @@ func initSql() bool {
 	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]创建数据表成功。")
 	initAdminAccount()
-	fmt.Println("[FeasOJ]断开数据库连接。")
 	return true
 }
 

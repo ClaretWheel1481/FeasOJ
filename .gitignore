@@ -21,6 +21,6 @@ dist-ssr
 *.sln
 *.sw?
 backend-src/main
-backend-src/go.mod
 backend-src/go.sum
-backend-src/config.xml
+backend-src/sqlconfig.xml
+backend-src/emailconfig.xml

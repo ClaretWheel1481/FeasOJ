@@ -51,7 +51,7 @@ func VerifyToken(tokenString string) string {
 
 func main() {
 	if initSql() {
-		fmt.Println("[FeasOJ]数据库初始化完毕！即将启动服务器...")
+		fmt.Println("[FeasOJ]数据库初始化完毕！")
 	} else {
 		fmt.Println("[FeasOJ]数据库初始化失败，请确认数据库连接是否正确！")
 		return
@@ -89,7 +89,7 @@ func main() {
 		})
 	}
 
-	fmt.Println("[FeasOJ]服务器启动成功，API地址：http://localhost:37881/api/")
-	fmt.Println("[FeasOJ]若要修改数据库连接信息，请修改config.xml文件。")
+	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/")
+	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 	r.Run("0.0.0.0:37881")
 }
