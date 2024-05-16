@@ -65,22 +65,22 @@ func main() {
 	{
 		// 登录API
 		router.GET("/login", func(c *gin.Context) {
-			//TODO：登录接口逻辑待修改
-			// // 验证账号密码是否正确
-			// userExist := selectPassword(loginInfo.Username)
-			// if userExist != "" {
-			// 	userPHash := selectPassword(loginInfo.Username)
-			// 	// 校验密码是否正确
-			// 	if verifyPassword(loginInfo.Password, userPHash) {
-			// 		// 生成Token
-			// 		token := GenerateToken(loginInfo.Username)
-			// 		c.JSON(200, gin.H{"token": token})
-			// 	} else {
-			// 		c.JSON(401, gin.H{"error": "密码错误"})
-			// 	}
-			// } else {
-			// 	c.JSON(401, gin.H{"error": "用户不存在"})
-			// }
+			Username := c.Query("username")
+			Password := c.Query("password")
+			userExist := selectPassword(Username)
+			if userExist != "" {
+				userPHash := selectPassword(Username)
+				// 校验密码是否正确
+				if verifyPassword(Password, userPHash) {
+					// 生成Token并返回至前端
+					token := GenerateToken(Username)
+					c.JSON(200, gin.H{"status:": 200, "token": token})
+				} else {
+					c.JSON(401, gin.H{"status:": 401, "error": "密码错误"})
+				}
+			} else {
+				c.JSON(401, gin.H{"status:": 401, "error": "用户不存在"})
+			}
 		})
 
 		// 注册API
