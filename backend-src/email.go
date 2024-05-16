@@ -36,7 +36,7 @@ func initMailConfig() *mailConfig {
 
 // 随机生成4位数字验证码
 func generateVerifycode() string {
-	return fmt.Sprintf("%06d", rand.New(rand.NewSource(time.Now().UnixNano())))
+	return fmt.Sprintf("%04d", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }
 
 // 发送验证码
