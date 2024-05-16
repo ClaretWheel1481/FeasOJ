@@ -1,7 +1,5 @@
 package main
 
-//TODO:发件服务端配置
-// 要求：生成随机4位验证码并发送、校验验证码、密码修改后发送邮件
 import (
 	"crypto/tls"
 	"encoding/xml"
@@ -66,7 +64,7 @@ func sendVerifycode(config mailConfig, to string, verifycode string) error {
 	m.SetHeader("From", config.User)
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", "FeasOJ验证码")
-	m.SetBody("text/plain", "您的验证码是："+verifycode)
+	m.SetBody("text/plain", "您的验证码是："+verifycode+"，请注意保存。")
 	d := gomail.NewDialer(config.Host, config.Port, config.User, config.Pass)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err := d.DialAndSend(m); err != nil {

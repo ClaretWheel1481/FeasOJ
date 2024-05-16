@@ -11,7 +11,7 @@ import (
 )
 
 // 数据库连接信息
-type Config struct {
+type SqlConfig struct {
 	DbName     string `xml:"dbname"`
 	DbUser     string `xml:"dbuser"`
 	DbPassword string `xml:"dbpassword"`
@@ -46,49 +46,29 @@ type Problem struct {
 	Submit_history string `gorm:"comment:提交记录"`
 }
 
-func writeConfig(dbName, dbUser, dbPassword, dbAddress string) error {
-	// 创建配置文件
-	config := Config{
-		DbName:     dbName,
-		DbUser:     dbUser,
-		DbPassword: dbPassword,
-		DbAddress:  dbAddress,
-	}
-	configXml, err := xml.Marshal(config)
-	if err != nil {
-		return err
-	}
-	err = os.WriteFile("sqlconfig.xml", configXml, 0644)
-	return err
-}
-
 func inputSqlInfo() bool {
+	var Sqlconfig SqlConfig
 	fmt.Println("[FeasOJ]请输入数据库连接信息：")
 	fmt.Print("数据库名：")
-	var dbName string
-	fmt.Scanln(&dbName)
+	fmt.Scanln(&Sqlconfig.DbName)
 	fmt.Print("数据库用户名：")
-	var dbUser string
-	fmt.Scanln(&dbUser)
+	fmt.Scanln(&Sqlconfig.DbUser)
 	fmt.Print("数据库密码：")
-	var dbPassword string
-	fmt.Scanln(&dbPassword)
+	fmt.Scanln(&Sqlconfig.DbPassword)
 	fmt.Print("数据库地址（加上端口）：")
-	var dbAddress string
-	fmt.Scanln(&dbAddress)
+	fmt.Scanln(&Sqlconfig.DbAddress)
 	fmt.Println("[FeasOJ]正在保存数据库连接信息...")
 	// 将连接信息作为xml保存到目录
-	err := writeConfig(dbName, dbUser, dbPassword, dbAddress)
+	configXml, err := xml.Marshal(Sqlconfig)
 	if err != nil {
-		fmt.Println("[FeasOJ]保存失败，请检查权限。")
 		return false
 	}
+	os.WriteFile("sqlconfig.xml", configXml, 0644)
 	return true
 }
 
 func initAdminAccount() {
 	if selectAdminUser(1) {
-		fmt.Println("[FeasOJ]管理员已存在，退出创建。")
 		return
 	}
 
@@ -113,16 +93,12 @@ func loadConfig() string {
 		return ""
 	}
 	defer configFile.Close()
-	var config Config
-	err = xml.NewDecoder(configFile).Decode(&config)
+	var SqlConfig SqlConfig
+	err = xml.NewDecoder(configFile).Decode(&SqlConfig)
 	if err != nil {
 		return ""
 	}
-	dbName := config.DbName
-	dbUser := config.DbUser
-	dbPassword := config.DbPassword
-	dbAddress := config.DbAddress
-	dsn := dbUser + ":" + dbPassword + "@tcp(" + dbAddress + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := SqlConfig.DbUser + ":" + SqlConfig.DbPassword + "@tcp(" + SqlConfig.DbAddress + ")/" + SqlConfig.DbName + "?charset=utf8mb4&parseTime=True&loc=Local"
 	return dsn
 }
 
@@ -133,13 +109,11 @@ func initSql() bool {
 		inputSqlInfo()
 	}
 	dsn := loadConfig()
-	fmt.Println("[FeasOJ]连接数据库中...")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
 	fmt.Println("[FeasOJ]数据库连接成功。")
-	fmt.Println("[FeasOJ]创建数据表中...")
 	db.AutoMigrate(&User{}, &Problem{})
 	fmt.Println("[FeasOJ]创建数据表成功。")
 	initAdminAccount()

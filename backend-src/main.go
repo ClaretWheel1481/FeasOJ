@@ -85,7 +85,14 @@ func main() {
 
 		// 注册API
 		router.GET("/register", func(c *gin.Context) {
-			// TODO：注册功能待实现
+			// TODO:注册功能待实现
+		})
+
+		// 获取验证码API
+		router.GET("/getCaptcha", func(c *gin.Context) {
+			// TODO: 获取验证码后将验证码存入Redis，用邮箱做Key，验证码做Value等候校验
+			// verifyCode := generateVerifycode()
+
 		})
 	}
 
