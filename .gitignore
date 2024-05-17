@@ -24,3 +24,4 @@ backend-src/main
 backend-src/go.sum
 backend-src/sqlconfig.xml
 backend-src/emailconfig.xml
+backend-src/redisconfig.xml

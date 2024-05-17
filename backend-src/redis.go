@@ -10,7 +10,6 @@ import (
 
 type redisConfig struct {
 	Address  string `xml:"address"`
-	User     string `xml:"user"`
 	Password string `xml:"password"`
 }
 
@@ -19,8 +18,6 @@ func inputRedisInfo() bool {
 	var config redisConfig
 	fmt.Print("请输入Redis地址：")
 	fmt.Scanln(&config.Address)
-	fmt.Print("请输入Redis用户名(没有的话请直接回车)：")
-	fmt.Scanln(&config.User)
 	fmt.Print("请输入Redis密码：")
 	fmt.Scanln(&config.Password)
 	configXml, err := xml.Marshal(config)
@@ -31,17 +28,27 @@ func inputRedisInfo() bool {
 	return true
 }
 
-// TODO：读取redisconfig.xml
-// func loadRedisConfig() string {
-
-// }
+func loadRedisConfig() redisConfig {
+	var config redisConfig
+	configXml, err := os.ReadFile("redisconfig.xml")
+	if err != nil {
+		return config
+	}
+	xml.Unmarshal(configXml, &config)
+	return config
+}
 
 // TODO：连接到Redis
 func initRedis() bool {
+	if _, err := os.Stat("redisconfig.xml"); os.IsNotExist(err) {
+		inputRedisInfo()
+	}
+	// config := loadRedisConfig()
 	// rdb := redis.NewClient(&redis.Options{
-	// 	Addr:     "localhost:6379",
-	// 	Password: "", // no password set
-	// 	DB:       0,  // use default DB
+	// 	Addr:     config.Address,
+	// 	Password: config.Password,
+	// 	DB:       0,
 	// })
+	fmt.Println("[FeasOJ]Redis连接成功。")
 	return true
 }

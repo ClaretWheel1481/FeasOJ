@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -10,16 +9,14 @@ import (
 
 // TODO:消息队列RabbitMQ待实现
 
-// TODO:用户Token生成后返回给前端
+// 用户Token生成后返回给前端
 func GenerateToken(username string) string {
 	token := jwt.New(jwt.SigningMethodHS256)
 	// 设置Token的Claims
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
-	// 设置Token过期时间为30天
-	claims["exp"] = time.Now().Add(time.Hour * 24 * 30).Unix()
 	// 生成Token
-	tokenString, err := token.SignedString([]byte("secret"))
+	tokenString, err := token.SignedString([]byte(selectTokenSecret(username)))
 	if err != nil {
 		fmt.Println("生成Token失败：", err)
 		return ""
@@ -27,30 +24,34 @@ func GenerateToken(username string) string {
 	return tokenString
 }
 
-// TODO:校验Token，返回结果给前端，若不正确，前端退出登录
-func VerifyToken(tokenString string) string {
+// 校验Token
+func VerifyToken(tokenString string) bool {
+	// 解析Token
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// 验证签名
+		// 验证签名方法
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		// 返回用于验证签名的密钥
-		return []byte("secret"), nil
+		// 返回签名密钥
+		return []byte(selectTokenSecret(token.Claims.(jwt.MapClaims)["username"].(string))), nil
+
 	})
+	// 验证Token
 	if err != nil {
-		return ""
+		fmt.Println("Token验证失败：", err)
+		return false
 	}
-	// 验证Token的有效性
-	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		// 获取用户名
-		username := claims["username"].(string)
-		return username
+	// 验证Token是否有效
+	if !token.Valid {
+		fmt.Println("Token无效")
+		return false
 	}
-	return ""
+	return true
 }
 
 func main() {
-	if initSql() {
+	// TODO:多线程运行待实现
+	if initSql() && initRedis() {
 		fmt.Println("[FeasOJ]数据库初始化完毕！")
 	} else {
 		fmt.Println("[FeasOJ]数据库初始化失败，请确认数据库连接是否正确！")
@@ -98,5 +99,6 @@ func main() {
 
 	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
+	// fmt.Println(VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIn0.x1q-3KM2EDlkn7XUmrQ42p83bOV2EFLWMBEF4IHubCY"))
 	r.Run("0.0.0.0:37881")
 }

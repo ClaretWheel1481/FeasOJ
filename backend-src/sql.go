@@ -6,6 +6,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -30,6 +31,7 @@ type User struct {
 	SubmitHistory string    `gorm:"comment:提交记录"`
 	CreateAt      time.Time `gorm:"comment:创建时间;not null"`
 	Role          int       `gorm:"comment:角色;not null"` // 0: 普通用户, 1: 管理员
+	TokenSecret   string    `gorm:"comment:token密钥;not null"`
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
@@ -83,10 +85,12 @@ func initAdminAccount() {
 	fmt.Scanln(&adminPassword)
 	fmt.Print("[FeasOJ]请输入管理员邮箱:")
 	fmt.Scanln(&adminEmail)
-	register(adminUsername, encryptPassword(adminPassword), adminEmail, 1)
+
+	tokensecret := uuid.New().String()
+	register(adminUsername, encryptPassword(adminPassword), adminEmail, tokensecret, 1)
 }
 
-func loadConfig() string {
+func loadSqlConfig() string {
 	// 读取config.xml文件
 	configFile, err := os.Open("sqlconfig.xml")
 	if err != nil {
@@ -108,27 +112,26 @@ func initSql() bool {
 	if _, err := os.Stat("sqlconfig.xml"); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	dsn := loadConfig()
+	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
-	fmt.Println("[FeasOJ]数据库连接成功。")
+	fmt.Println("[FeasOJ]MySQL连接成功。")
 	db.AutoMigrate(&User{}, &Problem{})
-	fmt.Println("[FeasOJ]创建数据表成功。")
 	initAdminAccount()
 	return true
 }
 
 // 注册用户添加至数据库
-func register(username, password, email string, role int) bool {
-	dsn := loadConfig()
+func register(username, password, email, tokensecret string, role int) bool {
+	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
 	time := time.Now()
-	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time, Role: role}).Error
+	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
 	if err != nil {
 		fmt.Println("[FeasOJ]添加用户失败，请检查用户名是否重复。")
 		return false
@@ -140,7 +143,7 @@ func register(username, password, email string, role int) bool {
 // 查询管理员用户
 func selectAdminUser(role int) bool {
 	// role = 1表示管理员
-	dsn := loadConfig()
+	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
@@ -154,7 +157,7 @@ func selectAdminUser(role int) bool {
 // 查询指定用户的password值
 func selectPassword(username string) string {
 	// 查询用户
-	dsn := loadConfig()
+	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
@@ -162,4 +165,17 @@ func selectPassword(username string) string {
 	var user User
 	db.Where("username = ?", username).First(&user)
 	return user.Password
+}
+
+// 查询指定用户的tokensecret
+func selectTokenSecret(username string) string {
+	// 查询用户
+	dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	var user User
+	db.Where("username = ?", username).First(&user)
+	return user.TokenSecret
 }
