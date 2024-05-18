@@ -30,7 +30,7 @@ func VerifyToken(tokenString string) bool {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// 验证签名方法
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		// 返回签名密钥
 		return []byte(selectTokenSecret(token.Claims.(jwt.MapClaims)["username"].(string))), nil
@@ -101,6 +101,12 @@ func main() {
 
 	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
+	// 测试用户Token校验代码
 	// fmt.Println(VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIn0.x1q-3KM2EDlkn7XUmrQ42p83bOV2EFLWMBEF4IHubCY"))
+	// 测试用户验证码Redis校验
+	// fmt.Println(sendVerifycode(initEmailConfig(), "claretwheel1482@gmail.com", generateVerifycode()))
+	// var fec string
+	// fmt.Scanln(&fec)
+	// fmt.Println(compareVerifyCode(fec, "claretwheel1482@gmail.com"))
 	r.Run("0.0.0.0:37881")
 }

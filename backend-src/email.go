@@ -70,7 +70,7 @@ func sendVerifycode(config mailConfig, to string, verifycode string) error {
 	if err := d.DialAndSend(m); err != nil {
 		return err
 	}
-	// TODO:将验证码同时存进Redis中等待校验 //待确认是否成功
+	// 将验证码同时存进Redis中等待校验
 	rdb := initRedis()
 	err := rdb.Set(to, verifycode, 5*time.Minute).Err()
 	if err != nil {
@@ -79,7 +79,7 @@ func sendVerifycode(config mailConfig, to string, verifycode string) error {
 	return nil
 }
 
-// TODO:检验Redis中验证码与前端返回的是否相同
+// 检验Redis中验证码与前端返回的是否相同
 func compareVerifyCode(frontendCode, to string) bool {
 	// 通过邮箱来获取Redis中的验证码
 	rdb := initRedis()
@@ -87,5 +87,10 @@ func compareVerifyCode(frontendCode, to string) bool {
 	if err != nil {
 		return false
 	}
-	return verifyCode == frontendCode
+	if verifyCode == frontendCode {
+		// 移除Redis中的验证码
+		rdb.Del(to)
+		return true
+	}
+	return false
 }
