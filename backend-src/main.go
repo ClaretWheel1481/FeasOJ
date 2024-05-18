@@ -51,12 +51,14 @@ func VerifyToken(tokenString string) bool {
 
 func main() {
 	// TODO:多线程运行待实现
-	if initSql() && initRedis() {
-		fmt.Println("[FeasOJ]数据库初始化完毕！")
+	if initSql() {
+		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
-		fmt.Println("[FeasOJ]数据库初始化失败，请确认数据库连接是否正确！")
+		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
+	rdb := initRedis()
+	fmt.Println("[FeasOJ]Redis连接信息为：", rdb)
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()

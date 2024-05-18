@@ -4,6 +4,8 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+
+	"github.com/go-redis/redis"
 )
 
 // TODO:连接Redis数据库，用于存储临时的邮箱验证码
@@ -38,17 +40,16 @@ func loadRedisConfig() redisConfig {
 	return config
 }
 
-// TODO：连接到Redis
-func initRedis() bool {
+// 连接到Redis
+func initRedis() *redis.Client {
 	if _, err := os.Stat("redisconfig.xml"); os.IsNotExist(err) {
 		inputRedisInfo()
 	}
-	// config := loadRedisConfig()
-	// rdb := redis.NewClient(&redis.Options{
-	// 	Addr:     config.Address,
-	// 	Password: config.Password,
-	// 	DB:       0,
-	// })
-	fmt.Println("[FeasOJ]Redis连接成功。")
-	return true
+	config := loadRedisConfig()
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     config.Address,
+		Password: config.Password,
+		DB:       0,
+	})
+	return rdb
 }

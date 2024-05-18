@@ -41,9 +41,9 @@ func inputMailConfig() {
 	var password string
 	fmt.Print("[FeasOJ]请输入Smtp服务器地址:")
 	fmt.Scanln(&hosts)
-	fmt.Print("[FeasOJ]请输入发件人邮箱地址（如114514@qq.com）:")
+	fmt.Print("[FeasOJ]请输入发件人邮箱地址(如114514@qq.com):")
 	fmt.Scanln(&users)
-	fmt.Print("[FeasOJ]请输入邮箱密码（不一定是登录密码）:")
+	fmt.Print("[FeasOJ]请输入邮箱密码(不一定是登录密码):")
 	fmt.Scanln(&password)
 
 	// 写入配置到emailconfig.xml文件中
@@ -70,10 +70,24 @@ func sendVerifycode(config mailConfig, to string, verifycode string) error {
 	if err := d.DialAndSend(m); err != nil {
 		return err
 	}
+	// TODO:将验证码同时存进Redis中等待校验 //待确认是否成功
+	rdb := initRedis()
+	err := rdb.Set(to, verifycode, 5*time.Minute).Err()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-// 检验验证码是否正确
-func compareVerifyCode(frontendCode, backendCode string) bool {
-	return frontendCode == backendCode
+// TODO:检验Redis中验证码与前端返回的是否相同
+func compareVerifyCode(frontendCode, to string) bool {
+	// 通过邮箱来获取Redis中的验证码
+	rdb := initRedis()
+	verifyCode, err := rdb.Get(to).Result()
+	if err != nil {
+		return false
+	}
+	if verifyCode == frontendCode {
+		return true
+	}
 }
