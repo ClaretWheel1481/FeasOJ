@@ -1,7 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted,reactive } from 'vue';
 import { Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Button as TinyButton } from '@opentiny/vue'
-import { reactive } from 'vue';
 import { Card as TinyCard,Row as TinyRow } from '@opentiny/vue'
 
 const ruleFormRef = ref()
@@ -75,8 +74,8 @@ function handleSubmit() {
                     <tiny-form-item label="验证码" prop="emailcode" style="margin-left: 80px;">
                         <tiny-input v-model="emailcode"></tiny-input>
                     </tiny-form-item>
-                    <!-- TODO:发送验证码待处理 -->
-                    <tiny-button type="text">发送验证码</tiny-button>
+                    <!-- TODO:发送验证码以及刷新后不倒计时待处理 -->
+                    <tiny-button type="text" >获取验证码</tiny-button>
                 </tiny-row>
                 <tiny-form-item label="密码" prop="password">
                     <tiny-input v-model="createData.password" type="password" show-password></tiny-input>

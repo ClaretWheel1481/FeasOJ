@@ -44,10 +44,6 @@ const dataset = ref([
               <tiny-button type="text" text="后台管理" @click="$router.push('/admin')"> </tiny-button>
             </div>
             <Divider></Divider>
-            <div style="display: block; margin-top: 20px;">
-              <tiny-button type="text" text="个人主页" @click="goToProfile"> </tiny-button>
-            </div>
-            <Divider></Divider>
           </div>
           </tiny-drawer>
       </template>
