@@ -50,7 +50,6 @@ func VerifyToken(tokenString string) bool {
 }
 
 func main() {
-	// TODO:多线程运行待实现
 	if initSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {

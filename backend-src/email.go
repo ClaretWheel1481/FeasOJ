@@ -59,24 +59,24 @@ func generateVerifycode() string {
 }
 
 // 发送验证码
-func sendVerifycode(config mailConfig, to string, verifycode string) error {
+func sendVerifycode(config mailConfig, to string, verifycode string) string {
 	m := gomail.NewMessage()
-	m.SetHeader("From", config.User)
+	m.SetAddressHeader("From", config.User, "FeasOJ")
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", "FeasOJ验证码")
 	m.SetBody("text/plain", "您的验证码是："+verifycode+"，5分钟后失效。")
 	d := gomail.NewDialer(config.Host, config.Port, config.User, config.Pass)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err := d.DialAndSend(m); err != nil {
-		return err
+		return err.Error()
 	}
 	// 将验证码同时存进Redis中等待校验
 	rdb := initRedis()
 	err := rdb.Set(to, verifycode, 5*time.Minute).Err()
 	if err != nil {
-		return err
+		return err.Error()
 	}
-	return nil
+	return "Success"
 }
 
 // 检验Redis中验证码与前端返回的是否相同
