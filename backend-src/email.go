@@ -87,8 +87,5 @@ func compareVerifyCode(frontendCode, to string) bool {
 	if err != nil {
 		return false
 	}
-	if verifyCode == frontendCode {
-		return true
-	}
-	return true
+	return verifyCode == frontendCode
 }
