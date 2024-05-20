@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
-// TODO:消息队列RabbitMQ待实现
+// TODO:消息队列待实现
 
 // 用户Token生成后返回给前端
 func GenerateToken(username string) string {
@@ -58,7 +58,8 @@ var configsDir string
 func main() {
 	currentDir, err := os.Getwd()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("[FeasOJ]获取目录失败，即将退出。")
+		return
 	}
 	parentDir = filepath.Dir(currentDir)
 	configsDir = filepath.Join(parentDir, "configs")
@@ -69,7 +70,7 @@ func main() {
 		return
 	}
 	rdb := initRedis()
-	fmt.Println("[FeasOJ]Redis连接信息为：", rdb)
+	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -88,12 +89,12 @@ func main() {
 				if verifyPassword(Password, userPHash) {
 					// 生成Token并返回至前端
 					token := GenerateToken(Username)
-					c.JSON(200, gin.H{"status:": 200, "token": token})
+					c.JSON(200, gin.H{"status:": 200, "message": "登录成功", "token": token})
 				} else {
-					c.JSON(401, gin.H{"status:": 401, "error": "密码错误"})
+					c.JSON(401, gin.H{"status:": 401, "message": "密码错误"})
 				}
 			} else {
-				c.JSON(401, gin.H{"status:": 401, "error": "用户不存在"})
+				c.JSON(401, gin.H{"status:": 401, "message": "用户不存在"})
 			}
 		})
 
@@ -108,20 +109,75 @@ func main() {
 			}
 		})
 
+		// 校验验证码API
+		router.GET("/verifyCaptcha", func(c *gin.Context) {
+			// 获取邮箱地址和验证码
+			email := c.Query("email")
+			vcode := c.Query("vcode")
+			// 校验验证码是否正确
+			if compareVerifyCode(vcode, email) {
+				c.JSON(200, gin.H{"status:": 200, "message": "验证码校验成功"})
+			} else {
+				c.JSON(400, gin.H{"status:": 400, "error": "验证码校验失败"})
+			}
+		})
+
 		// 注册API
 		router.GET("/register", func(c *gin.Context) {
-			// TODO:注册功能待实现，需要将前端注册表单数据与数据库进行交互，同时校验邮箱验证码
+			email := c.Query("email")
+			username := c.Query("username")
+			password := c.Query("password")
+			// 判断用户或邮箱是否存在
+			if isUserExist(username,email) {
+				c.JSON(400, gin.H{"status:": 400, "error": "用户已存在或邮箱已使用"})
+				return
+			}
+			tokensecret := uuid.New().String()
+			regstatus := register(username, encryptPassword(password), email, tokensecret, 0)
+			if regstatus {
+				c.JSON(200, gin.H{"status:": 200, "message": "注册成功"})
+			} else {
+				c.JSON(400, gin.H{"status:": 400, "error": "注册失败"})
+			}
 		})
 
 		// 获取用户信息API
 		router.GET("/getUserInfo", func(c *gin.Context) {
-			// TODO:返回至前端以显示个人资料
+			// 返回至前端以显示个人资料
+			uid := c.Query("uid")
+			// 根据uid来查询对应的用户信息
+			userInfo := selectUserInfo(uid)
+			c.JSON(200, gin.H{"status:": 200, "Info": userInfo})
+		})
+
+		// 密码修改API
+		router.GET("/updatePassword", func(c *gin.Context) {
+			// 获取账号以及新密码
+		    username := c.Query("username")
+			newpassword := c.Query("newpassword")
+			// 获取邮箱地址和验证码
+			email := c.Query("email")
+			vcode := c.Query("vcode")
+			if compareVerifyCode(vcode, email) && updatePassword(username, newpassword){
+				c.JSON(200, gin.H{"status:": 200, "message": "密码修改成功"})
+			}else{
+				c.JSON(400, gin.H{"status:": 400, "error": "密码修改失败"})
+			}
+		})
+
+		// 更新用户信息（非修改密码）API
+		router.GET("/updateUserInfo", func(c *gin.Context) {
+			// TODO:更新用户信息功能待实现
+		})
+
+		// 获取总提交记录API
+		router.GET("/getAllSubmitRecords", func(c *gin.Context) {
+			submitrecords := selectAllSubmitRecords()
+			c.JSON(200, gin.H{"submitrecords": submitrecords})
 		})
 	}
 
 	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
-	// 测试用户Token校验代码
-	// fmt.Println(VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIn0.x1q-3KM2EDlkn7XUmrQ42p83bOV2EFLWMBEF4IHubCY"))
 	r.Run("0.0.0.0:37881")
 }

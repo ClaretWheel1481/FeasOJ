@@ -24,12 +24,11 @@ type SqlConfig struct {
 // 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid           int       `gorm:"comment:Uid;primaryKey;autoIncrement"`
-	Avartar       string    `gorm:"comment:头像存放路径"`
+	Avatar        string    `gorm:"comment:头像存放路径"`
 	Username      string    `gorm:"comment:用户名;not null;unique"`
 	Password      string    `gorm:"comment:密码;not null"`
 	Email         string    `gorm:"comment:电子邮件;not null"`
 	Synopsis      string    `gorm:"comment:简介"`
-	SubmitHistory string    `gorm:"comment:提交记录"`
 	Score         int       `gorm:"comment:分数"`
 	CreateAt      time.Time `gorm:"comment:创建时间;not null"`
 	Role          int       `gorm:"comment:角色;not null"` // 0: 普通用户, 1: 管理员
@@ -42,12 +41,11 @@ type Problem struct {
 	Pid              int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
 	Title            string `gorm:"comment:题目标题;not null"`
 	Content          string `gorm:"comment:题目详细;not null"`
-	Time_limit       int    `gorm:"comment:运行时间限制;not null"`
-	Memory_limit     int    `gorm:"comment:内存大小限制;not null"`
+	Timelimit       int    `gorm:"comment:运行时间限制;not null"`
+	Memorylimit     int    `gorm:"comment:内存大小限制;not null"`
 	Input            string `gorm:"comment:输入样例;not null"`
 	Output           string `gorm:"comment:输出样例;not null"`
 	Contestid        int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
-	Submit_history   string `gorm:"comment:提交记录"`
 	Input_full_path  string `gorm:"comment:输入样例完整路径"`
 	Output_full_path string `gorm:"comment:输出样例完整路径"`
 }
@@ -202,4 +200,61 @@ func selectTokenSecret(username string) string {
 	var user User
 	db.Where("username = ?", username).First(&user)
 	return user.TokenSecret
+}
+
+// 根据uid查询指定用户的除了password和tokensecret之外的所有信息
+func selectUserInfo(uid string) User {
+	dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	var user User
+	db.Where("uid = ?", uid).First(&user)
+	user.Password = ""
+	user.TokenSecret = ""
+	return user
+}
+
+// 根据email与username判断是否该用户已存在
+func isUserExist(username,email string) bool {
+    dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	if db.Where("username = ?", username).First(&User{}).Error == nil || db.Where("email = ?", email).First(&User{}).Error == nil {
+	    return true
+	}
+	return false
+}
+
+// 根据username修改密码
+func updatePassword(username, newpassword string) bool {
+    dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+	    fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	newpassword = encryptPassword(newpassword)
+	tokensecret := uuid.New().String()
+	err = db.Model(&User{}).Where("username = ?", username).Update("password", newpassword).Update("token_secret", tokensecret).Error
+	if err != nil {
+	    fmt.Println("[FeasOJ]修改密码失败，请检查用户名是否正确。")
+	    return false
+	}
+	fmt.Println("[FeasOJ]修改密码成功。")
+	return true
+}
+
+// 返回SubmitRecord表中所有记录
+func selectAllSubmitRecords() []SubmitRecord {
+    dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+	}
+	var records []SubmitRecord
+	db.Find(&records)
+	return records
 }
