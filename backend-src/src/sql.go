@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/google/uuid"
@@ -23,7 +24,7 @@ type SqlConfig struct {
 // 用户表：uid, avartar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid           int       `gorm:"comment:Uid;primaryKey;autoIncrement"`
-	Avartar       string    `gorm:"comment:头像"`
+	Avartar       string    `gorm:"comment:头像存放路径"`
 	Username      string    `gorm:"comment:用户名;not null;unique"`
 	Password      string    `gorm:"comment:密码;not null"`
 	Email         string    `gorm:"comment:电子邮件;not null"`
@@ -37,15 +38,26 @@ type User struct {
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
 // contest为0则不属于任何比赛
 type Problem struct {
-	Pid            int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
-	Title          string `gorm:"comment:题目标题;not null"`
-	Content        string `gorm:"comment:题目详细;not null"`
-	Time_limit     int    `gorm:"comment:运行时间限制;not null"`
-	Memory_limit   int    `gorm:"comment:内存大小限制;not null"`
-	Input          string `gorm:"comment:输入样例;not null"`
-	Output         string `gorm:"comment:输出样例;not null"`
-	Contestid      int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
-	Submit_history string `gorm:"comment:提交记录"`
+	Pid              int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
+	Title            string `gorm:"comment:题目标题;not null"`
+	Content          string `gorm:"comment:题目详细;not null"`
+	Time_limit       int    `gorm:"comment:运行时间限制;not null"`
+	Memory_limit     int    `gorm:"comment:内存大小限制;not null"`
+	Input            string `gorm:"comment:输入样例;not null"`
+	Output           string `gorm:"comment:输出样例;not null"`
+	Contestid        int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
+	Submit_history   string `gorm:"comment:提交记录"`
+	Input_full_path  string `gorm:"comment:输入样例完整路径"`
+	Output_full_path string `gorm:"comment:输出样例完整路径"`
+}
+
+// 总提交记录表: Pid,Uid,Result,Time，Language
+type SubmitRecord struct {
+	Pid      int    `gorm:"comment:Pid;primaryKey"`
+	Uid      int    `gorm:"comment:Uid;not null"`
+	Result   string `gorm:"comment:结果"`
+	Time     int    `gorm:"comment:时间"`
+	Language string `gorm:"comment:语言"`
 }
 
 func inputSqlInfo() bool {
@@ -57,7 +69,7 @@ func inputSqlInfo() bool {
 	fmt.Scanln(&Sqlconfig.DbUser)
 	fmt.Print("数据库密码：")
 	fmt.Scanln(&Sqlconfig.DbPassword)
-	fmt.Print("数据库地址（加上端口）：")
+	fmt.Print("数据库地址(加上端口)：")
 	fmt.Scanln(&Sqlconfig.DbAddress)
 	fmt.Println("[FeasOJ]正在保存数据库连接信息...")
 	// 将连接信息作为xml保存到目录
@@ -65,7 +77,8 @@ func inputSqlInfo() bool {
 	if err != nil {
 		return false
 	}
-	os.WriteFile("sqlconfig.xml", configXml, 0644)
+	filePath := filepath.Join(configsDir, "sqlconfig.xml")
+	os.WriteFile(filePath, configXml, 0644)
 	return true
 }
 
@@ -73,7 +86,6 @@ func initAdminAccount() {
 	if selectAdminUser(1) {
 		return
 	}
-
 	//创建管理员
 	var adminUsername string
 	var adminPassword string
@@ -92,7 +104,8 @@ func initAdminAccount() {
 
 func loadSqlConfig() string {
 	// 读取config.xml文件
-	configFile, err := os.Open("sqlconfig.xml")
+	filePath := filepath.Join(configsDir, "sqlconfig.xml")
+	configFile, err := os.Open(filePath)
 	if err != nil {
 		return ""
 	}
@@ -108,8 +121,9 @@ func loadSqlConfig() string {
 
 // 连接数据库、创建表
 func initSql() bool {
+	filePath := filepath.Join(configsDir, "sqlconfig.xml")
 	//判断是否有config.xml文件，没有则输入
-	if _, err := os.Stat("sqlconfig.xml"); os.IsNotExist(err) {
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
 	dsn := loadSqlConfig()
@@ -117,8 +131,7 @@ func initSql() bool {
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
-	fmt.Println("[FeasOJ]MySQL连接成功。")
-	db.AutoMigrate(&User{}, &Problem{})
+	db.AutoMigrate(&User{}, &Problem{}, &SubmitRecord{})
 	initAdminAccount()
 	return true
 }

@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/go-redis/redis"
 )
@@ -26,13 +27,15 @@ func inputRedisInfo() bool {
 	if err != nil {
 		return false
 	}
-	os.WriteFile("redisconfig.xml", configXml, 0644)
+	filePath := filepath.Join(configsDir, "redisconfig.xml")
+	os.WriteFile(filePath, configXml, 0644)
 	return true
 }
 
 func loadRedisConfig() redisConfig {
+	filePath := filepath.Join(configsDir, "redisconfig.xml")
 	var config redisConfig
-	configXml, err := os.ReadFile("redisconfig.xml")
+	configXml, err := os.ReadFile(filePath)
 	if err != nil {
 		return config
 	}
@@ -42,7 +45,8 @@ func loadRedisConfig() redisConfig {
 
 // 连接到Redis
 func initRedis() *redis.Client {
-	if _, err := os.Stat("redisconfig.xml"); os.IsNotExist(err) {
+	filePath := filepath.Join(configsDir, "redisconfig.xml")
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputRedisInfo()
 	}
 	config := loadRedisConfig()

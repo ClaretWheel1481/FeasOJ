@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"time"
 
 	"gopkg.in/gomail.v2"
@@ -21,10 +22,11 @@ type mailConfig struct {
 // 从emailConfig.xml中读取邮箱配置并返回mailConfig
 func initEmailConfig() mailConfig {
 	// 判断是否有emailconfig.xml文件
-	if _, err := os.Stat("emailconfig.xml"); os.IsNotExist(err) {
+	filePath := filepath.Join(configsDir, "emailconfig.xml")
+	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputMailConfig()
 	}
-	configFile, err := os.Open("emailconfig.xml")
+	configFile, err := os.Open(filePath)
 	if err != nil {
 		return mailConfig{}
 	}
@@ -48,7 +50,8 @@ func inputMailConfig() {
 
 	// 写入配置到emailconfig.xml文件中
 	config := mailConfig{Host: hosts, Port: 465, User: users, Pass: password}
-	configFile, _ := os.Create("emailconfig.xml")
+	filePath := filepath.Join(configsDir, "emailconfig.xml")
+	configFile, _ := os.Create(filePath)
 	defer configFile.Close()
 	xml.NewEncoder(configFile).Encode(config)
 }

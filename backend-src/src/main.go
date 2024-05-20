@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -49,7 +52,16 @@ func VerifyToken(tokenString string) bool {
 	return true
 }
 
+var parentDir string
+var configsDir string
+
 func main() {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(err)
+	}
+	parentDir = filepath.Dir(currentDir)
+	configsDir = filepath.Join(parentDir, "configs")
 	if initSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
@@ -85,16 +97,25 @@ func main() {
 			}
 		})
 
-		// 注册API
-		router.GET("/register", func(c *gin.Context) {
-			// TODO:注册功能待实现
-		})
-
 		// 获取验证码API
 		router.GET("/getCaptcha", func(c *gin.Context) {
-			// TODO: 获取验证码后将验证码存入Redis，用邮箱做Key，验证码做Value等候校验
-			// verifyCode := generateVerifycode()
+			// 获取邮箱地址
+			email := c.Query("email")
+			if sendVerifycode(initEmailConfig(), email, generateVerifycode()) == "Success" {
+				c.JSON(200, gin.H{"status:": 200, "message": "验证码发送成功"})
+			} else {
+				c.JSON(400, gin.H{"status:": 400, "error": "验证码发送失败"})
+			}
+		})
 
+		// 注册API
+		router.GET("/register", func(c *gin.Context) {
+			// TODO:注册功能待实现，需要将前端注册表单数据与数据库进行交互，同时校验邮箱验证码
+		})
+
+		// 获取用户信息API
+		router.GET("/getUserInfo", func(c *gin.Context) {
+			// TODO:返回至前端以显示个人资料
 		})
 	}
 
@@ -102,10 +123,5 @@ func main() {
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 	// 测试用户Token校验代码
 	// fmt.Println(VerifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkFkbWluIn0.x1q-3KM2EDlkn7XUmrQ42p83bOV2EFLWMBEF4IHubCY"))
-	// 测试用户验证码Redis校验
-	// fmt.Println(sendVerifycode(initEmailConfig(), "claretwheel1482@gmail.com", generateVerifycode()))
-	// var fec string
-	// fmt.Scanln(&fec)
-	// fmt.Println(compareVerifyCode(fec, "claretwheel1482@gmail.com"))
 	r.Run("0.0.0.0:37881")
 }
