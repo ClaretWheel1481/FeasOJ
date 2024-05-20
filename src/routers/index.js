@@ -70,6 +70,12 @@ const routes = [
             title: 'FeasOJ - 忘记密码'
         }
     },
+    {
+        path: '/status', component: () => import('../pages/StatusPage.vue'),
+        meta: {
+            title: 'FeasOJ - 状态'
+        }
+    }
 ];
 
 const router = createRouter({

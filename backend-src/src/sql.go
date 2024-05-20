@@ -30,6 +30,7 @@ type User struct {
 	Email         string    `gorm:"comment:电子邮件;not null"`
 	Synopsis      string    `gorm:"comment:简介"`
 	SubmitHistory string    `gorm:"comment:提交记录"`
+	Score         int       `gorm:"comment:分数"`
 	CreateAt      time.Time `gorm:"comment:创建时间;not null"`
 	Role          int       `gorm:"comment:角色;not null"` // 0: 普通用户, 1: 管理员
 	TokenSecret   string    `gorm:"comment:token密钥;not null"`
@@ -58,6 +59,16 @@ type SubmitRecord struct {
 	Result   string `gorm:"comment:结果"`
 	Time     int    `gorm:"comment:时间"`
 	Language string `gorm:"comment:语言"`
+}
+
+// 竞赛表: Contestid, Title, Start_time, End_time, Description, Pid
+type Contest struct {
+	Contestid   int    `gorm:"comment:Contestid;primaryKey;autoIncrement"`
+	Title       string `gorm:"comment:竞赛标题"`
+	Start_time  string `gorm:"comment:开始时间"`
+	End_time    string `gorm:"comment:结束时间"`
+	Description string `gorm:"comment:竞赛描述"`
+	Pid         int    `gorm:"comment:题目"`
 }
 
 func inputSqlInfo() bool {
@@ -131,7 +142,7 @@ func initSql() bool {
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
-	db.AutoMigrate(&User{}, &Problem{}, &SubmitRecord{})
+	db.AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{})
 	initAdminAccount()
 	return true
 }
