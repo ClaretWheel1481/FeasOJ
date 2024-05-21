@@ -13,7 +13,8 @@ const routes = [
         path: '/about', 
         component: () => import('../pages/AboutPage.vue'),
         meta: {
-            title: 'FeasOJ - 关于'
+            title: 'FeasOJ - 关于',
+            transition: 'slide-left'
         }
     },
     { 
@@ -58,7 +59,6 @@ const routes = [
             title: 'Problem'
         },
         beforeEnter: (to, from, next) => {
-            // 动态设置title
             to.meta.title = 'Problem ' + to.params.Pid;
             next();
         }
@@ -67,8 +67,18 @@ const routes = [
         path: '/admin', 
         component: () => import('../pages/BackendManagementPage.vue'),
         meta: {
-            title: 'FeasOJ - 后台管理'
-        }
+            title: 'FeasOJ - 后台管理',
+            hideComponent: true
+        },
+        children: [
+            {
+                path: 'accounts',
+                component: () => import('../pages/AccountManagementPage.vue'),
+                meta: {
+                    title: 'FeasOJ - 用户管理',
+                }
+            }
+        ]
     },
     { 
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
@@ -81,7 +91,7 @@ const routes = [
         meta: {
             title: 'FeasOJ - 状态'
         }
-    }
+    },
 ];
 
 const router = createRouter({
@@ -90,7 +100,6 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-    // 使用nextTick确保在DOM更新后再获取document.title
     nextTick(() => {
       document.title = to.meta.title || 'FeasOJ';
     });

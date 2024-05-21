@@ -32,7 +32,7 @@ const dataset = ref([
 
 <template>
   <div class="preview">
-    <tiny-nav-menu :data="dataset">
+    <tiny-nav-menu :data="dataset" router :default-active="$route.path">
       <template #toolbar >
           <router-link to="/login">
             <tiny-icon-administrator class="icons-nav" ></tiny-icon-administrator>

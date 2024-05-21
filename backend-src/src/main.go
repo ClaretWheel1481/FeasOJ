@@ -63,6 +63,11 @@ func main() {
 	}
 	parentDir = filepath.Dir(currentDir)
 	configsDir = filepath.Join(parentDir, "configs")
+	// 如果没找到configs，则创建configs文件夹
+	if _, err := os.Stat(configsDir); os.IsNotExist(err) {
+		os.Mkdir(configsDir, 0755)
+	}
+
 	if initSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
@@ -71,6 +76,8 @@ func main() {
 	}
 	rdb := initRedis()
 	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
+	mcfg := initEmailConfig()
+	fmt.Println("[FeasOJ]邮箱配置信息为:", mcfg)
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -128,7 +135,7 @@ func main() {
 			username := c.Query("username")
 			password := c.Query("password")
 			// 判断用户或邮箱是否存在
-			if isUserExist(username,email) {
+			if isUserExist(username, email) {
 				c.JSON(400, gin.H{"status:": 400, "error": "用户已存在或邮箱已使用"})
 				return
 			}
@@ -157,9 +164,9 @@ func main() {
 			// 获取邮箱地址和验证码
 			email := c.Query("email")
 			vcode := c.Query("vcode")
-			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword){
+			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword) {
 				c.JSON(200, gin.H{"status:": 200, "message": "密码修改成功"})
-			}else{
+			} else {
 				c.JSON(400, gin.H{"status:": 400, "error": "密码修改失败"})
 			}
 		})

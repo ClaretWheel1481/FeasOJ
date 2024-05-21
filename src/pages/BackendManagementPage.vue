@@ -7,6 +7,7 @@ const adminData = ref([
   {
     id: 100,
     label: '用户管理',
+    url: '/admin/accounts'
   },
   {
     id: 200,
@@ -30,5 +31,16 @@ const adminData = ref([
 </script>
 
 <template>
-    <tiny-tree-menu :data="adminData"></tiny-tree-menu>
+      <tiny-tree-menu :data="adminData" :router="true" :default-active="$route.path"></tiny-tree-menu>
+      <router-view class="content"></router-view>
 </template>
+
+<style>
+.container {
+  position: relative; /* 设置容器为相对定位 */
+}
+.content {
+  position: absolute;
+  right: 0;
+}
+</style>
