@@ -7,7 +7,7 @@ const routes = [
         component: () => import('../pages/MainPage.vue'),
         meta: {
             title: 'FeasOJ - 首页'
-        }
+        },
     }, 
     { 
         path: '/about', 
@@ -63,22 +63,13 @@ const routes = [
             next();
         }
     },
-    { 
-        path: '/admin', 
-        component: () => import('../pages/BackendManagementPage.vue'),
+    {
+        path: '/accounts',
+        component: () => import('../pages/AccountManagementPage.vue'),
         meta: {
-            title: 'FeasOJ - 后台管理',
+            title: 'FeasOJ - 用户管理',
             hideComponent: true
-        },
-        children: [
-            {
-                path: 'accounts',
-                component: () => import('../pages/AccountManagementPage.vue'),
-                meta: {
-                    title: 'FeasOJ - 用户管理',
-                }
-            }
-        ]
+        }
     },
     { 
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
@@ -92,6 +83,13 @@ const routes = [
             title: 'FeasOJ - 状态'
         }
     },
+    {
+        path: '/psmanagement', component: () => import('../pages/ProblemsetManagementPage.vue'),
+        meta: {
+            title: 'FeasOJ - 题库管理',
+            hideComponent: true
+        }
+    }
 ];
 
 const router = createRouter({

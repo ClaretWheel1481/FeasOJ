@@ -13,22 +13,6 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 限制公告栏长度为屏幕70% */
-.restrictmaincomponents {
-  min-width: 70%;
-  max-width: 70%;
-}
-
-.input .tiny-input {
-  width: 250px;
-}
-
-.parent{
-  display: flex;
-  margin: 15px;
-  justify-content: center;
-}
-
 body {
   margin: 0px !important;
 }
