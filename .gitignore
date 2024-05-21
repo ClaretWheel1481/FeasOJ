@@ -20,6 +20,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend-src/main
-backend-src/src/go.sum
-backend-src/configs
+backend-src
