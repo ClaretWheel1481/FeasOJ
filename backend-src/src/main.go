@@ -144,21 +144,20 @@ func main() {
 		// 获取用户信息API
 		router.GET("/getUserInfo", func(c *gin.Context) {
 			// 返回至前端以显示个人资料
-			uid := c.Query("uid")
+			username := c.Query("username")
 			// 根据uid来查询对应的用户信息
-			userInfo := selectUserInfo(uid)
+			userInfo := selectUserInfo(username)
 			c.JSON(200, gin.H{"status:": 200, "Info": userInfo})
 		})
 
 		// 密码修改API
 		router.GET("/updatePassword", func(c *gin.Context) {
 			// 获取账号以及新密码
-		    username := c.Query("username")
 			newpassword := c.Query("newpassword")
 			// 获取邮箱地址和验证码
 			email := c.Query("email")
 			vcode := c.Query("vcode")
-			if compareVerifyCode(vcode, email) && updatePassword(username, newpassword){
+			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword){
 				c.JSON(200, gin.H{"status:": 200, "message": "密码修改成功"})
 			}else{
 				c.JSON(400, gin.H{"status:": 400, "error": "密码修改失败"})

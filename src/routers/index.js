@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { nextTick } from 'vue';
 
 const routes = [
     { 
@@ -51,10 +52,15 @@ const routes = [
         }
     },
     { 
-        path: '/problem/:id', 
+        path: '/problem/:Pid', 
         component: () => import('../pages/ProblemInfoPage.vue'),
         meta: {
-            title: 'Problem :id'
+            title: 'Problem'
+        },
+        beforeEnter: (to, from, next) => {
+            // 动态设置title
+            to.meta.title = 'Problem ' + to.params.Pid;
+            next();
         }
     },
     { 
@@ -83,4 +89,11 @@ const router = createRouter({
     routes, 
 });
 
+router.afterEach((to) => {
+    // 使用nextTick确保在DOM更新后再获取document.title
+    nextTick(() => {
+      document.title = to.meta.title || 'FeasOJ';
+    });
+  });
+  
 export default router;

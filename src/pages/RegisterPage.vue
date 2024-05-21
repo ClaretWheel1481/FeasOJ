@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted,reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import { Form as TinyForm, FormItem as TinyFormItem, Input as TinyInput, Button as TinyButton } from '@opentiny/vue'
 import { Card as TinyCard,Row as TinyRow } from '@opentiny/vue'
 
@@ -63,7 +63,7 @@ function handleSubmit() {
     <h1>注册</h1>
     <div class="parent">
         <tiny-card size="large">
-            <tiny-form ref="ruleFormRef" :label-align="true" label-position="right" label-width=80px :inline="true" :model="createData" :rules="rules" :validate-on-rule-change="isValidate" validate-type="text" class="input">
+            <tiny-form ref="ruleFormRef" :label-align="true" label-position="right" label-width=80px :inline="true" :model="createData" :rules="rules" :validate-on-rule-change="isValidate" validate-position="right" class="input">
                 <tiny-form-item label="用户名" prop="username">
                     <tiny-input v-model="createData.username"></tiny-input>
                 </tiny-form-item>

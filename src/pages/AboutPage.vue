@@ -7,7 +7,7 @@ function opengithub(){
 <template>
     <div>
         <h1>关于</h1>
-        <p>反馈问题？前往Github!</p>
+        <p>反馈问题或想加入开发？前往Github!</p>
     </div>
     <div class="parent">
         <div class="githublogo" @click="opengithub"></div>

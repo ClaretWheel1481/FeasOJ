@@ -176,7 +176,7 @@ func selectAdminUser(role int) bool {
 	return err == nil
 }
 
-// 查询指定用户的password值
+// 查询指定用户的password加密值
 func selectPassword(username string) string {
 	// 查询用户
 	dsn := loadSqlConfig()
@@ -203,14 +203,14 @@ func selectTokenSecret(username string) string {
 }
 
 // 根据uid查询指定用户的除了password和tokensecret之外的所有信息
-func selectUserInfo(uid string) User {
+func selectUserInfo(username string) User {
 	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 	}
 	var user User
-	db.Where("uid = ?", uid).First(&user)
+	db.Where("username = ?", username).First(&user)
 	user.Password = ""
 	user.TokenSecret = ""
 	return user
@@ -229,8 +229,8 @@ func isUserExist(username,email string) bool {
 	return false
 }
 
-// 根据username修改密码
-func updatePassword(username, newpassword string) bool {
+// 根据email修改密码
+func updatePassword(email, newpassword string) bool {
     dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -238,7 +238,7 @@ func updatePassword(username, newpassword string) bool {
 	}
 	newpassword = encryptPassword(newpassword)
 	tokensecret := uuid.New().String()
-	err = db.Model(&User{}).Where("username = ?", username).Update("password", newpassword).Update("token_secret", tokensecret).Error
+	err = db.Model(&User{}).Where("email = ?", email).Update("password", newpassword).Update("token_secret", tokensecret).Error
 	if err != nil {
 	    fmt.Println("[FeasOJ]修改密码失败，请检查用户名是否正确。")
 	    return false

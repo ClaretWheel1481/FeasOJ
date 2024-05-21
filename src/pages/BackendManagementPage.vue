@@ -11,23 +11,17 @@ const adminData = ref([
   {
     id: 200,
     label: '题目管理',
-    children: [
-        {
-            id: 200201,
-            label: '题目上传'
-        },
-        {
-            id: 200202,
-            label: '题目列表'
-        }
-    ]
   },
   {
     id: 300,
-    label: '更新日志'
+    label: '竞赛管理',
   },
   {
     id: 400,
+    label: '更新日志'
+  },
+  {
+    id: 500,
     label: '返回主页',
     url: '/'
   }

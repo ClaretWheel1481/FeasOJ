@@ -36,7 +36,7 @@ function getData({ page }) {
     </div>
     <div class="parent">
         <div class="restrictmaincomponents">
-            <tiny-grid :fetch-data="fetchData" seq-serial :pager="pagerConfig" min-height="800" align="center" height="20">
+            <tiny-grid :resizable="false" :fetch-data="fetchData" seq-serial :pager="pagerConfig" min-height="800" align="center" height="20">
                 <tiny-grid-column field="question" title="题目"></tiny-grid-column>
                 <tiny-grid-column field="numbers" title="通过人数" width="15%"></tiny-grid-column>
             </tiny-grid>
