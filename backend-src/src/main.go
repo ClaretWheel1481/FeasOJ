@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -78,6 +79,8 @@ func main() {
 	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
 	mcfg := initEmailConfig()
 	fmt.Println("[FeasOJ]邮箱配置信息为:", mcfg)
+	// 创建存放头像文件夹
+	initAvatarFolder()
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -89,9 +92,10 @@ func main() {
 		router.GET("/login", func(c *gin.Context) {
 			Username := c.Query("username")
 			Password := c.Query("password")
-			userExist := selectPassword(Username)
-			if userExist != "" {
-				userPHash := selectPassword(Username)
+			userPHash := selectPassword(Username)
+			if userPHash == "" {
+				c.JSON(401, gin.H{"status:": 401, "message": "用户不存在"})
+			} else {
 				// 校验密码是否正确
 				if verifyPassword(Password, userPHash) {
 					// 生成Token并返回至前端
@@ -100,8 +104,6 @@ func main() {
 				} else {
 					c.JSON(401, gin.H{"status:": 401, "message": "密码错误"})
 				}
-			} else {
-				c.JSON(401, gin.H{"status:": 401, "message": "用户不存在"})
 			}
 		})
 
@@ -173,7 +175,36 @@ func main() {
 
 		// 更新用户信息（非修改密码）API
 		router.GET("/updateUserInfo", func(c *gin.Context) {
-			// TODO:更新用户信息功能待实现
+			// TODO:更新用户信息功能待实现、等待前端修改
+		})
+
+		// 用户上传头像API
+		router.POST("/uploadAvatar", func(c *gin.Context) {
+			file, err := c.FormFile("avatar")
+			username := c.Query("username")
+			// 检查上传文件类型为png或jpg
+			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") {
+				c.JSON(400, gin.H{"status:": 400, "error": "头像文件类型错误"})
+				return
+			}
+			if err != nil {
+				c.JSON(400, gin.H{"status:": 400, "error": "头像上传失败"})
+			}
+
+			// 压缩文件并修改文件名为数据库中用户的uid，例如user_1.png/jpg
+			user := fmt.Sprintf("%d", selectUserInfo(username).Uid)
+			file.Filename = "user_" + user + file.Filename[strings.LastIndex(file.Filename, "."):]
+
+			// 存放到avatars文件夹中
+			err = c.SaveUploadedFile(file, "../avatars/"+file.Filename)
+			if err != nil {
+				c.JSON(400, gin.H{"status:": 400, "error": "头像上传失败"})
+			}
+
+			// 更新数据库中的头像地址
+			if updateAvatar(username, avatarsDir+"\\"+file.Filename) {
+				c.JSON(200, gin.H{"status:": 200, "message": "头像上传成功"})
+			}
 		})
 
 		// 获取总提交记录API

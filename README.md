@@ -14,4 +14,4 @@ The backend files are in the backend-src folder.
 2. Run `npm install -g pnpm` Install Pnpm.
 3. Run `pnpm i` Install dependencies.
 4. Run `pnpm dev` to start the front-end server.
-5. Run `cd backend-src` and `go run main.go sql.go password.go` to start the back-end server.
+5. Run `cd backend-src` and `go run main.go sql.go password.go email.go judgecore.go redis.go` to start the back-end server.
