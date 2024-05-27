@@ -9,8 +9,6 @@ import (
 	"github.com/go-redis/redis"
 )
 
-// TODO:连接Redis数据库，用于存储临时的邮箱验证码
-
 type redisConfig struct {
 	Address  string `xml:"address"`
 	Password string `xml:"password"`

@@ -127,6 +127,17 @@ func loadSqlConfig() string {
 	return dsn
 }
 
+func connectSql() *gorm.DB {
+	// 连接数据库
+	dsn := loadSqlConfig()
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+		return nil
+	}
+	return db
+}
+
 // 连接数据库、创建表
 func initSql() bool {
 	filePath := filepath.Join(configsDir, "sqlconfig.xml")
@@ -134,88 +145,48 @@ func initSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return false
-	}
-	db.AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{})
+	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{})
 	initAdminAccount()
 	return true
 }
 
 // 注册用户添加至数据库
 func register(username, password, email, tokensecret string, role int) bool {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return false
-	}
 	time := time.Now()
-	err = db.Create(&User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
-	if err != nil {
-		fmt.Println("[FeasOJ]添加用户失败，请检查用户名是否重复。")
-		return false
-	}
-	fmt.Println("[FeasOJ]添加用户成功。")
-	return true
+	err := connectSql().Create(&User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
+	return err == nil
 }
 
 // 查询管理员用户
 func selectAdminUser(role int) bool {
 	// role = 1表示管理员
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return false
-	}
 	// 查询是否有role = 1，有则返回true，否则返回false
 	var user User
-	err = db.Where("role = ?", role).First(&user).Error
+	err := connectSql().Where("role = ?", role).First(&user).Error
 	return err == nil
 }
 
 // 查询指定用户的password加密值
 func selectPassword(username string) string {
 	// 查询用户
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return ""
-	}
 	var user User
-	db.Where("username = ?", username).First(&user)
+	// 查询用户名或邮箱
+	connectSql().Where("username = ?", username).First(&user)
 	return user.Password
 }
 
 // 查询指定用户的tokensecret
 func selectTokenSecret(username string) string {
 	// 查询用户
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return ""
-	}
 	var user User
-	db.Where("username = ?", username).First(&user)
+	connectSql().Where("username = ?", username).First(&user)
 	return user.TokenSecret
 }
 
 // 根据username查询指定用户的除了password和tokensecret之外的所有信息
 func selectUserInfo(username string) User {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return User{}
-	}
 	var user User
-	db.Where("username = ?", username).First(&user)
+	connectSql().Where("username = ?", username).First(&user)
 	user.Password = ""
 	user.TokenSecret = ""
 	return user
@@ -223,13 +194,7 @@ func selectUserInfo(username string) User {
 
 // 根据email与username判断是否该用户已存在
 func isUserExist(username, email string) bool {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return false
-	}
-	if db.Where("username = ?", username).First(&User{}).Error == nil || db.Where("email = ?", email).First(&User{}).Error == nil {
+	if connectSql().Where("username = ?", username).First(&User{}).Error == nil || connectSql().Where("email = ?", email).First(&User{}).Error == nil {
 		return true
 	}
 	return false
@@ -237,47 +202,21 @@ func isUserExist(username, email string) bool {
 
 // 根据email修改密码
 func updatePassword(email, newpassword string) bool {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-	}
 	newpassword = encryptPassword(newpassword)
 	tokensecret := uuid.New().String()
-	err = db.Model(&User{}).Where("email = ?", email).Update("password", newpassword).Update("token_secret", tokensecret).Error
-	if err != nil {
-		fmt.Println("[FeasOJ]修改密码失败，请检查用户名是否正确。")
-		return false
-	}
-	fmt.Println("[FeasOJ]修改密码成功。")
-	return true
+	err := connectSql().Model(&User{}).Where("email = ?", email).Update("password", newpassword).Update("token_secret", tokensecret).Error
+	return err == nil
 }
 
 // 返回SubmitRecord表中所有记录
 func selectAllSubmitRecords() []SubmitRecord {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return []SubmitRecord{}
-	}
 	var records []SubmitRecord
-	db.Find(&records)
+	connectSql().Find(&records)
 	return records
 }
 
 // 更新数据库中用户的头像路径
 func updateAvatar(username, avatarpath string) bool {
-	dsn := loadSqlConfig()
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
-		return false
-	}
-	err = db.Model(&User{}).Where("username = ?", username).Update("avatar", avatarpath).Error
-	if err != nil {
-		fmt.Println("[FeasOJ]更新头像失败，请检查用户名是否正确。")
-		return false
-	}
-	return true
+	err := connectSql().Model(&User{}).Where("username = ?", username).Update("avatar", avatarpath).Error
+	return err == nil
 }

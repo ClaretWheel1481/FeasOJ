@@ -84,9 +84,10 @@ func main() {
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
 	//TODO:响应前端部分功能待实现
 	// 设置路由组
-	router := r.Group("/api")
+	router := r.Group("/api/v1")
 	{
 		// 登录API
 		router.GET("/login", func(c *gin.Context) {
@@ -118,24 +119,12 @@ func main() {
 			}
 		})
 
-		// 校验验证码API
-		router.GET("/verifyCaptcha", func(c *gin.Context) {
-			// 获取邮箱地址和验证码
-			email := c.Query("email")
-			vcode := c.Query("vcode")
-			// 校验验证码是否正确
-			if compareVerifyCode(vcode, email) {
-				c.JSON(200, gin.H{"status:": 200, "message": "验证码校验成功"})
-			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "验证码校验失败"})
-			}
-		})
-
 		// 注册API
 		router.GET("/register", func(c *gin.Context) {
 			email := c.Query("email")
 			username := c.Query("username")
 			password := c.Query("password")
+			vcode := c.Query("vcode")
 			// 判断用户或邮箱是否存在
 			if isUserExist(username, email) {
 				c.JSON(400, gin.H{"status:": 400, "error": "用户已存在或邮箱已使用"})
@@ -143,7 +132,7 @@ func main() {
 			}
 			tokensecret := uuid.New().String()
 			regstatus := register(username, encryptPassword(password), email, tokensecret, 0)
-			if regstatus {
+			if regstatus && compareVerifyCode(vcode, email) {
 				c.JSON(200, gin.H{"status:": 200, "message": "注册成功"})
 			} else {
 				c.JSON(400, gin.H{"status:": 400, "error": "注册失败"})
@@ -156,7 +145,12 @@ func main() {
 			username := c.Query("username")
 			// 根据uid来查询对应的用户信息
 			userInfo := selectUserInfo(username)
-			c.JSON(200, gin.H{"status:": 200, "Info": userInfo})
+			if userInfo.Username == "" {
+				c.JSON(400, gin.H{"status:": 400, "error": "用户不存在"})
+			} else {
+				c.JSON(200, gin.H{"status:": 200, "Info": userInfo})
+			}
+
 		})
 
 		// 密码修改API
@@ -183,7 +177,7 @@ func main() {
 			file, err := c.FormFile("avatar")
 			username := c.Query("username")
 			// 检查上传文件类型为png或jpg
-			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") {
+			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
 				c.JSON(400, gin.H{"status:": 400, "error": "头像文件类型错误"})
 				return
 			}
@@ -201,10 +195,20 @@ func main() {
 				c.JSON(400, gin.H{"status:": 400, "error": "头像上传失败"})
 			}
 
-			// 更新数据库中的头像地址
+			// 更新数据库中的头像路径地址
 			if updateAvatar(username, avatarsDir+"\\"+file.Filename) {
 				c.JSON(200, gin.H{"status:": 200, "message": "头像上传成功"})
 			}
+		})
+
+		// 上传代码文件API
+		router.POST("/uploadCode", func(c *gin.Context) {
+			// TODO:上传代码文件功能待实现、等待前端实现
+		})
+
+		// 从消息队列中获取代码运行状态API
+		router.GET("/getCodeStatus", func(c *gin.Context) {
+			// TODO:等待获取代码运行状态功能实现、消息队列实现
 		})
 
 		// 获取总提交记录API
@@ -214,7 +218,7 @@ func main() {
 		})
 	}
 
-	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/")
+	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/v1")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 	r.Run("0.0.0.0:37881")
 }
