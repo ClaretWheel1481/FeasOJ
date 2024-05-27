@@ -1,10 +1,17 @@
 import { createApp } from 'vue';
+import { createVuetify } from 'vuetify'
 import App from './App.vue';
+import 'vuetify/styles'
 import router from './routers/index';
 import './style.css';
-import { createPinia } from 'pinia'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
-const pinia = createPinia()
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 
 router.beforeEach((to, from, next) => {
     /* 路由发生变化修改页面title */
@@ -15,4 +22,4 @@ router.beforeEach((to, from, next) => {
 })
 
 const app = createApp(App);
-app.use(router).use(pinia).mount('#app');
+app.use(router).use(vuetify).mount('#app');
