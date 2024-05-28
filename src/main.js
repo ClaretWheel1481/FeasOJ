@@ -7,10 +7,17 @@ import './style.css';
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-
 const vuetify = createVuetify({
     components,
     directives,
+    theme: {
+        themes: {
+            light: {
+                primary: '#42A5F5',
+                secondary: '#42A5F5',
+            },
+        },
+    }
 })
 
 router.beforeEach((to, from, next) => {

@@ -1,9 +1,14 @@
 <script setup>
-
+import { VCarousel } from 'vuetify/lib/components/index.mjs';
 </script>
 
 <template>
     <div class="title">
-        <h1>首页</h1>
+        <h1>FeasOJ</h1>
     </div>
+    <v-carousel>
+        <v-carousel-item></v-carousel-item>
+        <v-carousel-item></v-carousel-item>
+        <v-carousel-item></v-carousel-item>
+    </v-carousel>
 </template>

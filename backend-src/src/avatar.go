@@ -5,8 +5,6 @@ import (
 	"path/filepath"
 )
 
-var avatarsDir string
-
 // 创建存放头像的文件夹
 func initAvatarFolder() {
 	avatarsDir = filepath.Join(parentDir, "avatars")

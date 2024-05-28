@@ -53,8 +53,10 @@ func VerifyToken(tokenString string) bool {
 	return true
 }
 
+// 全局变量 - 本地配置文件路径
 var parentDir string
 var configsDir string
+var avatarsDir string
 
 func main() {
 	currentDir, err := os.Getwd()
@@ -95,7 +97,7 @@ func main() {
 			Password := c.Query("password")
 			userPHash := selectPassword(Username)
 			if userPHash == "" {
-				c.JSON(401, gin.H{"status:": 401, "message": "用户不存在"})
+				c.JSON(400, gin.H{"status:": 400, "message": "用户不存在"})
 			} else {
 				// 校验密码是否正确
 				if verifyPassword(Password, userPHash) {
@@ -103,7 +105,7 @@ func main() {
 					token := GenerateToken(Username)
 					c.JSON(200, gin.H{"status:": 200, "message": "登录成功", "token": token})
 				} else {
-					c.JSON(401, gin.H{"status:": 401, "message": "密码错误"})
+					c.JSON(400, gin.H{"status:": 400, "message": "密码错误"})
 				}
 			}
 		})
@@ -115,7 +117,7 @@ func main() {
 			if sendVerifycode(initEmailConfig(), email, generateVerifycode()) == "Success" {
 				c.JSON(200, gin.H{"status:": 200, "message": "验证码发送成功"})
 			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "验证码发送失败"})
+				c.JSON(400, gin.H{"status:": 400, "error": "验证码发送失败，可能是我们的问题。"})
 			}
 		})
 
@@ -135,7 +137,7 @@ func main() {
 			if regstatus && compareVerifyCode(vcode, email) {
 				c.JSON(200, gin.H{"status:": 200, "message": "注册成功"})
 			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "注册失败"})
+				c.JSON(400, gin.H{"status:": 400, "error": "注册失败，请确认邮箱验证码是否正确。"})
 			}
 		})
 
