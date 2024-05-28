@@ -127,18 +127,26 @@ func loadSqlConfig() string {
 	return dsn
 }
 
+// 连接数据库
 func connectSql() *gorm.DB {
-	// 连接数据库
 	dsn := loadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
 		return nil
 	}
+	sqlDB, err := db.DB()
+	if err != nil {
+		fmt.Println("[FeasOJ]获取通用数据库对象失败。")
+		return nil
+	}
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetMaxOpenConns(100)
+	sqlDB.SetConnMaxLifetime(time.Second * 10)
 	return db
 }
 
-// 连接数据库、创建表
+// 创建表
 func initSql() bool {
 	filePath := filepath.Join(configsDir, "sqlconfig.xml")
 	//判断是否有config.xml文件，没有则输入
@@ -219,4 +227,11 @@ func selectAllSubmitRecords() []SubmitRecord {
 func updateAvatar(username, avatarpath string) bool {
 	err := connectSql().Model(&User{}).Where("username = ?", username).Update("avatar", avatarpath).Error
 	return err == nil
+}
+
+// 获取Problem表中的所有数据
+func selectAllProblems() []Problem {
+	var problems []Problem
+	connectSql().Find(&problems)
+	return problems
 }

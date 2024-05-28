@@ -1,5 +1,5 @@
 <script setup>
-import { VApp,VMain,VToolbar } from 'vuetify/components';
+import { VApp,VMain } from 'vuetify/components';
 import VNavigation from './components/VNavigation.vue'
 import VFooter from './components/Footer.vue'
 </script>
@@ -8,7 +8,7 @@ import VFooter from './components/Footer.vue'
   <v-app>
     <VNavigation></VNavigation>
     <VFooter></VFooter>
-    <v-main style="height: 650px">
+    <v-main>
       <RouterView>
       </RouterView>
     </v-main>

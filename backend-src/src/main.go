@@ -211,6 +211,11 @@ func main() {
 			// TODO:等待获取代码运行状态功能实现、消息队列实现
 		})
 
+		router.GET("/getAllProblems", func(c *gin.Context) {
+			problems := selectAllProblems()
+			c.JSON(200, gin.H{"problems": problems})
+		})
+
 		// 获取总提交记录API
 		router.GET("/getAllSubmitRecords", func(c *gin.Context) {
 			submitrecords := selectAllSubmitRecords()

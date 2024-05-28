@@ -3,5 +3,7 @@
 </script>
 
 <template>
-    <h1>HomePage</h1>
+    <div class="title">
+        <h1>首页</h1>
+    </div>
 </template>

@@ -31,6 +31,10 @@ h1 {
   line-height: 1.1;
 }
 
+.title {
+  margin-top: 15px;
+}
+
 #app {
   margin: 0px;
   padding: 0px;
