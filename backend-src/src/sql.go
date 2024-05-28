@@ -235,3 +235,12 @@ func selectAllProblems() []Problem {
 	connectSql().Find(&problems)
 	return problems
 }
+
+// 获取指定PID的题目除了Input_full_path Output_full_path外的所有信息
+func selectProblemInfo(pid string) Problem {
+	var problem Problem
+	connectSql().Where("pid = ?", pid).First(&problem)
+	problem.Input_full_path = ""
+	problem.Output_full_path = ""
+	return problem
+}

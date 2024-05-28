@@ -7,12 +7,11 @@ import VNavigation from './components/VNavigation.vue'
   <v-app>
     <VNavigation></VNavigation>
     <v-main>
-      <RouterView>
-      </RouterView>
+        <RouterView></RouterView>
     </v-main>
   </v-app>
 </template>
 
-<style scoped>
+<style>
 
 </style>

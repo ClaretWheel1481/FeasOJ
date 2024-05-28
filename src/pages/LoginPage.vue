@@ -12,6 +12,7 @@
       <v-text-field rounded="xl" variant="solo-filled" type="password" label="密码" />
       <v-row justify="end">
         <v-btn type="submit" color="primary" rounded="xl">登录</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/register')">注册</v-btn>
         <v-btn color="primary" variant="text" rounded="xl">忘记密码</v-btn>
       </v-row>
     </v-form>
@@ -19,10 +20,5 @@
 </template>
 
 <style>
-.constrainsheet{
-  width: 400px;
-  margin: 0 auto;
-  padding: 10px;
-  margin-top: 50px;
-}
+
 </style>

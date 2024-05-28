@@ -1,11 +1,11 @@
 import { createApp } from 'vue';
-import { createVuetify } from 'vuetify'
+import { createVuetify } from 'vuetify';
 import App from './App.vue';
-import 'vuetify/styles'
+import 'vuetify/styles';
 import router from './routers/index';
 import './style.css';
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
 
 const vuetify = createVuetify({
     components,

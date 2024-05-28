@@ -8,6 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@vuelidate/core':
+        specifier: ^2.0.3
+        version: 2.0.3(vue@3.4.27)
+      '@vuelidate/validators':
+        specifier: ^2.0.4
+        version: 2.0.4(vue@3.4.27)
       axios:
         specifier: ^1.6.8
         version: 1.6.8
@@ -15,8 +21,8 @@ importers:
         specifier: ^3.4.21
         version: 3.4.27
       vue-router:
-        specifier: ^4.3.2
-        version: 4.3.2(vue@3.4.27)
+        specifier: ^4.0.13
+        version: 4.0.13(vue@3.4.27)
       vuetify:
         specifier: ^3.6.6
         version: 3.6.6(vue@3.4.27)
@@ -325,6 +331,24 @@ packages:
   '@vue/shared@3.4.27':
     resolution: {integrity: sha512-DL3NmY2OFlqmYYrzp39yi3LDkKxa5vZVwxWdQ3rG0ekuWscHraeIbnI8t+aZK7qhYqEqWKTUdijadunb9pnrgA==}
 
+  '@vuelidate/core@2.0.3':
+    resolution: {integrity: sha512-AN6l7KF7+mEfyWG0doT96z+47ljwPpZfi9/JrNMkOGLFv27XVZvKzRLXlmDPQjPl/wOB1GNnHuc54jlCLRNqGA==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
+  '@vuelidate/validators@2.0.4':
+    resolution: {integrity: sha512-odTxtUZ2JpwwiQ10t0QWYJkkYrfd0SyFYhdHH44QQ1jDatlZgTh/KRzrWVmn/ib9Gq7H4hFD4e8ahoo5YlUlDw==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
@@ -439,8 +463,19 @@ packages:
       terser:
         optional: true
 
-  vue-router@4.3.2:
-    resolution: {integrity: sha512-hKQJ1vDAZ5LVkKEnHhmm1f9pMiWIBNGF5AwU67PdH7TyXCj/a4hTccuUuYCAMgJK6rO/NVYtQIEN3yL8CECa7Q==}
+  vue-demi@0.13.11:
+    resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
+  vue-router@4.0.13:
+    resolution: {integrity: sha512-LmXrC+BkDRLak+d5xTMgUYraT3Nj0H/vCbP+7usGvIl9Viqd1UP6AsP0i69pSbn9O0dXK/xCdp4yPw21HqV9Jw==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -670,6 +705,16 @@ snapshots:
 
   '@vue/shared@3.4.27': {}
 
+  '@vuelidate/core@2.0.3(vue@3.4.27)':
+    dependencies:
+      vue: 3.4.27
+      vue-demi: 0.13.11(vue@3.4.27)
+
+  '@vuelidate/validators@2.0.4(vue@3.4.27)':
+    dependencies:
+      vue: 3.4.27
+      vue-demi: 0.13.11(vue@3.4.27)
+
   asynckit@0.4.0: {}
 
   axios@1.6.8:
@@ -785,7 +830,11 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  vue-router@4.3.2(vue@3.4.27):
+  vue-demi@0.13.11(vue@3.4.27):
+    dependencies:
+      vue: 3.4.27
+
+  vue-router@4.0.13(vue@3.4.27):
     dependencies:
       '@vue/devtools-api': 6.6.1
       vue: 3.4.27

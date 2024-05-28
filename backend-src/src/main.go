@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -58,6 +59,13 @@ var parentDir string
 var configsDir string
 var avatarsDir string
 
+type RegisterRequest struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Vcode    string `json:"vcode"`
+}
+
 func main() {
 	currentDir, err := os.Getwd()
 	if err != nil {
@@ -97,15 +105,15 @@ func main() {
 			Password := c.Query("password")
 			userPHash := selectPassword(Username)
 			if userPHash == "" {
-				c.JSON(400, gin.H{"status:": 400, "message": "用户不存在"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在"})
 			} else {
 				// 校验密码是否正确
 				if verifyPassword(Password, userPHash) {
 					// 生成Token并返回至前端
 					token := GenerateToken(Username)
-					c.JSON(200, gin.H{"status:": 200, "message": "登录成功", "token": token})
+					c.JSON(http.StatusOK, gin.H{"status": 200, "message": "登录成功", "token": token})
 				} else {
-					c.JSON(400, gin.H{"status:": 400, "message": "密码错误"})
+					c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码错误"})
 				}
 			}
 		})
@@ -115,29 +123,9 @@ func main() {
 			// 获取邮箱地址
 			email := c.Query("email")
 			if sendVerifycode(initEmailConfig(), email, generateVerifycode()) == "Success" {
-				c.JSON(200, gin.H{"status:": 200, "message": "验证码发送成功"})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功"})
 			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "验证码发送失败，可能是我们的问题。"})
-			}
-		})
-
-		// 注册API
-		router.GET("/register", func(c *gin.Context) {
-			email := c.Query("email")
-			username := c.Query("username")
-			password := c.Query("password")
-			vcode := c.Query("vcode")
-			// 判断用户或邮箱是否存在
-			if isUserExist(username, email) {
-				c.JSON(400, gin.H{"status:": 400, "error": "用户已存在或邮箱已使用"})
-				return
-			}
-			tokensecret := uuid.New().String()
-			regstatus := register(username, encryptPassword(password), email, tokensecret, 0)
-			if regstatus && compareVerifyCode(vcode, email) {
-				c.JSON(200, gin.H{"status:": 200, "message": "注册成功"})
-			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "注册失败，请确认邮箱验证码是否正确。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "验证码发送失败，可能是我们的问题。"})
 			}
 		})
 
@@ -148,25 +136,11 @@ func main() {
 			// 根据uid来查询对应的用户信息
 			userInfo := selectUserInfo(username)
 			if userInfo.Username == "" {
-				c.JSON(400, gin.H{"status:": 400, "error": "用户不存在"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "用户不存在"})
 			} else {
-				c.JSON(200, gin.H{"status:": 200, "Info": userInfo})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 			}
 
-		})
-
-		// 密码修改API
-		router.GET("/updatePassword", func(c *gin.Context) {
-			// 获取账号以及新密码
-			newpassword := c.Query("newpassword")
-			// 获取邮箱地址和验证码
-			email := c.Query("email")
-			vcode := c.Query("vcode")
-			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword) {
-				c.JSON(200, gin.H{"status:": 200, "message": "密码修改成功"})
-			} else {
-				c.JSON(400, gin.H{"status:": 400, "error": "密码修改失败"})
-			}
 		})
 
 		// 更新用户信息（非修改密码）API
@@ -174,17 +148,44 @@ func main() {
 			// TODO:更新用户信息功能待实现、等待前端修改
 		})
 
+		// 从消息队列中获取代码运行状态API
+		router.GET("/getCodeStatus", func(c *gin.Context) {
+			// TODO:等待获取代码运行状态功能实现、消息队列实现
+		})
+
+		// 获取所有题目API
+		router.GET("/getAllProblems", func(c *gin.Context) {
+			problems := selectAllProblems()
+			c.JSON(http.StatusOK, gin.H{"problems": problems})
+		})
+
+		// 根据题目ID获取题目信息
+		router.GET("/getProblemInfo/:id", func(c *gin.Context) {
+			problemID := c.Param("id")
+			problemInfo := selectProblemInfo(problemID)
+			c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
+		})
+
+		// 获取总提交记录API
+		router.GET("/getAllSubmitRecords", func(c *gin.Context) {
+			submitrecords := selectAllSubmitRecords()
+			c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+		})
+	}
+
+	router2 := r.Group("/api/v2")
+	{
 		// 用户上传头像API
-		router.POST("/uploadAvatar", func(c *gin.Context) {
+		router2.POST("/uploadAvatar", func(c *gin.Context) {
 			file, err := c.FormFile("avatar")
 			username := c.Query("username")
 			// 检查上传文件类型为png或jpg
 			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
-				c.JSON(400, gin.H{"status:": 400, "error": "头像文件类型错误"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像文件类型错误"})
 				return
 			}
 			if err != nil {
-				c.JSON(400, gin.H{"status:": 400, "error": "头像上传失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败"})
 			}
 
 			// 压缩文件并修改文件名为数据库中用户的uid，例如user_1.png/jpg
@@ -194,12 +195,49 @@ func main() {
 			// 存放到avatars文件夹中
 			err = c.SaveUploadedFile(file, "../avatars/"+file.Filename)
 			if err != nil {
-				c.JSON(400, gin.H{"status:": 400, "error": "头像上传失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败"})
 			}
 
 			// 更新数据库中的头像路径地址
 			if updateAvatar(username, avatarsDir+"\\"+file.Filename) {
-				c.JSON(200, gin.H{"status:": 200, "message": "头像上传成功"})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功"})
+			}
+		})
+
+		// 注册API
+		router2.POST("/register", func(c *gin.Context) {
+			var req RegisterRequest
+			// 判断用户名与邮箱是否为空
+			c.ShouldBind(&req)
+			if req.Username == "" || req.Email == "" || req.Password == "" || req.Vcode == "" {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "不能有空的内容"})
+				return
+			}
+			// 判断用户或邮箱是否存在
+			if isUserExist(req.Username, req.Email) {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用"})
+				return
+			}
+			tokensecret := uuid.New().String()
+			regstatus := register(req.Username, encryptPassword(req.Password), req.Email, tokensecret, 0)
+			if regstatus && compareVerifyCode(req.Vcode, req.Email) {
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功"})
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "注册失败，请确认邮箱验证码是否正确。"})
+			}
+		})
+
+		// 密码修改API
+		router2.POST("/updatePassword", func(c *gin.Context) {
+			// 获取账号以及新密码
+			newpassword := c.Query("newpassword")
+			// 获取邮箱地址和验证码
+			email := c.Query("email")
+			vcode := c.Query("vcode")
+			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword) {
+				c.JSON(http.StatusOK, gin.H{"status:": 200, "message": "密码修改成功"})
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"status:": 400, "error": "密码修改失败"})
 			}
 		})
 
@@ -207,25 +245,11 @@ func main() {
 		router.POST("/uploadCode", func(c *gin.Context) {
 			// TODO:上传代码文件功能待实现、等待前端实现
 		})
-
-		// 从消息队列中获取代码运行状态API
-		router.GET("/getCodeStatus", func(c *gin.Context) {
-			// TODO:等待获取代码运行状态功能实现、消息队列实现
-		})
-
-		router.GET("/getAllProblems", func(c *gin.Context) {
-			problems := selectAllProblems()
-			c.JSON(200, gin.H{"problems": problems})
-		})
-
-		// 获取总提交记录API
-		router.GET("/getAllSubmitRecords", func(c *gin.Context) {
-			submitrecords := selectAllSubmitRecords()
-			c.JSON(200, gin.H{"submitrecords": submitrecords})
-		})
 	}
 
-	fmt.Println("[FeasOJ]服务器已启动，API地址：http://localhost:37881/api/v1")
+	fmt.Println("[FeasOJ]服务器已启动。")
+	fmt.Println("[FeasOJ]GET：http://localhost:37881/api/v1/")
+	fmt.Println("[FeasOJ]POST：http://localhost:37881/api/v2/")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 	r.Run("0.0.0.0:37881")
 }
