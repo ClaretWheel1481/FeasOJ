@@ -67,7 +67,7 @@ const register = async () => {
       return;
     }
   }catch(error){
-    showAlert('注册失败，请检查是否有输入错误。');
+    alert(error.response.data.message);
     return;
   }
 };

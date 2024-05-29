@@ -29,29 +29,20 @@ func GenerateToken(username string) string {
 	return tokenString
 }
 
-// 校验Token
-func VerifyToken(tokenString string) bool {
-	// 解析Token
+// 校验Token与username是不是配对
+func VerifyToken(username, tokenString string) bool {
+	// 解析Token Username
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// 验证签名方法
+		// 验证签名
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		// 返回签名密钥
-		return []byte(selectTokenSecret(token.Claims.(jwt.MapClaims)["username"].(string))), nil
-
+		return []byte(selectTokenSecret(username)), nil
 	})
-	// 验证Token
-	if err != nil {
-		fmt.Println("Token验证失败：", err)
-		return false
+	if token.Valid {
+		return true
 	}
-	// 验证Token是否有效
-	if !token.Valid {
-		fmt.Println("Token无效")
-		return false
-	}
-	return true
+	return err == nil
 }
 
 // 全局变量 - 本地配置文件路径
@@ -126,6 +117,17 @@ func main() {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功"})
 			} else {
 				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "验证码发送失败，可能是我们的问题。"})
+			}
+		})
+
+		// 校验TokenAPI
+		router.GET("/verifyToken", func(c *gin.Context) {
+			token := c.Query("token")
+			username := c.Query("username")
+			if VerifyToken(username, token) {
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功"})
+			} else {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败"})
 			}
 		})
 

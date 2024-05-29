@@ -1,6 +1,6 @@
 <script setup>
 import { VAppBar,VBtn,VDivider,VCard,VCardText,VSelect } from 'vuetify/components'
-import { ref,onMounted,computed, watch } from 'vue'
+import { ref,onMounted } from 'vue'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
 
@@ -22,21 +22,6 @@ onMounted(async () => {
   }
 });
 
-// 监听props变化
-watch(() => props.modelValue, (newValue) => {
-  code.value = newValue;
-});
-
-// 监听CodeMirror实例的变化
-watch(code, (newValue) => {
-  emit('update:modelValue', newValue);
-});
-
-// 计算样式
-const cmStyle = computed(() => ({
-  height: '400px',
-  // 更多样式...
-}));
 </script>
 
 <template>
@@ -78,14 +63,17 @@ const cmStyle = computed(() => ({
             {{ problemInfo.Output }}
         </v-card-text>
     </v-card>
-    <!-- TODO:Monaco Editor -->
-    <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="lg">
-        
+    <v-card class="mx-auto my-8 editor-container" width="80%" elevation="5" rounded="lg">
+        <!-- <v-select v-model="selectedLanguage" :items="languages" label="选择语言" rounded="lg"></v-select> -->
+        <!-- TODO:代码编辑器 -->
     </v-card>
 </template>
 
 <style scoped>
 .subtitle {
     font-size: 0.9rem;
+}
+.editor-container {
+  height: 600px;
 }
 </style>

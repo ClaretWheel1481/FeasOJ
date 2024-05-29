@@ -7,7 +7,7 @@ const routes = [
         component: () => import('../pages/MainPage.vue'),
         meta: {
             title: 'FeasOJ - 首页'
-        },
+        }
     }, 
     { 
         path: '/about', 
