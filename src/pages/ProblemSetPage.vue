@@ -55,6 +55,7 @@ onMounted(fetchData)
     :loading="loading"
     @update="fetchData"
     :hide-default-footer="true"
+    no-data-text="当前题库为空"
   >
   <template v-slot:item="{ item }">
     <tr>

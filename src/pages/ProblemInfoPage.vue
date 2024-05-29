@@ -1,5 +1,42 @@
 <script setup>
-import {VAppBar,VBtn} from 'vuetify/components'
+import { VAppBar,VBtn,VDivider,VCard,VCardText,VSelect } from 'vuetify/components'
+import { ref,onMounted,computed, watch } from 'vue'
+import axios from 'axios';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+const problemInfo = ref({});
+
+onMounted(async () => {
+  try {
+    const problemId = route.params.Pid;
+    const response = await axios.get(`http://127.0.0.1:37881/api/v1/getProblemInfo/${problemId}`);
+    if (response.status === 200) {
+      problemInfo.value = response.data.problemInfo;
+    } else {
+      console.error('获取题目信息失败:', response);
+    }
+  } catch (error) {
+    console.error('请求题目信息时发生错误:', error);
+  }
+});
+
+// 监听props变化
+watch(() => props.modelValue, (newValue) => {
+  code.value = newValue;
+});
+
+// 监听CodeMirror实例的变化
+watch(code, (newValue) => {
+  emit('update:modelValue', newValue);
+});
+
+// 计算样式
+const cmStyle = computed(() => ({
+  height: '400px',
+  // 更多样式...
+}));
 </script>
 
 <template>
@@ -8,4 +45,47 @@ import {VAppBar,VBtn} from 'vuetify/components'
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
     </v-app-bar>
+    <h1>{{problemInfo.Title}}</h1>
+    <div style="margin: 10px;"></div>
+    <p class="subtitle">时间限制: {{problemInfo.Timelimit}} S</p>
+    <p class="subtitle">内存限制: {{problemInfo.Memorylimit}} MB</p>
+    <div style="margin: 10px;"></div>
+    <v-divider></v-divider>
+    <div style="margin: 10px"></div>
+    <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="lg">
+        <template v-slot:title>
+            <span class="font-weight-black">题目详细</span>
+        </template>
+        <v-card-text>
+            {{ problemInfo.Content }}
+        </v-card-text>
+    </v-card>
+    <div style="margin: 10px"></div>
+    <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="lg">
+        <template v-slot:title>
+            <span class="font-weight-black">输入样例</span>
+        </template>
+        <v-card-text>
+            {{ problemInfo.Input }}
+        </v-card-text>
+    </v-card>
+    <div style="margin: 10px"></div>
+    <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="lg">
+        <template v-slot:title>
+            <span class="font-weight-black">输出样例</span>
+        </template>
+        <v-card-text>
+            {{ problemInfo.Output }}
+        </v-card-text>
+    </v-card>
+    <!-- TODO:Monaco Editor -->
+    <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="lg">
+        
+    </v-card>
 </template>
+
+<style scoped>
+.subtitle {
+    font-size: 0.9rem;
+}
+</style>

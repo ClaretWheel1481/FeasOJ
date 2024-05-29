@@ -209,19 +209,20 @@ func main() {
 			var req RegisterRequest
 			// 判断用户名与邮箱是否为空
 			c.ShouldBind(&req)
-			if req.Username == "" || req.Email == "" || req.Password == "" || req.Vcode == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "不能有空的内容"})
-				return
-			}
 			// 判断用户或邮箱是否存在
 			if isUserExist(req.Username, req.Email) {
 				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用"})
 				return
 			}
 			tokensecret := uuid.New().String()
+			vcodeStatus := compareVerifyCode(req.Vcode, req.Email)
+			if !vcodeStatus {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
+				return
+			}
 			regstatus := register(req.Username, encryptPassword(req.Password), req.Email, tokensecret, 0)
-			if regstatus && compareVerifyCode(req.Vcode, req.Email) {
-				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功"})
+			if regstatus {
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功，2秒后跳转至登录界面。"})
 			} else {
 				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "注册失败，请确认邮箱验证码是否正确。"})
 			}

@@ -6,6 +6,7 @@ import router from './routers/index';
 import './style.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import VueCodeMirror from 'vue-codemirror'
 
 const vuetify = createVuetify({
     components,
@@ -29,4 +30,4 @@ router.beforeEach((to, from, next) => {
 })
 
 const app = createApp(App);
-app.use(router).use(vuetify).mount('#app');
+app.use(router).use(vuetify).use(VueCodeMirror).mount('#app');
