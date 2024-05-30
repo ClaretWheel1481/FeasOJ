@@ -124,7 +124,7 @@ const getCaptcha = async () => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-sheet class="constrainsheet">
+  <v-sheet class="constrainsheet"  rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="register">
       <v-text-field v-model="formState.username" :rules="[rules.username.required]" rounded="xl" variant="solo-filled" label="用户名" />
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl" variant="solo-filled" label="邮箱" />

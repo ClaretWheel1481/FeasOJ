@@ -1,6 +1,7 @@
 <script setup>
 import { VApp,VMain } from 'vuetify/components';
 import VNavigation from './components/VNavigation.vue'
+import { RouterView } from 'vue-router';
 </script>
 
 <template>

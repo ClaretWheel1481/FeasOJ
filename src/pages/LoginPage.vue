@@ -60,8 +60,8 @@ const login = async () => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-sheet class="constrainsheet">
-    <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login">
+  <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
+    <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
       <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" label="用户名" />
       <v-text-field v-model="forms.password" rounded="xl" variant="solo-filled" type="password" label="密码" />
       <v-row justify="end">

@@ -122,7 +122,7 @@ func main() {
 
 		// 校验TokenAPI
 		router.GET("/verifyToken", func(c *gin.Context) {
-			token := c.Query("token")
+			token := c.GetHeader("token")
 			username := c.Query("username")
 			if VerifyToken(username, token) {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功"})

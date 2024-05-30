@@ -93,6 +93,12 @@ const routes = [
             title: 'FeasOJ - 题库管理',
             hideComponent: true
         }
+    },
+    {
+        path: '/403', component: () => import('../pages/NoPermissionPage.vue'),
+        meta: {
+            title: 'FeasOJ - 没有权限',
+        }
     }
 ];
 
