@@ -17,9 +17,6 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.6.8
-      monaco-editor:
-        specifier: ^0.49.0
-        version: 0.49.0
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.49.0)
@@ -30,8 +27,8 @@ importers:
         specifier: ^4.0.13
         version: 4.0.13(vue@3.4.27)
       vuetify:
-        specifier: ^3.6.6
-        version: 3.6.6(vue@3.4.27)
+        specifier: ^3.6.8
+        version: 3.6.8(vue@3.4.27)
     devDependencies:
       '@mdi/font':
         specifier: ^7.4.47
@@ -413,9 +410,6 @@ packages:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
 
-  monaco-editor@0.33.0:
-    resolution: {integrity: sha512-VcRWPSLIUEgQJQIE0pVT8FcGBIgFoxz7jtqctE+IiCxWugD0DwgyQBcZBhdSrdMC84eumoqMZsGl2GTreOzwqw==}
-
   monaco-editor@0.49.0:
     resolution: {integrity: sha512-2I8/T3X/hLxB2oPHgqcNYUVdA/ZEFShT7IAujifIPMfKkNbLOqY8XCoyHCXrsdjb36dW9MwoTwBCFpXKMwNwaQ==}
 
@@ -504,8 +498,8 @@ packages:
       typescript:
         optional: true
 
-  vuetify@3.6.6:
-    resolution: {integrity: sha512-7RkL0kuLsVUbc0YCwhPhVq54gSFKt5xv+SOrF01dxwJz7Ke3tAbvO616WhhQIfS78h1q/Ev952WJj5jpsdK58g==}
+  vuetify@3.6.8:
+    resolution: {integrity: sha512-j0v0iTeSVRj2ZEM9Q8HxejHxmxrQLYQSalhH82hfcraORaiDoqf1XV05N3P5ERXkKiJjJc/LfxFAUUvYSldxeg==}
     engines: {node: ^12.20 || >=14.13}
     peerDependencies:
       typescript: '>=4.7'
@@ -801,8 +795,6 @@ snapshots:
     dependencies:
       mime-db: 1.52.0
 
-  monaco-editor@0.33.0: {}
-
   monaco-editor@0.49.0: {}
 
   nanoid@3.3.7: {}
@@ -843,10 +835,6 @@ snapshots:
 
   to-fast-properties@2.0.0: {}
 
-  vite-plugin-monaco-editor@1.1.0(monaco-editor@0.33.0):
-    dependencies:
-      monaco-editor: 0.33.0
-
   vite-plugin-monaco-editor@1.1.0(monaco-editor@0.49.0):
     dependencies:
       monaco-editor: 0.49.0
@@ -876,6 +864,6 @@ snapshots:
       '@vue/server-renderer': 3.4.27(vue@3.4.27)
       '@vue/shared': 3.4.27
 
-  vuetify@3.6.6(vue@3.4.27):
+  vuetify@3.6.8(vue@3.4.27):
     dependencies:
       vue: 3.4.27

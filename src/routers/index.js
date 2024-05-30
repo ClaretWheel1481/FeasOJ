@@ -46,10 +46,14 @@ const routes = [
         }
     },
     { 
-        path: '/profile', 
+        path: '/profile/:Username', 
         component: () => import('../pages/ProfilePage.vue'),
         meta: {
             title: 'FeasOJ - 个人资料'
+        },
+        beforeEnter: (to, from, next) => {
+            to.meta.title = to.params.Username + '的资料';
+            next();
         }
     },
     { 
@@ -102,5 +106,5 @@ router.afterEach((to) => {
       document.title = to.meta.title || 'FeasOJ';
     });
   });
-  
+
 export default router;

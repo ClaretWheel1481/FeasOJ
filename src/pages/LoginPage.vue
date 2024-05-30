@@ -1,10 +1,8 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { reactive,ref } from 'vue';
-import { VBtn, VTextField, VForm,VSheet } from 'vuetify/components';
+import { VBtn, VTextField, VForm,VSheet,VDialog,VCard,VCardActions,VCardTitle,VCardText,VRow } from 'vuetify/components';
 
-const router = useRouter();
 const dialog = ref(false);
 const dialogMessage = ref('');
 

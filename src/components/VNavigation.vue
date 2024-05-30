@@ -15,8 +15,9 @@ const router = useRouter()
 
 // 根据用户登录状态进行导航
 const navigate = () => {
+  // 校验Token
   if (userLoggedIn.value) {
-    // router.push('/user-profile')
+    router.push('/profile/' + userName.value)
   } else {
     router.push('/login')
   }
@@ -38,6 +39,7 @@ const navigate = () => {
         :prepend-icon="userLoggedIn ? 'mdi-account-circle' : 'mdi-account'"
         :title="userLoggedIn ? userName : '登录'"
         @click="navigate"
+        value="PROFILE"
         base-color="primary"
       ></v-list-item>
     </v-list>
