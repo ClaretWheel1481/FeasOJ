@@ -20,9 +20,7 @@ onMounted(async () => {
             const problemId = route.params.Pid;
             const response = await axios.get(`http://127.0.0.1:37881/api/v1/getProblemInfo/${problemId}`);
             if (response.status === 200) {
-            problemInfo.value = response.data.problemInfo;
-            } else {
-            console.error('获取题目信息失败:', response);
+                problemInfo.value = response.data.problemInfo;
             }
         } catch (error) {
             console.error('请求题目信息时发生错误:', error);

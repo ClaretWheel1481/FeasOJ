@@ -25,7 +25,11 @@ const vuetify = createVuetify({
       }
     }
 })
-  
+
+window.addEventListener('storage', function (e) {
+    localStorage.setItem(e.key, e.oldValue)
+});
+
 router.beforeEach((to, from, next) => {
     /* 路由发生变化修改页面title */
     if (to.meta.title) {

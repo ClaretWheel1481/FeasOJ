@@ -67,14 +67,6 @@ const routes = [
             next();
         }
     },
-    {
-        path: '/accounts',
-        component: () => import('../pages/AccountManagementPage.vue'),
-        meta: {
-            title: 'FeasOJ - 用户管理',
-            hideComponent: true
-        }
-    },
     { 
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
         meta: {
@@ -88,10 +80,9 @@ const routes = [
         }
     },
     {
-        path: '/psmanagement', component: () => import('../pages/ProblemsetManagementPage.vue'),
+        path: '/psm', component: () => import('../pages/ProblemsetManagementPage.vue'),
         meta: {
-            title: 'FeasOJ - 题库管理',
-            hideComponent: true
+            title: 'FeasOJ - 题目管理'
         }
     },
     {

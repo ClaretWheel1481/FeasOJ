@@ -28,10 +28,16 @@ const login = async () => {
         password: forms.password,
       }
     });
+    const profileResponse = await axios.get('http://127.0.0.1:37881/api/v1/getUserInfo', {
+      params: {
+        username: forms.username,
+      }
+    });
     if (loginResponse.data.status === 200) {
       showAlert(loginResponse.data.message);
       localStorage.setItem('token',loginResponse.data.token)
       localStorage.setItem('username',forms.username)
+      localStorage.setItem('role',profileResponse.data.Info.Role)
       setTimeout(() => {
         window.location = '/'
       }, 500);
@@ -67,7 +73,7 @@ const login = async () => {
       <v-row justify="end">
         <v-btn type="submit" color="primary" rounded="xl">登录</v-btn>
         <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/register')">注册</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl">忘记密码</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/reset')">忘记密码</v-btn>
       </v-row>
     </v-form>
   </v-sheet>

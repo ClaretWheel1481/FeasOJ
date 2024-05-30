@@ -1,5 +1,5 @@
 <script setup>
-import { VCarousel } from 'vuetify/lib/components/index.mjs';
+import { VCarousel,VCarouselItem } from 'vuetify/lib/components/index.mjs';
 </script>
 
 <template>

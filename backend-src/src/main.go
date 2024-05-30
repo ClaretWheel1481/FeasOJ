@@ -57,6 +57,12 @@ type RegisterRequest struct {
 	Vcode    string `json:"vcode"`
 }
 
+type updatePasswordRequest struct {
+	Email       string `json:"email"`
+	NewPassword string `json:"newpassword"`
+	Vcode       string `json:"vcode"`
+}
+
 func main() {
 	currentDir, err := os.Getwd()
 	if err != nil {
@@ -96,15 +102,15 @@ func main() {
 			Password := c.Query("password")
 			userPHash := selectPassword(Username)
 			if userPHash == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 			} else {
 				// 校验密码是否正确
 				if verifyPassword(Password, userPHash) {
 					// 生成Token并返回至前端
 					token := GenerateToken(Username)
-					c.JSON(http.StatusOK, gin.H{"status": 200, "message": "登录成功", "token": token})
+					c.JSON(http.StatusOK, gin.H{"status": 200, "message": "登录成功。", "token": token})
 				} else {
-					c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码错误"})
+					c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码错误。"})
 				}
 			}
 		})
@@ -114,7 +120,7 @@ func main() {
 			// 获取邮箱地址
 			email := c.Query("email")
 			if sendVerifycode(initEmailConfig(), email, generateVerifycode()) == "Success" {
-				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功"})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
 			} else {
 				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "验证码发送失败，可能是我们的问题。"})
 			}
@@ -125,9 +131,9 @@ func main() {
 			token := c.GetHeader("token")
 			username := c.Query("username")
 			if VerifyToken(username, token) {
-				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功"})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功。"})
 			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败。"})
 			}
 		})
 
@@ -138,7 +144,7 @@ func main() {
 			// 根据uid来查询对应的用户信息
 			userInfo := selectUserInfo(username)
 			if userInfo.Username == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "用户不存在"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "用户不存在。"})
 			} else {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 			}
@@ -183,11 +189,11 @@ func main() {
 			username := c.Query("username")
 			// 检查上传文件类型为png或jpg
 			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像文件类型错误"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像文件类型错误。"})
 				return
 			}
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败。"})
 			}
 
 			// 压缩文件并修改文件名为数据库中用户的uid，例如user_1.png/jpg
@@ -197,23 +203,22 @@ func main() {
 			// 存放到avatars文件夹中
 			err = c.SaveUploadedFile(file, "../avatars/"+file.Filename)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败。"})
 			}
 
 			// 更新数据库中的头像路径地址
 			if updateAvatar(username, avatarsDir+"\\"+file.Filename) {
-				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功"})
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功。"})
 			}
 		})
 
 		// 注册API
 		router2.POST("/register", func(c *gin.Context) {
 			var req RegisterRequest
-			// 判断用户名与邮箱是否为空
 			c.ShouldBind(&req)
 			// 判断用户或邮箱是否存在
 			if isUserExist(req.Username, req.Email) {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用。"})
 				return
 			}
 			tokensecret := uuid.New().String()
@@ -232,15 +237,17 @@ func main() {
 
 		// 密码修改API
 		router2.POST("/updatePassword", func(c *gin.Context) {
-			// 获取账号以及新密码
-			newpassword := c.Query("newpassword")
-			// 获取邮箱地址和验证码
-			email := c.Query("email")
-			vcode := c.Query("vcode")
-			if compareVerifyCode(vcode, email) && updatePassword(email, newpassword) {
-				c.JSON(http.StatusOK, gin.H{"status:": 200, "message": "密码修改成功"})
+			var req updatePasswordRequest
+			c.ShouldBind(&req)
+			vcodeStatus := compareVerifyCode(req.Vcode, req.Email)
+			if !vcodeStatus {
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
+				return
+			}
+			if updatePassword(req.Email, req.NewPassword) {
+				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "密码修改成功，2秒后跳转至登录页面。"})
 			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"status:": 400, "error": "密码修改失败"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "密码修改失败。"})
 			}
 		})
 

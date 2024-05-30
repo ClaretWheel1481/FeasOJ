@@ -1,12 +1,12 @@
 <script setup>
 import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import '@mdi/font/css/materialdesignicons.css';
 
 const userName = ref(localStorage.getItem('username'))
 const token = ref(localStorage.getItem('token'))
-
+const role = ref(localStorage.getItem('role'))
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -15,7 +15,6 @@ const router = useRouter()
 
 // 根据用户登录状态进行导航
 const navigate = () => {
-  // 校验Token
   if (userLoggedIn.value) {
     router.push('/profile/' + userName.value)
   } else {
@@ -34,6 +33,15 @@ const navigate = () => {
       <v-list-item rounded="xl" prepend-icon="mdi-help-circle" title="关于" value="ABOUT" @click="$router.push('/about')" color="primary"></v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>
+      <v-list-item
+        v-if="role === '1'"
+        rounded="xl"
+        prepend-icon="mdi-file"
+        title="题目管理"
+        @click="router.push('/psm')"
+        value="BACKEND"
+        base-color="primary"
+      ></v-list-item>
       <v-list-item
         rounded="xl"
         :prepend-icon="userLoggedIn ? 'mdi-account-circle' : 'mdi-account'"
