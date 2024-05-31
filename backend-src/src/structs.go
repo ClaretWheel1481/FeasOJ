@@ -64,7 +64,7 @@ type Problem struct {
 	Memorylimit      int    `gorm:"comment:内存大小限制;not null"`
 	Input            string `gorm:"comment:输入样例;not null"`
 	Output           string `gorm:"comment:输出样例;not null"`
-	Contestid        int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
+	Cid              int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
 	Input_full_path  string `gorm:"comment:输入样例完整路径"`
 	Output_full_path string `gorm:"comment:输出样例完整路径"`
 }
@@ -80,12 +80,11 @@ type SubmitRecord struct {
 
 // 竞赛表: Contestid, Title, Start_time, End_time, Description, Pid
 type Contest struct {
-	Contestid   int    `gorm:"comment:Contestid;primaryKey;autoIncrement"`
+	Cid         int    `gorm:"comment:Cid;primaryKey;autoIncrement"`
 	Title       string `gorm:"comment:竞赛标题"`
 	Start_time  string `gorm:"comment:开始时间"`
 	End_time    string `gorm:"comment:结束时间"`
 	Description string `gorm:"comment:竞赛描述"`
-	Pid         int    `gorm:"comment:题目"`
 }
 
 // 讨论帖子表: Tid,Title,Content,Uid,Create_at

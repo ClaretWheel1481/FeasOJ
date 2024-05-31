@@ -32,6 +32,17 @@ const routes = [
         }
     },
     { 
+        path: '/contest/:Cid', 
+        component: () => import('../pages/ContestInfoPage.vue'),
+        meta: {
+            title: 'Contest'
+        },
+        beforeEnter: (to, from, next) => {
+            to.meta.title = 'Contest ' + to.params.Cid;
+            next();
+        }
+    },
+    { 
         path: '/login', 
         component: () => import('../pages/LoginPage.vue'),
         meta: {
@@ -77,6 +88,12 @@ const routes = [
         path: '/status', component: () => import('../pages/StatusPage.vue'),
         meta: {
             title: 'FeasOJ - 状态'
+        }
+    },
+    {
+        path: '/discuss', component: () => import('../pages/DiscussPage.vue'),
+        meta: {
+            title: 'FeasOJ - 讨论'
         }
     },
     {

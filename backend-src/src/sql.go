@@ -189,17 +189,26 @@ func selectProblemInfo(pid string) Problem {
 	return problem
 }
 
+// 获取所有Contest表中的数据
+func selectAllContests() []Contest {
+	var contests []Contest
+	connectSql().Find(&contests)
+	return contests
+}
+
+// 根据Contest表的Cid来显示所有对应Problem表Cid的题目
+func selectProblemByCid(cid string) []Problem {
+	var problems []Problem
+	connectSql().Where("cid = ?", cid).Find(&problems)
+	return problems
+}
+
 // 根据UID和PID，通过User表和SubmitRecord联合查询用户提交题目记录
 // TODO:待前端功能实现
-func selectUserSubmitRecord(uid, pid int) *SubmitRecord {
+func selectUserSubmitRecord(uid, pid string) SubmitRecord {
 	var submitRecord SubmitRecord
-	result := connectSql().Table("submit_records").Select("submit_records.*, users.username, users.email").
+	connectSql().Table("submit_records").Select("submit_records.*, users.username, users.email").
 		Joins("inner join users on users.uid = submit_records.uid").
 		Where("submit_records.uid = ? AND submit_records.pid = ?", uid, pid).First(&submitRecord)
-
-	if result.Error != nil {
-		return nil
-	}
-
-	return &submitRecord
+	return submitRecord
 }

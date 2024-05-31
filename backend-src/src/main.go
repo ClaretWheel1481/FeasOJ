@@ -129,6 +129,19 @@ func main() {
 			c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 		})
 
+		// 获取所有竞赛API
+		router.GET("/getAllContests", func(c *gin.Context) {
+			allContest := selectAllContests()
+			c.JSON(http.StatusOK, gin.H{"contests": allContest})
+		})
+
+		// 根据竞赛ID获取题目信息
+		router.GET("/getContestInfo/:cid", func(c *gin.Context) {
+			contestID := c.Param("cid")
+			contestInfo := selectProblemByCid(contestID)
+			c.JSON(http.StatusOK, gin.H{"contestInfo": contestInfo})
+		})
+
 		// 获取总提交记录API
 		router.GET("/getAllSubmitRecords", func(c *gin.Context) {
 			submitrecords := selectAllSubmitRecords()
