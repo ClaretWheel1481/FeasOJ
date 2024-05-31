@@ -2,7 +2,7 @@
 import { ref, onMounted,computed } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
-
+import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
 const router = useRouter()
 
 const headers = ref([
@@ -13,6 +13,10 @@ const problems = ref([])
 const totalProblems = ref(0)
 const loading = ref(true)
 const searchQuery = ref('')
+const token = ref(localStorage.getItem('token'))
+
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value)
 
 // 搜索功能
 const filteredProblems = computed(() => {
@@ -41,7 +45,16 @@ const handleRowClick = (row) => {
 }
 
 // 初始化数据
-onMounted(fetchData)
+onMounted(async () => {
+  if(!userLoggedIn.value){
+    loading.value = false;
+    setTimeout(() => {
+        window.location = '/login'
+    }, 2000);
+    return;
+  }
+  await fetchData()
+})
 </script>
 
 <template>
@@ -53,9 +66,10 @@ onMounted(fetchData)
     :items="filteredProblems"
     :items-length="totalProblems"
     :loading="loading"
+    loading-text="加载中..."
     @update="fetchData"
     :hide-default-footer="true"
-    no-data-text="当前题库为空"
+    :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有题目数据。'"
   >
   <template v-slot:item="{ item }">
     <tr>

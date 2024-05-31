@@ -188,3 +188,18 @@ func selectProblemInfo(pid string) Problem {
 	problem.Output_full_path = ""
 	return problem
 }
+
+// 根据UID和PID，通过User表和SubmitRecord联合查询用户提交题目记录
+// TODO:待前端功能实现
+func selectUserSubmitRecord(uid, pid int) *SubmitRecord {
+	var submitRecord SubmitRecord
+	result := connectSql().Table("submit_records").Select("submit_records.*, users.username, users.email").
+		Joins("inner join users on users.uid = submit_records.uid").
+		Where("submit_records.uid = ? AND submit_records.pid = ?", uid, pid).First(&submitRecord)
+
+	if result.Error != nil {
+		return nil
+	}
+
+	return &submitRecord
+}

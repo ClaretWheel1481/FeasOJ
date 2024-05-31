@@ -166,7 +166,7 @@ func main() {
 			}
 
 			// 更新数据库中的头像路径地址
-			if updateAvatar(username, avatarsDir+"\\"+file.Filename) {
+			if updateAvatar(username, "..\\..\\backend-src\\avatars\\"+file.Filename) {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功。"})
 			}
 		})
@@ -217,8 +217,8 @@ func main() {
 	}
 
 	fmt.Println("[FeasOJ]服务器已启动。")
-	fmt.Println("[FeasOJ]GET：http://localhost:37881/api/v1/")
-	fmt.Println("[FeasOJ]POST：http://localhost:37881/api/v2/")
+	fmt.Println("[FeasOJ]GETAPI：http://localhost:37881/api/v1/")
+	fmt.Println("[FeasOJ]POSTAPI：http://localhost:37881/api/v2/")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 	r.Run("0.0.0.0:37881")
 }

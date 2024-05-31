@@ -7,15 +7,14 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
-const userName = ref(localStorage.getItem('username'))
 const token = ref(localStorage.getItem('token'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
 onMounted(async () => {
+    loading.value = true;
     if(userLoggedIn.value){
-        loading.value = true;
         try {
             const problemId = route.params.Pid;
             const response = await axios.get(`http://127.0.0.1:37881/api/v1/getProblemInfo/${problemId}`);
@@ -30,9 +29,7 @@ onMounted(async () => {
     }else{
         window.location='/login'
     }
-    
 });
-
 </script>
 
 <template>

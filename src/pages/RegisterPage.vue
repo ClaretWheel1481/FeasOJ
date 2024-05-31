@@ -8,6 +8,7 @@ import axios from 'axios';
 const router = useRouter();
 const dialog = ref(false);
 const dialogMessage = ref('');
+const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const showAlert = (message) => {
   dialogMessage.value = message;
@@ -16,7 +17,7 @@ const showAlert = (message) => {
 
 const rules = {
   username: { required: value => !!value || '用户名是必填项。' },
-  userEmail: { required: value => !!value || '邮箱是必填项。', email: value => /.+@.+\..+/.test(value) || '请输入有效的邮箱地址。' },
+  userEmail: { required: value => !!value || '邮箱是必填项。', email: value => regex.test(value) || '请输入有效的邮箱地址。' },
   password: { required: value => !!value || '密码是必填项。', minLength: value => value.length >= 8 || '密码长度至少为8个字符。' },
   confirmPassword: { required: value => !!value || '确认密码是必填项。', minLength: value => value.length >= 8 || '确认密码长度至少为8个字符。' },
   vcode: { required: value => !!value || '验证码是必填项。',minLength: value => value.length === 4 || '验证码长度必须为4个字符。'}
@@ -73,36 +74,39 @@ const register = async () => {
 };
 
 const getCaptcha = async () => {
-  //TODO: 验证邮箱格式
-    if(!formState.userEmail){
-        showAlert("请输入邮箱地址。");
-        return;
-    }
-    try {
-        const response = await axios.get('http://127.0.0.1:37881/api/v1/getCaptcha', {
-            params: { email: formState.userEmail }
-        });
-        if (response.data.status === 200) {
-            showAlert('验证码发送成功，请检查您的邮箱。');
-            if(isButtonDisabled.value){
-                return;
-            }
-            isButtonDisabled.value = true;
-            let timer = setInterval(() => {
-                if(countdown.value > 0){
-                    countdown.value--;
-                } else {
-                    clearInterval(timer);
-                    isButtonDisabled.value = false;
-                    countdown.value = 60; // 重置倒计时
-                }
-            }, 1000);
-        } else{
-            showAlert("验证码发送失败，请稍后再试。");
-        }
-    } catch (error) {
-        showAlert('验证码请求失败，请稍后再试。');
-    }
+  if(!regex.test(formState.userEmail)){
+    showAlert("请输入有效的邮箱地址。");
+      return;
+  }
+  if(!formState.userEmail){
+      showAlert("请输入邮箱地址。");
+      return;
+  }
+  try {
+      const response = await axios.get('http://127.0.0.1:37881/api/v1/getCaptcha', {
+          params: { email: formState.userEmail }
+      });
+      if (response.data.status === 200) {
+          showAlert('验证码发送成功，请检查您的邮箱。');
+          if(isButtonDisabled.value){
+              return;
+          }
+          isButtonDisabled.value = true;
+          let timer = setInterval(() => {
+              if(countdown.value > 0){
+                  countdown.value--;
+              } else {
+                  clearInterval(timer);
+                  isButtonDisabled.value = false;
+                  countdown.value = 60; // 重置倒计时
+              }
+          }, 1000);
+      } else{
+          showAlert("验证码发送失败，请稍后再试。");
+      }
+  } catch (error) {
+      showAlert('验证码请求失败，请稍后再试。');
+  }
 }
 </script>
 

@@ -18,7 +18,7 @@ const forms = reactive({
 
 const login = async () => {
   if (forms.username === '' || forms.password === '') {
-    showAlert('用户名或密码不能为空');
+    showAlert('用户名或密码不能为空。');
     return;
   }
   try {
