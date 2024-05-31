@@ -12,13 +12,6 @@ import (
 	"gopkg.in/gomail.v2"
 )
 
-type mailConfig struct {
-	Host string `xml:"host"`
-	Port int    `xml:"port"`
-	User string `xml:"user"`
-	Pass string `xml:"pass"`
-}
-
 // 从emailConfig.xml中读取邮箱配置并返回mailConfig
 func initEmailConfig() mailConfig {
 	// 判断是否有emailconfig.xml文件

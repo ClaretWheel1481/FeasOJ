@@ -8,60 +8,15 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
 
 // TODO:消息队列待实现
 
-// 用户Token生成后返回给前端
-func GenerateToken(username string) string {
-	token := jwt.New(jwt.SigningMethodHS256)
-	// 设置Token的Claims
-	claims := token.Claims.(jwt.MapClaims)
-	claims["username"] = username
-	// 生成Token
-	tokenString, err := token.SignedString([]byte(selectTokenSecret(username)))
-	if err != nil {
-		fmt.Println("生成Token失败：", err)
-		return ""
-	}
-	return tokenString
-}
-
-// 校验Token与username是不是配对
-func VerifyToken(username, tokenString string) bool {
-	// 解析Token Username
-	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// 验证签名
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte(selectTokenSecret(username)), nil
-	})
-	if token.Valid {
-		return true
-	}
-	return err == nil
-}
-
 // 全局变量 - 本地配置文件路径
 var parentDir string
 var configsDir string
 var avatarsDir string
-
-type RegisterRequest struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Vcode    string `json:"vcode"`
-}
-
-type updatePasswordRequest struct {
-	Email       string `json:"email"`
-	NewPassword string `json:"newpassword"`
-	Vcode       string `json:"vcode"`
-}
 
 func main() {
 	currentDir, err := os.Getwd()
@@ -122,7 +77,7 @@ func main() {
 			if sendVerifycode(initEmailConfig(), email, generateVerifycode()) == "Success" {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
 			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "验证码发送失败，可能是我们的问题。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码发送失败，可能是我们的问题。"})
 			}
 		})
 
@@ -144,7 +99,7 @@ func main() {
 			// 根据uid来查询对应的用户信息
 			userInfo := selectUserInfo(username)
 			if userInfo.Username == "" {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "用户不存在。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 			} else {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 			}
@@ -189,21 +144,25 @@ func main() {
 			username := c.Query("username")
 			// 检查上传文件类型为png或jpg
 			if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像文件类型错误。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像文件类型错误。"})
 				return
 			}
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像上传失败。"})
 			}
 
 			// 压缩文件并修改文件名为数据库中用户的uid，例如user_1.png/jpg
 			user := fmt.Sprintf("%d", selectUserInfo(username).Uid)
 			file.Filename = "user_" + user + file.Filename[strings.LastIndex(file.Filename, "."):]
-
+			// 检查是否有重复名称，重复则删除
+			filepath := "../avatars/" + file.Filename
+			if _, err := os.Stat(filepath); err == nil {
+				os.Remove(filepath)
+			}
 			// 存放到avatars文件夹中
 			err = c.SaveUploadedFile(file, "../avatars/"+file.Filename)
 			if err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "头像上传失败。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像上传失败。"})
 			}
 
 			// 更新数据库中的头像路径地址
@@ -247,7 +206,7 @@ func main() {
 			if updatePassword(req.Email, req.NewPassword) {
 				c.JSON(http.StatusOK, gin.H{"status": 200, "message": "密码修改成功，2秒后跳转至登录页面。"})
 			} else {
-				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "error": "密码修改失败。"})
+				c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码修改失败。"})
 			}
 		})
 

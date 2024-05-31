@@ -9,11 +9,6 @@ import (
 	"github.com/go-redis/redis"
 )
 
-type redisConfig struct {
-	Address  string `xml:"address"`
-	Password string `xml:"password"`
-}
-
 // 写入Redis连接配置到redisconfig.xml中
 func inputRedisInfo() bool {
 	var config redisConfig

@@ -5,7 +5,6 @@ import { useVuelidate } from '@vuelidate/core';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
-const router = useRouter();
 const dialog = ref(false);
 const dialogMessage = ref('');
 
@@ -132,7 +131,7 @@ const getCaptcha = async () => {
                 </template>
             </v-text-field>
             <v-text-field v-model="forms.password" :rules="[rules.password.required, rules.password.minLength]" rounded="xl" variant="solo-filled" type="password" label="密码" />
-      <v-text-field v-model="forms.confirmPassword" :rules="[rules.confirmPassword.required, rules.confirmPassword.minLength]" rounded="xl" variant="solo-filled" type="password" label="确认密码" />
+        <v-text-field v-model="forms.confirmPassword" :rules="[rules.confirmPassword.required, rules.confirmPassword.minLength]" rounded="xl" variant="solo-filled" type="password" label="确认密码" />
         <v-btn type="submit" color="primary" rounded="xl">提交</v-btn>
         </v-form>
     </v-sheet>
