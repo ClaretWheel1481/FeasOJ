@@ -69,38 +69,38 @@ type Problem struct {
 	Output_full_path string `gorm:"comment:输出样例完整路径"`
 }
 
-// 总提交记录表: Pid,Uid,Result,Time，Language
+// 总提交记录表: Pid,Uid,Result,Time,Language
 type SubmitRecord struct {
-	Pid      int    `gorm:"comment:Pid;primaryKey"`
-	Uid      int    `gorm:"comment:Uid;not null"`
-	Result   string `gorm:"comment:结果"`
-	Time     int    `gorm:"comment:时间"`
-	Language string `gorm:"comment:语言"`
+	Pid      int       `gorm:"comment:Pid;primaryKey"`
+	Uid      int       `gorm:"comment:Uid;not null"`
+	Result   string    `gorm:"comment:结果;not null"`
+	Time     time.Time `gorm:"comment:时间;not null"`
+	Language string    `gorm:"comment:语言;not null"`
 }
 
 // 竞赛表: Contestid, Title, Start_time, End_time, Description, Pid
 type Contest struct {
-	Cid         int    `gorm:"comment:Cid;primaryKey;autoIncrement"`
-	Title       string `gorm:"comment:竞赛标题"`
-	Start_time  string `gorm:"comment:开始时间"`
-	End_time    string `gorm:"comment:结束时间"`
-	Description string `gorm:"comment:竞赛描述"`
+	Cid         int       `gorm:"comment:Cid;primaryKey;autoIncrement"`
+	Title       string    `gorm:"comment:竞赛标题"`
+	Start_time  time.Time `gorm:"comment:开始时间"`
+	End_time    time.Time `gorm:"comment:结束时间"`
+	Description string    `gorm:"comment:竞赛描述"`
 }
 
 // 讨论帖子表: Tid,Title,Content,Uid,Create_at
 type Discuss struct {
-	Tid       int    `gorm:"comment:Tid;primaryKey;autoIncrement"`
-	Title     string `gorm:"comment:标题"`
-	Content   string `gorm:"comment:内容"`
-	Uid       int    `gorm:"comment:用户"`
-	Create_at string `gorm:"comment:创建时间"`
+	Tid       int       `gorm:"comment:Tid;primaryKey;autoIncrement"`
+	Title     string    `gorm:"comment:标题"`
+	Content   string    `gorm:"comment:内容"`
+	Uid       int       `gorm:"comment:用户"`
+	Create_at time.Time `gorm:"comment:创建时间"`
 }
 
 // 讨论评论表: Cid,Tid,Content,Uid,Create_at
 type Comment struct {
-	Cid       int    `gorm:"comment:Cid;primaryKey;autoIncrement"`
-	Tid       int    `gorm:"comment:Tid"`
-	Content   string `gorm:"comment:内容"`
-	Uid       int    `gorm:"comment:用户"`
-	Create_at string `gorm:"comment:创建时间"`
+	Cid       int       `gorm:"comment:Cid;primaryKey;autoIncrement"`
+	Tid       int       `gorm:"comment:Tid"`
+	Content   string    `gorm:"comment:内容"`
+	Uid       int       `gorm:"comment:用户"`
+	Create_at time.Time `gorm:"comment:创建时间"`
 }

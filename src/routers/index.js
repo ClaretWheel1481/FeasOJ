@@ -14,7 +14,6 @@ const routes = [
         component: () => import('../pages/AboutPage.vue'),
         meta: {
             title: 'FeasOJ - 关于',
-            transition: 'slide-left'
         }
     },
     { 

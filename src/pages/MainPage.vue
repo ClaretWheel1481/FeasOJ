@@ -7,7 +7,7 @@ import { VCard, VCarousel,VCarouselItem } from 'vuetify/lib/components/index.mjs
         <h1>FeasOJ</h1>
     </div>
     <!-- TODO:轮播图组件待处理 -->
-    <v-card rounded="xl" style="margin: 50px;" elevation="5">
+    <v-card rounded="xl" style="margin: 50px;" elevation="10">
         <v-carousel show-arrows="hover">
             <v-carousel-item
                 src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
@@ -16,11 +16,6 @@ import { VCard, VCarousel,VCarouselItem } from 'vuetify/lib/components/index.mjs
 
             <v-carousel-item
                 src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg"
-                cover
-            ></v-carousel-item>
-
-            <v-carousel-item
-                src="..\..\backend-src\avatars\user_1.jpg"
                 cover
             ></v-carousel-item>
         </v-carousel>

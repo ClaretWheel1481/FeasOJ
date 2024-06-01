@@ -160,13 +160,6 @@ func updatePassword(email, newpassword string) bool {
 	return err == nil
 }
 
-// 返回SubmitRecord表中所有记录
-func selectAllSubmitRecords() []SubmitRecord {
-	var records []SubmitRecord
-	connectSql().Find(&records)
-	return records
-}
-
 // 更新数据库中用户的头像路径
 func updateAvatar(username, avatarpath string) bool {
 	err := connectSql().Model(&User{}).Where("username = ?", username).Update("avatar", avatarpath).Error
@@ -203,12 +196,16 @@ func selectProblemByCid(cid string) []Problem {
 	return problems
 }
 
-// 根据UID和PID，通过User表和SubmitRecord联合查询用户提交题目记录
-// TODO:待前端功能实现
-func selectUserSubmitRecord(uid, pid string) SubmitRecord {
-	var submitRecord SubmitRecord
-	connectSql().Table("submit_records").Select("submit_records.*, users.username, users.email").
-		Joins("inner join users on users.uid = submit_records.uid").
-		Where("submit_records.uid = ? AND submit_records.pid = ?", uid, pid).First(&submitRecord)
-	return submitRecord
+// 倒序查询指定用户ID的提交题目记录
+func selectSubmitRecordsByUid(uid string) []SubmitRecord {
+	var records []SubmitRecord
+	connectSql().Where("uid = ?", uid).Order("time desc").Find(&records)
+	return records
+}
+
+// 返回SubmitRecord表中所有记录
+func selectAllSubmitRecords() []SubmitRecord {
+	var records []SubmitRecord
+	connectSql().Order("time desc").Find(&records)
+	return records
 }

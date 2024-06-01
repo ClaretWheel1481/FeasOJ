@@ -49,7 +49,7 @@ onMounted(async () => {
         <div style="margin: 10px;"></div>
         <v-divider></v-divider>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">题目详细</span>
             </template>
@@ -58,7 +58,7 @@ onMounted(async () => {
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">输入样例</span>
             </template>
@@ -67,7 +67,7 @@ onMounted(async () => {
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">输出样例</span>
             </template>
@@ -75,7 +75,7 @@ onMounted(async () => {
                 {{ problemInfo.Output }}
             </v-card-text>
         </v-card>
-        <v-card class="mx-auto my-8 editor-container" width="80%" elevation="5" rounded="xl">
+        <v-card class="mx-auto my-8 editor-container" width="80%" elevation="10" rounded="xl">
             <!-- <v-select v-model="selectedLanguage" :items="languages" label="选择语言" rounded="xl"></v-select> -->
             <!-- TODO:代码编辑器 -->
         </v-card>

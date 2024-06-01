@@ -1,3 +1,4 @@
+<!-- 竞赛详细信息页 -->
 <script setup>
 import { ref, onMounted,computed } from 'vue'
 import axios from 'axios'
@@ -62,7 +63,7 @@ onMounted(async () => {
     <div class="title">
         <h1>竞赛 - {{ route.params.Cid }}</h1>
     </div>
-    <v-card style="margin: 100px;" rounded="xl" elevation="5">
+    <v-card style="margin: 100px;" rounded="xl" elevation="10">
         <v-data-table-server
         :headers="headers"
         :items="problems"
@@ -84,3 +85,9 @@ onMounted(async () => {
         </v-data-table-server>
     </v-card>
 </template>
+
+<style scoped>
+.tabletitle{
+  color: #1e65ff;
+}
+</style>

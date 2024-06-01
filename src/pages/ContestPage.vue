@@ -1,8 +1,10 @@
+<!-- 竞赛页 -->
 <script setup>
 import { ref, onMounted,computed } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
+import moment from 'moment';
 
 const headers = ref([
   { title: 'ID', value: 'Cid', align:'center'},
@@ -74,7 +76,7 @@ onMounted(async () => {
       loading-text="加载中..."
       @update="fetchData"
       :hide-default-footer="true"
-      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有竞赛数据。'"
+      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '当前无竞赛。'"
     >
     <template v-slot:item="{ item }">
       <tr>
@@ -82,10 +84,22 @@ onMounted(async () => {
         <td class="tabletitle">
           <v-btn @click="handleRowClick(item.Cid)" variant="text" block>{{ item.Title }}</v-btn>
         </td>
-        <td>{{ item.Start_time }}</td>
-        <td>{{ item.End_time }}</td>
+        <td>{{ moment(item.Start_time).format('YYYY-MM-DD HH:mm') }}</td>
+        <td>{{ moment(item.End_time).format('YYYY-MM-DD HH:mm') }}</td>
         <td>{{ item.Description }}</td>
       </tr>
     </template>
     </v-data-table-server>
 </template>
+
+<style scoped>
+.tabletitle{
+  color: #1e65ff;
+}
+
+.searchbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+</style>

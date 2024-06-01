@@ -147,6 +147,13 @@ func main() {
 			submitrecords := selectAllSubmitRecords()
 			c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 		})
+
+		// 获取指定用户的提交记录API
+		router.GET("/getSubmitRecordsByUid/:uid", func(c *gin.Context) {
+			uid := c.Param("uid")
+			submitrecords := selectSubmitRecordsByUid(uid)
+			c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+		})
 	}
 
 	router2 := r.Group("/api/v2")

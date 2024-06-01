@@ -1,3 +1,4 @@
+<!-- 关于页面 -->
 <script setup>
 import {VImg,VContainer} from 'vuetify/components'
 

@@ -2,14 +2,23 @@
 import { ref,onMounted } from 'vue'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn } from 'vuetify/components';
+import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import '@mdi/font/css/materialdesignicons.css';
+import moment from 'moment';
 
 const route = useRoute();
 const username = route.params.Username;
 const userInfo = ref({});
-
+const userId = ref('');
 const loading = ref(false);
+const userSubmitRecords = ref([])
+const userSubmitRecordsLength = ref(0)
+const headers = ref([
+  { title: '题目ID', value: 'Pid', align:'center'},
+  { title: '结果', value: 'Result', align:'center'},
+  { title: '语言', value: 'Language', align:'center'},
+  { title: '时间', value: 'Time', align:'center'},
+])
 
 const logout = () => {
   localStorage.clear();
@@ -35,6 +44,8 @@ onMounted(async () => {
       }
       );
       userInfo.value = response.data.Info;
+      userId.value = response.data.Info.Uid;
+      await fetchData();
     }
   }catch(error){
     window.location='/403'
@@ -42,6 +53,19 @@ onMounted(async () => {
     loading.value=false;
   }
 });
+
+const fetchData = async () => {
+  loading.value = true
+  try {
+    const submitResponse = await axios.get(`http://127.0.0.1:37881/api/v1/getSubmitRecordsByUid/${userId.value}`)
+    userSubmitRecords.value = submitResponse.data.submitrecords
+    userSubmitRecordsLength.value = userSubmitRecords.value.length
+  } catch (error) {
+    console.error('Error fetching data: ', error)
+  } finally {
+    loading.value = false
+  }
+}
 </script>
 
 <template>
@@ -50,8 +74,12 @@ onMounted(async () => {
   </div>
   <div v-else>
     <div style="margin: 10%"></div>
-    <v-row style="justify-content: space-between; margin-inline:5px">
       <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
+        <div style="margin: 10px"></div>
+        <!-- 头像组件 -->
+        <v-avatar size="120" color="surface-variant">
+          <v-img :src="userInfo.Avatar" cover></v-img>
+        </v-avatar>
         <v-card-text>
           <p class="text-h4 font-weight-black">{{userInfo.Username}}</p>
           <div style="margin: 10px"></div>
@@ -80,7 +108,29 @@ onMounted(async () => {
           <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">退出登录</v-btn>
         </v-card-actions>
       </v-card>
-    </v-row>
+      <div style="margin: 30px"></div>
+      <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
+        <v-data-table-server
+        :headers="headers"
+        :items="userSubmitRecords"
+        :items-length="userSubmitRecordsLength"
+        :loading="loading"
+        loading-text="加载中..."
+        @update="fetchData"
+        :hide-default-footer="true"
+        no-data-text="没有状态数据。"
+        >
+        <template v-slot:item="{ item }">
+          <tr>
+            <!-- TODO:点击后跳转到题目页面 -->
+            <td>{{ item.Pid }}</td>
+            <td>{{ item.Result }}</td>
+            <td>{{ item.Language }}</td>
+            <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
+          </tr>
+        </template>
+        </v-data-table-server>
+      </v-card>
   </div>
 </template>
 
