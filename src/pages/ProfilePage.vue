@@ -2,7 +2,7 @@
 import { ref,onMounted } from 'vue'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
-import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField } from 'vuetify/components';
+import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn } from 'vuetify/components';
 import '@mdi/font/css/materialdesignicons.css';
 
 const route = useRoute();
@@ -76,6 +76,7 @@ onMounted(async () => {
           </v-row>
         </v-card-text>
         <v-card-actions style="justify-content: end;">
+          <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="$router.push('/reset')">修改密码</v-btn>
           <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">退出登录</v-btn>
         </v-card-actions>
       </v-card>

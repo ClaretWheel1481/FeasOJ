@@ -88,4 +88,4 @@ onMounted(async () => {
       </tr>
     </template>
     </v-data-table-server>
-  </template>
+</template>

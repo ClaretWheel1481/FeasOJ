@@ -33,6 +33,8 @@ const isButtonDisabled = ref(false);
 const countdown = ref(60);
 
 const nextStep = async () => {
+    localStorage.clear();
+    window.location = '/';
     if (forms.email === "" || forms.password === "" || forms.confirmPassword === "" || forms.vcode === ""){
         showAlert('请确认所有内容都已经输入。');
         return;

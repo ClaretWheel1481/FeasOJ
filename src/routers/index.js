@@ -81,7 +81,7 @@ const routes = [
     { 
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
         meta: {
-            title: 'FeasOJ - 忘记密码'
+            title: 'FeasOJ - 重置密码'
         }
     },
     {
