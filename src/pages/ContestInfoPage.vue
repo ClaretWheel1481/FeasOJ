@@ -72,7 +72,7 @@ onMounted(async () => {
         loading-text="加载中..."
         @update="fetchData"
         :hide-default-footer="true"
-        :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有竞赛数据。'"
+        :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '当前无竞赛数据'"
         >
         <template v-slot:item="{ item }">
             <tr>

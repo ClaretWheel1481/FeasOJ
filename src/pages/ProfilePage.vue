@@ -1,12 +1,13 @@
 <script setup>
 import { ref,onMounted } from 'vue'
 import axios from 'axios';
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import '@mdi/font/css/materialdesignicons.css';
 import moment from 'moment';
 
 const route = useRoute();
+const router = useRouter();
 const username = route.params.Username;
 const userInfo = ref({});
 const userId = ref('');
@@ -24,6 +25,11 @@ const logout = () => {
   localStorage.clear();
   window.location = '/'
 };
+
+// 点击题目跳转
+const handleRowClick = (row) => {
+  router.push({ path: `/problem/${row}` })
+}
 
 onMounted(async () => {
   loading.value = true;
@@ -123,7 +129,9 @@ const fetchData = async () => {
         <template v-slot:item="{ item }">
           <tr>
             <!-- TODO:点击后跳转到题目页面 -->
-            <td>{{ item.Pid }}</td>
+            <td class="tabletitle">
+              <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+            </td>
             <td>{{ item.Result }}</td>
             <td>{{ item.Language }}</td>
             <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
@@ -140,5 +148,8 @@ const fetchData = async () => {
   justify-content: center;
   align-items: center;
   height: 100%;
+}
+.tabletitle{
+  color: #1e65ff;
 }
 </style>

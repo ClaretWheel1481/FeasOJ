@@ -1,13 +1,16 @@
 <script setup>
-import { VDataTableServer,VCard } from 'vuetify/lib/components/index.mjs';
+import { VDataTableServer,VCard,VBtn } from 'vuetify/lib/components/index.mjs';
 import { onMounted } from 'vue';
 import axios from 'axios';
 import { computed, ref } from 'vue';
 import moment from 'moment';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const headers = ref([
   { title: '题目ID', value: 'Pid', align:'center'},
-  { title: '用户ID', value: 'Uid', align:'center'},
+  { title: '用户UID', value: 'Uid', align:'center'},
   { title: '结果', value: 'Result', align:'center'},
   { title: '语言', value: 'Language', align:'center'},
   { title: '时间', value: 'Time', align:'center'},
@@ -32,6 +35,11 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// 点击题目跳转
+const handleRowClick = (row) => {
+  router.push({ path: `/problem/${row}` })
 }
 
 // 初始化数据
@@ -64,7 +72,9 @@ onMounted(async () => {
     >
     <template v-slot:item="{ item }">
       <tr>
-        <td>{{ item.Pid }}</td>
+        <td class="tabletitle">
+          <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+        </td>
         <td>{{ item.Uid }}</td>
         <td>{{ item.Result }}</td>
         <td>{{ item.Language }}</td>
@@ -76,5 +86,7 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-
+.tabletitle{
+  color: #1e65ff;
+}
 </style>
