@@ -107,7 +107,13 @@ func updatePasswords(c *gin.Context) {
 // 上传头像
 func uploadAvatars(c *gin.Context) {
 	file, err := c.FormFile("avatar")
+	token := c.GetHeader("token")
 	username := c.Query("username")
+	// 校验Token
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败。"})
+		return
+	}
 	// 检查上传文件类型为png或jpg
 	if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像文件类型错误。"})
@@ -174,4 +180,9 @@ func getSubmitRecordsByUids(c *gin.Context) {
 	uid := c.Param("uid")
 	submitrecords := selectSubmitRecordsByUid(uid)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
+}
+
+func getAllDiscussionss(c *gin.Context) {
+	discussions := selectDiscussList()
+	c.JSON(http.StatusOK, gin.H{"discussions": discussions})
 }

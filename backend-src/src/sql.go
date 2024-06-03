@@ -97,7 +97,7 @@ func initSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{}, &Discuss{}, &Comment{})
+	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{}, &Discussion{}, &Comment{})
 	initAdminAccount()
 	return true
 }
@@ -215,4 +215,15 @@ func selectAllSubmitRecords() []SubmitRecord {
 	connectSql().
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
+}
+
+// 获取讨论列表
+func selectDiscussList() []discussRequest {
+	var discussRequests []discussRequest
+	// TODO：联合查询根据Discuss表的Uid来先获取User表的Username后放入discussRequests，再将Discuss表的Title和Create_at放入discussRequests
+	connectSql().Table("Discussions").
+		Select("Discussions.Tid,Discussions.Title, Users.Username, Discussions.Create_at").
+		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
+		Find(&discussRequests)
+	return discussRequests
 }

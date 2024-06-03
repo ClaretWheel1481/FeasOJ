@@ -83,6 +83,9 @@ func main() {
 
 		// 获取指定用户的提交记录API
 		router.GET("/getSubmitRecordsByUid/:uid", getSubmitRecordsByUids)
+
+		// 获取所有讨论帖子API
+		router.GET("/getAllDiscussions", getAllDiscussionss)
 	}
 
 	router2 := r.Group("/api/v2")

@@ -31,7 +31,7 @@ const navigate = () => {
       <v-list-item rounded="xl" prepend-icon="mdi-file" title="题目" value="PROBLEMSET" @click="$router.push('/problemset')" color="primary"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-flag" title="竞赛" value="CONTEST" @click="$router.push('/contest')" color="primary"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" title="状态" value="STATUS" @click="$router.push('/status')" color="primary"></v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-chat" title="讨论" value="DISCUSS" color="primary" @click="$router.push('/discuss')"></v-list-item>
+      <v-list-item rounded="xl" prepend-icon="mdi-chat" title="讨论" value="DISCUSS" color="primary" @click="$router.push('/discussion')"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-help-circle" title="关于" value="ABOUT" @click="$router.push('/about')" color="primary"></v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>

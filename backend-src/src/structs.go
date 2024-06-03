@@ -40,6 +40,14 @@ type updatePasswordRequest struct {
 	Vcode       string `json:"vcode"`
 }
 
+// 讨论列表请求体
+type discussRequest struct {
+	Tid       string `json:"tid"`
+	Title     string `json:"title"`
+	Username  string `json:"username"`
+	Create_at string `json:"create_at"`
+}
+
 // 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid         int       `gorm:"comment:Uid;primaryKey;autoIncrement"`
@@ -88,7 +96,7 @@ type Contest struct {
 }
 
 // 讨论帖子表: Tid,Title,Content,Uid,Create_at
-type Discuss struct {
+type Discussion struct {
 	Tid       int       `gorm:"comment:Tid;primaryKey;autoIncrement"`
 	Title     string    `gorm:"comment:标题"`
 	Content   string    `gorm:"comment:内容"`

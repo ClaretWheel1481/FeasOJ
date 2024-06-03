@@ -31,6 +31,16 @@ const handleRowClick = (row) => {
   router.push({ path: `/problem/${row}` })
 }
 
+const fetchData = async () => {
+  try {
+    const submitResponse = await axios.get(`http://127.0.0.1:37881/api/v1/getSubmitRecordsByUid/${userId.value}`)
+    userSubmitRecords.value = submitResponse.data.submitrecords
+    userSubmitRecordsLength.value = userSubmitRecords.value.length
+  } catch (error) {
+    console.error('Error fetching data: ', error)
+  }
+}
+
 onMounted(async () => {
   loading.value = true;
   try{
@@ -52,6 +62,8 @@ onMounted(async () => {
       userInfo.value = response.data.Info;
       userId.value = response.data.Info.Uid;
       await fetchData();
+    }else {
+      window.location='/403'
     }
   }catch(error){
     window.location='/403'
@@ -59,19 +71,6 @@ onMounted(async () => {
     loading.value=false;
   }
 });
-
-const fetchData = async () => {
-  loading.value = true
-  try {
-    const submitResponse = await axios.get(`http://127.0.0.1:37881/api/v1/getSubmitRecordsByUid/${userId.value}`)
-    userSubmitRecords.value = submitResponse.data.submitrecords
-    userSubmitRecordsLength.value = userSubmitRecords.value.length
-  } catch (error) {
-    console.error('Error fetching data: ', error)
-  } finally {
-    loading.value = false
-  }
-}
 </script>
 
 <template>

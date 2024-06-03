@@ -90,10 +90,17 @@ const routes = [
         }
     },
     {
-        path: '/discuss', component: () => import('../pages/DiscussPage.vue'),
+        path: '/discussion', component: () => import('../pages/DiscussPage.vue'),
         meta: {
             title: 'FeasOJ - 讨论'
         }
+    },
+    { 
+        path: '/discussion/:Did', 
+        component: () => import('../pages/DiscussionDetailsPage.vue'),
+        meta: {
+            title: 'Discussion'
+        },
     },
     {
         path: '/psm', component: () => import('../pages/ProblemsetManagementPage.vue'),
