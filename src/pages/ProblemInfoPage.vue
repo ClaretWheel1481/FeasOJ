@@ -3,12 +3,13 @@ import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular } from 'vuetify
 import { ref,onMounted,computed } from 'vue'
 import axios from 'axios';
 import { useRoute } from 'vue-router';
+import CodeEditor from 'simple-code-editor';
 
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
 const token = ref(localStorage.getItem('token'))
-
+const Codes = ref('')
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -76,8 +77,22 @@ onMounted(async () => {
             </v-card-text>
         </v-card>
         <v-card class="mx-auto my-8 editor-container" width="80%" elevation="10" rounded="xl">
-            <!-- <v-select v-model="selectedLanguage" :items="languages" label="选择语言" rounded="xl"></v-select> -->
             <!-- TODO:代码编辑器 -->
+            <CodeEditor 
+            v-model="Codes"
+            :language_selector="true" 
+            :languages="[['cpp', 'C++'],['python', 'Python'],['php', 'PHP']]"
+            :wrap_code="true"
+            :tab-spaces="4"
+            :header="true"
+            :copy-code="false"
+            height="100%"
+            min_height="100%"
+            width="100%"
+            min_width="100%"
+            theme="github"
+            >
+            </CodeEditor>
         </v-card>
     </div>
 </template>

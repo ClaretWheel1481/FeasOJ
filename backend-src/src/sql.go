@@ -146,7 +146,9 @@ func selectUserInfo(username string) User {
 
 // 根据email与username判断是否该用户已存在
 func isUserExist(username, email string) bool {
-	if connectSql().Where("username = ?", username).First(&User{}).Error == nil || connectSql().Where("email = ?", email).First(&User{}).Error == nil {
+	if connectSql().Where("username = ?", username).
+		First(&User{}).Error == nil || connectSql().Where("email = ?", email).
+		First(&User{}).Error == nil {
 		return true
 	}
 	return false
@@ -156,13 +158,16 @@ func isUserExist(username, email string) bool {
 func updatePassword(email, newpassword string) bool {
 	newpassword = encryptPassword(newpassword)
 	tokensecret := uuid.New().String()
-	err := connectSql().Model(&User{}).Where("email = ?", email).Update("password", newpassword).Update("token_secret", tokensecret).Error
+	err := connectSql().Model(&User{}).
+		Where("email = ?", email).Update("password", newpassword).
+		Update("token_secret", tokensecret).Error
 	return err == nil
 }
 
 // 更新数据库中用户的头像路径
 func updateAvatar(username, avatarpath string) bool {
-	err := connectSql().Model(&User{}).Where("username = ?", username).Update("avatar", avatarpath).Error
+	err := connectSql().Model(&User{}).
+		Where("username = ?", username).Update("avatar", avatarpath).Error
 	return err == nil
 }
 
@@ -196,16 +201,18 @@ func selectProblemByCid(cid string) []Problem {
 	return problems
 }
 
-// 倒序查询指定用户ID的提交题目记录
+// 倒序查询指定用户ID的30天内的提交题目记录
 func selectSubmitRecordsByUid(uid string) []SubmitRecord {
 	var records []SubmitRecord
-	connectSql().Where("uid = ?", uid).Order("time desc").Find(&records)
+	connectSql().Where("uid = ?", uid).
+		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }
 
-// 返回SubmitRecord表中所有记录
+// 返回SubmitRecord表中30天内的记录
 func selectAllSubmitRecords() []SubmitRecord {
 	var records []SubmitRecord
-	connectSql().Order("time desc").Find(&records)
+	connectSql().
+		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }

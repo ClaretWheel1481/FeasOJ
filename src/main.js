@@ -6,6 +6,8 @@ import router from './routers/index';
 import './style.css';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
+import hljs from 'highlight.js';
+import CodeEditor from 'simple-code-editor';
 
 const vuetify = createVuetify({
     components,

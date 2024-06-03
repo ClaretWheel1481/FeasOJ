@@ -17,9 +17,15 @@ importers:
       axios:
         specifier: ^1.6.8
         version: 1.6.8
+      highlight.js:
+        specifier: ^11.9.0
+        version: 11.9.0
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      simple-code-editor:
+        specifier: ^2.0.9
+        version: 2.0.9
       vite-plugin-monaco-editor:
         specifier: ^1.1.0
         version: 1.1.0(monaco-editor@0.49.0)
@@ -393,6 +399,10 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  highlight.js@11.9.0:
+    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
+    engines: {node: '>=12.0.0'}
+
   magic-string@0.30.10:
     resolution: {integrity: sha512-iIRwTIf0QKV3UAnYK4PU8uiEc4SRh5jX0mwpIwETPpHdhVM4f53RSwS/vXvN1JhGX+Cs7B8qIq3d6AH49O5fAQ==}
 
@@ -429,6 +439,9 @@ packages:
     resolution: {integrity: sha512-/9ClTJPByC0U4zNLowV1tMBe8yMEAxewtR3cUNX5BoEpGH3dQEWpJLr6CLp0fPdYRF/fzVOgvDb1zXuakwF5kQ==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+
+  simple-code-editor@2.0.9:
+    resolution: {integrity: sha512-bDekCSgcaFn79kiB6N+S07/m9fLLfgHchVsKhMLyKsqZNaRC5GWxn2fpbMZPKmORDyWzUML3hy2mrN3XWyGSfA==}
 
   source-map-js@1.2.0:
     resolution: {integrity: sha512-itJW8lvSA0TXEphiRoawsCksnlf8SyvmFzIhltqAHluXd88pkCd+cXJVHTDwdCr0IzwptSm035IHQktUu1QUMg==}
@@ -782,6 +795,8 @@ snapshots:
   fsevents@2.3.3:
     optional: true
 
+  highlight.js@11.9.0: {}
+
   magic-string@0.30.10:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
@@ -829,6 +844,10 @@ snapshots:
       '@rollup/rollup-win32-ia32-msvc': 4.17.2
       '@rollup/rollup-win32-x64-msvc': 4.17.2
       fsevents: 2.3.3
+
+  simple-code-editor@2.0.9:
+    dependencies:
+      highlight.js: 11.9.0
 
   source-map-js@1.2.0: {}
 

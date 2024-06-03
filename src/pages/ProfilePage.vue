@@ -82,10 +82,13 @@ const fetchData = async () => {
     <div style="margin: 10%"></div>
       <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
         <div style="margin: 10px"></div>
-        <!-- 头像组件 -->
-        <v-avatar size="120" color="surface-variant">
-          <v-img :src="userInfo.Avatar" cover></v-img>
-        </v-avatar>
+        <!-- TODO:头像点击后弹出修改头像组件 -->
+        <v-btn icon size="120">
+          <v-avatar size="120" color="surface-variant">
+            <v-img :src="userInfo.Avatar" cover>
+            </v-img>
+          </v-avatar>
+        </v-btn>
         <v-card-text>
           <p class="text-h4 font-weight-black">{{userInfo.Username}}</p>
           <div style="margin: 10px"></div>
