@@ -1,6 +1,6 @@
 <!-- 关于页面 -->
 <script setup>
-import {VImg,VContainer} from 'vuetify/components'
+import { VImg,VContainer } from 'vuetify/components'
 
 function opengithub(){
     window.open('https://github.com/ClaretWheel1481/FeasOJ')

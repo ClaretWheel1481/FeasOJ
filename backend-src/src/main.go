@@ -86,6 +86,9 @@ func main() {
 
 		// 获取所有讨论帖子API
 		router.GET("/getAllDiscussions", getAllDiscussionss)
+
+		// 获取指定Tid的帖子API
+		router.GET("/getDiscussionByTid/:tid", getDiscussionByTids)
 	}
 
 	router2 := r.Group("/api/v2")

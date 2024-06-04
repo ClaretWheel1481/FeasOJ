@@ -48,6 +48,29 @@ type discussRequest struct {
 	Create_at string `json:"create_at"`
 }
 
+// 讨论帖子页请求体
+type discsInfoRequest struct {
+	Tid       int       `json:"tid"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	Uid       int       `json:"uid"`
+	Create_at time.Time `json:"create_at"`
+	Username  string    `json:"username"`
+	Avatar    string    `json:"avatar"`
+}
+
+// 用户信息请求体
+type userInfoRequest struct {
+	Uid      int       `json:"uid"`
+	Avatar   string    `json:"avatar"`
+	Username string    `json:"username"`
+	Email    string    `json:"email"`
+	Synopsis string    `json:"synopsis"`
+	Score    int       `json:"score"`
+	CreateAt time.Time `json:"create_at"`
+	Role     int       `json:"role"`
+}
+
 // 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid         int       `gorm:"comment:Uid;primaryKey;autoIncrement"`

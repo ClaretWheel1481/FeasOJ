@@ -27,8 +27,6 @@ const rules = {
   confirmPassword: { required: value => !!value || '确认密码是必填项。', minLength: value => value.length >= 8 || '确认密码长度至少为8个字符。' },
 };
 
-const v$ = useVuelidate(rules, forms);
-
 const isButtonDisabled = ref(false);
 const countdown = ref(60);
 

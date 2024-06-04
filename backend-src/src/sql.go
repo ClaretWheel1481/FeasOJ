@@ -136,11 +136,10 @@ func selectTokenSecret(username string) string {
 }
 
 // 根据username查询指定用户的除了password和tokensecret之外的所有信息
-func selectUserInfo(username string) User {
-	var user User
-	connectSql().Where("username = ?", username).First(&user)
-	user.Password = ""
-	user.TokenSecret = ""
+func selectUserInfo(username string) userInfoRequest {
+	var user userInfoRequest
+	connectSql().Table("users").Where("username = ?", username).
+		First(&user)
 	return user
 }
 
@@ -220,10 +219,19 @@ func selectAllSubmitRecords() []SubmitRecord {
 // 获取讨论列表
 func selectDiscussList() []discussRequest {
 	var discussRequests []discussRequest
-	// TODO：联合查询根据Discuss表的Uid来先获取User表的Username后放入discussRequests，再将Discuss表的Title和Create_at放入discussRequests
 	connectSql().Table("Discussions").
 		Select("Discussions.Tid,Discussions.Title, Users.Username, Discussions.Create_at").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
 		Find(&discussRequests)
 	return discussRequests
+}
+
+// 获取指定Tid的讨论以及User表中发帖人的头像
+func selectDiscussionByTid(tid string) discsInfoRequest {
+	var discussion discsInfoRequest
+	connectSql().Table("Discussions").
+		Select("Discussions.Tid, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Username, Users.Avatar").
+		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
+		Where("Discussions.Tid = ?", tid).First(&discussion)
+	return discussion
 }

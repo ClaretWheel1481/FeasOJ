@@ -1,5 +1,5 @@
 <script setup>
-import { VCard,VDataTableServer,VBtn } from 'vuetify/components'
+import { VCard,VDataTableServer,VBtn,VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
@@ -78,6 +78,7 @@ onMounted(async () => {
         </template>
         </v-data-table-server>
     </v-card>
+    <!-- TODO：浮动按钮 -->
 </template>
 
 <style scoped>

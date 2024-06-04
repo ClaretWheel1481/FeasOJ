@@ -79,18 +79,17 @@ onMounted(async () => {
         <v-card class="mx-auto my-8 editor-container" width="80%" elevation="10" rounded="xl">
             <!-- TODO:代码编辑器 -->
             <CodeEditor 
-            v-model="Codes"
+            v-model="Codes" 
             :language_selector="true" 
-            :languages="[['cpp', 'C++'],['python', 'Python'],['php', 'PHP']]"
-            :wrap_code="true"
-            :tab-spaces="4"
-            :header="true"
-            :copy-code="false"
-            height="100%"
-            min_height="100%"
-            width="100%"
-            min_width="100%"
-            theme="github"
+            :languages="[['cpp', 'C++'],['python', 'Python'],['java', 'Java']]" 
+            :wrap_code="true" 
+            :tab-spaces="4" 
+            :header="true" 
+            height="100%" 
+            min_height="100%" 
+            width="100%" 
+            min_width="100%" 
+            theme="github" 
             >
             </CodeEditor>
         </v-card>

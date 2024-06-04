@@ -84,19 +84,19 @@ onMounted(async () => {
         <!-- TODO:头像点击后弹出修改头像组件 -->
         <v-btn icon size="120">
           <v-avatar size="120" color="surface-variant">
-            <v-img :src="userInfo.Avatar" cover>
+            <v-img :src="userInfo.avatar" cover>
             </v-img>
           </v-avatar>
         </v-btn>
         <v-card-text>
-          <p class="text-h4 font-weight-black">{{userInfo.Username}}</p>
+          <p class="text-h4 font-weight-black">{{userInfo.username}}</p>
           <div style="margin: 10px"></div>
-          <p class="text-medium-emphasis">{{userInfo.Synopsis}}</p>
+          <p class="text-medium-emphasis">{{userInfo.synopsis}}</p>
           <div style="margin: 20px"></div>
           <v-row style="justify-content: space-between;margin-inline:5px">
             <v-text-field
                 label="Email"
-                :model-value="userInfo.Email"
+                :model-value="userInfo.email"
                 readonly
                 rounded="xl"
                 variant="solo-filled"
@@ -104,7 +104,7 @@ onMounted(async () => {
               <div style="margin: 5px;"></div>
               <v-text-field
                 label="Score"
-                :model-value="userInfo.Score"
+                :model-value="userInfo.score"
                 readonly
                 rounded="xl"
                 variant="solo-filled"

@@ -151,8 +151,7 @@ func getAllProblemss(c *gin.Context) {
 
 // 获取题目信息
 func getProblemInfos(c *gin.Context) {
-	problemID := c.Param("id")
-	problemInfo := selectProblemInfo(problemID)
+	problemInfo := selectProblemInfo(c.Param("id"))
 	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 }
 
@@ -164,8 +163,7 @@ func getAllContestss(c *gin.Context) {
 
 // 获取竞赛信息
 func getContestInfos(c *gin.Context) {
-	contestID := c.Param("cid")
-	contestInfo := selectProblemByCid(contestID)
+	contestInfo := selectProblemByCid(c.Param("cid"))
 	c.JSON(http.StatusOK, gin.H{"contestInfo": contestInfo})
 }
 
@@ -177,12 +175,17 @@ func getAllSubmitRecordss(c *gin.Context) {
 
 // 获取指定用户提交记录
 func getSubmitRecordsByUids(c *gin.Context) {
-	uid := c.Param("uid")
-	submitrecords := selectSubmitRecordsByUid(uid)
+	submitrecords := selectSubmitRecordsByUid(c.Param("uid"))
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
 
+// 获取所有讨论列表
 func getAllDiscussionss(c *gin.Context) {
 	discussions := selectDiscussList()
 	c.JSON(http.StatusOK, gin.H{"discussions": discussions})
+}
+
+func getDiscussionByTids(c *gin.Context) {
+	discussion := selectDiscussionByTid(c.Param("tid"))
+	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
 }

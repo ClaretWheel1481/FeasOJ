@@ -27,5 +27,4 @@ const logout = () => {
         <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">退出登录</v-btn>
         <div style="margin: 10px"></div>
     </v-card>
-    
 </template>
