@@ -28,7 +28,7 @@ const fetchData = async () => {
     discuss.value = response.data.discussions
     allDiscuss.value = discuss.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   } finally {
     loading.value = false
   }

@@ -110,7 +110,7 @@ func uploadAvatars(c *gin.Context) {
 	token := c.GetHeader("token")
 	username := c.Query("username")
 	// 校验Token
-	if !VerifyToken(username, token) {
+	if token == "" || !VerifyToken(username, token) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败。"})
 		return
 	}
@@ -185,6 +185,7 @@ func getAllDiscussionss(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"discussions": discussions})
 }
 
+// 获取指定id讨论信息
 func getDiscussionByTids(c *gin.Context) {
 	discussion := selectDiscussionByTid(c.Param("tid"))
 	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})

@@ -30,7 +30,7 @@ const fetchData = async () => {
     problems.value = response.data.contestInfo
     allProblems.value = problems.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   } finally {
     loading.value = false
   }
@@ -61,7 +61,7 @@ onMounted(async () => {
         </template>
     </v-app-bar>
     <div class="title">
-        <h1>竞赛 - {{ route.params.Cid }}</h1>
+        <h1>竞赛</h1>
     </div>
     <v-card style="margin: 100px;" rounded="xl" elevation="10">
         <v-data-table-server
@@ -76,9 +76,9 @@ onMounted(async () => {
         >
         <template v-slot:item="{ item }">
             <tr>
-                <td>{{ item.Pid }}</td>
+                <td>{{ item.pid }}</td>
                 <td class="tabletitle">
-                <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
+                  <v-btn @click="handleRowClick(item.pid)" variant="text" block>{{ item.title }}</v-btn>
                 </td>
             </tr>
         </template>

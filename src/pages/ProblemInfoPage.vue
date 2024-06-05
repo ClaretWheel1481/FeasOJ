@@ -43,10 +43,10 @@ onMounted(async () => {
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
-        <h1>{{problemInfo.Title}}</h1>
+        <h1>{{problemInfo.title}}</h1>
         <div style="margin: 10px;"></div>
-        <p class="subtitle">时间限制: {{problemInfo.Timelimit}} S</p>
-        <p class="subtitle">内存限制: {{problemInfo.Memorylimit}} MB</p>
+        <p class="subtitle">时间限制: {{problemInfo.time_limit}} S</p>
+        <p class="subtitle">内存限制: {{problemInfo.memory_limit}} MB</p>
         <div style="margin: 10px;"></div>
         <v-divider></v-divider>
         <div style="margin: 10px"></div>
@@ -55,7 +55,7 @@ onMounted(async () => {
                 <span class="font-weight-black">题目详细</span>
             </template>
             <v-card-text>
-                {{ problemInfo.Content }}
+                {{ problemInfo.content }}
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
@@ -64,7 +64,7 @@ onMounted(async () => {
                 <span class="font-weight-black">输入样例</span>
             </template>
             <v-card-text>
-                {{ problemInfo.Input }}
+                {{ problemInfo.input }}
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
@@ -73,7 +73,7 @@ onMounted(async () => {
                 <span class="font-weight-black">输出样例</span>
             </template>
             <v-card-text>
-                {{ problemInfo.Output }}
+                {{ problemInfo.output }}
             </v-card-text>
         </v-card>
         <v-card class="mx-auto my-8 editor-container" width="80%" elevation="10" rounded="xl">

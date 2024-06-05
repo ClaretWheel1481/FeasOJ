@@ -71,6 +71,18 @@ type userInfoRequest struct {
 	Role     int       `json:"role"`
 }
 
+// 题目信息请求体
+type problemInfoRequest struct {
+	Pid         int    `json:"pid"`
+	Title       string `json:"title"`
+	Content     string `json:"content"`
+	Timelimit   int    `json:"time_limit"`
+	Memorylimit int    `json:"memory_Limit"`
+	Input       string `json:"input"`
+	Output      string `json:"output"`
+	Cid         int    `json:"cid"`
+}
+
 // 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at
 type User struct {
 	Uid         int       `gorm:"comment:Uid;primaryKey;autoIncrement"`

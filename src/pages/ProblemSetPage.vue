@@ -34,7 +34,7 @@ const fetchData = async () => {
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   } finally {
     loading.value = false
   }

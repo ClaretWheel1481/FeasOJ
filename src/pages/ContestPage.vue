@@ -40,7 +40,7 @@ const fetchData = async () => {
     contests.value = response.data.contests
     allContests.value = contests.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   } finally {
     loading.value = false
   }

@@ -60,7 +60,7 @@ onMounted(async () => {
       }
       );
       userInfo.value = response.data.Info;
-      userId.value = response.data.Info.Uid;
+      userId.value = response.data.Info.uid;
       await fetchData();
     }else {
       window.location='/403'
@@ -130,7 +130,6 @@ onMounted(async () => {
         >
         <template v-slot:item="{ item }">
           <tr>
-            <!-- TODO:点击后跳转到题目页面 -->
             <td class="tabletitle">
               <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
             </td>

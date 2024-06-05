@@ -31,7 +31,7 @@ const fetchData = async () => {
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   } finally {
     loading.value = false
   }

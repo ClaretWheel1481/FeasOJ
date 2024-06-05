@@ -21,7 +21,7 @@ onMounted(async () => {
                 discussionInfos.value = response.data.discussionInfo;
             }
         } catch (error) {
-            console.error('请求帖子信息时发生错误:', error);
+            alert('错误:', error);
         } finally{
             loading.value = false;
         }

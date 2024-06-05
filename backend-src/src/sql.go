@@ -178,11 +178,9 @@ func selectAllProblems() []Problem {
 }
 
 // 获取指定PID的题目除了Input_full_path Output_full_path外的所有信息
-func selectProblemInfo(pid string) Problem {
-	var problem Problem
-	connectSql().Where("pid = ?", pid).First(&problem)
-	problem.Input_full_path = ""
-	problem.Output_full_path = ""
+func selectProblemInfo(pid string) problemInfoRequest {
+	var problem problemInfoRequest
+	connectSql().Table("Problems").Where("pid = ?", pid).First(&problem)
 	return problem
 }
 
@@ -194,9 +192,9 @@ func selectAllContests() []Contest {
 }
 
 // 根据Contest表的Cid来显示所有对应Problem表Cid的题目
-func selectProblemByCid(cid string) []Problem {
-	var problems []Problem
-	connectSql().Where("cid = ?", cid).Find(&problems)
+func selectProblemByCid(cid string) []problemInfoRequest {
+	var problems []problemInfoRequest
+	connectSql().Table("Problems").Where("cid = ?", cid).Find(&problems)
 	return problems
 }
 
