@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import ViteMonacoPlugin from 'vite-plugin-monaco-editor'
+import legacy from '@vitejs/plugin-legacy'
 
 export default defineConfig({
+  base: './',
   plugins: [
     vue(),
-    ViteMonacoPlugin,
+    legacy()
   ],
   define: {
     'process.env': { ...process.env }
