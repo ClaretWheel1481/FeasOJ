@@ -1,3 +1,4 @@
+<!-- 首页 -->
 <script setup>
 import { VCard, VCarousel,VCarouselItem } from 'vuetify/lib/components/index.mjs';
 </script>

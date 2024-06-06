@@ -1,8 +1,8 @@
+<!-- 状态页 -->
 <script setup>
 import { VDataTableServer,VCard,VBtn } from 'vuetify/lib/components/index.mjs';
-import { onMounted } from 'vue';
 import axios from 'axios';
-import { computed, ref } from 'vue';
+import { onMounted,computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
 

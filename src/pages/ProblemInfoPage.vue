@@ -1,3 +1,4 @@
+<!-- 题目详细页 -->
 <script setup>
 import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular } from 'vuetify/components'
 import { ref,onMounted,computed } from 'vue'
@@ -10,6 +11,7 @@ const loading = ref(true)
 const problemInfo = ref({});
 const token = ref(localStorage.getItem('token'))
 const Codes = ref('')
+
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 

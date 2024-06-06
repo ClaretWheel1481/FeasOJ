@@ -1,5 +1,6 @@
+<!-- 讨论帖子列表页 -->
 <script setup>
-import { VCard,VDataTableServer,VBtn,VFab } from 'vuetify/components'
+import { VCard,VDataTableServer,VBtn } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'

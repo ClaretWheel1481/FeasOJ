@@ -1,3 +1,4 @@
+<!-- 讨论帖子详情页 -->
 <script setup>
 import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from 'vuetify/components';
 import { ref,onMounted,computed } from 'vue'
@@ -8,6 +9,7 @@ const route = useRoute();
 const loading = ref(true)
 const discussionInfos = ref({});
 const token = ref(localStorage.getItem('token'))
+
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 

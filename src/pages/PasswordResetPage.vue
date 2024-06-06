@@ -1,7 +1,7 @@
+<!-- 重置密码页 -->
 <script setup>
 import { VSheet,VForm,VTextField,VRow,VBtn,VDialog,VCard,VCardActions,VCardText,VCardTitle,VAppBar } from 'vuetify/lib/components/index.mjs';
 import { ref,reactive } from 'vue';
-import { useVuelidate } from '@vuelidate/core';
 import axios from 'axios';
 
 const dialog = ref(false);

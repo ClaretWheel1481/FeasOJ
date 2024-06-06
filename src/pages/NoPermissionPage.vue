@@ -1,8 +1,6 @@
+<!-- 403 -->
 <script setup>
 import { VEmptyState,VBtn,VCard,VCardActions } from 'vuetify/components';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 
 const back = () => {
   window.location = '/'

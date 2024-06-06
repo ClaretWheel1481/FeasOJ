@@ -1,6 +1,6 @@
 <script setup>
 import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
-import { ref,computed,onMounted } from 'vue';
+import { ref,computed } from 'vue';
 import { useRouter } from 'vue-router';
 import '@mdi/font/css/materialdesignicons.css';
 
@@ -35,6 +35,7 @@ const navigate = () => {
       <v-list-item rounded="xl" prepend-icon="mdi-help-circle" title="关于" value="ABOUT" @click="$router.push('/about')" color="primary"></v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>
+      <!-- TODO:检测是否为管理员方式待修改 -->
       <v-list-item
         v-if="role === '1'"
         rounded="xl"

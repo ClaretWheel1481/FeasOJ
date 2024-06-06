@@ -1,3 +1,4 @@
+<!-- 注册页 -->
 <script setup>
 import { ref,reactive } from 'vue';
 import { VAppBar, VBtn, VTextField, VForm, VDialog, VCard, VCardTitle, VCardText, VCardActions,VSheet } from 'vuetify/components';
