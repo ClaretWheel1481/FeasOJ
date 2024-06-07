@@ -80,7 +80,7 @@ onMounted(async () => {
         </v-data-table-server>
     </v-card>
     <div class="fab">
-      <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10"></v-fab>
+      <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading"></v-fab>
     </div>
 </template>
 

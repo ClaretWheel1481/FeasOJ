@@ -14,7 +14,7 @@ func initAvatarFolder() {
 	}
 }
 
-// TODO:压缩头像分辨率为64*64
+// TODO:压缩头像分辨率为512*512
 // func compressAvatar(filePath string) {
 // 	var width uint = 64
 // 	var height uint = 64

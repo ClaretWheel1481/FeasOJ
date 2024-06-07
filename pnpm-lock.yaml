@@ -32,6 +32,9 @@ importers:
       vue:
         specifier: ^3.4.21
         version: 3.4.27
+      vue-avatar-cropper:
+        specifier: ^6.1.1
+        version: 6.1.1(vue@3.4.27)
       vue-router:
         specifier: ^4.0.13
         version: 4.0.13(vue@3.4.27)
@@ -1031,6 +1034,9 @@ packages:
   core-js@3.37.1:
     resolution: {integrity: sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==}
 
+  cropperjs@1.6.2:
+    resolution: {integrity: sha512-nhymn9GdnV3CqiEHJVai54TULFAE3VshJTXSqSJKa8yXAKyBKDWdhHarnlIPrshJ0WMFTGuFvG02YjLXfPiuOA==}
+
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
 
@@ -1155,6 +1161,11 @@ packages:
   mime-types@2.1.35:
     resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
     engines: {node: '>= 0.6'}
+
+  mime@4.0.3:
+    resolution: {integrity: sha512-KgUb15Oorc0NEKPbvfa0wRU+PItIEZmiv+pyAO2i0oTIVTJhlzMclU7w4RXWQrSOVH5ax/p/CkIO7KI4OyFJTQ==}
+    engines: {node: '>=16'}
+    hasBin: true
 
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
@@ -1303,6 +1314,12 @@ packages:
         optional: true
       terser:
         optional: true
+
+  vue-avatar-cropper@6.1.1:
+    resolution: {integrity: sha512-IdS1arePgcW5JIfopwG+TdEYs1xl8ctzy0Vy74aax2zQsEFb+GPitWaf2TOvPRHFiDIjTkYBmQ619qPEDmoCmw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      vue: ^3.2.21
 
   vue-demi@0.13.11:
     resolution: {integrity: sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==}
@@ -2449,6 +2466,8 @@ snapshots:
 
   core-js@3.37.1: {}
 
+  cropperjs@1.6.2: {}
+
   csstype@3.1.3: {}
 
   debug@4.3.5:
@@ -2549,6 +2568,8 @@ snapshots:
   mime-types@2.1.35:
     dependencies:
       mime-db: 1.52.0
+
+  mime@4.0.3: {}
 
   moment@2.30.1: {}
 
@@ -2682,6 +2703,12 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
       terser: 5.31.0
+
+  vue-avatar-cropper@6.1.1(vue@3.4.27):
+    dependencies:
+      cropperjs: 1.6.2
+      mime: 4.0.3
+      vue: 3.4.27
 
   vue-demi@0.13.11(vue@3.4.27):
     dependencies:

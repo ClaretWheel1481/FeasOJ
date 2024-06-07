@@ -2,7 +2,6 @@
 <script setup>
 import { ref,reactive } from 'vue';
 import { VAppBar, VBtn, VTextField, VForm, VDialog, VCard, VCardTitle, VCardText, VCardActions,VSheet } from 'vuetify/components';
-import { useVuelidate } from '@vuelidate/core';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 
@@ -31,8 +30,6 @@ const formState = reactive({
   confirmPassword: '',
   vcode: ''
 });
-
-const v$ = useVuelidate(rules, formState);
 
 const isButtonDisabled = ref(false);
 const countdown = ref(60);

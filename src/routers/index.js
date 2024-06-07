@@ -24,24 +24,6 @@ const routes = [
         }
     },
     { 
-        path: '/contest', 
-        component: () => import('../pages/ContestPage.vue'),
-        meta: {
-            title: 'FeasOJ - 竞赛'
-        }
-    },
-    { 
-        path: '/contest/:Cid', 
-        component: () => import('../pages/ContestInfoPage.vue'),
-        meta: {
-            title: 'Contest'
-        },
-        beforeEnter: (to, from, next) => {
-            to.meta.title = 'Contest ' + to.params.Cid;
-            next();
-        }
-    },
-    { 
         path: '/login', 
         component: () => import('../pages/LoginPage.vue'),
         meta: {

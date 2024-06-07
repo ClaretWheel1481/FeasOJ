@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
+	"path"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -107,40 +108,39 @@ func updatePasswords(c *gin.Context) {
 // 上传头像
 func uploadAvatars(c *gin.Context) {
 	file, err := c.FormFile("avatar")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取头像文件。"})
+		return
+	}
 	token := c.GetHeader("token")
 	username := c.Query("username")
 	// 校验Token
-	if token == "" || !VerifyToken(username, token) {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败。"})
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	// 检查上传文件类型为png或jpg
-	if !strings.HasSuffix(file.Filename, ".png") && !strings.HasSuffix(file.Filename, ".jpg") && !strings.HasSuffix(file.Filename, ".JPG") && !strings.HasSuffix(file.Filename, ".PNG") {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像文件类型错误。"})
+	// 获取用户信息
+	userInfo := selectUserInfo(username)
+	if userInfo.Username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户信息。"})
 		return
 	}
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像上传失败。"})
+	newFilename := fmt.Sprintf("user_%d%s", userInfo.Uid, path.Ext(file.Filename))
+	filePath := filepath.Join("../avatars", newFilename)
+	if _, err := os.Stat(filePath); err == nil {
+		os.Remove(filePath)
 	}
-
-	// 压缩文件并修改文件名为数据库中用户的uid，例如user_1.png/jpg
-	user := fmt.Sprintf("%d", selectUserInfo(username).Uid)
-	file.Filename = "user_" + user + file.Filename[strings.LastIndex(file.Filename, "."):]
-	// 检查是否有重复名称，重复则删除
-	filepath := "../avatars/" + file.Filename
-	if _, err := os.Stat(filepath); err == nil {
-		os.Remove(filepath)
+	// 上传头像至指定路径
+	if err := c.SaveUploadedFile(file, filePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像上传失败。"})
+		return
 	}
-	// 存放到avatars文件夹中
-	err = c.SaveUploadedFile(file, "../avatars/"+file.Filename)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "头像上传失败。"})
+	// 上传头像路径至数据库
+	if !updateAvatar(username, filepath.Join("..", "..", "backend-src", "avatars", newFilename)) {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像路径更新失败。"})
+		return
 	}
-
-	// 更新数据库中的头像路径地址
-	if updateAvatar(username, "..\\..\\backend-src\\avatars\\"+file.Filename) {
-		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功。"})
-	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "头像上传成功。"})
 }
 
 // 获取所有题目

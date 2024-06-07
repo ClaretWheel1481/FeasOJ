@@ -7,6 +7,8 @@ import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAv
 import '@mdi/font/css/materialdesignicons.css';
 import moment from 'moment';
 
+const showCropper = ref(false);
+const avatar = ref(null);
 const route = useRoute();
 const router = useRouter();
 const username = route.params.Username;
@@ -32,16 +34,38 @@ const handleRowClick = (row) => {
   router.push({ path: `/problem/${row}` })
 }
 
+// 上传头像至服务器
+const uploadAvatar = async (file) => {
+  const formData = new FormData();
+  formData.append('avatar', file);
+  try {
+    const response = await axios.post('http://127.0.0.1:37881/api/v2/uploadAvatar',formData,{
+      headers: {
+        token:localStorage.getItem('token'),
+        'Content-Type':'multipart/form-data'
+      },
+      params: {
+        username: username,
+      },
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// 获取用户提交记录
 const fetchData = async () => {
   try {
     const submitResponse = await axios.get(`http://127.0.0.1:37881/api/v1/getSubmitRecordsByUid/${userId.value}`)
     userSubmitRecords.value = submitResponse.data.submitrecords
     userSubmitRecordsLength.value = userSubmitRecords.value.length
   } catch (error) {
-    console.error('Error fetching data: ', error)
+    alert('错误: ', error)
   }
 }
 
+// 校验token后获取用户信息
 onMounted(async () => {
   loading.value = true;
   try{
@@ -82,8 +106,7 @@ onMounted(async () => {
     <div style="margin: 10%"></div>
       <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
         <div style="margin: 10px"></div>
-        <!-- TODO:头像点击后弹出修改头像组件 -->
-        <v-btn icon size="120">
+        <v-btn icon size="120" @click="showCropper = true">
           <v-avatar size="120" color="surface-variant">
             <v-img :src="userInfo.avatar" cover>
             </v-img>
@@ -142,6 +165,12 @@ onMounted(async () => {
         </v-data-table-server>
       </v-card>
   </div>
+  <!-- FIXME:头像文件上传失败 -->
+  <avatar-cropper
+  v-model="showCropper"
+  :upload-handler="uploadAvatar"
+  :labels="{ submit: '上传头像', cancel: '取消' }"
+  />
 </template>
 
 <style scoped>

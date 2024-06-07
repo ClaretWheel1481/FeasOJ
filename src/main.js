@@ -8,6 +8,7 @@ import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import hljs from 'highlight.js';
 import CodeEditor from 'simple-code-editor';
+import AvatarCropper from 'vue-avatar-cropper';
 
 const vuetify = createVuetify({
     components,
@@ -42,4 +43,4 @@ router.beforeEach((to, from, next) => {
 })
 
 const app = createApp(App);
-app.use(router).use(vuetify).mount('#app');
+app.use(router).use(vuetify).use(AvatarCropper).mount('#app');
