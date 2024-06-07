@@ -1,12 +1,13 @@
 <script setup>
 import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import '@mdi/font/css/materialdesignicons.css';
+import axios from 'axios';
 
 const userName = ref(localStorage.getItem('username'))
 const token = ref(localStorage.getItem('token'))
-const role = ref(localStorage.getItem('role'))
+const privilege = ref("")
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -22,6 +23,29 @@ const navigate = () => {
     router.push('/login')
   }
 }
+
+// 校验Token后获取用户信息，若privilege为1则表明是管理员
+onMounted(async () => {
+  if (userLoggedIn.value) {
+      const tokenResponse = await axios.get('http://127.0.0.1:37881/api/v1/verifyToken',{
+        params:{
+          username:localStorage.getItem('username')
+        },
+        headers:{
+          token:localStorage.getItem('token')
+        }
+      })
+      if(tokenResponse.data.status === 200){
+        const response = await axios.get('http://127.0.0.1:37881/api/v1/getUserInfo',{
+          params:{
+            username:localStorage.getItem('username')
+          }
+        }
+        );
+        privilege.value = response.data.Info.role;
+      }
+  }
+})
 </script>
 
 <template>
@@ -29,15 +53,13 @@ const navigate = () => {
     <v-list nav style="display: flex; flex-direction: column; height: 100%;">
       <v-list-item rounded="xl" prepend-icon="mdi-home" title="首页" value="HOME" @click="$router.push('/')" color="primary"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-file" title="题目" value="PROBLEMSET" @click="$router.push('/problemset')" color="primary"></v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-flag" title="竞赛" value="CONTEST" @click="$router.push('/contest')" color="primary"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" title="状态" value="STATUS" @click="$router.push('/status')" color="primary"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-chat" title="讨论" value="DISCUSS" color="primary" @click="$router.push('/discussion')"></v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-help-circle" title="关于" value="ABOUT" @click="$router.push('/about')" color="primary"></v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>
-      <!-- TODO:检测是否为管理员方式待修改 -->
       <v-list-item
-        v-if="role === '1'"
+        v-if="privilege===1"
         rounded="xl"
         prepend-icon="mdi-file"
         title="题目管理"

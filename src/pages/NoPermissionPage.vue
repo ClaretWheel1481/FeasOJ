@@ -1,6 +1,6 @@
 <!-- 403 -->
 <script setup>
-import { VEmptyState,VBtn,VCard,VCardActions } from 'vuetify/components';
+import { VEmptyState,VBtn,VCard } from 'vuetify/components';
 
 const back = () => {
   window.location = '/'

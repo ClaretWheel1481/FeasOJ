@@ -97,7 +97,7 @@ func initSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Contest{}, &Discussion{}, &Comment{})
+	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Discussion{}, &Comment{})
 	initAdminAccount()
 	return true
 }
@@ -182,20 +182,6 @@ func selectProblemInfo(pid string) problemInfoRequest {
 	var problem problemInfoRequest
 	connectSql().Table("Problems").Where("pid = ?", pid).First(&problem)
 	return problem
-}
-
-// 获取所有Contest表中的数据
-func selectAllContests() []Contest {
-	var contests []Contest
-	connectSql().Find(&contests)
-	return contests
-}
-
-// 根据Contest表的Cid来显示所有对应Problem表Cid的题目
-func selectProblemByCid(cid string) []problemInfoRequest {
-	var problems []problemInfoRequest
-	connectSql().Table("Problems").Where("cid = ?", cid).Find(&problems)
-	return problems
 }
 
 // 倒序查询指定用户ID的30天内的提交题目记录

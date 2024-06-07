@@ -155,18 +155,6 @@ func getProblemInfos(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 }
 
-// 获取所有竞赛API
-func getAllContestss(c *gin.Context) {
-	allContest := selectAllContests()
-	c.JSON(http.StatusOK, gin.H{"contests": allContest})
-}
-
-// 获取竞赛信息
-func getContestInfos(c *gin.Context) {
-	contestInfo := selectProblemByCid(c.Param("cid"))
-	c.JSON(http.StatusOK, gin.H{"contestInfo": contestInfo})
-}
-
 // 获取所有提交记录
 func getAllSubmitRecordss(c *gin.Context) {
 	submitrecords := selectAllSubmitRecords()

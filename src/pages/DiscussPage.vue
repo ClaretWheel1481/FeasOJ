@@ -1,6 +1,6 @@
 <!-- 讨论帖子列表页 -->
 <script setup>
-import { VCard,VDataTableServer,VBtn } from 'vuetify/components'
+import { VCard,VDataTableServer,VBtn,VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
@@ -79,12 +79,20 @@ onMounted(async () => {
         </template>
         </v-data-table-server>
     </v-card>
-    <!-- TODO：浮动按钮 -->
+    <div class="fab">
+      <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10"></v-fab>
+    </div>
 </template>
 
 <style scoped>
 .disctitle{
   color: #1e65ff;
   width: 60%;
+}
+
+.fab {
+  position: fixed;
+  bottom: 80px;
+  right: 180px;
 }
 </style>

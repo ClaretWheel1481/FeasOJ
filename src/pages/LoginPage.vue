@@ -39,7 +39,6 @@ const login = async () => {
       showAlert(loginResponse.data.message);
       localStorage.setItem('token',loginResponse.data.token)
       localStorage.setItem('username',forms.username)
-      localStorage.setItem('role',profileResponse.data.Info.role)
       setTimeout(() => {
         window.location = '/'
       }, 500);

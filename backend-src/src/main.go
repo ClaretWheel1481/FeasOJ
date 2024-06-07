@@ -72,12 +72,6 @@ func main() {
 		// 根据题目ID获取题目信息
 		router.GET("/getProblemInfo/:id", getProblemInfos)
 
-		// 获取所有竞赛API
-		router.GET("/getAllContests", getAllContestss)
-
-		// 根据竞赛ID获取题目信息
-		router.GET("/getContestInfo/:cid", getContestInfos)
-
 		// 获取总提交记录API
 		router.GET("/getAllSubmitRecords", getAllSubmitRecordss)
 

@@ -98,7 +98,6 @@ type User struct {
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
-// contest为0则不属于任何比赛
 type Problem struct {
 	Pid              int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
 	Title            string `gorm:"comment:题目标题;not null"`
@@ -107,7 +106,6 @@ type Problem struct {
 	Memorylimit      int    `gorm:"comment:内存大小限制;not null"`
 	Input            string `gorm:"comment:输入样例;not null"`
 	Output           string `gorm:"comment:输出样例;not null"`
-	Cid              int    `gorm:"comment:隶属竞赛;not null"` //0为不属于任何竞赛，1...32767表示隶属的竞赛号
 	Input_full_path  string `gorm:"comment:输入样例完整路径"`
 	Output_full_path string `gorm:"comment:输出样例完整路径"`
 }
@@ -119,15 +117,6 @@ type SubmitRecord struct {
 	Result   string    `gorm:"comment:结果;not null"`
 	Time     time.Time `gorm:"comment:时间;not null"`
 	Language string    `gorm:"comment:语言;not null"`
-}
-
-// 竞赛表: Contestid, Title, Start_time, End_time, Description, Pid
-type Contest struct {
-	Cid         int       `gorm:"comment:Cid;primaryKey;autoIncrement"`
-	Title       string    `gorm:"comment:竞赛标题"`
-	Start_time  time.Time `gorm:"comment:开始时间"`
-	End_time    time.Time `gorm:"comment:结束时间"`
-	Description string    `gorm:"comment:竞赛描述"`
 }
 
 // 讨论帖子表: Tid,Title,Content,Uid,Create_at
