@@ -1,9 +1,9 @@
 <!-- 题库页 -->
 <script setup>
-import { ref, onMounted,computed } from 'vue'
-import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { ref, onMounted,computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
+import { getAllProblems } from '../utils/axios';
 
 const router = useRouter()
 
@@ -31,7 +31,7 @@ const filteredProblems = computed(() => {
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await axios.get('http://127.0.0.1:37881/api/v1/getAllProblems')
+    const response = await getAllProblems();
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {

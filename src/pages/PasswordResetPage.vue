@@ -1,8 +1,8 @@
 <!-- 重置密码页 -->
 <script setup>
-import { VSheet,VForm,VTextField,VRow,VBtn,VDialog,VCard,VCardActions,VCardText,VCardTitle,VAppBar } from 'vuetify/lib/components/index.mjs';
+import { VSheet,VForm,VTextField,VBtn,VDialog,VCard,VCardActions,VCardText,VCardTitle,VAppBar } from 'vuetify/lib/components/index.mjs';
 import { ref,reactive } from 'vue';
-import axios from 'axios';
+import { updatePassword, getCaptchaCode } from '../utils/axios';
 
 const dialog = ref(false);
 const dialogMessage = ref('');
@@ -46,11 +46,7 @@ const nextStep = async () => {
         return;
     }
     try{
-        const response = await axios.post('http://127.0.0.1:37881/api/v2/updatePassword', {
-            email: forms.email,
-            vcode: forms.vcode,
-            newpassword: forms.password
-        });
+        const response = await updatePassword(forms.email, forms.vcode, forms.password);
         if (response.data.status === 200) {
             showAlert(response.data.message);
             setTimeout(() => {
@@ -77,9 +73,7 @@ const getCaptcha = async () => {
         return;
     }
     try {
-        const response = await axios.get('http://127.0.0.1:37881/api/v1/getCaptcha', {
-            params: { email: forms.email }
-        });
+        const response = await getCaptchaCode(forms.email);
         if (response.data.status === 200) {
             showAlert('验证码发送成功，请检查您的邮箱。');
             if(isButtonDisabled.value){

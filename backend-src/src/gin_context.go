@@ -11,6 +11,8 @@ import (
 	"github.com/google/uuid"
 )
 
+// TODO:为安全性考虑，未来将对任何API操作加入Token验证
+
 // 注册
 func registers(c *gin.Context) {
 	var req RegisterRequest
@@ -177,4 +179,17 @@ func getAllDiscussionss(c *gin.Context) {
 func getDiscussionByTids(c *gin.Context) {
 	discussion := selectDiscussionByTid(c.Param("tid"))
 	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
+}
+
+// 创建讨论
+func createDiscussion(c *gin.Context) {
+	username := c.GetHeader("username")
+	title := c.PostForm("title")
+	content := c.PostForm("content")
+	uid := selectUserInfo(username).Uid
+	if !addDiscussion(title, content, uid) {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "创建讨论失败。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "创建讨论成功。"})
 }

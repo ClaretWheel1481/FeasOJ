@@ -2,8 +2,7 @@
 import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
 import { ref,computed,onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import '@mdi/font/css/materialdesignicons.css';
-import axios from 'axios';
+import { getUserInfo, verifyJWT } from '../utils/axios';
 
 const userName = ref(localStorage.getItem('username'))
 const token = ref(localStorage.getItem('token'))
@@ -27,21 +26,9 @@ const navigate = () => {
 // 校验Token后获取用户信息，若privilege为1则表明是管理员
 onMounted(async () => {
   if (userLoggedIn.value) {
-      const tokenResponse = await axios.get('http://127.0.0.1:37881/api/v1/verifyToken',{
-        params:{
-          username:localStorage.getItem('username')
-        },
-        headers:{
-          token:localStorage.getItem('token')
-        }
-      })
+      const tokenResponse = await verifyJWT(localStorage.getItem('username'),localStorage.getItem('token'));
       if(tokenResponse.data.status === 200){
-        const response = await axios.get('http://127.0.0.1:37881/api/v1/getUserInfo',{
-          params:{
-            username:localStorage.getItem('username')
-          }
-        }
-        );
+        const response = await getUserInfo(localStorage.getItem('username'));
         privilege.value = response.data.Info.role;
       }
   }

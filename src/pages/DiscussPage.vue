@@ -4,7 +4,7 @@ import { VCard,VDataTableServer,VBtn,VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
-import axios from 'axios';
+import { getAllDis } from '../utils/axios';
 const headers = ref([
   { title: '帖子', value: 'Title', align:'center'},
   { title: '发帖人', value: 'Owner', align:'center'},
@@ -25,7 +25,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await axios.get('http://127.0.0.1:37881/api/v1/getAllDiscussions')
+    const response = await getAllDis();
     discuss.value = response.data.discussions
     allDiscuss.value = discuss.value.length
   } catch (error) {

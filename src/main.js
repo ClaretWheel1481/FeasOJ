@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import 'vuetify/styles';
 import router from './routers/index';
-import './style.css';
+import './assets/style.css';
 import { registerPlugins } from './plugins';
 
 // FIXME:Firefox无效

@@ -2,7 +2,7 @@
 <script setup>
 import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from 'vuetify/components';
 import { ref,onMounted,computed } from 'vue'
-import axios from 'axios';
+import { getDisDetails } from '../utils/axios';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -18,7 +18,7 @@ onMounted(async () => {
     if(userLoggedIn.value){
         try {
             const Tid = route.params.Tid;
-            const response = await axios.get(`http://127.0.0.1:37881/api/v1/getDiscussionByTid/${Tid}`);
+            const response = await getDisDetails(Tid);
             if (response.status === 200) {
                 discussionInfos.value = response.data.discussionInfo;
             }

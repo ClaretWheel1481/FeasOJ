@@ -96,6 +96,9 @@ func main() {
 		// 密码修改API
 		router2.POST("/updatePassword", updatePasswords)
 
+		// 创建讨论API
+		router2.POST("/addDiscussion", createDiscussion)
+
 		// 上传代码文件API
 		// TODO:上传代码文件功能待实现、等待前端实现
 		router.POST("/uploadCode")

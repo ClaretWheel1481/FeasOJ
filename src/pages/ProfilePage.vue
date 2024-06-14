@@ -1,11 +1,10 @@
 <!-- 个人信息页 -->
 <script setup>
 import { ref,onMounted } from 'vue'
-import axios from 'axios';
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
-import '@mdi/font/css/materialdesignicons.css';
 import moment from 'moment';
+import { verifyJWT,getUserSubmitRecords,getUserInfo } from '../utils/axios';
 
 const showCropper = ref(false);
 const avatar = ref(null);
@@ -39,6 +38,7 @@ const uploadAvatar = async (file) => {
   const formData = new FormData();
   formData.append('avatar', file);
   try {
+    // FIXME:上传出现错误
     const response = await axios.post('http://127.0.0.1:37881/api/v2/uploadAvatar',formData,{
       headers: {
         token:localStorage.getItem('token'),
@@ -57,7 +57,7 @@ const uploadAvatar = async (file) => {
 // 获取用户提交记录
 const fetchData = async () => {
   try {
-    const submitResponse = await axios.get(`http://127.0.0.1:37881/api/v1/getSubmitRecordsByUid/${userId.value}`)
+    const submitResponse = await getUserSubmitRecords(userId.value);
     userSubmitRecords.value = submitResponse.data.submitrecords
     userSubmitRecordsLength.value = userSubmitRecords.value.length
   } catch (error) {
@@ -69,21 +69,9 @@ const fetchData = async () => {
 onMounted(async () => {
   loading.value = true;
   try{
-    const tokenResponse = await axios.get('http://127.0.0.1:37881/api/v1/verifyToken',{
-      params:{
-        username:username
-      },
-      headers:{
-        token:localStorage.getItem('token')
-      }
-    })
+    const tokenResponse = await verifyJWT(username,localStorage.getItem('token'));
     if(tokenResponse.data.status === 200){
-      const response = await axios.get('http://127.0.0.1:37881/api/v1/getUserInfo',{
-        params:{
-          username:username
-        }
-      }
-      );
+      const response = await getUserInfo(username);
       userInfo.value = response.data.Info;
       userId.value = response.data.Info.uid;
       await fetchData();
@@ -166,11 +154,11 @@ onMounted(async () => {
       </v-card>
   </div>
   <!-- FIXME:头像文件上传失败 -->
-  <avatar-cropper
+  <!-- <avatar-cropper
   v-model="showCropper"
   :upload-handler="uploadAvatar"
   :labels="{ submit: '上传头像', cancel: '取消' }"
-  />
+  /> -->
 </template>
 
 <style scoped>

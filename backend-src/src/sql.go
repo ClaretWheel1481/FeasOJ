@@ -219,3 +219,9 @@ func selectDiscussionByTid(tid string) discsInfoRequest {
 		Where("Discussions.Tid = ?", tid).First(&discussion)
 	return discussion
 }
+
+// 添加讨论
+func addDiscussion(title, content string, uid int) bool {
+	err := connectSql().Table("Discussions").Create(&Discussion{Uid: uid, Title: title, Content: content, Create_at: time.Now()}).Error
+	return err == nil
+}

@@ -1,7 +1,7 @@
 <!-- 状态页 -->
 <script setup>
 import { VDataTableServer,VCard,VBtn } from 'vuetify/lib/components/index.mjs';
-import axios from 'axios';
+import { getSubmitRecords } from '../utils/axios.js';
 import { onMounted,computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
@@ -27,7 +27,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await axios.get('http://127.0.0.1:37881/api/v1/getAllSubmitRecords')
+    const response = await getSubmitRecords()
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {

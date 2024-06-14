@@ -1,8 +1,8 @@
 <!-- 登录页 -->
 <script setup>
-import axios from 'axios';
 import { reactive,ref } from 'vue';
 import { VBtn, VTextField, VForm,VSheet,VDialog,VCard,VCardActions,VCardTitle,VCardText,VRow } from 'vuetify/components';
+import { loginRequest } from '../utils/axios.js'
 
 const dialog = ref(false);
 const dialogMessage = ref('');
@@ -24,26 +24,16 @@ const login = async () => {
     return;
   }
   try {
-    const loginResponse = await axios.get('http://127.0.0.1:37881/api/v1/login', {
-      params: {
-        username: forms.username,
-        password: forms.password,
-      }
-    });
-    const profileResponse = await axios.get('http://127.0.0.1:37881/api/v1/getUserInfo', {
-      params: {
-        username: forms.username,
-      }
-    });
-    if (loginResponse.data.status === 200) {
-      showAlert(loginResponse.data.message);
-      localStorage.setItem('token',loginResponse.data.token)
+    const response = await loginRequest(forms.username, forms.password);
+    if (response.data.status === 200) {
+      showAlert(response.data.message);
+      localStorage.setItem('token',response.data.token)
       localStorage.setItem('username',forms.username)
       setTimeout(() => {
         window.location = '/'
       }, 500);
     } else {
-      showAlert(loginResponse.data.message);
+      showAlert(response.data.message);
       return;
     }
   } catch (error) {

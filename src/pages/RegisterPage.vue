@@ -3,7 +3,7 @@
 import { ref,reactive } from 'vue';
 import { VAppBar, VBtn, VTextField, VForm, VDialog, VCard, VCardTitle, VCardText, VCardActions,VSheet } from 'vuetify/components';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import { getCaptchaCode, registerRequest } from '../utils/axios';
 
 const router = useRouter();
 const dialog = ref(false);
@@ -48,12 +48,7 @@ const register = async () => {
     return;
   }
   try{
-    const response = await axios.post('http://127.0.0.1:37881/api/v2/register', {
-      email: formState.userEmail,
-      username: formState.username,
-      password: formState.password,
-      vcode: formState.vcode
-    });
+    const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
     if (response.data.status === 200) {
       showAlert(response.data.message);
       // 2秒后跳转
@@ -81,9 +76,7 @@ const getCaptcha = async () => {
       return;
   }
   try {
-      const response = await axios.get('http://127.0.0.1:37881/api/v1/getCaptcha', {
-          params: { email: formState.userEmail }
-      });
+      const response = await getCaptchaCode(formState.email);
       if (response.data.status === 200) {
           showAlert('验证码发送成功，请检查您的邮箱。');
           if(isButtonDisabled.value){
@@ -133,7 +126,7 @@ const getCaptcha = async () => {
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled" label="邮箱验证码">
         <template v-slot:append>
             <v-btn icon @click="getCaptcha()" :disabled="isButtonDisabled">
-                <v-icon>mdi-email</v-icon>
+                <v-icon icon="mdi-email"/>
                 <span v-if="isButtonDisabled">{{ countdown }}</span>
             </v-btn>
         </template>
