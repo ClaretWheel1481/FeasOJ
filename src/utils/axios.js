@@ -81,6 +81,17 @@ export const getDisDetails = async (Tid) => {
     return await axios.get(`${apiUrl}/v1/getDiscussionByTid/${Tid}`)
 }
 
+export const addDiscussion = async (Title,Content,Username) => {
+    const formData = new FormData();
+    formData.append('title', Title);
+    formData.append('content', Content);
+    return await axios.post(`${apiUrl}/v2/addDiscussion`,formData,{
+        headers: {
+            username: Username,
+        },
+    });
+}
+
 // 获取指定用户提交记录
 export const getUserSubmitRecords = async (userId) => {
     return await axios.get(`${apiUrl}/v1/getSubmitRecordsByUid/${userId}`)

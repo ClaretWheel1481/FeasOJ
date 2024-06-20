@@ -77,6 +77,12 @@ const routes = [
             title: 'FeasOJ - 讨论'
         }
     },
+    {
+        path: '/discussion/create', component: () => import('../pages/NewDiscussionPage.vue'),
+        meta: {
+            title: 'FeasOJ - 创建讨论'
+        }
+    },
     { 
         path: '/discussion/:Tid', 
         component: () => import('../pages/DiscussionDetailsPage.vue'),

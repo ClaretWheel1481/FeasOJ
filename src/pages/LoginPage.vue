@@ -24,16 +24,16 @@ const login = async () => {
     return;
   }
   try {
-    const response = await loginRequest(forms.username, forms.password);
-    if (response.data.status === 200) {
-      showAlert(response.data.message);
-      localStorage.setItem('token',response.data.token)
+    const loginResponse = await loginRequest(forms.username, forms.password);
+    if (loginResponse.data.status === 200) {
+      showAlert(loginResponse.data.message);
+      localStorage.setItem('token',loginResponse.data.token)
       localStorage.setItem('username',forms.username)
       setTimeout(() => {
         window.location = '/'
       }, 500);
     } else {
-      showAlert(response.data.message);
+      showAlert(loginResponse.data.message);
       return;
     }
   } catch (error) {
