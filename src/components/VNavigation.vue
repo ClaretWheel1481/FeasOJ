@@ -30,6 +30,8 @@ onMounted(async () => {
       if(tokenResponse.data.status === 200){
         const response = await getUserInfo(localStorage.getItem('username'));
         privilege.value = response.data.Info.role;
+      }else {
+        router.push('/403')
       }
   }
 })

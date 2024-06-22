@@ -76,7 +76,7 @@ const getCaptcha = async () => {
       return;
   }
   try {
-      const response = await getCaptchaCode(formState.email);
+      const response = await getCaptchaCode(formState.userEmail);
       if (response.data.status === 200) {
           showAlert('验证码发送成功，请检查您的邮箱。');
           if(isButtonDisabled.value){
@@ -125,7 +125,7 @@ const getCaptcha = async () => {
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl" variant="solo-filled" label="邮箱" />
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled" label="邮箱验证码">
         <template v-slot:append>
-            <v-btn icon @click="getCaptcha()" :disabled="isButtonDisabled">
+            <v-btn icon @click="getCaptcha" :disabled="isButtonDisabled">
                 <v-icon icon="mdi-email"/>
                 <span v-if="isButtonDisabled">{{ countdown }}</span>
             </v-btn>

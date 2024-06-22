@@ -193,3 +193,13 @@ func createDiscussion(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "创建讨论成功。"})
 }
+
+// 删除讨论
+func deleteDiscussion(c *gin.Context) {
+	tid := c.Param("tid")
+	if delDiscussion(tid) {
+		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
+	} else {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "删除讨论失败。"})
+	}
+}

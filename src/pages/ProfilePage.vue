@@ -34,25 +34,24 @@ const handleRowClick = (row) => {
 }
 
 // 上传头像至服务器
-const uploadAvatar = async (file) => {
-  const formData = new FormData();
-  formData.append('avatar', file);
-  try {
-    // FIXME:上传出现错误
-    const response = await axios.post('http://127.0.0.1:37881/api/v2/uploadAvatar',formData,{
-      headers: {
-        token:localStorage.getItem('token'),
-        'Content-Type':'multipart/form-data'
-      },
-      params: {
-        username: username,
-      },
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+// const uploadAvatar = async (file) => {
+//   const formData = new FormData();
+//   formData.append('avatar', file);
+//   try {
+//     // FIXME:上传出现错误
+//     const response = await axios.post('http://127.0.0.1:37881/api/v2/uploadAvatar',formData,{
+//       headers: {
+//         token:localStorage.getItem('token'),
+//       },
+//       params: {
+//         username: username,
+//       },
+//     });
+//     console.log(response.data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 // 获取用户提交记录
 const fetchData = async () => {

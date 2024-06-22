@@ -99,6 +99,9 @@ func main() {
 		// 创建讨论API
 		router2.POST("/addDiscussion", createDiscussion)
 
+		// 删除讨论API
+		router2.POST("/deleteDiscussion/:tid", deleteDiscussion)
+
 		// 上传代码文件API
 		// TODO:上传代码文件功能待实现、等待前端实现
 		router.POST("/uploadCode")

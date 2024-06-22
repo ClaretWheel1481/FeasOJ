@@ -81,6 +81,7 @@ export const getDisDetails = async (Tid) => {
     return await axios.get(`${apiUrl}/v1/getDiscussionByTid/${Tid}`)
 }
 
+// 添加讨论
 export const addDiscussion = async (Title,Content,Username) => {
     const formData = new FormData();
     formData.append('title', Title);
@@ -90,6 +91,14 @@ export const addDiscussion = async (Title,Content,Username) => {
             username: Username,
         },
     });
+}
+
+// 删除讨论
+export const deleteDiscussion = async(username,token,Tid) => {
+    const tokenVerifyResp = await verifyJWT(username,token);
+    if(tokenVerifyResp.status === 200){
+        return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Tid}`)
+    }
 }
 
 // 获取指定用户提交记录

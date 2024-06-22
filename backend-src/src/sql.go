@@ -228,3 +228,9 @@ func addDiscussion(title, content string, uid int) bool {
 	err := connectSql().Table("Discussions").Create(&Discussion{Uid: uid, Title: title, Content: content, Create_at: time.Now()}).Error
 	return err == nil
 }
+
+// 删除讨论
+func delDiscussion(tid string) bool {
+	err := connectSql().Table("Discussions").Where("Tid = ?", tid).Delete(&Discussion{}).Error
+	return err == nil
+}

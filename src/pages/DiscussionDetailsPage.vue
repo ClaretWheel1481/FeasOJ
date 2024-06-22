@@ -2,13 +2,14 @@
 <script setup>
 import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from 'vuetify/components';
 import { ref,onMounted,computed } from 'vue'
-import { getDisDetails } from '../utils/axios';
+import { getDisDetails,deleteDiscussion } from '../utils/axios';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
 const loading = ref(true)
 const discussionInfos = ref({});
 const token = ref(localStorage.getItem('token'))
+const userName = ref(localStorage.getItem('username'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -31,6 +32,22 @@ onMounted(async () => {
         window.location='/login'
     }
 });
+
+const deleteDis = async () => {
+    loading.value = true;
+    try{
+        const Tid = route.params.Tid;
+        const resp = await deleteDiscussion(localStorage.getItem('username'),localStorage.getItem('token'),Tid);
+        if(resp.status === 200){
+            alert('删除成功');
+            window.location = '/discussion'
+        }
+    }catch(error){
+        window.location = '/403'
+    }finally{
+        loading.value = false;
+    }
+}
 </script>
 
 <template>
@@ -50,6 +67,9 @@ onMounted(async () => {
                 <div style="margin-left: 10px;"></div>
                 <p class="font-weight-black">{{ discussionInfos.username }}</p>
             </v-row>
+            <template v-if="discussionInfos.username === userName" v-slot:append>
+                <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>
+            </template>
         </v-app-bar>
         <div style="margin-top: 30px;"></div>
         <v-card class="mx-auto" width="85%" rounded="xl" elevation="10">
