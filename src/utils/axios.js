@@ -29,7 +29,7 @@ export const verifyJWT = async (username,token) => {
           username:username
         },
         headers:{
-          token:token
+            Authorization:token
         }
     })
 }

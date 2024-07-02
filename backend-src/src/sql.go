@@ -206,6 +206,7 @@ func selectDiscussList() []discussRequest {
 	connectSql().Table("Discussions").
 		Select("Discussions.Tid,Discussions.Title, Users.Username, Discussions.Create_at").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
+		Order("Discussions.Create_at desc").
 		Find(&discussRequests)
 	return discussRequests
 }

@@ -68,7 +68,7 @@ func getCaptchas(c *gin.Context) {
 
 // 校验TOKEN
 func verifyTokens(c *gin.Context) {
-	token := c.GetHeader("token")
+	token := c.GetHeader("Authorization")
 	username := c.Query("username")
 	if VerifyToken(username, token) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功。"})
