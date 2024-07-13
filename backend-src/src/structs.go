@@ -77,7 +77,7 @@ type problemInfoRequest struct {
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	Timelimit   int    `json:"time_limit"`
-	Memorylimit int    `json:"memory_Limit"`
+	Memorylimit int    `json:"memory_limit"`
 	Input       string `json:"input"`
 	Output      string `json:"output"`
 	Cid         int    `json:"cid"`
