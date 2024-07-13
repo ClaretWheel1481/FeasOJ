@@ -7,7 +7,6 @@ import moment from 'moment';
 import { verifyJWT,getUserSubmitRecords,getUserInfo } from '../utils/axios';
 
 const showCropper = ref(false);
-const avatar = ref(null);
 const route = useRoute();
 const router = useRouter();
 const username = route.params.Username;
