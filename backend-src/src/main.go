@@ -12,6 +12,7 @@ import (
 var parentDir string
 var configsDir string
 var avatarsDir string
+var codeDir string
 
 func main() {
 	currentDir, err := os.Getwd()
@@ -25,6 +26,10 @@ func main() {
 	if _, err := os.Stat(configsDir); os.IsNotExist(err) {
 		os.Mkdir(configsDir, 0755)
 	}
+	// 创建存放头像文件夹
+	initAvatarFolder()
+	// 创建存放代码文件夹
+	initCodeFolder()
 	// 初始化数据库连接配置
 	if initSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
@@ -36,8 +41,6 @@ func main() {
 	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
 	mcfg := initEmailConfig()
 	fmt.Println("[FeasOJ]邮箱配置信息为:", mcfg)
-	// 创建存放头像文件夹
-	initAvatarFolder()
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -104,7 +107,7 @@ func main() {
 
 		// 上传代码文件API
 		// TODO:上传代码文件功能待实现、等待前端实现
-		router.POST("/uploadCode")
+		router2.POST("/uploadCode", uploadCodes)
 	}
 
 	fmt.Println("[FeasOJ]服务器已启动。")

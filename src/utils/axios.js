@@ -12,19 +12,9 @@ export const loginRequest = async (username,password) => {
     })
 }
 
-// 注册
-export const registerRequest = async (username,password,email,vcode) => {
-    return await axios.post('http://127.0.0.1:37881/api/v2/register', {
-        email: email,
-        username: username,
-        password: password,
-        vcode: vcode
-      });
-}
-
 // Token校验
 export const verifyJWT = async (username,token) => {
-    return await axios.get('http://127.0.0.1:37881/api/v1/verifyToken',{
+    return await axios.get(`${apiUrl}/v1/verifyToken`,{
         params:{
           username:username
         },
@@ -40,15 +30,6 @@ export const getCaptchaCode = async (email) => {
         params: { 
             email: email 
         }
-    });
-}
-
-// 修改密码
-export const updatePassword = async (email,vcode,newPassword) => {
-    return await axios.post(`${apiUrl}/v2/updatePassword`, {
-        email: email,
-        vcode: vcode,
-        newpassword: newPassword
     });
 }
 
@@ -81,6 +62,36 @@ export const getDisDetails = async (Tid) => {
     return await axios.get(`${apiUrl}/v1/getDiscussionByTid/${Tid}`)
 }
 
+
+// 获取指定用户提交记录
+export const getUserSubmitRecords = async (userId) => {
+    return await axios.get(`${apiUrl}/v1/getSubmitRecordsByUid/${userId}`)
+}
+
+// 获取30天内的提交记录
+export const getSubmitRecords = async () => {
+    return await axios.get(`${apiUrl}/v1/getAllSubmitRecords`)
+}
+
+// 注册
+export const registerRequest = async (username,password,email,vcode) => {
+    return await axios.post(`${apiUrl}/v2/register`, {
+        email: email,
+        username: username,
+        password: password,
+        vcode: vcode
+      });
+}
+
+// 修改密码
+export const updatePassword = async (email,vcode,newPassword) => {
+    return await axios.post(`${apiUrl}/v2/updatePassword`, {
+        email: email,
+        vcode: vcode,
+        newpassword: newPassword
+    });
+}
+
 // 添加讨论
 export const addDiscussion = async (Title,Content,Username) => {
     const formData = new FormData();
@@ -101,12 +112,18 @@ export const deleteDiscussion = async(username,token,Tid) => {
     }
 }
 
-// 获取指定用户提交记录
-export const getUserSubmitRecords = async (userId) => {
-    return await axios.get(`${apiUrl}/v1/getSubmitRecordsByUid/${userId}`)
-}
-
-// 获取30天内的提交记录
-export const getSubmitRecords = async () => {
-    return await axios.get(`${apiUrl}/v1/getAllSubmitRecords`)
+// 上传代码文件
+export const uploadCode = async (file,pid,username,token) => {
+    let formData = new FormData();
+    formData.append('code', file);
+    return await axios.post(`${apiUrl}/v2/uploadCode`,formData,{
+        params: {
+            'problem' : pid
+        },
+        headers: {
+            'Content-Type':'multipart/form-data',
+            username: username,
+            Authorization: token
+        },
+    });
 }

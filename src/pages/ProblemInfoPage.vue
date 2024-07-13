@@ -3,13 +3,16 @@
 import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular,VSelect } from 'vuetify/components'
 import { ref,onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router';
-import { getPbDetails } from '../utils/axios';
+import { getPbDetails,uploadCode } from '../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
+
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
+const username = ref(localStorage.getItem('username'))
 const token = ref(localStorage.getItem('token'))
 const content = ref('');
+// 代码模板
 const templates = {
 java: 
 `public class Main {
@@ -37,6 +40,13 @@ python:
 ``
 };
 const lang = ref('python');
+
+const langFileExtension = {
+    java: 'java',
+    c_cpp: 'cpp',
+    golang: 'go',
+    python: 'py'
+};
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -45,9 +55,9 @@ onMounted(async () => {
     if(userLoggedIn.value){
         try {
             const problemId = route.params.Pid;
-            const response = await getPbDetails(problemId);
-            if (response.status === 200) {
-                problemInfo.value = response.data.problemInfo;
+            const resp = await getPbDetails(problemId);
+            if (resp.status === 200) {
+                problemInfo.value = resp.data.problemInfo;
             }
         } catch (error) {
             console.error('请求题目信息时发生错误:', error);
@@ -62,6 +72,20 @@ onMounted(async () => {
         content.value = templates[newLang];
     });
 });
+
+// TODO:将content内容保存并上传至指定API
+const uploadContentAsFile = async () => {
+    const blob = new Blob([content.value], { type: 'text/plain' });
+    const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
+    try {
+        const uploadResp = await uploadCode(codefile,route.params.Pid,username.value,token.value);
+        if(uploadResp.status === 200){
+            alert('提交成功')
+        }
+    } catch (error) {
+        console.error('上传代码时发生错误:', error);
+    }
+};
 </script>
 
 <template>
@@ -121,7 +145,7 @@ onMounted(async () => {
                 style="height: 1000px;font-size: 16px;"
             />
         </v-card>
-        <v-btn type="submit" color="primary" rounded="xl">提交</v-btn>
+        <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">提交</v-btn>
     </div>
 </template>
 

@@ -25,3 +25,4 @@ backend-src/src/go.sum
 backend-src/configs
 backend-src/avatars
 backend-src/pkg
+backend-src/codefiles

@@ -203,3 +203,25 @@ func deleteDiscussion(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "删除讨论失败。"})
 	}
 }
+
+func uploadCodes(c *gin.Context) {
+	file, err := c.FormFile("code")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取代码文件。"})
+		return
+	}
+	problem := c.Query("problem")
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	// 将文件名改为用户名+题目名
+	file.Filename = username + "_" + problem + path.Ext(file.Filename)
+	// 保存文件到指定路径
+	if err := c.SaveUploadedFile(file, "../codefiles/"+file.Filename); err != nil {
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码上传成功。"})
+}

@@ -10,7 +10,7 @@ func initAvatarFolder() {
 	avatarsDir = filepath.Join(parentDir, "avatars")
 	// 如果没找到avatars，则创建avatars文件夹
 	if _, err := os.Stat(avatarsDir); os.IsNotExist(err) {
-		os.Mkdir(configsDir, 0755)
+		os.Mkdir(avatarsDir, 0755)
 	}
 }
 
