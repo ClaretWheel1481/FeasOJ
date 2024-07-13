@@ -1,15 +1,42 @@
 <!-- 题目详细页 -->
 <script setup>
-import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular } from 'vuetify/components'
-import { ref,onMounted,computed } from 'vue'
+import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular,VSelect } from 'vuetify/components'
+import { ref,onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { getPbDetails } from '../utils/axios';
-
+import { VAceEditor } from 'vue3-ace-editor';
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
 const token = ref(localStorage.getItem('token'))
+const content = ref('');
+const templates = {
+java: 
+`public class Main {
+    public static void main(String[] args) {
 
+    }
+}`,
+c_cpp: 
+`#include <iostream>
+using namespace std;
+
+int main() {
+
+    return 0;
+}`,
+golang: 
+`package main
+
+import "fmt"
+
+func main() {
+
+}`,
+python:
+``
+};
+const lang = ref('python');
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -30,6 +57,10 @@ onMounted(async () => {
     }else{
         window.location='/login'
     }
+
+    watch(lang, (newLang) => {
+        content.value = templates[newLang];
+    });
 });
 </script>
 
@@ -50,7 +81,7 @@ onMounted(async () => {
         <div style="margin: 10px;"></div>
         <v-divider></v-divider>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">题目详细</span>
             </template>
@@ -59,7 +90,7 @@ onMounted(async () => {
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">输入样例</span>
             </template>
@@ -68,7 +99,7 @@ onMounted(async () => {
             </v-card-text>
         </v-card>
         <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
+        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
             <template v-slot:title>
                 <span class="font-weight-black">输出样例</span>
             </template>
@@ -76,9 +107,21 @@ onMounted(async () => {
                 {{ problemInfo.output }}
             </v-card-text>
         </v-card>
-        <v-card class="mx-auto my-8 editor-container" width="80%" elevation="10" rounded="xl">
-            <!-- TODO:代码编辑器 -->
+        <v-card class="mx-auto my-8" width="80%" height="1000" elevation="5" rounded="xl">
+            <v-select
+                label="选择语言"
+                v-model="lang"
+                :items="['python','c_cpp', 'golang', 'java']"
+                variant="solo-filled"
+            ></v-select>
+            <v-ace-editor
+                v-model:value="content"
+                theme="chrome"
+                :lang=lang
+                style="height: 1000px;font-size: 16px;"
+            />
         </v-card>
+        <v-btn type="submit" color="primary" rounded="xl">提交</v-btn>
     </div>
 </template>
 
@@ -86,9 +129,7 @@ onMounted(async () => {
 .subtitle {
     font-size: 0.9rem;
 }
-.editor-container {
-  height: 600px;
-}
+
 .loading{
   display: flex;
   justify-content: center;
