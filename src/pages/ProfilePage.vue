@@ -4,19 +4,17 @@ import { ref,onMounted } from 'vue'
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
-import { verifyJWT,getUserSubmitRecords,getUserInfo,uploadAvatar } from '../utils/axios';
+import { getUserSubmitRecords,uploadAvatar } from '../utils/axios';
 import { showAlert } from '../utils/alert';
+import { userInfo,userId,userName,token } from '../utils/account';
 
 const showCropper = ref(false);
 const route = useRoute();
 const router = useRouter();
-const username = route.params.Username;
-const userInfo = ref({});
-const userId = ref('');
+const currentUsername = route.params.Username;
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
-const token = ref(localStorage.getItem('token'));
 const headers = ref([
   { title: '题目ID', value: 'Pid', align:'center'},
   { title: '结果', value: 'Result', align:'center'},
@@ -47,10 +45,10 @@ const uploadAvat = async (cropper) => {
 
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
-    await uploadAvatar(newFile,username,token.value);
+    await uploadAvatar(newFile,userName.value,token.value);
     showAlert("上传成功！","reload");
   } catch (error) {
-    showAlert("上传失败，请重试。","reload")
+    showAlert("上传失败，请重试。","")
   }
 };
 
@@ -61,25 +59,20 @@ const fetchData = async () => {
     userSubmitRecords.value = submitResponse.data.submitrecords
     userSubmitRecordsLength.value = userSubmitRecords.value.length
   } catch (error) {
-    showAlert("获取数据失败，请重试。","reload")
+    showAlert("获取数据失败，请重试。","")
   }
 }
 
 // 校验token后获取用户信息
 onMounted(async () => {
   loading.value = true;
+  if(currentUsername !== userName.value){
+    window.location = '/403'
+  }
   try{
-    const tokenResponse = await verifyJWT(username,token.value);
-    if(tokenResponse.data.status === 200){
-      const response = await getUserInfo(username);
-      userInfo.value = response.data.Info;
-      userId.value = response.data.Info.uid;
-      await fetchData();
-    }else {
-      window.location='/403'
-    }
+    await fetchData();
   }catch(error){
-    window.location='/403'
+    showAlert("获取数据失败，请重试。","")
   }finally{
     loading.value=false;
   }
@@ -101,7 +94,7 @@ onMounted(async () => {
           <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
         </div>
         <v-card-text>
-          <p class="text-h4 font-weight-black">{{userInfo.username}}</p>
+          <p class="text-h4 font-weight-black">{{userName}}</p>
           <div style="margin: 10px"></div>
           <p class="text-medium-emphasis">{{userInfo.synopsis}}</p>
           <div style="margin: 20px"></div>

@@ -6,12 +6,11 @@ import { useRoute } from 'vue-router';
 import { getPbDetails,uploadCode } from '../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../utils/alert';
+import { token,userName } from "../utils/account";
 
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
-const username = ref(localStorage.getItem('username'))
-const token = ref(localStorage.getItem('token'))
 const content = ref('');
 // 代码模板
 const templates = {
@@ -74,17 +73,17 @@ onMounted(async () => {
     });
 });
 
-// TODO:将content内容保存并上传至指定API
+// 代码上传
 const uploadContentAsFile = async () => {
     const blob = new Blob([content.value], { type: 'text/plain' });
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
-        const uploadResp = await uploadCode(codefile,route.params.Pid,username.value,token.value);
+        const uploadResp = await uploadCode(codefile,route.params.Pid,userName.value,token.value);
         if(uploadResp.status === 200){
             showAlert('提交成功',"reload")
         }
     } catch (error) {
-        showAlert('上传代码时发生错误。',"");
+        showAlert('提交代码时发生错误。',"");
     }
 };
 </script>

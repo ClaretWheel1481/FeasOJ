@@ -6,6 +6,7 @@ import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
 import { getAllDis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
+import { token } from '../utils/account';
 
 const headers = ref([
   { title: '帖子', value: 'Title', align:'center'},
@@ -18,7 +19,6 @@ const router = useRouter()
 const discuss = ref([])
 const allDiscuss = ref(0)
 const loading = ref(true)
-const token = ref(localStorage.getItem('token'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)

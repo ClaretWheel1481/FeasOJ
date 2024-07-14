@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router';
 import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
 import { getAllProblems } from '../utils/axios';
 import { showAlert } from '../utils/alert';
+import { token } from "../utils/account";
 
 const router = useRouter()
 
@@ -16,7 +17,6 @@ const problems = ref([])
 const totalProblems = ref(0)
 const loading = ref(true)
 const searchQuery = ref('')
-const token = ref(localStorage.getItem('token'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)

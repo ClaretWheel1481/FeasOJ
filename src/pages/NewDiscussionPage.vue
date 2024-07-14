@@ -4,12 +4,11 @@ import { VProgressCircular,VAppBar,VRow,VBtn,VTextarea,VForm,VTextField } from '
 import { ref,computed,onMounted } from 'vue';
 import { addDiscussion } from '../utils/axios.js';
 import { showAlert } from '../utils/alert';
+import { token,userName } from "../utils/account";
 
 const title = ref('');
 const content = ref('');
 const loading = ref(false);
-const token = ref(localStorage.getItem('token'))
-const userName = ref(localStorage.getItem('username'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)

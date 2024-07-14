@@ -5,12 +5,11 @@ import { ref,onMounted,computed } from 'vue'
 import { getDisDetails,deleteDiscussion } from '../utils/axios';
 import { useRoute } from 'vue-router';
 import { showAlert } from '../utils/alert';
+import { token,userName } from "../utils/account";
 
 const route = useRoute();
 const loading = ref(true)
 const discussionInfos = ref({});
-const token = ref(localStorage.getItem('token'))
-const userName = ref(localStorage.getItem('username'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)

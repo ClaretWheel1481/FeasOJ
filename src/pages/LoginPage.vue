@@ -1,8 +1,8 @@
 <!-- 登录页 -->
 <script setup>
-import { reactive,ref } from 'vue';
-import { VBtn, VTextField, VForm,VSheet,VDialog,VCard,VCardActions,VCardTitle,VCardText,VRow } from 'vuetify/components';
-import { loginRequest } from '../utils/axios.js'
+import { reactive } from 'vue';
+import { VBtn, VTextField, VForm,VSheet,VRow } from 'vuetify/components';
+import { loginRequest,getUserInfo } from '../utils/axios.js'
 import { showAlert } from '../utils/alert';
 
 const forms = reactive({
@@ -21,6 +21,8 @@ const login = async () => {
     if (loginResponse.data.status === 200) {
       localStorage.setItem('token',loginResponse.data.token)
       localStorage.setItem('username',forms.username)
+      const response = await getUserInfo(forms.username);
+      localStorage.setItem('userid', response.data.Info.uid);
       showAlert(loginResponse.data.message,"/");
     } else {
       showAlert(loginResponse.data.message,"");
@@ -31,14 +33,12 @@ const login = async () => {
     return;
   }
 }
-
 </script>
 
 <template>
   <div class="title">
     <h1>登录</h1>
   </div>
-
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
       <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" label="用户名" />

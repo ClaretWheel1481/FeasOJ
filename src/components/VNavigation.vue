@@ -3,11 +3,10 @@ import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
 import { ref,computed,onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getUserInfo, verifyJWT } from '../utils/axios';
+import { token,userInfo } from '../utils/account';
 
 const userName = ref(localStorage.getItem('username'))
-const token = ref(localStorage.getItem('token'))
 const privilege = ref("")
-
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -26,10 +25,11 @@ const navigate = () => {
 // 校验Token后获取用户信息，若privilege为1则表明是管理员
 onMounted(async () => {
   if (userLoggedIn.value) {
-      const tokenResponse = await verifyJWT(localStorage.getItem('username'),localStorage.getItem('token'));
-      if(tokenResponse.data.status === 200){
+      const tokenResp = await verifyJWT(localStorage.getItem('username'),localStorage.getItem('token'));
+      if(tokenResp.data.status === 200){
         const response = await getUserInfo(localStorage.getItem('username'));
-        privilege.value = response.data.Info.role;
+        userInfo.value = response.data.Info;
+        privilege.value = userInfo.value.role;
       }else {
         router.push('/403')
       }

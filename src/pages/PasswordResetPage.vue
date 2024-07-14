@@ -1,6 +1,6 @@
 <!-- 重置密码页 -->
 <script setup>
-import { VSheet,VForm,VTextField,VBtn,VDialog,VCard,VCardActions,VCardText,VCardTitle,VAppBar } from 'vuetify/lib/components/index.mjs';
+import { VSheet,VForm,VTextField,VBtn,VAppBar } from 'vuetify/lib/components/index.mjs';
 import { ref,reactive } from 'vue';
 import { updatePassword, getCaptchaCode } from '../utils/axios';
 import { regex,rules } from '../utils/rules'

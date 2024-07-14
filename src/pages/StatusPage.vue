@@ -6,6 +6,7 @@ import { onMounted,computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert';
+import { token } from "../utils/account";
 
 const router = useRouter();
 
@@ -19,7 +20,6 @@ const headers = ref([
 const submitrecords = ref([])
 const submitRecordsLength = ref(0)
 const loading = ref(true)
-const token = ref(localStorage.getItem('token'))
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
