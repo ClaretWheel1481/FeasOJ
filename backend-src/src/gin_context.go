@@ -149,8 +149,9 @@ func uploadAvatars(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像上传失败。"})
 		return
 	}
+	// TODO:若要上传至服务器，则将路径改为服务器路径
 	// 上传头像路径至数据库
-	if !updateAvatar(username, filepath.Join("..", "..", "backend-src", "avatars", newFilename)) {
+	if !updateAvatar(username, filepath.Join(newFilename)) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像路径更新失败。"})
 		return
 	}

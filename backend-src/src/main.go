@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -21,10 +22,11 @@ func main() {
 		return
 	}
 	parentDir = filepath.Dir(currentDir)
-	configsDir = filepath.Join(parentDir, "configs")
-	// 如果没找到configs，则创建configs文件夹
+	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
+	configsDir = filepath.Join(parentDir, "/configs")
+	// 如果没有找到configs，则创建configs文件夹
 	if _, err := os.Stat(configsDir); os.IsNotExist(err) {
-		os.Mkdir(configsDir, 0755)
+		os.Mkdir(configsDir, os.ModePerm)
 	}
 	// 创建存放头像文件夹
 	initAvatarFolder()
@@ -106,9 +108,11 @@ func main() {
 		router2.POST("/deleteDiscussion/:tid", deleteDiscussion)
 
 		// 上传代码文件API
-		// TODO:上传代码文件功能待实现、等待前端实现
 		router2.POST("/uploadCode", uploadCodes)
 	}
+
+	// 头像http服务器
+	r.StaticFS("/avatar", http.Dir(avatarsDir))
 
 	fmt.Println("[FeasOJ]服务器已启动。")
 	fmt.Println("[FeasOJ]GETAPI：http://localhost:37881/api/v1/")

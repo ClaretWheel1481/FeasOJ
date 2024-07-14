@@ -7,7 +7,8 @@ import (
 
 // 创建存放头像的文件夹
 func initAvatarFolder() {
-	avatarsDir = filepath.Join(parentDir, "avatars")
+	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
+	avatarsDir = filepath.Join(parentDir, "/avatars")
 	// 如果没找到avatars，则创建avatars文件夹
 	if _, err := os.Stat(avatarsDir); os.IsNotExist(err) {
 		os.Mkdir(avatarsDir, 0755)
