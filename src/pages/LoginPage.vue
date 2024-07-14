@@ -3,14 +3,7 @@
 import { reactive,ref } from 'vue';
 import { VBtn, VTextField, VForm,VSheet,VDialog,VCard,VCardActions,VCardTitle,VCardText,VRow } from 'vuetify/components';
 import { loginRequest } from '../utils/axios.js'
-
-const dialog = ref(false);
-const dialogMessage = ref('');
-
-const showAlert = (message) => {
-  dialogMessage.value = message;
-  dialog.value = true;
-};
+import { showAlert } from '../utils/alert';
 
 const forms = reactive({
   username: '',
@@ -20,24 +13,21 @@ const forms = reactive({
 // 登录逻辑
 const login = async () => {
   if (forms.username === '' || forms.password === '') {
-    showAlert('用户名或密码不能为空。');
+    showAlert('用户名或密码不能为空。',"");
     return;
   }
   try {
     const loginResponse = await loginRequest(forms.username, forms.password);
     if (loginResponse.data.status === 200) {
-      showAlert(loginResponse.data.message);
       localStorage.setItem('token',loginResponse.data.token)
       localStorage.setItem('username',forms.username)
-      setTimeout(() => {
-        window.location = '/'
-      }, 500);
+      showAlert(loginResponse.data.message,"/");
     } else {
-      showAlert(loginResponse.data.message);
+      showAlert(loginResponse.data.message,"");
       return;
     }
   } catch (error) {
-    showAlert(error.response.data.message);
+    showAlert(error.response.data.message,"");
     return;
   }
 }
@@ -48,15 +38,7 @@ const login = async () => {
   <div class="title">
     <h1>登录</h1>
   </div>
-  <v-dialog v-model="dialog" persistent max-width="290">
-    <v-card rounded="xl">
-      <v-card-title class="text-h5">提示</v-card-title>
-      <v-card-text>{{ dialogMessage }}</v-card-text>
-      <v-card-actions>
-        <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">关闭</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
       <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" label="用户名" />

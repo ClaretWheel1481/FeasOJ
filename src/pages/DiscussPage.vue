@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
 import { getAllDis } from '../utils/axios';
+import { showAlert } from '../utils/alert';
 
 const headers = ref([
   { title: '帖子', value: 'Title', align:'center'},
@@ -30,7 +31,7 @@ const fetchData = async () => {
     discuss.value = response.data.discussions
     allDiscuss.value = discuss.value.length
   } catch (error) {
-    alert('错误: ', error)
+    showAlert('错误，未找到数据！', '/discussion')
   } finally {
     loading.value = false
   }

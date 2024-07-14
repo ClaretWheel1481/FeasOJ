@@ -5,6 +5,7 @@ import { ref,onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { getPbDetails,uploadCode } from '../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
+import { showAlert } from '../utils/alert';
 
 const route = useRoute();
 const loading = ref(true)
@@ -60,7 +61,7 @@ onMounted(async () => {
                 problemInfo.value = resp.data.problemInfo;
             }
         } catch (error) {
-            alert('请求题目信息时发生错误:', error);
+            showAlert('请求题目信息时发生错误。',"");
         } finally{
             loading.value = false;
         }
@@ -80,10 +81,10 @@ const uploadContentAsFile = async () => {
     try {
         const uploadResp = await uploadCode(codefile,route.params.Pid,username.value,token.value);
         if(uploadResp.status === 200){
-            alert('提交成功')
+            showAlert('提交成功',"reload")
         }
     } catch (error) {
-        alert('上传代码时发生错误:', error);
+        showAlert('上传代码时发生错误。',"");
     }
 };
 </script>

@@ -5,6 +5,7 @@ import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
 import { verifyJWT,getUserSubmitRecords,getUserInfo,uploadAvatar } from '../utils/axios';
+import { showAlert } from '../utils/alert';
 
 const showCropper = ref(false);
 const route = useRoute();
@@ -47,10 +48,9 @@ const uploadAvat = async (cropper) => {
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
     await uploadAvatar(newFile,username,token.value);
-    alert("上传成功！");
-    window.location.reload()
+    showAlert("上传成功！","reload");
   } catch (error) {
-    console.error(error);
+    showAlert("上传失败，请重试。","reload")
   }
 };
 
@@ -61,7 +61,7 @@ const fetchData = async () => {
     userSubmitRecords.value = submitResponse.data.submitrecords
     userSubmitRecordsLength.value = userSubmitRecords.value.length
   } catch (error) {
-    alert('错误: ', error)
+    showAlert("获取数据失败，请重试。","reload")
   }
 }
 

@@ -5,6 +5,7 @@ import { getSubmitRecords } from '../utils/axios.js';
 import { onMounted,computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
+import { showAlert } from '../utils/alert';
 
 const router = useRouter();
 
@@ -31,7 +32,7 @@ const fetchData = async () => {
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
-    alert('错误: ', error)
+    showAlert(error,"")
   } finally {
     loading.value = false
   }

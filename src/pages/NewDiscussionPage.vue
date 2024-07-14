@@ -3,6 +3,7 @@
 import { VProgressCircular,VAppBar,VRow,VBtn,VTextarea,VForm,VTextField } from 'vuetify/lib/components/index.mjs';
 import { ref,computed,onMounted } from 'vue';
 import { addDiscussion } from '../utils/axios.js';
+import { showAlert } from '../utils/alert';
 
 const title = ref('');
 const content = ref('');
@@ -30,7 +31,7 @@ const submit = async () => {
         window.location = "/discussion";
     }else{
         loading.value = false;
-        alert("创建讨论失败。");
+        showAlert("创建讨论失败。","");
     }
 };
 </script>

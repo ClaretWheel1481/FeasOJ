@@ -4,6 +4,7 @@ import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from
 import { ref,onMounted,computed } from 'vue'
 import { getDisDetails,deleteDiscussion } from '../utils/axios';
 import { useRoute } from 'vue-router';
+import { showAlert } from '../utils/alert';
 
 const route = useRoute();
 const loading = ref(true)
@@ -24,7 +25,7 @@ onMounted(async () => {
                 discussionInfos.value = response.data.discussionInfo;
             }
         } catch (error) {
-            alert('错误:', error);
+            showAlert(`错误，未找到对象。`,'/discussion');
         } finally{
             loading.value = false;
         }
@@ -39,8 +40,7 @@ const deleteDis = async () => {
         const Tid = route.params.Tid;
         const resp = await deleteDiscussion(localStorage.getItem('username'),localStorage.getItem('token'),Tid);
         if(resp.status === 200){
-            alert('删除成功');
-            window.location = '/discussion'
+            showAlert('删除成功！','/discussion');
         }
     }catch(error){
         window.location = '/403'

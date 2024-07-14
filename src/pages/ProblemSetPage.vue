@@ -4,6 +4,7 @@ import { ref, onMounted,computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
 import { getAllProblems } from '../utils/axios';
+import { showAlert } from '../utils/alert';
 
 const router = useRouter()
 
@@ -35,7 +36,7 @@ const fetchData = async () => {
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {
-    alert('错误: ', error)
+    showAlert('无法获取数据，请重试。',"")
   } finally {
     loading.value = false
   }

@@ -4,14 +4,7 @@ import { VSheet,VForm,VTextField,VBtn,VDialog,VCard,VCardActions,VCardText,VCard
 import { ref,reactive } from 'vue';
 import { updatePassword, getCaptchaCode } from '../utils/axios';
 import { regex,rules } from '../utils/rules'
-
-const dialog = ref(false);
-const dialogMessage = ref('');
-
-const showAlert = (message) => {
-  dialogMessage.value = message;
-  dialog.value = true;
-};
+import { showAlert } from '../utils/alert';
 
 const forms = reactive({
   email: '',
@@ -27,48 +20,45 @@ const nextStep = async () => {
     localStorage.clear();
     window.location = '/';
     if (forms.email === "" || forms.password === "" || forms.confirmPassword === "" || forms.vcode === ""){
-        showAlert('请确认所有内容都已经输入。');
+        showAlert('请确认所有内容都已经输入。',"");
         return;
     }
     if (forms.password.length < 8){
-        showAlert('密码长度至少为8个字符。');
+        showAlert('密码长度至少为8个字符。',"");
         return;
     }
     if (forms.password !== forms.confirmPassword) {
-        showAlert('两次输入的密码不一致，请重新输入。');
+        showAlert('两次输入的密码不一致，请重新输入。',"");
         return;
     }
     try{
         const response = await updatePassword(forms.email, forms.vcode, forms.password);
         if (response.data.status === 200) {
-            showAlert(response.data.message);
-            setTimeout(() => {
-                window.location = '/login';
-            }, 2000);
+            showAlert(response.data.message,"/login");
             return;
         } else {
-            showAlert(response.data.message);
+            showAlert(response.data.message,"");
             return;
         }
     }catch(error){
-        alert(error.response.data.message);
+        showAlert(error.response.data.message,"");
         return;
     }
 }
 
 const getCaptcha = async () => {
     if(!regex.test(forms.email)){
-        showAlert("请输入有效的邮箱地址。");
+        showAlert("请输入有效的邮箱地址。","");
         return;
     }
     if(!forms.email){
-        showAlert("请输入邮箱地址。");
+        showAlert("请输入邮箱地址。","");
         return;
     }
     try {
         const response = await getCaptchaCode(forms.email);
         if (response.data.status === 200) {
-            showAlert('验证码发送成功，请检查您的邮箱。');
+            showAlert('验证码发送成功，请检查您的邮箱。',"");
             if(isButtonDisabled.value){
                 return;
             }
@@ -83,10 +73,10 @@ const getCaptcha = async () => {
                 }
             }, 1000);
         } else{
-            showAlert("验证码发送失败，请稍后再试。");
+            showAlert("验证码发送失败，请稍后再试。","");
         }
     } catch (error) {
-        showAlert('验证码请求失败，请稍后再试。');
+        showAlert('验证码请求失败，请稍后再试。',"");
     }
 }
 </script>
@@ -100,15 +90,6 @@ const getCaptcha = async () => {
     <div class="title">
         <h1>重置密码</h1>
     </div>
-    <v-dialog v-model="dialog" persistent max-width="290">
-        <v-card rounded="xl">
-        <v-card-title class="text-h5">提示</v-card-title>
-        <v-card-text>{{ dialogMessage }}</v-card-text>
-        <v-card-actions>
-            <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">关闭</v-btn>
-        </v-card-actions>
-        </v-card>
-    </v-dialog>
     <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
         <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="nextStep" style="margin: 20px;">
             <v-text-field v-model="forms.email" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl" variant="solo-filled" label="邮箱" />
