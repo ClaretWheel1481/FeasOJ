@@ -7,7 +7,8 @@
 2. 运行 `npm install -g pnpm` 安装 Pnpm。
 3. 运行 `pnpm i` 安装依赖项。
 4. 运行 `pnpm dev` 启动前端服务器。
-5. 运行 `cd backend-src\src` 和 `go run main` 启动后端服务器。
+5. 运行 `cd backend-src\src` 和 `go mod tidy` 下载依赖。
+6. 运行 `go run main` 启动后端服务器。
 
 ### 待办事项列表
 
