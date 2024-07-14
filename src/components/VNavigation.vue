@@ -3,7 +3,7 @@ import { VNavigationDrawer,VList,VListItem,VDivider } from 'vuetify/components';
 import { ref,computed,onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getUserInfo, verifyJWT } from '../utils/axios';
-import { token,userInfo,userName } from '../utils/account';
+import { token,userName } from '../utils/account';
 
 const privilege = ref("")
 // 计算属性来判断用户是否已经登录
@@ -27,8 +27,7 @@ onMounted(async () => {
       const tokenResp = await verifyJWT(userName.value,token.value);
       if(tokenResp.data.status === 200){
         const response = await getUserInfo(userName.value);
-        userInfo.value = response.data.Info;
-        privilege.value = userInfo.value.role;
+        privilege.value = response.data.Info.role;
       }else {
         router.push('/403')
       }

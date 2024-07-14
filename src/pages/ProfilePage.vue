@@ -4,10 +4,11 @@ import { ref,onMounted } from 'vue'
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
-import { getUserSubmitRecords,uploadAvatar,avatarServer } from '../utils/axios';
+import { getUserSubmitRecords,uploadAvatar,avatarServer,getUserInfo } from '../utils/axios';
 import { showAlert } from '../utils/alert';
-import { userInfo,userId,userName,token } from '../utils/account';
+import { userId,userName,token } from '../utils/account';
 
+const userInfo = ref({});
 const showCropper = ref(false);
 const route = useRoute();
 const router = useRouter();
@@ -52,12 +53,15 @@ const uploadAvat = async (cropper) => {
   }
 };
 
-// 获取用户提交记录
+// 获取用户信息
+// FIXME:需要优化，每次刷新页面都会重新获取用户信息
 const fetchData = async () => {
   try {
     const submitResponse = await getUserSubmitRecords(userId.value);
-    userSubmitRecords.value = submitResponse.data.submitrecords
-    userSubmitRecordsLength.value = userSubmitRecords.value.length
+    const userInfoResp = await getUserInfo(userName.value);
+    userInfo.value = userInfoResp.data.Info;
+    userSubmitRecords.value = submitResponse.data.submitrecords;
+    userSubmitRecordsLength.value = userSubmitRecords.value.length;
   } catch (error) {
     showAlert("获取数据失败，请重试。","")
   }
@@ -89,7 +93,6 @@ onMounted(async () => {
         <div style="margin: 10px"></div>
         <div class="avatar-container">
           <v-avatar size="120" color="surface-variant">
-            <!-- TODO:打包前记得修改为你的头像存放地址 -->
             <v-img :src="avatarServer+userInfo.avatar" cover></v-img>
           </v-avatar>
           <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
