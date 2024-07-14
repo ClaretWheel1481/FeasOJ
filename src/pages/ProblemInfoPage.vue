@@ -60,7 +60,7 @@ onMounted(async () => {
                 problemInfo.value = resp.data.problemInfo;
             }
         } catch (error) {
-            console.error('请求题目信息时发生错误:', error);
+            alert('请求题目信息时发生错误:', error);
         } finally{
             loading.value = false;
         }
@@ -83,7 +83,7 @@ const uploadContentAsFile = async () => {
             alert('提交成功')
         }
     } catch (error) {
-        console.error('上传代码时发生错误:', error);
+        alert('上传代码时发生错误:', error);
     }
 };
 </script>

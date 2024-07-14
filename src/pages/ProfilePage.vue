@@ -64,7 +64,6 @@ const fetchData = async () => {
     alert('错误: ', error)
   }
 }
-const isHovered = ref(false);
 
 // 校验token后获取用户信息
 onMounted(async () => {

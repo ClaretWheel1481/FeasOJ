@@ -236,8 +236,10 @@ func uploadCodes(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	// 将文件名改为用户名+题目名
-	file.Filename = username + "_" + problem + path.Ext(file.Filename)
+	// 获取用户ID
+	userInfo := selectUserInfo(username)
+	// 将文件名改为用户ID_题目ID
+	file.Filename = fmt.Sprintf("%d_%s%s", userInfo.Uid, problem, path.Ext(file.Filename))
 	// 保存文件到指定路径
 	if err := c.SaveUploadedFile(file, "../codefiles/"+file.Filename); err != nil {
 		return

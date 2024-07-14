@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted,computed } from 'vue'
 import { getAllDis } from '../utils/axios';
+
 const headers = ref([
   { title: '帖子', value: 'Title', align:'center'},
   { title: '发帖人', value: 'Owner', align:'center'},
