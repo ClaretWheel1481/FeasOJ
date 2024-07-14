@@ -114,8 +114,8 @@ func uploadAvatars(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取头像文件。"})
 		return
 	}
-	token := c.GetHeader("token")
-	username := c.Query("username")
+	token := c.GetHeader("Authorization")
+	username := c.GetHeader("username")
 	// 校验Token
 	if !VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
@@ -204,6 +204,7 @@ func deleteDiscussion(c *gin.Context) {
 	}
 }
 
+// 上传代码
 func uploadCodes(c *gin.Context) {
 	file, err := c.FormFile("code")
 	if err != nil {

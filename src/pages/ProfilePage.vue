@@ -4,7 +4,7 @@ import { ref,onMounted } from 'vue'
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
-import { verifyJWT,getUserSubmitRecords,getUserInfo } from '../utils/axios';
+import { verifyJWT,getUserSubmitRecords,getUserInfo,uploadAvatar } from '../utils/axios';
 
 const showCropper = ref(false);
 const route = useRoute();
@@ -15,6 +15,7 @@ const userId = ref('');
 const loading = ref(false);
 const userSubmitRecords = ref([])
 const userSubmitRecordsLength = ref(0)
+const token = ref(localStorage.getItem('token'));
 const headers = ref([
   { title: '题目ID', value: 'Pid', align:'center'},
   { title: '结果', value: 'Result', align:'center'},
@@ -33,24 +34,25 @@ const handleRowClick = (row) => {
 }
 
 // 上传头像至服务器
-// const uploadAvatar = async (file) => {
-//   const formData = new FormData();
-//   formData.append('avatar', file);
-//   try {
-//     // FIXME:上传出现错误
-//     const response = await axios.post('http://127.0.0.1:37881/api/v2/uploadAvatar',formData,{
-//       headers: {
-//         token:localStorage.getItem('token'),
-//       },
-//       params: {
-//         username: username,
-//       },
-//     });
-//     console.log(response.data);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+const uploadAvat = async (cropper) => {
+  try {
+    const canvas = cropper.getCroppedCanvas();
+    const file = await new Promise((resolve) => canvas.toBlob(resolve));
+
+    // 获取原始文件的名称和类型
+    const imageData = cropper.getImageData();
+    const originalFile = imageData.src ? imageData.src.split('/').pop() : 'avatar.png';
+    const fileName = originalFile.split('?')[0]; // 去掉可能的查询参数
+    const fileType = file.type || 'image/png';
+
+    // 创建一个新的文件对象，保留原始文件名和类型
+    const newFile = new File([file], fileName, { type: fileType });
+    await uploadAvatar(newFile,username,token.value);
+    window.location.reload()
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // 获取用户提交记录
 const fetchData = async () => {
@@ -63,11 +65,15 @@ const fetchData = async () => {
   }
 }
 
+const uploadSuccess = () => {
+  window.location='/profile/'+username
+}
+
 // 校验token后获取用户信息
 onMounted(async () => {
   loading.value = true;
   try{
-    const tokenResponse = await verifyJWT(username,localStorage.getItem('token'));
+    const tokenResponse = await verifyJWT(username,token.value);
     if(tokenResponse.data.status === 200){
       const response = await getUserInfo(username);
       userInfo.value = response.data.Info;
@@ -152,11 +158,11 @@ onMounted(async () => {
       </v-card>
   </div>
   <!-- FIXME:头像文件上传失败 -->
-  <!-- <avatar-cropper
-  v-model="showCropper"
-  :upload-handler="uploadAvatar"
-  :labels="{ submit: '上传头像', cancel: '取消' }"
-  /> -->
+  <avatar-cropper
+    v-model="showCropper"
+    :labels="{ submit: '上传头像', cancel: '取消' }"
+    :upload-handler="uploadAvat"
+  />
 </template>
 
 <style scoped>

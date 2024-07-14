@@ -20,4 +20,4 @@ func initAvatarFolder() {
 // 	var height uint = 64
 // }
 
-// TODO:接入AI模型对上传的头像进行检测
+// TODO:接入头像检测API

@@ -127,3 +127,16 @@ export const uploadCode = async (file,pid,username,token) => {
         },
     });
 }
+
+// 上传头像
+export const uploadAvatar = async (file,username,token) => {
+    let formData = new FormData();
+    formData.append('avatar', file);
+    return await axios.post(`${apiUrl}/v2/uploadAvatar`,formData,{
+        headers: {
+            'Content-Type':'multipart/form-data',
+            username: username,
+            Authorization: token
+        },
+    });
+}
