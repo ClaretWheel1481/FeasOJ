@@ -15,10 +15,8 @@ export const loginRequest = async (username,password) => {
 // Token校验
 export const verifyJWT = async (username,token) => {
     return await axios.get(`${apiUrl}/v1/verifyToken`,{
-        params:{
-          username:username
-        },
         headers:{
+            username:encodeURIComponent(username),
             Authorization:token
         }
     })
@@ -36,8 +34,8 @@ export const getCaptchaCode = async (email) => {
 // 获取用户信息
 export const getUserInfo = async (username) => {
     return await axios.get(`${apiUrl}/v1/getUserInfo`,{
-        params:{
-          username:username
+        headers:{
+          username:encodeURIComponent(username)
         }
     });
 }
@@ -99,7 +97,7 @@ export const addDiscussion = async (Title,Content,Username) => {
     formData.append('content', Content);
     return await axios.post(`${apiUrl}/v2/addDiscussion`,formData,{
         headers: {
-            username: Username,
+            username: encodeURIComponent(Username),
         },
     });
 }
@@ -122,7 +120,7 @@ export const uploadCode = async (file,pid,username,token) => {
         },
         headers: {
             'Content-Type':'multipart/form-data',
-            username: username,
+            username: encodeURIComponent(username),
             Authorization: token
         },
     });
@@ -135,7 +133,7 @@ export const uploadAvatar = async (file,username,token) => {
     return await axios.post(`${apiUrl}/v2/uploadAvatar`,formData,{
         headers: {
             'Content-Type':'multipart/form-data',
-            username: username,
+            username: encodeURIComponent(username),
             Authorization: token
         },
     });

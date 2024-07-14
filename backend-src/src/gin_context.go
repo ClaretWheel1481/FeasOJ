@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 	"path"
 	"path/filepath"
@@ -69,7 +70,12 @@ func getCaptchas(c *gin.Context) {
 // 校验TOKEN
 func verifyTokens(c *gin.Context) {
 	token := c.GetHeader("Authorization")
-	username := c.Query("username")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
 	if VerifyToken(username, token) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功。"})
 	} else {
@@ -80,7 +86,12 @@ func verifyTokens(c *gin.Context) {
 // 获取用户信息
 func getUserInfos(c *gin.Context) {
 	// 返回至前端以显示个人资料
-	username := c.Query("username")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
 	// 根据uid来查询对应的用户信息
 	userInfo := selectUserInfo(username)
 	if userInfo.Username == "" {
@@ -115,7 +126,8 @@ func uploadAvatars(c *gin.Context) {
 		return
 	}
 	token := c.GetHeader("Authorization")
-	username := c.GetHeader("username")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
 	// 校验Token
 	if !VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
@@ -127,7 +139,7 @@ func uploadAvatars(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户信息。"})
 		return
 	}
-	newFilename := fmt.Sprintf("user_%d%s", userInfo.Uid, path.Ext(file.Filename))
+	newFilename := fmt.Sprintf("%d%s", userInfo.Uid, path.Ext(file.Filename))
 	filePath := filepath.Join("../avatars", newFilename)
 	if _, err := os.Stat(filePath); err == nil {
 		os.Remove(filePath)
@@ -183,7 +195,12 @@ func getDiscussionByTids(c *gin.Context) {
 
 // 创建讨论
 func createDiscussion(c *gin.Context) {
-	username := c.GetHeader("username")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
+		return
+	}
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 	uid := selectUserInfo(username).Uid
@@ -212,7 +229,8 @@ func uploadCodes(c *gin.Context) {
 		return
 	}
 	problem := c.Query("problem")
-	username := c.GetHeader("username")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
 	token := c.GetHeader("Authorization")
 	if !VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})

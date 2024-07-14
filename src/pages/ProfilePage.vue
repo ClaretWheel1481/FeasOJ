@@ -13,8 +13,8 @@ const username = route.params.Username;
 const userInfo = ref({});
 const userId = ref('');
 const loading = ref(false);
-const userSubmitRecords = ref([])
-const userSubmitRecordsLength = ref(0)
+const userSubmitRecords = ref([]);
+const userSubmitRecordsLength = ref(0);
 const token = ref(localStorage.getItem('token'));
 const headers = ref([
   { title: '题目ID', value: 'Pid', align:'center'},
@@ -22,7 +22,6 @@ const headers = ref([
   { title: '语言', value: 'Language', align:'center'},
   { title: '时间', value: 'Time', align:'center'},
 ])
-
 const logout = () => {
   localStorage.clear();
   window.location = '/'
@@ -48,6 +47,7 @@ const uploadAvat = async (cropper) => {
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
     await uploadAvatar(newFile,username,token.value);
+    alert("上传成功！");
     window.location.reload()
   } catch (error) {
     console.error(error);
@@ -64,10 +64,7 @@ const fetchData = async () => {
     alert('错误: ', error)
   }
 }
-
-const uploadSuccess = () => {
-  window.location='/profile/'+username
-}
+const isHovered = ref(false);
 
 // 校验token后获取用户信息
 onMounted(async () => {
@@ -98,12 +95,12 @@ onMounted(async () => {
     <div style="margin: 10%"></div>
       <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
         <div style="margin: 10px"></div>
-        <v-btn icon size="120" @click="showCropper = true">
+        <div class="avatar-container">
           <v-avatar size="120" color="surface-variant">
-            <v-img :src="userInfo.avatar" cover>
-            </v-img>
+            <v-img :src="userInfo.avatar" cover></v-img>
           </v-avatar>
-        </v-btn>
+          <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
+        </div>
         <v-card-text>
           <p class="text-h4 font-weight-black">{{userInfo.username}}</p>
           <div style="margin: 10px"></div>
@@ -174,5 +171,15 @@ onMounted(async () => {
 }
 .tabletitle{
   color: #1e65ff;
+}
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.edit-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 </style>
