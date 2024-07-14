@@ -26,17 +26,16 @@ const submit = async () => {
     loading.value = true;
     const response = await addDiscussion(title.value,content.value,userName.value)
     if(response.status === 200){
+        showAlert("创建成功！","/discussion");
         loading.value = false;
-        window.location = "/discussion";
     }else{
-        loading.value = false;
         showAlert("创建讨论失败。","");
+        loading.value = false;
     }
 };
 </script>
 
 <template>
-    <!-- TODO:创建讨论页 -->
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>

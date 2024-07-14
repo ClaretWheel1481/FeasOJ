@@ -15,6 +15,6 @@ export const showAlert = (message,path) => {
   }else {
     setTimeout(() => {
       window.location = path;
-    },500);
+    },1000);
   }
 };

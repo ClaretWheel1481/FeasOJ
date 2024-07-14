@@ -4,7 +4,7 @@ import { ref,onMounted } from 'vue'
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
-import { getUserSubmitRecords,uploadAvatar } from '../utils/axios';
+import { getUserSubmitRecords,uploadAvatar,avatarServer } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { userInfo,userId,userName,token } from '../utils/account';
 
@@ -89,7 +89,8 @@ onMounted(async () => {
         <div style="margin: 10px"></div>
         <div class="avatar-container">
           <v-avatar size="120" color="surface-variant">
-            <v-img :src="userInfo.avatar" cover></v-img>
+            <!-- TODO:打包前记得修改为你的头像存放地址 -->
+            <v-img :src="avatarServer+userInfo.avatar" cover></v-img>
           </v-avatar>
           <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
         </div>
@@ -146,7 +147,6 @@ onMounted(async () => {
         </v-data-table-server>
       </v-card>
   </div>
-  <!-- FIXME:头像文件上传失败 -->
   <avatar-cropper
     v-model="showCropper"
     :labels="{ submit: '上传头像', cancel: '取消' }"
