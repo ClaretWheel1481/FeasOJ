@@ -95,8 +95,8 @@ const getCaptcha = async () => {
             <v-text-field v-model="forms.email" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl" variant="solo-filled" label="邮箱" />
             <v-text-field v-model="forms.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled" label="邮箱验证码">
                 <template v-slot:append>
-                    <v-btn icon @click="getCaptcha" :disabled="isButtonDisabled">
-                        <v-icon>mdi-email</v-icon>
+                    <v-btn @click="getCaptcha" :disabled="isButtonDisabled" size="25" icon>
+                        <v-icon v-if="!isButtonDisabled" icon="mdi-email"/>
                         <span v-if="isButtonDisabled">{{ countdown }}</span>
                     </v-btn>
                 </template>

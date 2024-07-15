@@ -1,8 +1,10 @@
 <!-- 注册页 -->
 <script setup>
 import { ref,reactive } from 'vue';
-import { VAppBar, VBtn, VTextField, VForm,VSheet } from 'vuetify/components';
+import { VAppBar, VBtn, VTextField, VForm,VSheet,VIcon } from 'vuetify/components';
 import { getCaptchaCode, registerRequest } from '../utils/axios';
+import { rules,regex } from '../utils/rules';
+import { showAlert } from '../utils/alert';
 
 const formState = reactive({
   username: '',
@@ -93,10 +95,10 @@ const getCaptcha = async () => {
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl" variant="solo-filled" label="邮箱" />
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled" label="邮箱验证码">
         <template v-slot:append>
-            <v-btn icon @click="getCaptcha" :disabled="isButtonDisabled">
-                <v-icon icon="mdi-email"/>
+              <v-btn @click="getCaptcha" :disabled="isButtonDisabled" size="25" icon>
+                <v-icon v-if="!isButtonDisabled" icon="mdi-email"/>
                 <span v-if="isButtonDisabled">{{ countdown }}</span>
-            </v-btn>
+              </v-btn>
         </template>
       </v-text-field>
       <v-text-field v-model="formState.password" :rules="[rules.password.required, rules.password.minLength]" rounded="xl" variant="solo-filled" type="password" label="密码" />
