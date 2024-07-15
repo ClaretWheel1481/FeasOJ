@@ -14,3 +14,21 @@ English | [简体中文](README_CN.md)
 
 1. Add Token Checksums to every API.
 2. Save Token to Cookies.
+3. Judge Core
+
+### Notice
+
+This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
+If you find any bugs, please open an issue.
+
+
+### Thanks
+
+- [Vue](https://github.com/vuejs/vue)
+- [Vuetify](https://github.com/vuetifyjs/vuetify)
+- [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
+- [axios](https://github.com/axios/axios)
+- [Go](https://github.com/golang/go)
+- [Gin](https://github.com/gin-gonic/gin)
+- [gorm](https://github.com/go-gorm/gorm)
+- [jwt-go](https://github.com/golang-jwt/jwt)

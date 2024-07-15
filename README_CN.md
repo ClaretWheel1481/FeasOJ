@@ -14,3 +14,20 @@
 
 1. 为每个 API 添加Token校验。
 2. 将Token保存到 Cookies 中。
+3. 判题端
+
+### 注意
+
+这是我第一次用Vue + Golang写大项目，所以代码会很糟糕，不过我会一直去改进它！
+如果你找到任何Bug请发布Issue告诉我。
+
+### 致谢
+
+- [Vue](https://github.com/vuejs/vue)
+- [Vuetify](https://github.com/vuetifyjs/vuetify)
+- [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
+- [axios](https://github.com/axios/axios)
+- [Go](https://github.com/golang/go)
+- [Gin](https://github.com/gin-gonic/gin)
+- [gorm](https://github.com/go-gorm/gorm)
+- [jwt-go](https://github.com/golang-jwt/jwt)
