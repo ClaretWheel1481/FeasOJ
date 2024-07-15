@@ -2,7 +2,7 @@
 <script setup>
 import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from 'vuetify/components';
 import { ref,onMounted,computed } from 'vue'
-import { getDisDetails,deleteDiscussion } from '../utils/axios';
+import { getDisDetails,deleteDiscussion,avatarServer } from '../utils/axios';
 import { useRoute } from 'vue-router';
 import { showAlert } from '../utils/alert';
 import { token,userName } from "../utils/account";
@@ -61,7 +61,7 @@ const deleteDis = async () => {
             <v-row style="align-items: center;">
                 <div style="margin-left: 80px;"></div>
                 <v-avatar size="50" color="surface-variant">
-                    <v-img :src="discussionInfos.avatar" cover></v-img>
+                    <v-img :src="avatarServer+discussionInfos.avatar" cover></v-img>
                 </v-avatar>
                 <div style="margin-left: 10px;"></div>
                 <p class="font-weight-black">{{ discussionInfos.username }}</p>

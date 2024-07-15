@@ -74,6 +74,7 @@ type userInfoRequest struct {
 // 题目信息请求体
 type problemInfoRequest struct {
 	Pid         int    `json:"pid"`
+	Difficulty  string `json:"difficulty"`
 	Title       string `json:"title"`
 	Content     string `json:"content"`
 	Timelimit   int    `json:"time_limit"`
@@ -100,6 +101,7 @@ type User struct {
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
 type Problem struct {
 	Pid              int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
+	Difficulty       string `gorm:"comment:难度;not null"`
 	Title            string `gorm:"comment:题目标题;not null"`
 	Content          string `gorm:"comment:题目详细;not null"`
 	Timelimit        int    `gorm:"comment:运行时间限制;not null"`

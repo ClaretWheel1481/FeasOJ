@@ -100,6 +100,7 @@ const uploadContentAsFile = async () => {
     <div v-else>
         <h1>{{problemInfo.title}}</h1>
         <div style="margin: 10px;"></div>
+        <p class="subtitle">难度: {{problemInfo.difficulty}}</p>
         <p class="subtitle">时间限制: {{problemInfo.time_limit}} S</p>
         <p class="subtitle">内存限制: {{problemInfo.memory_limit}} MB</p>
         <div style="margin: 10px;"></div>
