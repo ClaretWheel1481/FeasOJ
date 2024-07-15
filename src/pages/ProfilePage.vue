@@ -1,12 +1,13 @@
 <!-- 个人信息页 -->
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref,onMounted,computed } from 'vue'
 import { useRoute,useRouter } from 'vue-router';
 import { VCard,VCardActions,VCardText,VRow,VProgressCircular,VTextField,VBtn,VAvatar,VImg,VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
 import { getUserSubmitRecords,uploadAvatar,avatarServer,getUserInfo } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { userId,userName,token } from '../utils/account';
+import { verifyJWT } from '../utils/axios';
 
 const userInfo = ref({});
 const showCropper = ref(false);
@@ -22,6 +23,10 @@ const headers = ref([
   { title: '语言', value: 'Language', align:'center'},
   { title: '时间', value: 'Time', align:'center'},
 ])
+
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value)
+
 const logout = () => {
   localStorage.clear();
   window.location = '/'
@@ -54,12 +59,9 @@ const uploadAvat = async (cropper) => {
 };
 
 // 获取用户信息
-// FIXME:需要优化，每次刷新页面都会重新获取用户信息
 const fetchData = async () => {
   try {
     const submitResponse = await getUserSubmitRecords(userId.value);
-    const userInfoResp = await getUserInfo(userName.value);
-    userInfo.value = userInfoResp.data.Info;
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
   } catch (error) {
@@ -67,18 +69,33 @@ const fetchData = async () => {
   }
 }
 
-// 校验token后获取用户信息
+// 检验获取用户信息
 onMounted(async () => {
   loading.value = true;
-  if(currentUsername !== userName.value){
-    window.location = '/403'
-  }
-  try{
+  try {
+    if (!userLoggedIn.value) {
+      window.location = "/login";
+      return;
+    }
+    const tokenVerificationResponse = await verifyJWT(userName.value, token.value);
+    if (tokenVerificationResponse.data.status !== 200) {
+      window.location = '/403'
+      return;
+    }
+    const userInfoResponse = await getUserInfo(userName.value);
+    if (userInfoResponse.data.status !== 200) {
+      window.location = '/403'
+      return;
+    }
+    userInfo.value = userInfoResponse.data.Info;
+    if (currentUsername !== userInfo.value.username) {
+      window.location = '/403'
+      return;
+    }
     await fetchData();
-  }catch(error){
-    showAlert("获取数据失败，请重试。","")
-  }finally{
-    loading.value=false;
+    loading.value = false;
+  } catch (error) {
+    window.location = '/403'
   }
 });
 </script>
