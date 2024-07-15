@@ -84,7 +84,7 @@ const routes = [
         }
     },
     { 
-        path: '/discussion/:Tid', 
+        path: '/discussion/:Did', 
         component: () => import('../pages/DiscussionDetailsPage.vue'),
         meta: {
             title: 'Discussion'

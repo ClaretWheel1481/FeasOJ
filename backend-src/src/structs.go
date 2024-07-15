@@ -42,7 +42,7 @@ type updatePasswordRequest struct {
 
 // 讨论列表请求体
 type discussRequest struct {
-	Tid       string `json:"tid"`
+	Did       string `json:"Did"`
 	Title     string `json:"title"`
 	Username  string `json:"username"`
 	Create_at string `json:"create_at"`
@@ -50,7 +50,7 @@ type discussRequest struct {
 
 // 讨论帖子页请求体
 type discsInfoRequest struct {
-	Tid       int       `json:"tid"`
+	Did       int       `json:"Did"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
 	Uid       int       `json:"uid"`
@@ -81,7 +81,25 @@ type problemInfoRequest struct {
 	Memorylimit int    `json:"memory_limit"`
 	Input       string `json:"input"`
 	Output      string `json:"output"`
-	Cid         int    `json:"cid"`
+}
+
+// 提交代码请求体
+type TestCaseRequest struct {
+	InputData  string `json:"input"`
+	OutputData string `json:"output"`
+}
+
+// 管理员获取题目信息请求体
+type adminProblemInfoRequest struct {
+	Pid         int               `json:"pid"`
+	Difficulty  string            `json:"difficulty"`
+	Title       string            `json:"title"`
+	Content     string            `json:"content"`
+	Timelimit   string            `json:"time_limit"`
+	Memorylimit string            `json:"memory_limit"`
+	Input       string            `json:"input"`
+	Output      string            `json:"output"`
+	TestCases   []TestCaseRequest `json:"test_cases"`
 }
 
 // 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at
@@ -104,8 +122,8 @@ type Problem struct {
 	Difficulty  string `gorm:"comment:难度;not null"`
 	Title       string `gorm:"comment:题目标题;not null"`
 	Content     string `gorm:"comment:题目详细;not null"`
-	Timelimit   int    `gorm:"comment:运行时间限制;not null"`
-	Memorylimit int    `gorm:"comment:内存大小限制;not null"`
+	Timelimit   string `gorm:"comment:运行时间限制;not null"`
+	Memorylimit string `gorm:"comment:内存大小限制;not null"`
 	Input       string `gorm:"comment:输入样例;not null"`
 	Output      string `gorm:"comment:输出样例;not null"`
 }
@@ -121,7 +139,7 @@ type SubmitRecord struct {
 
 // 讨论帖子表: Tid,Title,Content,Uid,Create_at
 type Discussion struct {
-	Tid       int       `gorm:"comment:Tid;primaryKey;autoIncrement"`
+	Did       int       `gorm:"comment:讨论ID;primaryKey;autoIncrement"`
 	Title     string    `gorm:"comment:标题"`
 	Content   string    `gorm:"comment:内容"`
 	Uid       int       `gorm:"comment:用户"`
@@ -131,15 +149,16 @@ type Discussion struct {
 // 讨论评论表: Cid,Tid,Content,Uid,Create_at
 type Comment struct {
 	Cid       int       `gorm:"comment:Cid;primaryKey;autoIncrement"`
-	Tid       int       `gorm:"comment:Tid"`
+	Did       int       `gorm:"comment:Did"`
 	Content   string    `gorm:"comment:内容"`
 	Uid       int       `gorm:"comment:用户"`
 	Create_at time.Time `gorm:"comment:创建时间"`
 }
 
+// 测试样例表: Tid, Pid, InputData, OutputData
 type TestCase struct {
 	Tid        int    `gorm:"comment:Tid;primaryKey;autoIncrement"`
-	Pid        int    `gorm:"comment:题目ID;not null"`
+	Pid        int    `gorm:"comment:Pid;not null"`
 	InputData  string `gorm:"comment:输入数据;not null"`
 	OutputData string `gorm:"comment:输出数据;not null"`
 }

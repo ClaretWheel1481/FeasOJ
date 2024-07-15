@@ -5,6 +5,8 @@ export const apiUrl = "http://127.0.0.1:37881/api"
 // TODO:打包前记得修改为你的头像服务器地址
 export const avatarServer = "http://127.0.0.1:37881/avatar/"
 
+                //  GET请求
+
 // 登录
 export const loginRequest = async (username,password) => {
     return await axios.get(`${apiUrl}/v1/login`, {
@@ -59,10 +61,9 @@ export const getAllDis = async () => {
 }
 
 // 获取讨论详细信息
-export const getDisDetails = async (Tid) => {
-    return await axios.get(`${apiUrl}/v1/getDiscussionByTid/${Tid}`)
+export const getDisDetails = async (Did) => {
+    return await axios.get(`${apiUrl}/v1/getDiscussionByDid/${Did}`)
 }
-
 
 // 获取指定用户提交记录
 export const getUserSubmitRecords = async (userId) => {
@@ -73,6 +74,18 @@ export const getUserSubmitRecords = async (userId) => {
 export const getSubmitRecords = async () => {
     return await axios.get(`${apiUrl}/v1/getAllSubmitRecords`)
 }
+
+// 管理员获取指定题目所有信息
+export const getProblemAllInfoByAdmin = async (pid,username,token) => {
+    return await axios.get(`${apiUrl}/v1/getProblemInfosByAdmin/${pid}`,{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        },
+    })
+}
+
+                    //    POST请求
 
 // 注册
 export const registerRequest = async (username,password,email,vcode) => {
@@ -106,10 +119,10 @@ export const addDiscussion = async (Title,Content,Username) => {
 }
 
 // 删除讨论
-export const deleteDiscussion = async(username,token,Tid) => {
+export const deleteDiscussion = async(username,token,Did) => {
     const tokenVerifyResp = await verifyJWT(username,token);
     if(tokenVerifyResp.status === 200){
-        return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Tid}`)
+        return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`)
     }
 }
 
@@ -140,4 +153,15 @@ export const uploadAvatar = async (file,username,token) => {
             Authorization: token
         },
     });
+}
+
+// 更新题目信息
+export const updateProblemInfo = async (username,token,problemInfo) => {
+    return await axios.post(`${apiUrl}/v2/updateProblemInfo/`,problemInfo,{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token,
+            "Content-Type": "application/json"
+        }
+    })
 }

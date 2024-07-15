@@ -153,7 +153,6 @@ func uploadAvatars(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像上传失败。"})
 		return
 	}
-	// TODO:若要上传至服务器，则将路径改为服务器路径
 	// 上传头像路径至数据库
 	if !updateAvatar(username, filepath.Join(newFilename)) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像路径更新失败。"})
@@ -193,8 +192,8 @@ func getAllDiscussionss(c *gin.Context) {
 }
 
 // 获取指定id讨论信息
-func getDiscussionByTids(c *gin.Context) {
-	discussion := selectDiscussionByTid(c.Param("tid"))
+func getDiscussionByDids(c *gin.Context) {
+	discussion := selectDiscussionByDid(c.Param("Did"))
 	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
 }
 
@@ -218,8 +217,8 @@ func createDiscussion(c *gin.Context) {
 
 // 删除讨论
 func deleteDiscussion(c *gin.Context) {
-	tid := c.Param("tid")
-	if delDiscussion(tid) {
+	did := c.Param("did")
+	if delDiscussion(did) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "删除讨论失败。"})
@@ -254,4 +253,49 @@ func uploadCodes(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码上传成功。"})
+}
+
+// 管理员获取指定题目所有信息
+func getProblemInfosByAdmins(c *gin.Context) {
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if selectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	problemInfo := selectProblemTestCases(c.Param("Pid"))
+	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
+}
+
+// 更新题目信息
+func updateProblemInfos(c *gin.Context) {
+	var req adminProblemInfoRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
+		return
+	}
+
+	// 验证用户权限
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败"})
+		return
+	}
+	if selectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足"})
+		return
+	}
+
+	// 更新题目信息
+	if err := updateProblem(req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新题目信息失败"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "题目信息更新成功"})
 }

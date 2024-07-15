@@ -86,8 +86,11 @@ func main() {
 		// 获取所有讨论帖子API
 		router.GET("/getAllDiscussions", getAllDiscussionss)
 
-		// 获取指定Tid的帖子API
-		router.GET("/getDiscussionByTid/:tid", getDiscussionByTids)
+		// 获取指定Did的帖子API
+		router.GET("/getDiscussionByDid/:Did", getDiscussionByDids)
+
+		// 管理员获取指定题目的所有信息
+		router.GET("/getProblemInfosByAdmin/:Pid", getProblemInfosByAdmins)
 	}
 
 	router2 := r.Group("/api/v2")
@@ -105,10 +108,13 @@ func main() {
 		router2.POST("/addDiscussion", createDiscussion)
 
 		// 删除讨论API
-		router2.POST("/deleteDiscussion/:tid", deleteDiscussion)
+		router2.POST("/deleteDiscussion/:Did", deleteDiscussion)
 
 		// 上传代码文件API
 		router2.POST("/uploadCode", uploadCodes)
+
+		// 管理员更新题目信息API
+		router2.POST("/updateProblemInfo", updateProblemInfos)
 	}
 
 	// 头像http服务器

@@ -18,8 +18,8 @@ onMounted(async () => {
     loading.value = true;
     if(userLoggedIn.value){
         try {
-            const Tid = route.params.Tid;
-            const response = await getDisDetails(Tid);
+            const Did = route.params.Did;
+            const response = await getDisDetails(Did);
             if (response.status === 200) {
                 discussionInfos.value = response.data.discussionInfo;
             }
@@ -36,8 +36,8 @@ onMounted(async () => {
 const deleteDis = async () => {
     loading.value = true;
     try{
-        const Tid = route.params.Tid;
-        const resp = await deleteDiscussion(localStorage.getItem('username'),localStorage.getItem('token'),Tid);
+        const Did = route.params.Did;
+        const resp = await deleteDiscussion(localStorage.getItem('username'),localStorage.getItem('token'),Did);
         if(resp.status === 200){
             showAlert('删除成功！','/discussion');
         }

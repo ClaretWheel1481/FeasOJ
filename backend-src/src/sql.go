@@ -204,20 +204,20 @@ func selectAllSubmitRecords() []SubmitRecord {
 func selectDiscussList() []discussRequest {
 	var discussRequests []discussRequest
 	connectSql().Table("Discussions").
-		Select("Discussions.Tid,Discussions.Title, Users.Username, Discussions.Create_at").
+		Select("Discussions.Did,Discussions.Title, Users.Username, Discussions.Create_at").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
 		Order("Discussions.Create_at desc").
 		Find(&discussRequests)
 	return discussRequests
 }
 
-// 获取指定Tid的讨论以及User表中发帖人的头像
-func selectDiscussionByTid(tid string) discsInfoRequest {
+// 获取指定Did的讨论以及User表中发帖人的头像
+func selectDiscussionByDid(Did string) discsInfoRequest {
 	var discussion discsInfoRequest
 	connectSql().Table("Discussions").
-		Select("Discussions.Tid, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Username, Users.Avatar").
+		Select("Discussions.Did, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Username, Users.Avatar").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
-		Where("Discussions.Tid = ?", tid).First(&discussion)
+		Where("Discussions.Did = ?", Did).First(&discussion)
 	return discussion
 }
 
@@ -231,7 +231,82 @@ func addDiscussion(title, content string, uid int) bool {
 }
 
 // 删除讨论
-func delDiscussion(tid string) bool {
-	err := connectSql().Table("Discussions").Where("Tid = ?", tid).Delete(&Discussion{}).Error
+func delDiscussion(Did string) bool {
+	err := connectSql().Table("Discussions").Where("Did = ?", Did).Delete(&Discussion{}).Error
 	return err == nil
 }
+
+// 获取指定题目所有输入输出样例
+func selectProblemTestCases(pid string) adminProblemInfoRequest {
+	var problem Problem
+	var testCases []TestCaseRequest
+	var result adminProblemInfoRequest
+
+	if err := connectSql().First(&problem, pid).Error; err != nil {
+		return result
+	}
+
+	if err := connectSql().Table("test_cases").Where("pid = ?", pid).Select("input_data,output_data").Find(&testCases).Error; err != nil {
+		return result
+	}
+
+	result = adminProblemInfoRequest{
+		Pid:         problem.Pid,
+		Difficulty:  problem.Difficulty,
+		Title:       problem.Title,
+		Content:     problem.Content,
+		Timelimit:   problem.Timelimit,
+		Memorylimit: problem.Memorylimit,
+		Input:       problem.Input,
+		Output:      problem.Output,
+		TestCases:   testCases,
+	}
+
+	return result
+}
+
+// 更新题目信息
+func updateProblem(req adminProblemInfoRequest) error {
+	// 更新题目表
+	problem := Problem{
+		Pid:         req.Pid,
+		Difficulty:  req.Difficulty,
+		Title:       req.Title,
+		Content:     req.Content,
+		Timelimit:   req.Timelimit,
+		Memorylimit: req.Memorylimit,
+		Input:       req.Input,
+		Output:      req.Output,
+	}
+	if err := connectSql().Save(&problem).Error; err != nil {
+		return err
+	}
+	// 更新测试样例表
+	for _, testCase := range req.TestCases {
+		var existingTestCase TestCase
+		if err := connectSql().Where("pid = ? AND input_data = ?", req.Pid, testCase.InputData).First(&existingTestCase).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				// 如果测试样例不存在，则创建新的样例
+				newTestCase := TestCase{
+					Pid:        req.Pid,
+					InputData:  testCase.InputData,
+					OutputData: testCase.OutputData,
+				}
+				if err := connectSql().Create(&newTestCase).Error; err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		} else {
+			// 如果测试样例存在，则更新该样例
+			existingTestCase.OutputData = testCase.OutputData
+			if err := connectSql().Save(&existingTestCase).Error; err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+// TODO:创建题目

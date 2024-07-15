@@ -37,7 +37,7 @@ const fetchData = async () => {
   }
 }
 
-// 点击竞赛跳转
+// 点击讨论跳转
 const handleRowClick = (row) => {
   router.push({ path: `/discussion/${row}` })
 }
@@ -73,7 +73,7 @@ onMounted(async () => {
         <template v-slot:item="{ item }">
         <tr>
             <td class="disctitle">
-                <v-btn @click="handleRowClick(item.tid)" variant="text" block>{{ item.title }}</v-btn>
+                <v-btn @click="handleRowClick(item.Did)" variant="text" block>{{ item.title }}</v-btn>
             </td>
             <td>{{ item.username }}</td>
             <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
