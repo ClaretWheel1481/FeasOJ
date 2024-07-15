@@ -3,7 +3,7 @@
 import { ref, onMounted, computed } from 'vue'
 import { token, userName } from '../utils/account'
 import { getUserInfo, verifyJWT, getAllProblems } from '../utils/axios';
-import { VDataTableServer, VFab }
+import { VDataTableServer, VFab } from 'vuetify/components'
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
