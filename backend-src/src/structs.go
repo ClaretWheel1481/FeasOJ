@@ -100,16 +100,14 @@ type User struct {
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
 type Problem struct {
-	Pid              int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
-	Difficulty       string `gorm:"comment:难度;not null"`
-	Title            string `gorm:"comment:题目标题;not null"`
-	Content          string `gorm:"comment:题目详细;not null"`
-	Timelimit        int    `gorm:"comment:运行时间限制;not null"`
-	Memorylimit      int    `gorm:"comment:内存大小限制;not null"`
-	Input            string `gorm:"comment:输入样例;not null"`
-	Output           string `gorm:"comment:输出样例;not null"`
-	Input_full_path  string `gorm:"comment:输入样例完整路径"`
-	Output_full_path string `gorm:"comment:输出样例完整路径"`
+	Pid         int    `gorm:"comment:Pid;primaryKey;autoIncrement"`
+	Difficulty  string `gorm:"comment:难度;not null"`
+	Title       string `gorm:"comment:题目标题;not null"`
+	Content     string `gorm:"comment:题目详细;not null"`
+	Timelimit   int    `gorm:"comment:运行时间限制;not null"`
+	Memorylimit int    `gorm:"comment:内存大小限制;not null"`
+	Input       string `gorm:"comment:输入样例;not null"`
+	Output      string `gorm:"comment:输出样例;not null"`
 }
 
 // 总提交记录表: Pid,Uid,Result,Time,Language
@@ -137,4 +135,11 @@ type Comment struct {
 	Content   string    `gorm:"comment:内容"`
 	Uid       int       `gorm:"comment:用户"`
 	Create_at time.Time `gorm:"comment:创建时间"`
+}
+
+type TestCase struct {
+	Tid        int    `gorm:"comment:Tid;primaryKey;autoIncrement"`
+	Pid        int    `gorm:"comment:题目ID;not null"`
+	InputData  string `gorm:"comment:输入数据;not null"`
+	OutputData string `gorm:"comment:输出数据;not null"`
 }

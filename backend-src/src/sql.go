@@ -97,7 +97,7 @@ func initSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Discussion{}, &Comment{})
+	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Discussion{}, &Comment{}, &TestCase{})
 	initAdminAccount()
 	return true
 }

@@ -128,6 +128,10 @@ func uploadAvatars(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	encodedUsername := c.GetHeader("username")
 	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
 	// 校验Token
 	if !VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
@@ -232,6 +236,10 @@ func uploadCodes(c *gin.Context) {
 	problem := c.Query("problem")
 	encodedUsername := c.GetHeader("username")
 	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
 	token := c.GetHeader("Authorization")
 	if !VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
