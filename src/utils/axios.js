@@ -77,7 +77,7 @@ export const getSubmitRecords = async () => {
 
 // 管理员获取指定题目所有信息
 export const getProblemAllInfoByAdmin = async (pid,username,token) => {
-    return await axios.get(`${apiUrl}/v1/getProblemInfosByAdmin/${pid}`,{
+    return await axios.get(`${apiUrl}/v1/getProblemAllInfo/${pid}`,{
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -162,6 +162,16 @@ export const updateProblemInfo = async (username,token,problemInfo) => {
             username: encodeURIComponent(username),
             Authorization: token,
             "Content-Type": "application/json"
+        }
+    })
+}
+
+// 删除题目信息
+export const deleteProblemAllInfo = async (pid,username,token) => {
+    return await axios.post(`${apiUrl}/v2/delProblemAllInfo/${pid}`,{},{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token,
         }
     })
 }

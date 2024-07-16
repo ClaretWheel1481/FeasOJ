@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -256,7 +257,7 @@ func uploadCodes(c *gin.Context) {
 }
 
 // 管理员获取指定题目所有信息
-func getProblemInfosByAdmins(c *gin.Context) {
+func getProblemAllInfos(c *gin.Context) {
 	username := c.GetHeader("username")
 	token := c.GetHeader("Authorization")
 	if !VerifyToken(username, token) {
@@ -298,4 +299,29 @@ func updateProblemInfos(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "题目信息更新成功"})
+}
+
+// 删除题目及其输入输出样例
+func deleteProblems(c *gin.Context) {
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	pid := c.Param("Pid")
+	pidInt, err := strconv.Atoi(pid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "题目ID错误"})
+		return
+	}
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if selectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	if !deleteProblemAllInfo(pidInt) {
+		c.JSON(http.StatusOK, gin.H{"status": 400, "message": "删除失败。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
 }

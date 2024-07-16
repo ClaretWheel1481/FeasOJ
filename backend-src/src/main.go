@@ -90,7 +90,7 @@ func main() {
 		router.GET("/getDiscussionByDid/:Did", getDiscussionByDids)
 
 		// 管理员获取指定题目的所有信息
-		router.GET("/getProblemInfosByAdmin/:Pid", getProblemInfosByAdmins)
+		router.GET("/getProblemAllInfo/:Pid", getProblemAllInfos)
 	}
 
 	router2 := r.Group("/api/v2")
@@ -115,6 +115,9 @@ func main() {
 
 		// 管理员更新题目信息API
 		router2.POST("/updateProblemInfo", updateProblemInfos)
+
+		// 管理员删除题目API
+		router2.POST("/delProblemAllInfo/:Pid", deleteProblems)
 	}
 
 	// 头像http服务器

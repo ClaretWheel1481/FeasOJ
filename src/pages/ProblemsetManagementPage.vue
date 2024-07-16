@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { token, userName } from '../utils/account'
-import { getUserInfo, verifyJWT, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo } from '../utils/axios';
+import { getUserInfo, verifyJWT, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../utils/axios';
 import { VDataTableServer, VFab, VDialog,VCard,VCardTitle,VCardText,VBtn,VTextField,VSelect,VForm,VTextarea,VSpacer,VCardActions,VRow } from 'vuetify/components'
 import { showAlert } from '../utils/alert';
 
@@ -14,7 +14,7 @@ const problems = ref([])
 const totalProblems = ref(0)
 const dialog = ref(false)
 const difficulty = ref("")
-const testCases = ref([{ input: '', output: '' }]);
+let testCases = ref([{ input: '', output: '' }]);
 const title = ref("")
 const content = ref("")
 const timeLimit = ref("")
@@ -26,6 +26,7 @@ const headers = ref([
     { title: 'ID', value: 'Pid', align: 'center' },
     { title: '题目', value: 'Title', align: 'center' },
 ])
+const isCreate = ref(false)
 
 // 添加测试样例
 const addTestCase = () => {
@@ -71,8 +72,24 @@ const fetchData = async () => {
     }
 }
 
+// 创建题目
+const createProblem = async() => {
+    isCreate.value = true;
+    dialog.value = true;
+    pids.value = totalProblems.value+1;
+    title.value = "";
+    content.value = "";
+    difficulty.value = "";
+    timeLimit.value = "";
+    memoryLimit.value = "";
+    input.value = "";
+    output.value = "";
+    testCases.value = [{ input: '', output: '' }];
+}
+
 // 编辑题目显示
 const goToEditProblem = async(pid) => {
+    isCreate.value = false;
     dialog.value = true;
     const problemResp = await getProblemAllInfoByAdmin(pid,userName.value,token.value);
     pids.value = problemResp.data.problemInfo.pid;
@@ -84,6 +101,17 @@ const goToEditProblem = async(pid) => {
     input.value = problemResp.data.problemInfo.input;
     output.value = problemResp.data.problemInfo.output;
     testCases.value = problemResp.data.problemInfo.test_cases;
+}
+
+// 删除题目
+const delProblem = async() => {
+    const delProblemResp = await deleteProblemAllInfo(pids.value,userName.value,token.value);
+    if(delProblemResp.data.status === 200){
+        showAlert("删除成功！","reload");
+    }else{
+        showAlert("删除失败，请重试。","");
+    }
+    dialog.value = false;
 }
 
 onMounted(async () => {
@@ -176,13 +204,14 @@ onMounted(async () => {
             <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">取消</v-btn>
+            <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">删除</v-btn>
             <v-btn color="primary" @click="save" rounded="xl">保存</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
     <!-- TODO:添加题目待处理 -->
     <div class="fab">
-        <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading" @click=""></v-fab>
+        <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading" @click="createProblem"></v-fab>
     </div>
 </template>
 

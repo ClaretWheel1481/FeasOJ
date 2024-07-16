@@ -309,4 +309,15 @@ func updateProblem(req adminProblemInfoRequest) error {
 	return nil
 }
 
-// TODO:创建题目
+// TODO:删除题目及其所有测试样例
+func deleteProblemAllInfo(pid int) bool {
+	if connectSql().Table("problems").Where("pid = ?", pid).Delete(&Problem{}).Error != nil {
+		return false
+	}
+
+	if connectSql().Table("test_cases").Where("pid = ?", pid).Delete(&TestCase{}).Error != nil {
+		return false
+	}
+
+	return true
+}
