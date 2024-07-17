@@ -6,10 +6,13 @@ import { getDisDetails,deleteDiscussion,avatarServer } from '../utils/axios';
 import { useRoute } from 'vue-router';
 import { showAlert } from '../utils/alert';
 import { token,userName } from "../utils/account";
+import { MdPreview } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 const route = useRoute();
 const loading = ref(true)
 const discussionInfos = ref({});
+const id = 'preview-only';
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -75,9 +78,10 @@ const deleteDis = async () => {
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
-            <v-card-text class="bg-surface-light pt-4">
+            <!-- <v-card-text class="bg-surface-light pt-4">
                 {{ discussionInfos.content }}
-            </v-card-text>
+            </v-card-text> -->
+            <MdPreview :editorId="id" :modelValue="discussionInfos.content" />
         </v-card>
         <!-- TODO:评论区组件待实现 -->
     </div>

@@ -3,8 +3,10 @@
 import { ref, onMounted, computed } from 'vue'
 import { token, userName } from '../utils/account'
 import { getUserInfo, verifyJWT, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../utils/axios';
-import { VDataTableServer, VFab, VDialog,VCard,VCardTitle,VCardText,VBtn,VTextField,VSelect,VForm,VTextarea,VSpacer,VCardActions,VRow } from 'vuetify/components'
+import { VDataTableServer, VFab, VDialog,VCard,VCardTitle,VCardText,VBtn,VTextField,VSelect,VForm,VSpacer,VCardActions,VRow } from 'vuetify/components'
 import { showAlert } from '../utils/alert';
+import { MdEditor } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -163,9 +165,9 @@ onMounted(async () => {
                 <v-text-field label="题目ID" v-model="pids" variant="solo-filled" readonly></v-text-field>
                 <!-- 题目名称 -->
                 <v-text-field label="题目名称" v-model="title" variant="solo-filled"></v-text-field>
-                <!-- TODO: 题目描述Markdown编辑器待替换 -->
                 <!-- 题目描述 -->
-                <v-textarea v-model="content" label="题目描述" variant="solo-filled"></v-textarea>
+                <md-editor v-model="content" noUploadImg="true" tabWidth="4"/>
+                <div style="margin-top: 20px;"></div>
                 <!-- 难易程度 -->
                 <v-select
                 :items="['简单', '中等', '困难']"
@@ -179,9 +181,9 @@ onMounted(async () => {
                     <v-text-field label="内存限制MB" v-model="memoryLimit" variant="solo-filled"></v-text-field>
                 </v-row>
                 <v-row class="limitRow">
-                    <v-text-field label="用户输入案例" v-model="input" variant="solo-filled"></v-text-field>
+                    <v-text-field label="显示输入案例" v-model="input" variant="solo-filled"></v-text-field>
                     <div style="margin-inline: 30px;"></div>
-                    <v-text-field label="用户输出案例" v-model="output" variant="solo-filled"></v-text-field>
+                    <v-text-field label="显示输出案例" v-model="output" variant="solo-filled"></v-text-field>
                 </v-row>
                 <!-- 输入输出测试样例 -->
                 <div v-for="(testCase, index) in testCases" :key="index">

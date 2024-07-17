@@ -218,7 +218,7 @@ func createDiscussion(c *gin.Context) {
 
 // 删除讨论
 func deleteDiscussion(c *gin.Context) {
-	did := c.Param("did")
+	did := c.Param("Did")
 	if delDiscussion(did) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
 	} else {

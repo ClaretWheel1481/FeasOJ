@@ -1,13 +1,16 @@
 <!-- 题目详细页 -->
 <script setup>
-import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular,VSelect } from 'vuetify/components'
+import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular,VSelect,VContainer,VRow,VCol } from 'vuetify/components'
 import { ref,onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router';
 import { getPbDetails,uploadCode } from '../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../utils/alert';
 import { token,userName } from "../utils/account";
+import { MdPreview } from 'md-editor-v3';
+import 'md-editor-v3/lib/preview.css';
 
+const id = 'preview-only';
 const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
@@ -98,59 +101,64 @@ const uploadContentAsFile = async () => {
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
-        <h1>{{problemInfo.title}}</h1>
-        <div style="margin: 10px;"></div>
-        <p class="subtitle">难度: {{problemInfo.difficulty}}</p>
-        <p class="subtitle">时间限制: {{problemInfo.time_limit}} S</p>
-        <p class="subtitle">内存限制: {{problemInfo.memory_limit}} MB</p>
-        <div style="margin: 10px;"></div>
-        <v-divider></v-divider>
-        <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
-            <template v-slot:title>
-                <span class="font-weight-black">题目详细</span>
-            </template>
-            <v-card-text>
-                {{ problemInfo.content }}
-            </v-card-text>
-        </v-card>
-        <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
-            <template v-slot:title>
-                <span class="font-weight-black">输入样例</span>
-            </template>
-            <v-card-text>
-                {{ problemInfo.input }}
-            </v-card-text>
-        </v-card>
-        <div style="margin: 10px"></div>
-        <v-card class="mx-auto my-8" width="80%" elevation="5" rounded="xl">
-            <template v-slot:title>
-                <span class="font-weight-black">输出样例</span>
-            </template>
-            <v-card-text>
-                {{ problemInfo.output }}
-            </v-card-text>
-        </v-card>
-        <v-card class="mx-auto my-8" width="80%" height="1000" elevation="5" rounded="xl">
-            <v-select
-                label="选择语言"
-                v-model="lang"
-                :items="['python','c_cpp', 'golang', 'java']"
-                variant="solo-filled"
-            ></v-select>
-            <v-ace-editor
-                v-model:value="content"
-                theme="chrome"
-                :lang=lang
-                style="height: 1000px;font-size: 16px;"
-            />
-        </v-card>
-        <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">提交</v-btn>
+        <v-container fluid>
+            <v-row>
+                <v-col cols="12" md="6">
+                    <h1>{{problemInfo.title}}</h1>
+                    <div style="margin: 10px;"></div>
+                    <p class="subtitle">难度: {{problemInfo.difficulty}}</p>
+                    <p class="subtitle">时间限制: {{problemInfo.time_limit}} S</p>
+                    <p class="subtitle">内存限制: {{problemInfo.memory_limit}} MB</p>
+                    <div style="margin: 10px;"></div>
+                    <v-divider></v-divider>
+                    <div style="margin-top: 20px;"></div>
+                    <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview"/>
+                    <p class="tags">输入样例</p>
+                    <p class="example">{{ problemInfo.input }}</p>
+                    <p class="tags">输出样例</p>
+                    <p class="example">{{ problemInfo.output }}</p>
+                </v-col>
+                <v-col cols="12" md="6">
+                    <v-card class="mx-auto my-8" width="100%" height="800" elevation="5">
+                        <v-select
+                            label="选择语言"
+                            v-model="lang"
+                            :items="['python','c_cpp', 'golang', 'java']"
+                            variant="solo-filled"
+                        ></v-select>
+                        <v-ace-editor
+                            v-model:value="content"
+                            theme="chrome"
+                            :lang=lang
+                            style="height: 800px;font-size: 16px;"
+                        />
+                    </v-card>
+                    <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">提交</v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
     </div>
 </template>
 
 <style scoped>
+.tags {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.example {
+    text-align: left;
+    margin-left: 30px;
+}
+
+.md_preview {
+    text-align: left;
+    margin: 10px;
+}
+
 .subtitle {
     font-size: 0.9rem;
 }

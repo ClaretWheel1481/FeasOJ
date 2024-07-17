@@ -5,6 +5,8 @@ import { ref,computed,onMounted } from 'vue';
 import { addDiscussion } from '../utils/axios.js';
 import { showAlert } from '../utils/alert';
 import { token,userName } from "../utils/account";
+import { MdEditor } from 'md-editor-v3';
+import 'md-editor-v3/lib/style.css';
 
 const title = ref('');
 const content = ref('');
@@ -53,7 +55,8 @@ const submit = async () => {
         <div class="form-align">
             <v-form style="min-width: 50%" @submit.prevent="submit">
                 <v-text-field v-model="title" label="标题" rounded="xl" variant="solo-filled"></v-text-field>
-                <v-textarea v-model="content" label="内容" rounded="xl" variant="solo-filled"></v-textarea>
+                <MdEditor v-model="content" :noUploadImg="true" />
+                <div style="margin-top: 30px;"></div>
                 <v-btn rounded="xl" type="submit" color="primary">提交</v-btn>
             </v-form>
         </div>
