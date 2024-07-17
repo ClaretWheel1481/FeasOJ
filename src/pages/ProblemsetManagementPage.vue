@@ -11,43 +11,66 @@ import 'md-editor-v3/lib/style.css';
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 const loading = ref(true)
+const networkloading = ref(false)
 const userPrivilege = ref("")
 const problems = ref([])
 const totalProblems = ref(0)
 const dialog = ref(false)
-const difficulty = ref("")
-let testCases = ref([{ input: '', output: '' }]);
-const title = ref("")
-const content = ref("")
-const timeLimit = ref("")
-const memoryLimit = ref("")
-const pids = ref()
-const input = ref("")
-const output = ref("")
+const problemFields = {
+    pids: ref(),
+    title: ref(""),
+    content: ref(""),
+    difficulty: ref(""),
+    timeLimit: ref(""),
+    memoryLimit: ref(""),
+    input: ref(""),
+    output: ref(""),
+    testCases: ref([{ input: '', output: '' }])
+};
 const headers = ref([
     { title: 'ID', value: 'Pid', align: 'center' },
     { title: '题目', value: 'Title', align: 'center' },
 ])
 const isCreate = ref(false)
-const networkloading = ref(false)
+
 // 添加测试样例
 const addTestCase = () => {
-  testCases.value.push({ input: '', output: '' });
+    problemFields.testCases.value.push({ input: '', output: '' });
+};
+
+const removeTestCase = () => {
+  if (problemFields.testCases.value.length > 0) {
+    problemFields.testCases.value.pop();
+  }
 };
 
 // 数据传至后端
 const save = async() => {
+    // TODO: 快来个大神帮我优化掉大芬循环
+    for (const key in problemFields) {
+        if (problemFields[key].value === "" || (Array.isArray(problemFields[key].value) && problemFields[key].value.length === 0)) {
+            showAlert("请填写所有数据。", "");
+            return;
+        }
+    }
+
+    for (const testCase of problemFields.testCases.value) {
+        if (testCase.input === "" || testCase.output === "") {
+            showAlert("请填写所有测试样例的输入和输出。", "");
+            return;
+        }
+    }
     networkloading.value = true;
     const problemData = {
-        pid: pids.value,
-        title: title.value,
-        content: content.value,
-        difficulty: difficulty.value,
-        time_limit: timeLimit.value,
-        memory_limit: memoryLimit.value,
-        input: input.value,
-        output: output.value,
-        test_cases: testCases.value
+        pid: problemFields.pids.value,
+        title: problemFields.title.value,
+        content: problemFields.content.value,
+        difficulty: problemFields.difficulty.value,
+        time_limit: problemFields.timeLimit.value,
+        memory_limit: problemFields.memoryLimit.value,
+        input: problemFields.input.value,
+        output: problemFields.output.value,
+        test_cases: problemFields.testCases.value
     };
     try{
         const updateResp = await updateProblemInfo(userName.value,token.value,problemData);
@@ -68,7 +91,7 @@ const fetchData = async () => {
         const response = await getAllProblems();
         problems.value = response.data.problems
         totalProblems.value = problems.value.length
-        pids.value = totalProblems.value+1
+        problemFields.pids.value = totalProblems.value+1
     } catch (error) {
         showAlert('无法获取数据，请重试。', "")
     } finally {
@@ -80,15 +103,15 @@ const fetchData = async () => {
 const createProblem = async() => {
     isCreate.value = true;
     dialog.value = true;
-    pids.value = totalProblems.value+1;
-    title.value = "";
-    content.value = "";
-    difficulty.value = "";
-    timeLimit.value = "";
-    memoryLimit.value = "";
-    input.value = "";
-    output.value = "";
-    testCases.value = [{ input: '', output: '' }];
+    problemFields.pids.value = totalProblems.value+1;
+    problemFields.title.value = "";
+    problemFields.content.value = "";
+    problemFields.difficulty.value = "";
+    problemFields.timeLimit.value = "";
+    problemFields.memoryLimit.value = "";
+    problemFields.input.value = "";
+    problemFields.output.value = "";
+    problemFields.testCases.value = [{ input: '', output: '' }];
 }
 
 // 编辑题目显示
@@ -98,20 +121,20 @@ const goToEditProblem = async(pid) => {
     networkloading.value = true;
     const problemResp = await getProblemAllInfoByAdmin(pid,userName.value,token.value);
     networkloading.value = false;
-    pids.value = problemResp.data.problemInfo.pid;
-    title.value = problemResp.data.problemInfo.title;
-    content.value = problemResp.data.problemInfo.content;
-    difficulty.value = problemResp.data.problemInfo.difficulty;
-    timeLimit.value = problemResp.data.problemInfo.time_limit;
-    memoryLimit.value = problemResp.data.problemInfo.memory_limit;
-    input.value = problemResp.data.problemInfo.input;
-    output.value = problemResp.data.problemInfo.output;
-    testCases.value = problemResp.data.problemInfo.test_cases;
+    problemFields.pids.value = problemResp.data.problemInfo.pid;
+    problemFields.title.value = problemResp.data.problemInfo.title;
+    problemFields.content.value = problemResp.data.problemInfo.content;
+    problemFields.difficulty.value = problemResp.data.problemInfo.difficulty;
+    problemFields.timeLimit.value = problemResp.data.problemInfo.time_limit;
+    problemFields.memoryLimit.value = problemResp.data.problemInfo.memory_limit;
+    problemFields.input.value = problemResp.data.problemInfo.input;
+    problemFields.output.value = problemResp.data.problemInfo.output;
+    problemFields.testCases.value = problemResp.data.problemInfo.test_cases;
 }
 
 // 删除题目
 const delProblem = async() => {
-    const delProblemResp = await deleteProblemAllInfo(pids.value,userName.value,token.value);
+    const delProblemResp = await deleteProblemAllInfo(problemFields.pids.value,userName.value,token.value);
     if(delProblemResp.data.status === 200){
         showAlert("删除成功！","reload");
     }else{
@@ -159,7 +182,7 @@ onMounted(async () => {
             </tr>
         </template>
     </v-data-table-server>
-    <v-dialog v-model="dialog" max-width="800px">
+    <v-dialog v-model="dialog" max-width="1200px">
         <v-card>
             <div v-if="networkloading" class="loading">
                 <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
@@ -170,31 +193,31 @@ onMounted(async () => {
                 </v-card-title>
                 <v-card-text>
                 <v-form>
-                    <v-text-field label="题目ID" v-model="pids" variant="solo-filled" readonly></v-text-field>
+                    <v-text-field label="题目ID" v-model="problemFields.pids.value" variant="solo-filled" readonly></v-text-field>
                     <!-- 题目名称 -->
-                    <v-text-field label="题目名称" v-model="title" variant="solo-filled"></v-text-field>
+                    <v-text-field label="题目名称" v-model="problemFields.title.value" variant="solo-filled"></v-text-field>
                     <!-- 题目描述 -->
-                    <md-editor v-model="content" :noUploadImg="true" :tabWidth="4"/>
+                    <md-editor v-model="problemFields.content.value" :noUploadImg="true" :tabWidth="4"/>
                     <div style="margin-top: 20px;"></div>
                     <!-- 难易程度 -->
                     <v-select
                     :items="['简单', '中等', '困难']"
                     label="难易程度"
-                    v-model="difficulty"
+                    v-model="problemFields.difficulty.value"
                     variant="solo-filled"
                     ></v-select>
                     <v-row class="limitRow">
-                        <v-text-field label="时间限制s" v-model="timeLimit" variant="solo-filled"></v-text-field>
+                        <v-text-field label="时间限制s" v-model="problemFields.timeLimit.value" variant="solo-filled"></v-text-field>
                         <div style="margin-inline: 30px;"></div>
-                        <v-text-field label="内存限制MB" v-model="memoryLimit" variant="solo-filled"></v-text-field>
+                        <v-text-field label="内存限制MB" v-model="problemFields.memoryLimit.value" variant="solo-filled"></v-text-field>
                     </v-row>
                     <v-row class="limitRow">
-                        <v-text-field label="显示输入案例" v-model="input" variant="solo-filled"></v-text-field>
+                        <v-text-field label="显示输入案例" v-model="problemFields.input.value" variant="solo-filled"></v-text-field>
                         <div style="margin-inline: 30px;"></div>
-                        <v-text-field label="显示输出案例" v-model="output" variant="solo-filled"></v-text-field>
+                        <v-text-field label="显示输出案例" v-model="problemFields.output.value" variant="solo-filled"></v-text-field>
                     </v-row>
                     <!-- 输入输出测试样例 -->
-                    <div v-for="(testCase, index) in testCases" :key="index">
+                    <div v-for="(testCase, index) in problemFields.testCases.value" :key="index">
                         <span>测试样例 {{index+1}}</span>
                         <v-text-field
                             label="输入"
@@ -209,6 +232,7 @@ onMounted(async () => {
                     </div>
                     <!-- 添加新的输入输出测试样例 -->
                     <v-btn @click="addTestCase" color="primary" rounded="xl">添加测试样例</v-btn>
+                    <v-btn @click="removeTestCase" text rounded="xl">移除测试样例</v-btn>
                 </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -220,7 +244,6 @@ onMounted(async () => {
             </div>
         </v-card>
     </v-dialog>
-    <!-- TODO:添加题目待处理 -->
     <div class="fab">
         <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading" @click="createProblem"></v-fab>
     </div>

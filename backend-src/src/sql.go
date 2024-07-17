@@ -281,7 +281,30 @@ func updateProblem(req adminProblemInfoRequest) error {
 	if err := connectSql().Save(&problem).Error; err != nil {
 		return err
 	}
-	// 更新测试样例表
+
+	// 获取该题目的测试样例
+	var existingTestCases []TestCase
+	if err := connectSql().Where("pid = ?", req.Pid).Find(&existingTestCases).Error; err != nil {
+		return err
+	}
+
+	// 找出前端不存在的测试样例，并将其从数据库中删除
+	existingTestCaseMap := make(map[string]TestCase)
+	for _, testCase := range existingTestCases {
+		existingTestCaseMap[testCase.InputData] = testCase
+	}
+
+	for _, testCase := range req.TestCases {
+		delete(existingTestCaseMap, testCase.InputData)
+	}
+
+	for _, testCase := range existingTestCaseMap {
+		if err := connectSql().Delete(&testCase).Error; err != nil {
+			return err
+		}
+	}
+
+	// 更新或添加新的测试样例
 	for _, testCase := range req.TestCases {
 		var existingTestCase TestCase
 		if err := connectSql().Where("pid = ? AND input_data = ?", req.Pid, testCase.InputData).First(&existingTestCase).Error; err != nil {

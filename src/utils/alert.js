@@ -9,7 +9,7 @@ export const showAlert = (message,path) => {
   if(path === "reload"){
     setTimeout(() => {
       location.reload();
-    },500);
+    },800);
   }else if(path === ""){
     return
   }else {
