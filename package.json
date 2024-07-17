@@ -20,11 +20,11 @@
     "vue-avatar-cropper": "^6.1.1",
     "vue-router": "^4.4.0",
     "vue3-ace-editor": "^2.2.4",
-    "vuetify": "^3.6.12"
+    "vuetify": "^3.6.13"
   },
   "devDependencies": {
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^5.0.5",
-    "vite": "^5.3.3"
+    "vite": "^5.3.4"
   }
 }
