@@ -27,6 +27,7 @@ If you find any bugs, please open an issue.
 - [Vue](https://github.com/vuejs/vue)
 - [Vuetify](https://github.com/vuetifyjs/vuetify)
 - [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
+- [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [axios](https://github.com/axios/axios)
 - [Go](https://github.com/golang/go)
 - [Gin](https://github.com/gin-gonic/gin)
