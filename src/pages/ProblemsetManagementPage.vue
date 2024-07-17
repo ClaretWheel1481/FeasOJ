@@ -29,7 +29,7 @@ const headers = ref([
     { title: '题目', value: 'Title', align: 'center' },
 ])
 const isCreate = ref(false)
-
+const networkloading = ref(false)
 // 添加测试样例
 const addTestCase = () => {
   testCases.value.push({ input: '', output: '' });
@@ -37,6 +37,7 @@ const addTestCase = () => {
 
 // 数据传至后端
 const save = async() => {
+    networkloading.value = true;
     const problemData = {
         pid: pids.value,
         title: title.value,
@@ -51,6 +52,7 @@ const save = async() => {
     try{
         const updateResp = await updateProblemInfo(userName.value,token.value,problemData);
         if(updateResp.data.status === 200){
+            networkloading.value = false;
             showAlert("更新成功！","reload");
         }
     }catch(error){
@@ -93,7 +95,9 @@ const createProblem = async() => {
 const goToEditProblem = async(pid) => {
     isCreate.value = false;
     dialog.value = true;
+    networkloading.value = true;
     const problemResp = await getProblemAllInfoByAdmin(pid,userName.value,token.value);
+    networkloading.value = false;
     pids.value = problemResp.data.problemInfo.pid;
     title.value = problemResp.data.problemInfo.title;
     content.value = problemResp.data.problemInfo.content;
@@ -157,58 +161,63 @@ onMounted(async () => {
     </v-data-table-server>
     <v-dialog v-model="dialog" max-width="800px">
         <v-card>
-            <v-card-title>
-            <span class="headline">编辑题目</span>
-            </v-card-title>
-            <v-card-text>
-            <v-form>
-                <v-text-field label="题目ID" v-model="pids" variant="solo-filled" readonly></v-text-field>
-                <!-- 题目名称 -->
-                <v-text-field label="题目名称" v-model="title" variant="solo-filled"></v-text-field>
-                <!-- 题目描述 -->
-                <md-editor v-model="content" noUploadImg="true" tabWidth="4"/>
-                <div style="margin-top: 20px;"></div>
-                <!-- 难易程度 -->
-                <v-select
-                :items="['简单', '中等', '困难']"
-                label="难易程度"
-                v-model="difficulty"
-                variant="solo-filled"
-                ></v-select>
-                <v-row class="limitRow">
-                    <v-text-field label="时间限制s" v-model="timeLimit" variant="solo-filled"></v-text-field>
-                    <div style="margin-inline: 30px;"></div>
-                    <v-text-field label="内存限制MB" v-model="memoryLimit" variant="solo-filled"></v-text-field>
-                </v-row>
-                <v-row class="limitRow">
-                    <v-text-field label="显示输入案例" v-model="input" variant="solo-filled"></v-text-field>
-                    <div style="margin-inline: 30px;"></div>
-                    <v-text-field label="显示输出案例" v-model="output" variant="solo-filled"></v-text-field>
-                </v-row>
-                <!-- 输入输出测试样例 -->
-                <div v-for="(testCase, index) in testCases" :key="index">
-                    <span>测试样例 {{index+1}}</span>
-                    <v-text-field
-                        label="输入"
-                        v-model="testCase.input"
-                        variant="solo-filled"
-                    ></v-text-field>
-                    <v-text-field
-                        label="输出"
-                        v-model="testCase.output"
-                        variant="solo-filled"
-                    ></v-text-field>
-                </div>
-                <!-- 添加新的输入输出测试样例 -->
-                <v-btn @click="addTestCase" color="primary" rounded="xl">添加测试样例</v-btn>
-            </v-form>
-            </v-card-text>
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">取消</v-btn>
-            <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">删除</v-btn>
-            <v-btn color="primary" @click="save" rounded="xl">保存</v-btn>
-            </v-card-actions>
+            <div v-if="networkloading" class="loading">
+                <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+            </div>
+            <div v-else>
+                <v-card-title>
+                    <span class="headline">编辑题目</span>
+                </v-card-title>
+                <v-card-text>
+                <v-form>
+                    <v-text-field label="题目ID" v-model="pids" variant="solo-filled" readonly></v-text-field>
+                    <!-- 题目名称 -->
+                    <v-text-field label="题目名称" v-model="title" variant="solo-filled"></v-text-field>
+                    <!-- 题目描述 -->
+                    <md-editor v-model="content" :noUploadImg="true" :tabWidth="4"/>
+                    <div style="margin-top: 20px;"></div>
+                    <!-- 难易程度 -->
+                    <v-select
+                    :items="['简单', '中等', '困难']"
+                    label="难易程度"
+                    v-model="difficulty"
+                    variant="solo-filled"
+                    ></v-select>
+                    <v-row class="limitRow">
+                        <v-text-field label="时间限制s" v-model="timeLimit" variant="solo-filled"></v-text-field>
+                        <div style="margin-inline: 30px;"></div>
+                        <v-text-field label="内存限制MB" v-model="memoryLimit" variant="solo-filled"></v-text-field>
+                    </v-row>
+                    <v-row class="limitRow">
+                        <v-text-field label="显示输入案例" v-model="input" variant="solo-filled"></v-text-field>
+                        <div style="margin-inline: 30px;"></div>
+                        <v-text-field label="显示输出案例" v-model="output" variant="solo-filled"></v-text-field>
+                    </v-row>
+                    <!-- 输入输出测试样例 -->
+                    <div v-for="(testCase, index) in testCases" :key="index">
+                        <span>测试样例 {{index+1}}</span>
+                        <v-text-field
+                            label="输入"
+                            v-model="testCase.input"
+                            variant="solo-filled"
+                        ></v-text-field>
+                        <v-text-field
+                            label="输出"
+                            v-model="testCase.output"
+                            variant="solo-filled"
+                        ></v-text-field>
+                    </div>
+                    <!-- 添加新的输入输出测试样例 -->
+                    <v-btn @click="addTestCase" color="primary" rounded="xl">添加测试样例</v-btn>
+                </v-form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">取消</v-btn>
+                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">删除</v-btn>
+                    <v-btn color="primary" @click="save" rounded="xl">保存</v-btn>
+                </v-card-actions>
+            </div>
         </v-card>
     </v-dialog>
     <!-- TODO:添加题目待处理 -->
@@ -223,6 +232,7 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
+    margin: 100px;
 }
 
 .tabletitle{

@@ -11,7 +11,7 @@ export const showAlert = (message,path) => {
       location.reload();
     },500);
   }else if(path === ""){
-
+    return
   }else {
     setTimeout(() => {
       window.location = path;
