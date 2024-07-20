@@ -73,7 +73,7 @@ onMounted(async () => {
         <template v-slot:item="{ item }">
         <tr>
             <td class="disctitle">
-                <v-btn @click="handleRowClick(item.Did)" variant="text" block>{{ item.title }}</v-btn>
+                <v-btn @click="handleRowClick(item.did)" variant="text" block>{{ item.title }}</v-btn>
             </td>
             <td>{{ item.username }}</td>
             <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>

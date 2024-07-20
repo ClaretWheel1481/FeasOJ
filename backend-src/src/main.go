@@ -89,6 +89,9 @@ func main() {
 		// 获取指定Did的帖子API
 		router.GET("/getDiscussionByDid/:Did", getDiscussionByDids)
 
+		// 获取指定帖子的讨论API
+		router.GET("/getComment/:Did", getComments)
+
 		// 管理员获取指定题目的所有信息
 		router.GET("/getProblemAllInfo/:Pid", getProblemAllInfos)
 	}

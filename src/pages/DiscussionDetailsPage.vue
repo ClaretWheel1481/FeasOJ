@@ -1,55 +1,109 @@
 <!-- 讨论帖子详情页 -->
 <script setup>
-import { VRow,VAppBar,VBtn,VAvatar,VProgressCircular,VImg,VCard,VCardText } from 'vuetify/components';
-import { ref,onMounted,computed } from 'vue'
-import { getDisDetails,deleteDiscussion,avatarServer } from '../utils/axios';
-import { useRoute } from 'vue-router';
-import { showAlert } from '../utils/alert';
-import { token,userName } from "../utils/account";
-import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
+import {
+    VRow,
+    VAppBar,
+    VBtn,
+    VAvatar,
+    VProgressCircular,
+    VImg,
+    VCard,
+} from "vuetify/components";
+import { ref, onMounted, computed } from "vue";
+import { getDisDetails, deleteDiscussion, avatarServer, getComments } from "../utils/axios";
+import { useRoute } from "vue-router";
+import { showAlert } from "../utils/alert";
+import { token, userName } from "../utils/account";
+import { MdPreview,MdEditor } from "md-editor-v3";
+import moment from "moment";
+import "md-editor-v3/lib/style.css";
 
 const route = useRoute();
-const loading = ref(true)
+const loading = ref(true);
 const discussionInfos = ref({});
-const id = 'preview-only';
+const Did = route.params.Did;
+const id = "preview-only";
+const page = ref(1);
+const comments = ref([]);
+const commentContent = ref("写一条评论吧！");
+const editorToolbar = [
+  'bold',
+  'underline',
+  'italic',
+  '-',
+  'title',
+  'strikeThrough',
+  'sub',
+  'sup',
+  'quote',
+  'unorderedList',
+  'orderedList',
+  'task',
+  '-',
+  'codeRow',
+  'code',
+  'link',
+  'image',
+  'katex',
+];
+// 用作分页
+const itemsPerPage = 5; 
+const totalPages = computed(() => {
+  return Math.ceil(comments.value.length / itemsPerPage);
+});
 
+const paginatedComments = computed(() => {
+  const start = (page.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return comments.value.slice(start, end);
+});
+
+const onPageChange = (newPage) => {
+  page.value = newPage;
+};
 // 计算属性来判断用户是否已经登录
-const userLoggedIn = computed(() => !!token.value)
+const userLoggedIn = computed(() => !!token.value);
 
 onMounted(async () => {
     loading.value = true;
-    if(userLoggedIn.value){
+    if (userLoggedIn.value) {
         try {
-            const Did = route.params.Did;
             const response = await getDisDetails(Did);
+            // 获取评论
+            const commentsResp = await getComments(Did,userName.value,token.value);
+            comments.value = commentsResp.data.comments;
             if (response.status === 200) {
                 discussionInfos.value = response.data.discussionInfo;
             }
         } catch (error) {
-            showAlert(`错误，未找到对象。`,'/discussion');
-        } finally{
+            showAlert(`错误，未找到对象。`, "/discussion");
+        } finally {
             loading.value = false;
         }
-    }else{
-        window.location='/login'
+    } else {
+        window.location = "/login";
     }
 });
 
+// 删除讨论
 const deleteDis = async () => {
     loading.value = true;
-    try{
+    try {
         const Did = route.params.Did;
-        const resp = await deleteDiscussion(localStorage.getItem('username'),localStorage.getItem('token'),Did);
-        if(resp.status === 200){
-            showAlert('删除成功！','/discussion');
+        const resp = await deleteDiscussion(
+            localStorage.getItem("username"),
+            localStorage.getItem("token"),
+            Did
+        );
+        if (resp.status === 200) {
+            showAlert("删除成功！", "/discussion");
         }
-    }catch(error){
-        window.location = '/403'
-    }finally{
+    } catch (error) {
+        window.location = "/403";
+    } finally {
         loading.value = false;
     }
-}
+};
 </script>
 
 <template>
@@ -61,37 +115,95 @@ const deleteDis = async () => {
             <template v-slot:prepend>
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
-            <v-row style="align-items: center;">
-                <div style="margin-left: 80px;"></div>
+            <v-row style="align-items: center">
+                <div style="margin-left: 80px"></div>
                 <v-avatar size="50" color="surface-variant">
-                    <v-img :src="avatarServer+discussionInfos.avatar" cover></v-img>
+                    <v-img :src="avatarServer + discussionInfos.avatar" cover></v-img>
                 </v-avatar>
-                <div style="margin-left: 10px;"></div>
+                <div style="margin-left: 10px"></div>
                 <p class="font-weight-black">{{ discussionInfos.username }}</p>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
                 <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>
             </template>
         </v-app-bar>
-        <div style="margin-top: 30px;"></div>
-        <v-card class="mx-auto" width="85%" rounded="xl" elevation="10">
+        <div style="margin-top: 30px"></div>
+        <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
-            <!-- <v-card-text class="bg-surface-light pt-4">
-                {{ discussionInfos.content }}
-            </v-card-text> -->
             <MdPreview :editorId="id" :modelValue="discussionInfos.content" />
         </v-card>
-        <!-- TODO:评论区组件待实现 -->
+        <div style="margin-top: 50px"></div>
+        <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
+            <template v-slot:title>
+                <span class="font-weight-black">评论</span>
+            </template>
+            <div style="max-height: 300px">
+                <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true" :preview="false" :footers="[]"/>
+            </div>
+            <div style="margin: 10px;">
+                <!-- TODO: 发布事件待处理 -->
+                <v-btn color="primary" rounded="xl" @click="">发布</v-btn>
+            </div>
+            <v-divider></v-divider>
+            <v-list>
+                <!-- TODO: 删除评论待处理 -->
+                <v-list-item v-for="comment in paginatedComments" :key="comment.cid">
+                    <v-list-item>
+                        <v-list-item-title class="item-title">
+                            <v-avatar size="43" color="surface-variant">
+                                <v-img :src="avatarServer + comment.avatar" alt="Avatar" cover></v-img>
+                            </v-avatar>
+                            <div class="left-align-username">{{ comment.username }}</div>
+                            <v-list-item-subtitle class="left-align small-font light-color">
+                                {{ moment(comment.create_at).format('MM-DD HH:mm') }}
+                            </v-list-item-subtitle>
+                        </v-list-item-title>
+                        <v-list-item-title class="comment-content">
+                            <md-preview :modelValue="comment.content" />
+                        </v-list-item-title>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                </v-list-item>
+            </v-list>
+            <v-pagination
+            v-model="page"
+            :length="totalPages"
+            @input="onPageChange"
+            rounded="xl"
+            ></v-pagination>
+        </v-card>
     </div>
 </template>
 
 <style scoped>
-.loading{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.item-title {
+    text-align: left;
+}
+
+.comment-content {
+    text-align: left;
+    margin-left: -20px;
+}
+
+.left-align-username {
+    text-align: left;
+    font-weight: bold;
+}
+
+.small-font {
+    font-size: 0.8em;
+}
+
+.light-color {
+    color: #999;
 }
 </style>

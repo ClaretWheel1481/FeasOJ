@@ -97,7 +97,7 @@ func initSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		inputSqlInfo()
 	}
-	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Discussion{}, &Comment{}, &TestCase{})
+	connectSql().AutoMigrate(&User{}, &Problem{}, &SubmitRecord{}, &Discussion{}, &Comment{}, &TestCase{}, &Reply{})
 	initAdminAccount()
 	return true
 }
@@ -215,7 +215,7 @@ func selectDiscussList() []discussRequest {
 func selectDiscussionByDid(Did string) discsInfoRequest {
 	var discussion discsInfoRequest
 	connectSql().Table("Discussions").
-		Select("Discussions.Did, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Username, Users.Avatar").
+		Select("Discussions.Did, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Uid,Users.Username, Users.Avatar").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
 		Where("Discussions.Did = ?", Did).First(&discussion)
 	return discussion
@@ -343,4 +343,15 @@ func deleteProblemAllInfo(pid int) bool {
 	}
 
 	return true
+}
+
+// 获取指定讨论ID的所有评论信息
+func getCommentsByDid(Did int) []CommentRequest {
+	var comments []CommentRequest
+	connectSql().Table("Comments").
+		Select("Comments.Cid, Comments.Did, Comments.Content, Comments.Create_at, Users.Uid,Users.Username, Users.Avatar").
+		Joins("JOIN Users ON Comments.Uid = Users.Uid").
+		Order("create_at desc").
+		Where("Comments.Did = ?", Did).Find(&comments)
+	return comments
 }

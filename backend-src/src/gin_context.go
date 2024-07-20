@@ -325,3 +325,20 @@ func deleteProblems(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
 }
+
+// 获取指定讨论的评论
+func getComments(c *gin.Context) {
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	did := c.Param("Did")
+	didInt, err := strconv.Atoi(did)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "讨论ID错误"})
+	}
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	comments := getCommentsByDid(didInt)
+	c.JSON(http.StatusOK, gin.H{"comments": comments})
+}

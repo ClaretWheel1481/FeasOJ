@@ -75,6 +75,16 @@ export const getSubmitRecords = async () => {
     return await axios.get(`${apiUrl}/v1/getAllSubmitRecords`)
 }
 
+// 获取指定讨论的所有回复
+export const getComments = async (did,username,token) => {
+    return await axios.get(`${apiUrl}/v1/getComment/${did}`,{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
 // 管理员获取指定题目所有信息
 export const getProblemAllInfoByAdmin = async (pid,username,token) => {
     return await axios.get(`${apiUrl}/v1/getProblemAllInfo/${pid}`,{

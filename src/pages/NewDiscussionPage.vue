@@ -25,6 +25,10 @@ onMounted(async () => {
 });
 
 const submit = async () => {
+    if(!title.value || !content.value){
+        showAlert("请填写完整信息。","");
+        return;
+    }
     loading.value = true;
     const response = await addDiscussion(title.value,content.value,userName.value)
     if(response.status === 200){
