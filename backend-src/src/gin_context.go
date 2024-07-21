@@ -320,7 +320,7 @@ func deleteProblems(c *gin.Context) {
 		return
 	}
 	if !deleteProblemAllInfo(pidInt) {
-		c.JSON(http.StatusOK, gin.H{"status": 400, "message": "删除失败。"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
@@ -341,4 +341,23 @@ func getComments(c *gin.Context) {
 	}
 	comments := getCommentsByDid(didInt)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
+}
+
+// 删除指定Cid的评论
+func delComments(c *gin.Context) {
+	username := c.GetHeader("username")
+	token := c.GetHeader("Authorization")
+	Cid := c.Param("Cid")
+	CidInt, err := strconv.Atoi(Cid)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "评论ID错误"})
+	}
+	if !VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if !deleteCommentByCid(CidInt) {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
 }

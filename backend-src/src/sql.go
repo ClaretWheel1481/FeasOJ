@@ -355,3 +355,8 @@ func getCommentsByDid(Did int) []CommentRequest {
 		Where("Comments.Did = ?", Did).Find(&comments)
 	return comments
 }
+
+// 删除指定评论
+func deleteCommentByCid(Cid int) bool {
+	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&Comment{}).Error == nil
+}

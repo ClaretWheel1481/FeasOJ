@@ -8,9 +8,11 @@ import {
     VProgressCircular,
     VImg,
     VCard,
+    VListItemTitle,
+    VListItemSubtitle,
 } from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
-import { getDisDetails, deleteDiscussion, avatarServer, getComments } from "../utils/axios";
+import { getDisDetails, deleteDiscussion, avatarServer, getComments,deleteComment } from "../utils/axios";
 import { useRoute } from "vue-router";
 import { showAlert } from "../utils/alert";
 import { token, userName } from "../utils/account";
@@ -38,7 +40,6 @@ const editorToolbar = [
   'quote',
   'unorderedList',
   'orderedList',
-  'task',
   '-',
   'codeRow',
   'code',
@@ -84,6 +85,21 @@ onMounted(async () => {
         window.location = "/login";
     }
 });
+
+// 删除讨论
+const deleteCommentByID = async(commentID) => {
+    loading.value = true;
+    try {
+        const delCommentResp = await deleteComment(userName.value,token.value, commentID);
+        if (delCommentResp.status === 200) {
+            showAlert("删除成功！", "reload");
+        }
+    } catch (error) {
+        window.location = "/403";
+    } finally {
+        loading.value = false;
+    }
+}
 
 // 删除讨论
 const deleteDis = async () => {
@@ -151,22 +167,32 @@ const deleteDis = async () => {
                 <!-- TODO: 删除评论待处理 -->
                 <v-list-item v-for="comment in paginatedComments" :key="comment.cid">
                     <v-list-item>
-                        <v-list-item-title class="item-title">
-                            <v-avatar size="43" color="surface-variant">
+                        <v-list-item-title class="username-avatar">
+                            <v-avatar size="44" color="surface-variant">
                                 <v-img :src="avatarServer + comment.avatar" alt="Avatar" cover></v-img>
                             </v-avatar>
-                            <div class="left-align-username">{{ comment.username }}</div>
-                            <v-list-item-subtitle class="left-align small-font light-color">
-                                {{ moment(comment.create_at).format('MM-DD HH:mm') }}
-                            </v-list-item-subtitle>
+                            <div style="margin: 5px;">
+                                <div class="username">
+                                    {{ comment.username }}
+                                </div>
+                                <div class="timeline">
+                                    {{ moment(comment.create_at).format('MM-DD HH:mm') }}
+                                </div>
+                            </div>
                         </v-list-item-title>
                         <v-list-item-title class="comment-content">
                             <md-preview :modelValue="comment.content" />
                         </v-list-item-title>
                     </v-list-item>
+                    <div class="buttons">
+                        <!-- TODO: 回复待处理 -->
+                        <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
+                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary" @click="deleteCommentByID(comment.cid)">删除</v-btn>
+                    </div>
                     <v-divider></v-divider>
                 </v-list-item>
             </v-list>
+
             <v-pagination
             v-model="page"
             :length="totalPages"
@@ -178,6 +204,12 @@ const deleteDis = async () => {
 </template>
 
 <style scoped>
+.buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
 .loading {
     display: flex;
     justify-content: center;
@@ -185,8 +217,9 @@ const deleteDis = async () => {
     height: 100%;
 }
 
-.item-title {
-    text-align: left;
+.username {
+    font-weight: bold;
+    font-size: 1.0em
 }
 
 .comment-content {
@@ -194,16 +227,15 @@ const deleteDis = async () => {
     margin-left: -20px;
 }
 
-.left-align-username {
+.timeline {
     text-align: left;
-    font-weight: bold;
-}
-
-.small-font {
     font-size: 0.8em;
+    color: #999;
 }
 
-.light-color {
-    color: #999;
+.username-avatar {
+    text-align: left;
+    display: flex;
+    align-items: center;
 }
 </style>

@@ -136,6 +136,16 @@ export const deleteDiscussion = async(username,token,Did) => {
     }
 }
 
+// 删除讨论评论
+export const deleteComment = async(username,token,Cid) => {
+    return await axios.post(`${apiUrl}/v2/delComment/${Cid}`,{},{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        },
+    })
+}
+
 // 上传代码文件
 export const uploadCode = async (file,pid,username,token) => {
     let formData = new FormData();

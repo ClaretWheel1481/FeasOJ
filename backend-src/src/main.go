@@ -113,6 +113,9 @@ func main() {
 		// 删除讨论API
 		router2.POST("/deleteDiscussion/:Did", deleteDiscussion)
 
+		// 删除评论API
+		router2.POST("/delComment/:Cid", delComments)
+
 		// 上传代码文件API
 		router2.POST("/uploadCode", uploadCodes)
 
