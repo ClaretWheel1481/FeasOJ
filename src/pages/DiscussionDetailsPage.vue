@@ -12,7 +12,7 @@ import {
     VListItemSubtitle,
 } from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
-import { getDisDetails, deleteDiscussion, avatarServer, getComments,deleteComment } from "../utils/axios";
+import { getDisDetails, deleteDiscussion, avatarServer, getComments,deleteComment,addComment } from "../utils/axios";
 import { useRoute } from "vue-router";
 import { showAlert } from "../utils/alert";
 import { token, userName } from "../utils/account";
@@ -35,16 +35,11 @@ const editorToolbar = [
   '-',
   'title',
   'strikeThrough',
-  'sub',
-  'sup',
   'quote',
-  'unorderedList',
-  'orderedList',
   '-',
   'codeRow',
   'code',
   'link',
-  'image',
   'katex',
 ];
 // 用作分页
@@ -86,7 +81,22 @@ onMounted(async () => {
     }
 });
 
-// 删除讨论
+// 添加评论
+const addComments = async (content) => {
+    loading.value = true;
+    try {
+        const resp = await addComment(Did, content, userName.value, token.value);
+        if (resp.status === 200) {
+            showAlert("评论成功！", "reload");
+        }
+    } catch (error) {
+        window.location = "/403";
+    } finally {
+        loading.value = false;
+    }
+}
+
+// 删除评论
 const deleteCommentByID = async(commentID) => {
     loading.value = true;
     try {
@@ -105,7 +115,6 @@ const deleteCommentByID = async(commentID) => {
 const deleteDis = async () => {
     loading.value = true;
     try {
-        const Did = route.params.Did;
         const resp = await deleteDiscussion(
             localStorage.getItem("username"),
             localStorage.getItem("token"),
@@ -159,12 +168,10 @@ const deleteDis = async () => {
                 <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true" :preview="false" :footers="[]"/>
             </div>
             <div style="margin: 10px;">
-                <!-- TODO: 发布事件待处理 -->
-                <v-btn color="primary" rounded="xl" @click="">发布</v-btn>
+                <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">发布</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
-                <!-- TODO: 删除评论待处理 -->
                 <v-list-item v-for="comment in paginatedComments" :key="comment.cid">
                     <v-list-item>
                         <v-list-item-title class="username-avatar">
@@ -180,19 +187,18 @@ const deleteDis = async () => {
                                 </div>
                             </div>
                         </v-list-item-title>
-                        <v-list-item-title class="comment-content">
-                            <md-preview :modelValue="comment.content" />
-                        </v-list-item-title>
+                        <v-list-item class="comment-content">
+                            <md-preview :modelValue="comment.content"/>
+                        </v-list-item>
                     </v-list-item>
                     <div class="buttons">
-                        <!-- TODO: 回复待处理 -->
+                        <!-- TODO: 回复暂不添加 -->
                         <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary" @click="deleteCommentByID(comment.cid)">删除</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>
             </v-list>
-
             <v-pagination
             v-model="page"
             :length="totalPages"
@@ -207,7 +213,8 @@ const deleteDis = async () => {
 .buttons {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 
 .loading {
@@ -223,6 +230,8 @@ const deleteDis = async () => {
 }
 
 .comment-content {
+    max-width: fit-content;
+    max-height: 350px;
     text-align: left;
     margin-left: -20px;
 }

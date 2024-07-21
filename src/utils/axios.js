@@ -136,6 +136,18 @@ export const deleteDiscussion = async(username,token,Did) => {
     }
 }
 
+// 添加讨论评论
+export const addComment = async (did,content,username,token) => {
+    const formData = new FormData();
+    formData.append('content', content);
+    return await axios.post(`${apiUrl}/v2/addComment/${did}`,formData,{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        },
+    })
+}
+
 // 删除讨论评论
 export const deleteComment = async(username,token,Cid) => {
     return await axios.post(`${apiUrl}/v2/delComment/${Cid}`,{},{

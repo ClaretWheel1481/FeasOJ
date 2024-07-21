@@ -236,6 +236,27 @@ func delDiscussion(Did string) bool {
 	return err == nil
 }
 
+// 添加评论
+func addComment(content string, did, uid int) bool {
+	return connectSql().Table("Comments").Create(&Comment{Did: did, Uid: uid, Content: content, Create_at: time.Now()}).Error == nil
+}
+
+// 获取指定讨论ID的所有评论信息
+func getCommentsByDid(Did int) []CommentRequest {
+	var comments []CommentRequest
+	connectSql().Table("Comments").
+		Select("Comments.Cid, Comments.Did, Comments.Content, Comments.Create_at, Users.Uid,Users.Username, Users.Avatar").
+		Joins("JOIN Users ON Comments.Uid = Users.Uid").
+		Order("create_at desc").
+		Where("Comments.Did = ?", Did).Find(&comments)
+	return comments
+}
+
+// 删除指定评论
+func deleteCommentByCid(Cid int) bool {
+	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&Comment{}).Error == nil
+}
+
 // 获取指定题目所有输入输出样例
 func selectProblemTestCases(pid string) adminProblemInfoRequest {
 	var problem Problem
@@ -343,20 +364,4 @@ func deleteProblemAllInfo(pid int) bool {
 	}
 
 	return true
-}
-
-// 获取指定讨论ID的所有评论信息
-func getCommentsByDid(Did int) []CommentRequest {
-	var comments []CommentRequest
-	connectSql().Table("Comments").
-		Select("Comments.Cid, Comments.Did, Comments.Content, Comments.Create_at, Users.Uid,Users.Username, Users.Avatar").
-		Joins("JOIN Users ON Comments.Uid = Users.Uid").
-		Order("create_at desc").
-		Where("Comments.Did = ?", Did).Find(&comments)
-	return comments
-}
-
-// 删除指定评论
-func deleteCommentByCid(Cid int) bool {
-	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&Comment{}).Error == nil
 }
