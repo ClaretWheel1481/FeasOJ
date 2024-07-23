@@ -1,16 +1,19 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"net/http"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"src/account"
-	"src/code"
+	"src/codehandler"
 	"src/email"
 	"src/ginrouter"
 	"src/global"
 	"src/utils"
+	"syscall"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +34,7 @@ func main() {
 	// 创建存放头像文件夹
 	account.InitAvatarFolder()
 	// 创建存放代码文件夹
-	code.InitCodeFolder()
+	codehandler.InitCodeFolder()
 	// 初始化数据库连接配置
 	if utils.InitSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
@@ -39,10 +42,20 @@ func main() {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
-	rdb := utils.InitRedis()
-	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
-	mcfg := email.InitEmailConfig()
-	fmt.Println("[FeasOJ]邮箱配置信息为:", mcfg)
+	utils.InitRedis()
+	email.InitEmailConfig()
+	if codehandler.BuildImage() {
+		fmt.Println("[FeasOJ]SandBox构建成功！")
+	} else {
+		fmt.Println("[FeasOJ]SandBox构建失败！")
+		return
+	}
+	if codehandler.StartContainer() {
+		fmt.Println("[FeasOJ]SandBox启动成功！")
+	} else {
+		fmt.Println("[FeasOJ]SandBox启动失败！")
+		return
+	}
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -132,9 +145,31 @@ func main() {
 	// 头像http服务器
 	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
 
-	fmt.Println("[FeasOJ]服务器已启动。")
-	fmt.Println("[FeasOJ]GETAPI：http://localhost:37881/api/v1/")
-	fmt.Println("[FeasOJ]POSTAPI：http://localhost:37881/api/v2/")
+	fmt.Println("[FeasOJ]服务已启动。")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
-	r.Run("0.0.0.0:37881")
+
+	// 启动服务器
+	go func() {
+		if err := r.Run("0.0.0.0:37881"); err != nil {
+			fmt.Printf("Server exited with error: %v\n", err)
+		}
+	}()
+
+	// 监听终端输入
+	go func() {
+		scanner := bufio.NewScanner(os.Stdin)
+		for scanner.Scan() {
+			if scanner.Text() == "quit" {
+				fmt.Println("[FeasOJ]正在关闭服务器....")
+				codehandler.TerminateContainer(global.ContainerID)
+				os.Exit(0)
+			}
+		}
+	}()
+
+	// 等待中断信号以优雅地关闭服务器
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	fmt.Println("[FeasOJ]输入“quit”可停止服务器并删除容器。")
+	<-quit
 }

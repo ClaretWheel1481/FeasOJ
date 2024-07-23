@@ -5,3 +5,6 @@ var ParentDir string
 var ConfigsDir string
 var AvatarsDir string
 var CodeDir string
+
+// 全局变量 - 容器ID
+var ContainerID string

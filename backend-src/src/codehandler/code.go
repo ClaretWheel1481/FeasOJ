@@ -1,4 +1,4 @@
-package code
+package codehandler
 
 import (
 	"os"
