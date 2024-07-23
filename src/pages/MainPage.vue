@@ -5,6 +5,7 @@ import { VCard, VCarousel, VCarouselItem } from 'vuetify/lib/components/index.mj
 
 <template>
     <div class="title">
+        <v-img src="/logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
         <h1>FeasOJ</h1>
     </div>
     <!-- TODO:轮播图组件待处理 -->
@@ -15,3 +16,12 @@ import { VCard, VCarousel, VCarouselItem } from 'vuetify/lib/components/index.mj
         </v-carousel>
     </v-card>
 </template>
+
+<style scoped>
+.title {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+</style>
