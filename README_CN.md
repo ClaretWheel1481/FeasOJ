@@ -1,4 +1,10 @@
 [English](README.md) | 简体中文
+<p align="center">
+    <a href="https://github.com/ClaretWheel1481/easyweather">
+        <img src="./public/logo.png" height="200"/>
+    </a>
+</p>
+
 # FeasOJ
 
 #### 如何运行
