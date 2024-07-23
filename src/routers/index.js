@@ -2,43 +2,43 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { nextTick } from 'vue';
 
 const routes = [
-    { 
-        path: '/', 
+    {
+        path: '/',
         component: () => import('../pages/MainPage.vue'),
         meta: {
             title: 'FeasOJ - 首页'
         }
-    }, 
-    { 
-        path: '/about', 
+    },
+    {
+        path: '/about',
         component: () => import('../pages/AboutPage.vue'),
         meta: {
             title: 'FeasOJ - 关于',
         }
     },
-    { 
-        path: '/problemset', 
+    {
+        path: '/problemset',
         component: () => import('../pages/ProblemSetPage.vue'),
         meta: {
             title: 'FeasOJ - 题目'
         }
     },
-    { 
-        path: '/login', 
+    {
+        path: '/login',
         component: () => import('../pages/LoginPage.vue'),
         meta: {
             title: 'FeasOJ - 登录'
         }
     },
-    { 
-        path: '/register', 
+    {
+        path: '/register',
         component: () => import('../pages/RegisterPage.vue'),
         meta: {
             title: 'FeasOJ - 注册'
         }
     },
-    { 
-        path: '/profile/:Username', 
+    {
+        path: '/profile/:Username',
         component: () => import('../pages/ProfilePage.vue'),
         meta: {
             title: 'FeasOJ - 个人资料'
@@ -48,8 +48,8 @@ const routes = [
             next();
         }
     },
-    { 
-        path: '/problem/:Pid', 
+    {
+        path: '/problem/:Pid',
         component: () => import('../pages/ProblemInfoPage.vue'),
         meta: {
             title: 'Problem'
@@ -59,7 +59,7 @@ const routes = [
             next();
         }
     },
-    { 
+    {
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
         meta: {
             title: 'FeasOJ - 重置密码'
@@ -83,8 +83,8 @@ const routes = [
             title: 'FeasOJ - 创建讨论'
         }
     },
-    { 
-        path: '/discussion/:Did', 
+    {
+        path: '/discussion/:Did',
         component: () => import('../pages/DiscussionDetailsPage.vue'),
         meta: {
             title: 'Discussion'
@@ -106,13 +106,13 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(),
-    routes, 
+    routes,
 });
 
 router.afterEach((to) => {
     nextTick(() => {
-      document.title = to.meta.title || 'FeasOJ';
+        document.title = to.meta.title || 'FeasOJ';
     });
-  });
+});
 
 export default router;

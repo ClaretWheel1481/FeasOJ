@@ -1,12 +1,12 @@
 <!-- 题目详细页 -->
 <script setup>
-import { VAppBar,VBtn,VDivider,VCard,VCardText,VProgressCircular,VSelect,VContainer,VRow,VCol } from 'vuetify/components'
-import { ref,onMounted,computed,watch } from 'vue'
+import { VAppBar, VBtn, VDivider, VCard, VCardText, VProgressCircular, VSelect, VContainer, VRow, VCol } from 'vuetify/components'
+import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router';
-import { getPbDetails,uploadCode } from '../utils/axios';
+import { getPbDetails, uploadCode } from '../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../utils/alert';
-import { token,userName } from "../utils/account";
+import { token, userName } from "../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
 
@@ -17,30 +17,30 @@ const problemInfo = ref({});
 const content = ref('');
 // 代码模板
 const templates = {
-java: 
-`public class Main {
+    java:
+        `public class Main {
     public static void main(String[] args) {
 
     }
 }`,
-c_cpp: 
-`#include <iostream>
+    c_cpp:
+        `#include <iostream>
 using namespace std;
 
 int main() {
 
     return 0;
 }`,
-golang: 
-`package main
+    golang:
+        `package main
 
 import "fmt"
 
 func main() {
 
 }`,
-python:
-``
+    python:
+        ``
 };
 const lang = ref('python');
 
@@ -55,7 +55,7 @@ const userLoggedIn = computed(() => !!token.value)
 
 onMounted(async () => {
     loading.value = true;
-    if(userLoggedIn.value){
+    if (userLoggedIn.value) {
         try {
             const problemId = route.params.Pid;
             const resp = await getPbDetails(problemId);
@@ -63,12 +63,12 @@ onMounted(async () => {
                 problemInfo.value = resp.data.problemInfo;
             }
         } catch (error) {
-            showAlert('请求题目信息时发生错误。',"");
-        } finally{
+            showAlert('请求题目信息时发生错误。', "");
+        } finally {
             loading.value = false;
         }
-    }else{
-        window.location='/login'
+    } else {
+        window.location = '/login'
     }
 
     watch(lang, (newLang) => {
@@ -81,12 +81,12 @@ const uploadContentAsFile = async () => {
     const blob = new Blob([content.value], { type: 'text/plain' });
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
-        const uploadResp = await uploadCode(codefile,route.params.Pid,userName.value,token.value);
-        if(uploadResp.status === 200){
-            showAlert('提交成功',"reload")
+        const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
+        if (uploadResp.status === 200) {
+            showAlert('提交成功', "reload")
         }
     } catch (error) {
-        showAlert('提交代码时发生错误。',"");
+        showAlert('提交代码时发生错误。', "");
     }
 };
 </script>
@@ -104,15 +104,15 @@ const uploadContentAsFile = async () => {
         <v-container fluid>
             <v-row>
                 <v-col cols="12" md="6">
-                    <h1>{{problemInfo.title}}</h1>
+                    <h1>{{ problemInfo.title }}</h1>
                     <div style="margin: 10px;"></div>
-                    <p class="subtitle">难度: {{problemInfo.difficulty}}</p>
-                    <p class="subtitle">时间限制: {{problemInfo.time_limit}} S</p>
-                    <p class="subtitle">内存限制: {{problemInfo.memory_limit}} MB</p>
+                    <p class="subtitle">难度: {{ problemInfo.difficulty }}</p>
+                    <p class="subtitle">时间限制: {{ problemInfo.time_limit }} S</p>
+                    <p class="subtitle">内存限制: {{ problemInfo.memory_limit }} MB</p>
                     <div style="margin: 10px;"></div>
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
-                    <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview"/>
+                    <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
                     <p class="tags">输入样例</p>
                     <p class="example">{{ problemInfo.input }}</p>
                     <p class="tags">输出样例</p>
@@ -120,18 +120,10 @@ const uploadContentAsFile = async () => {
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-card class="mx-auto my-8" width="100%" height="800" elevation="5">
-                        <v-select
-                            label="选择语言"
-                            v-model="lang"
-                            :items="['python','c_cpp', 'golang', 'java']"
-                            variant="solo-filled"
-                        ></v-select>
-                        <v-ace-editor
-                            v-model:value="content"
-                            theme="chrome"
-                            :lang=lang
-                            style="height: 800px;font-size: 16px;"
-                        />
+                        <v-select label="选择语言" v-model="lang" :items="['python', 'c_cpp', 'golang', 'java']"
+                            variant="solo-filled"></v-select>
+                        <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
+                            style="height: 800px;font-size: 16px;" />
                     </v-card>
                     <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">提交</v-btn>
                 </v-col>
@@ -163,10 +155,10 @@ const uploadContentAsFile = async () => {
     font-size: 0.9rem;
 }
 
-.loading{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 </style>

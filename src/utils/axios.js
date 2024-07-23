@@ -5,24 +5,24 @@ export const apiUrl = "http://127.0.0.1:37881/api"
 // TODO:打包前记得修改为你的头像服务器地址
 export const avatarServer = "http://127.0.0.1:37881/avatar/"
 
-                //  GET请求
+//  GET请求
 
 // 登录
-export const loginRequest = async (username,password) => {
+export const loginRequest = async (username, password) => {
     return await axios.get(`${apiUrl}/v1/login`, {
         params: {
-            username:username,
-            password:password
+            username: username,
+            password: password
         }
     })
 }
 
 // Token校验
-export const verifyJWT = async (username,token) => {
-    return await axios.get(`${apiUrl}/v1/verifyToken`,{
-        headers:{
-            username:encodeURIComponent(username),
-            Authorization:token
+export const verifyJWT = async (username, token) => {
+    return await axios.get(`${apiUrl}/v1/verifyToken`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
         }
     })
 }
@@ -30,17 +30,17 @@ export const verifyJWT = async (username,token) => {
 // 获取验证码
 export const getCaptchaCode = async (email) => {
     return await axios.get(`${apiUrl}/v1/getCaptcha`, {
-        params: { 
-            email: email 
+        params: {
+            email: email
         }
     });
 }
 
 // 获取用户信息
 export const getUserInfo = async (username) => {
-    return await axios.get(`${apiUrl}/v1/getUserInfo`,{
-        headers:{
-          username:encodeURIComponent(username)
+    return await axios.get(`${apiUrl}/v1/getUserInfo`, {
+        headers: {
+            username: encodeURIComponent(username)
         }
     });
 }
@@ -76,8 +76,8 @@ export const getSubmitRecords = async () => {
 }
 
 // 获取指定讨论的所有回复
-export const getComments = async (did,username,token) => {
-    return await axios.get(`${apiUrl}/v1/getComment/${did}`,{
+export const getComments = async (did, username, token) => {
+    return await axios.get(`${apiUrl}/v1/getComment/${did}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -86,8 +86,8 @@ export const getComments = async (did,username,token) => {
 }
 
 // 管理员获取指定题目所有信息
-export const getProblemAllInfoByAdmin = async (pid,username,token) => {
-    return await axios.get(`${apiUrl}/v1/getProblemAllInfo/${pid}`,{
+export const getProblemAllInfoByAdmin = async (pid, username, token) => {
+    return await axios.get(`${apiUrl}/v1/getProblemAllInfo/${pid}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -95,20 +95,20 @@ export const getProblemAllInfoByAdmin = async (pid,username,token) => {
     })
 }
 
-                    //    POST请求
+//    POST请求
 
 // 注册
-export const registerRequest = async (username,password,email,vcode) => {
+export const registerRequest = async (username, password, email, vcode) => {
     return await axios.post(`${apiUrl}/v2/register`, {
         email: email,
         username: username,
         password: password,
         vcode: vcode
-      });
+    });
 }
 
 // 修改密码
-export const updatePassword = async (email,vcode,newPassword) => {
+export const updatePassword = async (email, vcode, newPassword) => {
     return await axios.post(`${apiUrl}/v2/updatePassword`, {
         email: email,
         vcode: vcode,
@@ -117,11 +117,11 @@ export const updatePassword = async (email,vcode,newPassword) => {
 }
 
 // 添加讨论
-export const addDiscussion = async (Title,Content,Username) => {
+export const addDiscussion = async (Title, Content, Username) => {
     const formData = new FormData();
     formData.append('title', Title);
     formData.append('content', Content);
-    return await axios.post(`${apiUrl}/v2/addDiscussion`,formData,{
+    return await axios.post(`${apiUrl}/v2/addDiscussion`, formData, {
         headers: {
             username: encodeURIComponent(Username),
         },
@@ -129,18 +129,18 @@ export const addDiscussion = async (Title,Content,Username) => {
 }
 
 // 删除讨论
-export const deleteDiscussion = async(username,token,Did) => {
-    const tokenVerifyResp = await verifyJWT(username,token);
-    if(tokenVerifyResp.status === 200){
+export const deleteDiscussion = async (username, token, Did) => {
+    const tokenVerifyResp = await verifyJWT(username, token);
+    if (tokenVerifyResp.status === 200) {
         return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`)
     }
 }
 
 // 添加讨论评论
-export const addComment = async (did,content,username,token) => {
+export const addComment = async (did, content, username, token) => {
     const formData = new FormData();
     formData.append('content', content);
-    return await axios.post(`${apiUrl}/v2/addComment/${did}`,formData,{
+    return await axios.post(`${apiUrl}/v2/addComment/${did}`, formData, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -149,8 +149,8 @@ export const addComment = async (did,content,username,token) => {
 }
 
 // 删除讨论评论
-export const deleteComment = async(username,token,Cid) => {
-    return await axios.post(`${apiUrl}/v2/delComment/${Cid}`,{},{
+export const deleteComment = async (username, token, Cid) => {
+    return await axios.post(`${apiUrl}/v2/delComment/${Cid}`, {}, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -159,15 +159,15 @@ export const deleteComment = async(username,token,Cid) => {
 }
 
 // 上传代码文件
-export const uploadCode = async (file,pid,username,token) => {
+export const uploadCode = async (file, pid, username, token) => {
     let formData = new FormData();
     formData.append('code', file);
-    return await axios.post(`${apiUrl}/v2/uploadCode`,formData,{
+    return await axios.post(`${apiUrl}/v2/uploadCode`, formData, {
         params: {
-            'problem' : pid
+            'problem': pid
         },
         headers: {
-            'Content-Type':'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             username: encodeURIComponent(username),
             Authorization: token
         },
@@ -175,12 +175,12 @@ export const uploadCode = async (file,pid,username,token) => {
 }
 
 // 上传头像
-export const uploadAvatar = async (file,username,token) => {
+export const uploadAvatar = async (file, username, token) => {
     let formData = new FormData();
     formData.append('avatar', file);
-    return await axios.post(`${apiUrl}/v2/uploadAvatar`,formData,{
+    return await axios.post(`${apiUrl}/v2/uploadAvatar`, formData, {
         headers: {
-            'Content-Type':'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
             username: encodeURIComponent(username),
             Authorization: token
         },
@@ -188,8 +188,8 @@ export const uploadAvatar = async (file,username,token) => {
 }
 
 // 更新题目信息
-export const updateProblemInfo = async (username,token,problemInfo) => {
-    return await axios.post(`${apiUrl}/v2/updateProblemInfo/`,problemInfo,{
+export const updateProblemInfo = async (username, token, problemInfo) => {
+    return await axios.post(`${apiUrl}/v2/updateProblemInfo/`, problemInfo, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token,
@@ -199,8 +199,8 @@ export const updateProblemInfo = async (username,token,problemInfo) => {
 }
 
 // 删除题目信息
-export const deleteProblemAllInfo = async (pid,username,token) => {
-    return await axios.post(`${apiUrl}/v2/delProblemAllInfo/${pid}`,{},{
+export const deleteProblemAllInfo = async (pid, username, token) => {
+    return await axios.post(`${apiUrl}/v2/delProblemAllInfo/${pid}`, {}, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token,

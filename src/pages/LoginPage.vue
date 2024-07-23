@@ -1,8 +1,8 @@
 <!-- 登录页 -->
 <script setup>
 import { reactive } from 'vue';
-import { VBtn, VTextField, VForm,VSheet,VRow } from 'vuetify/components';
-import { loginRequest,getUserInfo } from '../utils/axios.js'
+import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
+import { loginRequest, getUserInfo } from '../utils/axios.js'
 import { showAlert } from '../utils/alert';
 
 const forms = reactive({
@@ -13,23 +13,23 @@ const forms = reactive({
 // 登录逻辑
 const login = async () => {
   if (forms.username === '' || forms.password === '') {
-    showAlert('用户名或密码不能为空。',"");
+    showAlert('用户名或密码不能为空。', "");
     return;
   }
   try {
     const loginResponse = await loginRequest(forms.username, forms.password);
     if (loginResponse.data.status === 200) {
-      localStorage.setItem('token',loginResponse.data.token)
-      localStorage.setItem('username',forms.username)
+      localStorage.setItem('token', loginResponse.data.token)
+      localStorage.setItem('username', forms.username)
       const response = await getUserInfo(forms.username);
       localStorage.setItem('userid', response.data.Info.uid);
-      showAlert(loginResponse.data.message,"/");
+      showAlert(loginResponse.data.message, "/");
     } else {
-      showAlert(loginResponse.data.message,"");
+      showAlert(loginResponse.data.message, "");
       return;
     }
   } catch (error) {
-    showAlert(error.response.data.message,"");
+    showAlert(error.response.data.message, "");
     return;
   }
 }
@@ -52,6 +52,4 @@ const login = async () => {
   </v-sheet>
 </template>
 
-<style>
-
-</style>
+<style></style>

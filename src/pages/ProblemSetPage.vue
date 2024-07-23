@@ -1,8 +1,8 @@
 <!-- 题库页 -->
 <script setup>
-import { ref, onMounted,computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { VTextField,VDataTableServer,VBtn } from 'vuetify/lib/components/index.mjs';
+import { VTextField, VDataTableServer, VBtn } from 'vuetify/lib/components/index.mjs';
 import { getAllProblems } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token } from "../utils/account";
@@ -10,9 +10,9 @@ import { token } from "../utils/account";
 const router = useRouter()
 
 const headers = ref([
-  { title: 'ID', value: 'Pid', align:'center'},
-  { title: '题目', value: 'Title', align:'center'},
-  { title: '难度', value: 'Difficulty', align:'center'}
+  { title: 'ID', value: 'Pid', align: 'center' },
+  { title: '题目', value: 'Title', align: 'center' },
+  { title: '难度', value: 'Difficulty', align: 'center' }
 ])
 const problems = ref([])
 const totalProblems = ref(0)
@@ -37,7 +37,7 @@ const fetchData = async () => {
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {
-    showAlert('无法获取数据，请重试。',"")
+    showAlert('无法获取数据，请重试。', "")
   } finally {
     loading.value = false
   }
@@ -64,10 +64,10 @@ const difficultyColor = (difficulty) => {
 
 // 初始化数据
 onMounted(async () => {
-  if(!userLoggedIn.value){
+  if (!userLoggedIn.value) {
     loading.value = false;
     setTimeout(() => {
-        window.location = '/login'
+      window.location = '/login'
     }, 2000);
     return;
   }
@@ -80,34 +80,27 @@ onMounted(async () => {
   <div class="searchbar">
     <v-text-field v-model="searchQuery" variant="solo-filled" placeholder="搜索题目" rounded="sm"></v-text-field>
   </div>
-  <v-data-table-server
-    :headers="headers"
-    :items="filteredProblems"
-    :items-length="totalProblems"
-    :loading="loading"
-    loading-text="加载中..."
-    @update="fetchData"
-    :hide-default-footer="true"
-    :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有题目数据。'"
-  >
-  <template v-slot:item="{ item }">
-    <tr>
-      <td>{{ item.Pid }}</td>
-      <td class="tabletitle">
-        <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
-      </td>
-      <td :class="difficultyColor(item.Difficulty)">{{ item.Difficulty }}</td>
-    </tr>
-  </template>
+  <v-data-table-server :headers="headers" :items="filteredProblems" :items-length="totalProblems" :loading="loading"
+    loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
+    :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有题目数据。'">
+    <template v-slot:item="{ item }">
+      <tr>
+        <td>{{ item.Pid }}</td>
+        <td class="tabletitle">
+          <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
+        </td>
+        <td :class="difficultyColor(item.Difficulty)">{{ item.Difficulty }}</td>
+      </tr>
+    </template>
   </v-data-table-server>
 </template>
 
 <style>
-.text{
-    justify-content: center;
+.text {
+  justify-content: center;
 }
 
-.tabletitle{
+.tabletitle {
   color: #1e65ff;
 }
 
@@ -116,14 +109,17 @@ onMounted(async () => {
   top: 0;
   z-index: 100;
 }
+
 .easy {
   font-weight: bold;
   color: green;
 }
+
 .medium {
   font-weight: bold;
   color: orange;
 }
+
 .hard {
   font-weight: bold;
   color: red;

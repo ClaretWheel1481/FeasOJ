@@ -1,10 +1,10 @@
 <!-- 创建讨论页 -->
 <script setup>
-import { VProgressCircular,VAppBar,VRow,VBtn,VTextarea,VForm,VTextField } from 'vuetify/lib/components/index.mjs';
-import { ref,computed,onMounted } from 'vue';
+import { VProgressCircular, VAppBar, VRow, VBtn, VTextarea, VForm, VTextField } from 'vuetify/lib/components/index.mjs';
+import { ref, computed, onMounted } from 'vue';
 import { addDiscussion } from '../utils/axios.js';
 import { showAlert } from '../utils/alert';
-import { token,userName } from "../utils/account";
+import { token, userName } from "../utils/account";
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 
@@ -17,25 +17,25 @@ const userLoggedIn = computed(() => !!token.value)
 
 onMounted(async () => {
     loading.value = true;
-    if(!userLoggedIn.value){
+    if (!userLoggedIn.value) {
         window.location = "/login";
-    }else{
+    } else {
         loading.value = false;
     }
 });
 
 const submit = async () => {
-    if(!title.value || !content.value){
-        showAlert("请填写完整信息。","");
+    if (!title.value || !content.value) {
+        showAlert("请填写完整信息。", "");
         return;
     }
     loading.value = true;
-    const response = await addDiscussion(title.value,content.value,userName.value)
-    if(response.status === 200){
-        showAlert("创建成功！","/discussion");
+    const response = await addDiscussion(title.value, content.value, userName.value)
+    if (response.status === 200) {
+        showAlert("创建成功！", "/discussion");
         loading.value = false;
-    }else{
-        showAlert("创建讨论失败。","");
+    } else {
+        showAlert("创建讨论失败。", "");
         loading.value = false;
     }
 };
@@ -68,14 +68,14 @@ const submit = async () => {
 </template>
 
 <style scoped>
-.loading{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
-.form-align{
+.form-align {
     display: flex;
     justify-content: center;
     align-items: center;

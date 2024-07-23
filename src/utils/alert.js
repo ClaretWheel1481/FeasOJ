@@ -3,18 +3,18 @@ import { ref } from 'vue';
 export const dialog = ref(false);
 export const dialogMessage = ref('');
 
-export const showAlert = (message,path) => {
+export const showAlert = (message, path) => {
   dialogMessage.value = message;
   dialog.value = true;
-  if(path === "reload"){
+  if (path === "reload") {
     setTimeout(() => {
       location.reload();
-    },800);
-  }else if(path === ""){
+    }, 800);
+  } else if (path === "") {
     return
-  }else {
+  } else {
     setTimeout(() => {
       window.location = path;
-    },1000);
+    }, 1000);
   }
 };

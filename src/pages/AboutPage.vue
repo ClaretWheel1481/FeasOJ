@@ -1,8 +1,8 @@
 <!-- 关于页面 -->
 <script setup>
-import { VImg,VContainer } from 'vuetify/components'
+import { VImg, VContainer } from 'vuetify/components'
 
-function opengithub(){
+function opengithub() {
     window.open('https://github.com/ClaretWheel1481/FeasOJ')
 }
 </script>
@@ -15,6 +15,7 @@ function opengithub(){
         <h3>有问题反馈或想参与开发？前往Github！</h3>
     </div>
     <v-container class="d-flex justify-center align-center">
-        <v-img src="https://res.hc-cdn.com/tinyui-design-common/1.0.5.20240401143336/assets/github.svg" max-width="50" @click="opengithub" style="cursor: pointer;"></v-img>
+        <v-img src="https://res.hc-cdn.com/tinyui-design-common/1.0.5.20240401143336/assets/github.svg" max-width="50"
+            @click="opengithub" style="cursor: pointer;"></v-img>
     </v-container>
 </template>

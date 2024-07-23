@@ -9,7 +9,6 @@ import {
     VImg,
     VCard,
     VListItemTitle,
-    VListItemSubtitle,
 } from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
 import { getDisDetails, deleteDiscussion, avatarServer, getComments,deleteComment,addComment } from "../utils/axios";
