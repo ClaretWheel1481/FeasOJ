@@ -8,8 +8,7 @@ import (
 	"path"
 	"path/filepath"
 	"src/account"
-	"src/email"
-	"src/structs"
+	"src/global"
 	"src/utils"
 	"strconv"
 
@@ -21,7 +20,7 @@ import (
 
 // 注册
 func Registers(c *gin.Context) {
-	var req structs.RegisterRequest
+	var req global.RegisterRequest
 	c.ShouldBind(&req)
 	// 判断用户或邮箱是否存在
 	if utils.IsUserExist(req.Username, req.Email) {
@@ -29,7 +28,7 @@ func Registers(c *gin.Context) {
 		return
 	}
 	tokensecret := uuid.New().String()
-	vcodeStatus := email.CompareVerifyCode(req.Vcode, req.Email)
+	vcodeStatus := utils.CompareVerifyCode(req.Vcode, req.Email)
 	if !vcodeStatus {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
@@ -68,7 +67,7 @@ func Logins(c *gin.Context) {
 func GetCaptchas(c *gin.Context) {
 	// 获取邮箱地址
 	emails := c.Query("email")
-	if email.SendVerifycode(email.InitEmailConfig(), emails, email.GenerateVerifycode()) == "Success" {
+	if utils.SendVerifycode(utils.InitEmailConfig(), emails, utils.GenerateVerifycode()) == "Success" {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码发送失败，可能是我们的问题。"})
@@ -112,9 +111,9 @@ func GetUserInfos(c *gin.Context) {
 
 // 更新密码
 func UpdatePasswords(c *gin.Context) {
-	var req structs.UpdatePasswordRequest
+	var req global.UpdatePasswordRequest
 	c.ShouldBind(&req)
-	vcodeStatus := email.CompareVerifyCode(req.Vcode, req.Email)
+	vcodeStatus := utils.CompareVerifyCode(req.Vcode, req.Email)
 	if !vcodeStatus {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
@@ -286,7 +285,7 @@ func GetProblemAllInfos(c *gin.Context) {
 
 // 更新题目信息
 func UpdateProblemInfos(c *gin.Context) {
-	var req structs.AdminProblemInfoRequest
+	var req global.AdminProblemInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
 		return

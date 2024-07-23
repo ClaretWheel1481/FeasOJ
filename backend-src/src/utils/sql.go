@@ -7,7 +7,6 @@ import (
 	"path/filepath"
 	"src/account"
 	"src/global"
-	"src/structs"
 	"time"
 
 	"github.com/google/uuid"
@@ -16,7 +15,7 @@ import (
 )
 
 func InputSqlInfo() bool {
-	var Sqlconfig structs.SqlConfig
+	var Sqlconfig global.SqlConfig
 	fmt.Println("[FeasOJ]请输入数据库连接信息：")
 	fmt.Print("数据库名：")
 	fmt.Scanln(&Sqlconfig.DbName)
@@ -64,7 +63,7 @@ func LoadSqlConfig() string {
 	if err != nil {
 		return ""
 	}
-	var SqlConfig structs.SqlConfig
+	var SqlConfig global.SqlConfig
 	err = xml.NewDecoder(configFile).Decode(&SqlConfig)
 	if err != nil {
 		return ""
@@ -100,7 +99,7 @@ func InitSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		InputSqlInfo()
 	}
-	connectSql().AutoMigrate(&structs.User{}, &structs.Problem{}, &structs.SubmitRecord{}, &structs.Discussion{}, &structs.Comment{}, &structs.TestCase{}, &structs.Reply{})
+	connectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{}, &global.Reply{})
 	InitAdminAccount()
 	return true
 }
@@ -108,7 +107,7 @@ func InitSql() bool {
 // 注册用户添加至数据库
 func Register(username, password, email, tokensecret string, role int) bool {
 	time := time.Now()
-	err := connectSql().Create(&structs.User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
+	err := connectSql().Create(&global.User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
 	return err == nil
 }
 
@@ -116,7 +115,7 @@ func Register(username, password, email, tokensecret string, role int) bool {
 func SelectAdminUser(role int) bool {
 	// role = 1表示管理员
 	// 查询是否有role = 1，有则返回true，否则返回false
-	var user structs.User
+	var user global.User
 	err := connectSql().Where("role = ?", role).First(&user).Error
 	return err == nil
 }
@@ -124,7 +123,7 @@ func SelectAdminUser(role int) bool {
 // 查询指定用户的password加密值
 func SelectPassword(username string) string {
 	// 查询用户
-	var user structs.User
+	var user global.User
 	// 查询用户名或邮箱
 	connectSql().Where("username = ?", username).First(&user)
 	return user.Password
@@ -133,14 +132,14 @@ func SelectPassword(username string) string {
 // 查询指定用户的tokensecret
 func SelectTokenSecret(username string) string {
 	// 查询用户
-	var user structs.User
+	var user global.User
 	connectSql().Where("username = ?", username).First(&user)
 	return user.TokenSecret
 }
 
 // 根据username查询指定用户的除了password和tokensecret之外的所有信息
-func SelectUserInfo(username string) structs.UserInfoRequest {
-	var user structs.UserInfoRequest
+func SelectUserInfo(username string) global.UserInfoRequest {
+	var user global.UserInfoRequest
 	connectSql().Table("users").Where("username = ?", username).
 		First(&user)
 	return user
@@ -149,8 +148,8 @@ func SelectUserInfo(username string) structs.UserInfoRequest {
 // 根据email与username判断是否该用户已存在
 func IsUserExist(username, email string) bool {
 	if connectSql().Where("username = ?", username).
-		First(&structs.User{}).Error == nil || connectSql().Where("email = ?", email).
-		First(&structs.User{}).Error == nil {
+		First(&global.User{}).Error == nil || connectSql().Where("email = ?", email).
+		First(&global.User{}).Error == nil {
 		return true
 	}
 	return false
@@ -160,7 +159,7 @@ func IsUserExist(username, email string) bool {
 func UpdatePassword(email, newpassword string) bool {
 	newpassword = account.EncryptPassword(newpassword)
 	tokensecret := uuid.New().String()
-	err := connectSql().Model(&structs.User{}).
+	err := connectSql().Model(&global.User{}).
 		Where("email = ?", email).Update("password", newpassword).
 		Update("token_secret", tokensecret).Error
 	return err == nil
@@ -168,44 +167,44 @@ func UpdatePassword(email, newpassword string) bool {
 
 // 更新数据库中用户的头像路径
 func UpdateAvatar(username, avatarpath string) bool {
-	err := connectSql().Model(&structs.User{}).
+	err := connectSql().Model(&global.User{}).
 		Where("username = ?", username).Update("avatar", avatarpath).Error
 	return err == nil
 }
 
 // 获取Problem表中的所有数据
-func SelectAllProblems() []structs.Problem {
-	var problems []structs.Problem
+func SelectAllProblems() []global.Problem {
+	var problems []global.Problem
 	connectSql().Find(&problems)
 	return problems
 }
 
 // 获取指定PID的题目除了Input_full_path Output_full_path外的所有信息
-func SelectProblemInfo(pid string) structs.ProblemInfoRequest {
-	var problem structs.ProblemInfoRequest
+func SelectProblemInfo(pid string) global.ProblemInfoRequest {
+	var problem global.ProblemInfoRequest
 	connectSql().Table("Problems").Where("pid = ?", pid).First(&problem)
 	return problem
 }
 
 // 倒序查询指定用户ID的30天内的提交题目记录
-func SelectSubmitRecordsByUid(uid string) []structs.SubmitRecord {
-	var records []structs.SubmitRecord
+func SelectSubmitRecordsByUid(uid string) []global.SubmitRecord {
+	var records []global.SubmitRecord
 	connectSql().Where("uid = ?", uid).
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }
 
 // 返回SubmitRecord表中30天内的记录
-func SelectAllSubmitRecords() []structs.SubmitRecord {
-	var records []structs.SubmitRecord
+func SelectAllSubmitRecords() []global.SubmitRecord {
+	var records []global.SubmitRecord
 	connectSql().
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)
 	return records
 }
 
 // 获取讨论列表
-func SelectDiscussList() []structs.DiscussRequest {
-	var discussRequests []structs.DiscussRequest
+func SelectDiscussList() []global.DiscussRequest {
+	var discussRequests []global.DiscussRequest
 	connectSql().Table("Discussions").
 		Select("Discussions.Did,Discussions.Title, Users.Username, Discussions.Create_at").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
@@ -215,8 +214,8 @@ func SelectDiscussList() []structs.DiscussRequest {
 }
 
 // 获取指定Did的讨论以及User表中发帖人的头像
-func SelectDiscussionByDid(Did string) structs.DiscsInfoRequest {
-	var discussion structs.DiscsInfoRequest
+func SelectDiscussionByDid(Did string) global.DiscsInfoRequest {
+	var discussion global.DiscsInfoRequest
 	connectSql().Table("Discussions").
 		Select("Discussions.Did, Discussions.Title, Discussions.Content, Discussions.Create_at, Users.Uid,Users.Username, Users.Avatar").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
@@ -229,24 +228,24 @@ func AddDiscussion(title, content string, uid int) bool {
 	if title == "" || content == "" {
 		return false
 	}
-	err := connectSql().Table("Discussions").Create(&structs.Discussion{Uid: uid, Title: title, Content: content, Create_at: time.Now()}).Error
+	err := connectSql().Table("Discussions").Create(&global.Discussion{Uid: uid, Title: title, Content: content, Create_at: time.Now()}).Error
 	return err == nil
 }
 
 // 删除讨论
 func DelDiscussion(Did string) bool {
-	err := connectSql().Table("Discussions").Where("Did = ?", Did).Delete(&structs.Discussion{}).Error
+	err := connectSql().Table("Discussions").Where("Did = ?", Did).Delete(&global.Discussion{}).Error
 	return err == nil
 }
 
 // 添加评论
 func AddComment(content string, did, uid int) bool {
-	return connectSql().Table("Comments").Create(&structs.Comment{Did: did, Uid: uid, Content: content, Create_at: time.Now()}).Error == nil
+	return connectSql().Table("Comments").Create(&global.Comment{Did: did, Uid: uid, Content: content, Create_at: time.Now()}).Error == nil
 }
 
 // 获取指定讨论ID的所有评论信息
-func GetCommentsByDid(Did int) []structs.CommentRequest {
-	var comments []structs.CommentRequest
+func GetCommentsByDid(Did int) []global.CommentRequest {
+	var comments []global.CommentRequest
 	connectSql().Table("Comments").
 		Select("Comments.Cid, Comments.Did, Comments.Content, Comments.Create_at, Users.Uid,Users.Username, Users.Avatar").
 		Joins("JOIN Users ON Comments.Uid = Users.Uid").
@@ -257,14 +256,14 @@ func GetCommentsByDid(Did int) []structs.CommentRequest {
 
 // 删除指定评论
 func DeleteCommentByCid(Cid int) bool {
-	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&structs.Comment{}).Error == nil
+	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&global.Comment{}).Error == nil
 }
 
 // 获取指定题目所有输入输出样例
-func SelectProblemTestCases(pid string) structs.AdminProblemInfoRequest {
-	var problem structs.Problem
-	var testCases []structs.TestCaseRequest
-	var result structs.AdminProblemInfoRequest
+func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
+	var problem global.Problem
+	var testCases []global.TestCaseRequest
+	var result global.AdminProblemInfoRequest
 
 	if err := connectSql().First(&problem, pid).Error; err != nil {
 		return result
@@ -274,7 +273,7 @@ func SelectProblemTestCases(pid string) structs.AdminProblemInfoRequest {
 		return result
 	}
 
-	result = structs.AdminProblemInfoRequest{
+	result = global.AdminProblemInfoRequest{
 		Pid:         problem.Pid,
 		Difficulty:  problem.Difficulty,
 		Title:       problem.Title,
@@ -290,9 +289,9 @@ func SelectProblemTestCases(pid string) structs.AdminProblemInfoRequest {
 }
 
 // 更新题目信息
-func UpdateProblem(req structs.AdminProblemInfoRequest) error {
+func UpdateProblem(req global.AdminProblemInfoRequest) error {
 	// 更新题目表
-	problem := structs.Problem{
+	problem := global.Problem{
 		Pid:         req.Pid,
 		Difficulty:  req.Difficulty,
 		Title:       req.Title,
@@ -307,13 +306,13 @@ func UpdateProblem(req structs.AdminProblemInfoRequest) error {
 	}
 
 	// 获取该题目的测试样例
-	var existingTestCases []structs.TestCase
+	var existingTestCases []global.TestCase
 	if err := connectSql().Where("pid = ?", req.Pid).Find(&existingTestCases).Error; err != nil {
 		return err
 	}
 
 	// 找出前端不存在的测试样例，并将其从数据库中删除
-	existingTestCaseMap := make(map[string]structs.TestCase)
+	existingTestCaseMap := make(map[string]global.TestCase)
 	for _, testCase := range existingTestCases {
 		existingTestCaseMap[testCase.InputData] = testCase
 	}
@@ -330,11 +329,11 @@ func UpdateProblem(req structs.AdminProblemInfoRequest) error {
 
 	// 更新或添加新的测试样例
 	for _, testCase := range req.TestCases {
-		var existingTestCase structs.TestCase
+		var existingTestCase global.TestCase
 		if err := connectSql().Where("pid = ? AND input_data = ?", req.Pid, testCase.InputData).First(&existingTestCase).Error; err != nil {
 			if err == gorm.ErrRecordNotFound {
 				// 如果测试样例不存在，则创建新的样例
-				newTestCase := structs.TestCase{
+				newTestCase := global.TestCase{
 					Pid:        req.Pid,
 					InputData:  testCase.InputData,
 					OutputData: testCase.OutputData,
@@ -358,11 +357,11 @@ func UpdateProblem(req structs.AdminProblemInfoRequest) error {
 
 // 删除题目及其所有测试样例
 func DeleteProblemAllInfo(pid int) bool {
-	if connectSql().Table("problems").Where("pid = ?", pid).Delete(&structs.Problem{}).Error != nil {
+	if connectSql().Table("problems").Where("pid = ?", pid).Delete(&global.Problem{}).Error != nil {
 		return false
 	}
 
-	if connectSql().Table("test_cases").Where("pid = ?", pid).Delete(&structs.TestCase{}).Error != nil {
+	if connectSql().Table("test_cases").Where("pid = ?", pid).Delete(&global.TestCase{}).Error != nil {
 		return false
 	}
 

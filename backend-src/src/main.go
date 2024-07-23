@@ -9,7 +9,6 @@ import (
 	"path/filepath"
 	"src/account"
 	"src/codehandler"
-	"src/email"
 	"src/ginrouter"
 	"src/global"
 	"src/utils"
@@ -43,7 +42,7 @@ func main() {
 		return
 	}
 	utils.InitRedis()
-	email.InitEmailConfig()
+	utils.InitEmailConfig()
 	if codehandler.BuildImage() {
 		fmt.Println("[FeasOJ]SandBox构建成功！")
 	} else {

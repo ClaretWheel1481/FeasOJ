@@ -6,14 +6,13 @@ import (
 	"os"
 	"path/filepath"
 	"src/global"
-	"src/structs"
 
 	"github.com/go-redis/redis"
 )
 
 // 写入Redis连接配置到redisconfig.xml中
 func InputRedisInfo() bool {
-	var config structs.RedisConfig
+	var config global.RedisConfig
 	fmt.Print("请输入Redis地址：")
 	fmt.Scanln(&config.Address)
 	fmt.Print("请输入Redis密码：")
@@ -27,9 +26,9 @@ func InputRedisInfo() bool {
 	return true
 }
 
-func LoadRedisConfig() structs.RedisConfig {
+func LoadRedisConfig() global.RedisConfig {
 	filePath := filepath.Join(global.ConfigsDir, "redisconfig.xml")
-	var config structs.RedisConfig
+	var config global.RedisConfig
 	configXml, err := os.ReadFile(filePath)
 	if err != nil {
 		return config
