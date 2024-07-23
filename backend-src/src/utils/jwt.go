@@ -1,4 +1,4 @@
-package main
+package utils
 
 import (
 	"fmt"
@@ -7,18 +7,17 @@ import (
 )
 
 // 用户Token生成后返回给前端
-func GenerateToken(username string) string {
+func GenerateToken(username string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	// 设置Token的Claims
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
 	// 生成Token
-	tokenString, err := token.SignedString([]byte(selectTokenSecret(username)))
+	tokenString, err := token.SignedString([]byte(SelectTokenSecret(username)))
 	if err != nil {
-		fmt.Println("生成Token失败：", err)
-		return ""
+		return "", fmt.Errorf("生成Token失败：%v", err)
 	}
-	return tokenString
+	return tokenString, nil
 }
 
 // 校验Token与username是不是配对
@@ -29,7 +28,7 @@ func VerifyToken(username, tokenString string) bool {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(selectTokenSecret(username)), nil
+		return []byte(SelectTokenSecret(username)), nil
 	})
 	if token.Valid {
 		return true

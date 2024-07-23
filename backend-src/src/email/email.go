@@ -1,4 +1,4 @@
-package main
+package email
 
 import (
 	"crypto/tls"
@@ -7,30 +7,33 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"src/global"
+	"src/structs"
+	"src/utils"
 	"time"
 
 	"gopkg.in/gomail.v2"
 )
 
 // 从emailConfig.xml中读取邮箱配置并返回mailConfig
-func initEmailConfig() mailConfig {
+func InitEmailConfig() structs.MailConfig {
 	// 判断是否有emailconfig.xml文件
-	filePath := filepath.Join(configsDir, "emailconfig.xml")
+	filePath := filepath.Join(global.ConfigsDir, "emailconfig.xml")
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		inputMailConfig()
+		InputMailConfig()
 	}
 	configFile, err := os.Open(filePath)
 	if err != nil {
-		return mailConfig{}
+		return structs.MailConfig{}
 	}
 	defer configFile.Close()
-	var mc mailConfig
+	var mc structs.MailConfig
 	xml.NewDecoder(configFile).Decode(&mc)
 	return mc
 }
 
 // 初始化邮箱配置并作为结构体返回给其他方法
-func inputMailConfig() {
+func InputMailConfig() {
 	var hosts string
 	var users string
 	var password string
@@ -42,20 +45,20 @@ func inputMailConfig() {
 	fmt.Scanln(&password)
 
 	// 写入配置到emailconfig.xml文件中
-	config := mailConfig{Host: hosts, Port: 465, User: users, Pass: password}
-	filePath := filepath.Join(configsDir, "emailconfig.xml")
+	config := structs.MailConfig{Host: hosts, Port: 465, User: users, Pass: password}
+	filePath := filepath.Join(global.ConfigsDir, "emailconfig.xml")
 	configFile, _ := os.Create(filePath)
 	defer configFile.Close()
 	xml.NewEncoder(configFile).Encode(config)
 }
 
 // 随机生成4位数字验证码
-func generateVerifycode() string {
+func GenerateVerifycode() string {
 	return fmt.Sprintf("%04d", rand.New(rand.NewSource(time.Now().UnixNano())).Int31n(10000))
 }
 
 // 发送验证码
-func sendVerifycode(config mailConfig, to string, verifycode string) string {
+func SendVerifycode(config structs.MailConfig, to string, verifycode string) string {
 	m := gomail.NewMessage()
 	m.SetAddressHeader("From", config.User, "FeasOJ")
 	m.SetHeader("To", to)
@@ -67,7 +70,7 @@ func sendVerifycode(config mailConfig, to string, verifycode string) string {
 		return err.Error()
 	}
 	// 将验证码同时存进Redis中等待校验
-	rdb := initRedis()
+	rdb := utils.InitRedis()
 	err := rdb.Set(to, verifycode, 5*time.Minute).Err()
 	if err != nil {
 		return err.Error()
@@ -76,9 +79,9 @@ func sendVerifycode(config mailConfig, to string, verifycode string) string {
 }
 
 // 检验Redis中验证码与前端返回的是否相同
-func compareVerifyCode(frontendCode, to string) bool {
+func CompareVerifyCode(frontendCode, to string) bool {
 	// 通过邮箱来获取Redis中的验证码
-	rdb := initRedis()
+	rdb := utils.InitRedis()
 	verifyCode, err := rdb.Get(to).Result()
 	if err != nil {
 		return false

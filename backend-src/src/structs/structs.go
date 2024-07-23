@@ -1,4 +1,4 @@
-package main
+package structs
 
 import "time"
 
@@ -12,13 +12,13 @@ type SqlConfig struct {
 }
 
 // Redis数据连接信息
-type redisConfig struct {
+type RedisConfig struct {
 	Address  string `xml:"address"`
 	Password string `xml:"password"`
 }
 
 // 邮件服务连接信息
-type mailConfig struct {
+type MailConfig struct {
 	Host string `xml:"host"`
 	Port int    `xml:"port"`
 	User string `xml:"user"`
@@ -34,14 +34,14 @@ type RegisterRequest struct {
 }
 
 // 修改密码请求体
-type updatePasswordRequest struct {
+type UpdatePasswordRequest struct {
 	Email       string `json:"email"`
 	NewPassword string `json:"newpassword"`
 	Vcode       string `json:"vcode"`
 }
 
 // 讨论列表请求体
-type discussRequest struct {
+type DiscussRequest struct {
 	Did       string `json:"did"`
 	Title     string `json:"title"`
 	Username  string `json:"username"`
@@ -49,7 +49,7 @@ type discussRequest struct {
 }
 
 // 讨论帖子页请求体
-type discsInfoRequest struct {
+type DiscsInfoRequest struct {
 	Did       int       `json:"did"`
 	Title     string    `json:"title"`
 	Content   string    `json:"content"`
@@ -71,7 +71,7 @@ type CommentRequest struct {
 }
 
 // 用户信息请求体
-type userInfoRequest struct {
+type UserInfoRequest struct {
 	Uid      int       `json:"uid"`
 	Avatar   string    `json:"avatar"`
 	Username string    `json:"username"`
@@ -83,7 +83,7 @@ type userInfoRequest struct {
 }
 
 // 题目信息请求体
-type problemInfoRequest struct {
+type ProblemInfoRequest struct {
 	Pid         int    `json:"pid"`
 	Difficulty  string `json:"difficulty"`
 	Title       string `json:"title"`
@@ -101,7 +101,7 @@ type TestCaseRequest struct {
 }
 
 // 管理员获取题目信息请求体
-type adminProblemInfoRequest struct {
+type AdminProblemInfoRequest struct {
 	Pid         int               `json:"pid"`
 	Difficulty  string            `json:"difficulty"`
 	Title       string            `json:"title"`

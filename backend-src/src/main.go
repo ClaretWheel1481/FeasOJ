@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"src/account"
+	"src/code"
+	"src/email"
+	"src/ginrouter"
+	"src/global"
+	"src/utils"
 
 	"github.com/gin-gonic/gin"
 )
-
-// 全局变量 - 本地配置文件路径
-var parentDir string
-var configsDir string
-var avatarsDir string
-var codeDir string
 
 func main() {
 	currentDir, err := os.Getwd()
@@ -21,27 +21,27 @@ func main() {
 		fmt.Println("[FeasOJ]获取目录失败，即将退出。")
 		return
 	}
-	parentDir = filepath.Dir(currentDir)
+	global.ParentDir = filepath.Dir(currentDir)
 	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
-	configsDir = filepath.Join(parentDir, "/configs")
+	global.ConfigsDir = filepath.Join(global.ParentDir, "/configs")
 	// 如果没有找到configs，则创建configs文件夹
-	if _, err := os.Stat(configsDir); os.IsNotExist(err) {
-		os.Mkdir(configsDir, os.ModePerm)
+	if _, err := os.Stat(global.ConfigsDir); os.IsNotExist(err) {
+		os.Mkdir(global.ConfigsDir, os.ModePerm)
 	}
 	// 创建存放头像文件夹
-	initAvatarFolder()
+	account.InitAvatarFolder()
 	// 创建存放代码文件夹
-	initCodeFolder()
+	code.InitCodeFolder()
 	// 初始化数据库连接配置
-	if initSql() {
+	if utils.InitSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
-	rdb := initRedis()
+	rdb := utils.InitRedis()
 	fmt.Println("[FeasOJ]Redis连接信息为:", rdb)
-	mcfg := initEmailConfig()
+	mcfg := email.InitEmailConfig()
 	fmt.Println("[FeasOJ]邮箱配置信息为:", mcfg)
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
@@ -52,16 +52,16 @@ func main() {
 	router := r.Group("/api/v1")
 	{
 		// 登录API
-		router.GET("/login", logins)
+		router.GET("/login", ginrouter.Logins)
 
 		// 获取验证码API
-		router.GET("/getCaptcha", getCaptchas)
+		router.GET("/getCaptcha", ginrouter.GetCaptchas)
 
 		// 校验TokenAPI
-		router.GET("/verifyToken", verifyTokens)
+		router.GET("/verifyToken", ginrouter.VerifyTokens)
 
 		// 获取用户信息API
-		router.GET("/getUserInfo", getUserInfos)
+		router.GET("/getUserInfo", ginrouter.GetUserInfos)
 
 		// 更新用户信息（非修改密码）API
 		// TODO:更新用户信息功能待实现、等待前端修改
@@ -72,65 +72,65 @@ func main() {
 		router.GET("/getCodeStatus")
 
 		// 获取所有题目API
-		router.GET("/getAllProblems", getAllProblemss)
+		router.GET("/getAllProblems", ginrouter.GetAllProblemss)
 
 		// 根据题目ID获取题目信息
-		router.GET("/getProblemInfo/:id", getProblemInfos)
+		router.GET("/getProblemInfo/:id", ginrouter.GetProblemInfos)
 
 		// 获取总提交记录API
-		router.GET("/getAllSubmitRecords", getAllSubmitRecordss)
+		router.GET("/getAllSubmitRecords", ginrouter.GetAllSubmitRecordss)
 
 		// 获取指定用户的提交记录API
-		router.GET("/getSubmitRecordsByUid/:uid", getSubmitRecordsByUids)
+		router.GET("/getSubmitRecordsByUid/:uid", ginrouter.GetSubmitRecordsByUids)
 
 		// 获取所有讨论帖子API
-		router.GET("/getAllDiscussions", getAllDiscussionss)
+		router.GET("/getAllDiscussions", ginrouter.GetAllDiscussionss)
 
 		// 获取指定Did的帖子API
-		router.GET("/getDiscussionByDid/:Did", getDiscussionByDids)
+		router.GET("/getDiscussionByDid/:Did", ginrouter.GetDiscussionByDids)
 
 		// 获取指定帖子的讨论API
-		router.GET("/getComment/:Did", getComments)
+		router.GET("/getComment/:Did", ginrouter.GetComments)
 
 		// 管理员获取指定题目的所有信息
-		router.GET("/getProblemAllInfo/:Pid", getProblemAllInfos)
+		router.GET("/getProblemAllInfo/:Pid", ginrouter.GetProblemAllInfos)
 	}
 
 	router2 := r.Group("/api/v2")
 	{
 		// 用户上传头像API
-		router2.POST("/uploadAvatar", uploadAvatars)
+		router2.POST("/uploadAvatar", ginrouter.UploadAvatars)
 
 		// 注册API
-		router2.POST("/register", registers)
+		router2.POST("/register", ginrouter.Registers)
 
 		// 密码修改API
-		router2.POST("/updatePassword", updatePasswords)
+		router2.POST("/updatePassword", ginrouter.UpdatePasswords)
 
 		// 创建讨论API
-		router2.POST("/addDiscussion", createDiscussion)
+		router2.POST("/addDiscussion", ginrouter.CreateDiscussion)
 
 		// 删除讨论API
-		router2.POST("/deleteDiscussion/:Did", deleteDiscussion)
+		router2.POST("/deleteDiscussion/:Did", ginrouter.DeleteDiscussion)
 
 		// 添加评论API
-		router2.POST("/addComment/:Did", addComments)
+		router2.POST("/addComment/:Did", ginrouter.AddComments)
 
 		// 删除评论API
-		router2.POST("/delComment/:Cid", delComments)
+		router2.POST("/delComment/:Cid", ginrouter.DelComments)
 
 		// 上传代码文件API
-		router2.POST("/uploadCode", uploadCodes)
+		router2.POST("/uploadCode", ginrouter.UploadCodes)
 
 		// 管理员更新题目信息API
-		router2.POST("/updateProblemInfo", updateProblemInfos)
+		router2.POST("/updateProblemInfo", ginrouter.UpdateProblemInfos)
 
 		// 管理员删除题目API
-		router2.POST("/delProblemAllInfo/:Pid", deleteProblems)
+		router2.POST("/delProblemAllInfo/:Pid", ginrouter.DeleteProblems)
 	}
 
 	// 头像http服务器
-	r.StaticFS("/avatar", http.Dir(avatarsDir))
+	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
 
 	fmt.Println("[FeasOJ]服务器已启动。")
 	fmt.Println("[FeasOJ]GETAPI：http://localhost:37881/api/v1/")

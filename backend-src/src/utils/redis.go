@@ -1,17 +1,19 @@
-package main
+package utils
 
 import (
 	"encoding/xml"
 	"fmt"
 	"os"
 	"path/filepath"
+	"src/global"
+	"src/structs"
 
 	"github.com/go-redis/redis"
 )
 
 // 写入Redis连接配置到redisconfig.xml中
-func inputRedisInfo() bool {
-	var config redisConfig
+func InputRedisInfo() bool {
+	var config structs.RedisConfig
 	fmt.Print("请输入Redis地址：")
 	fmt.Scanln(&config.Address)
 	fmt.Print("请输入Redis密码：")
@@ -20,14 +22,14 @@ func inputRedisInfo() bool {
 	if err != nil {
 		return false
 	}
-	filePath := filepath.Join(configsDir, "redisconfig.xml")
+	filePath := filepath.Join(global.ConfigsDir, "redisconfig.xml")
 	os.WriteFile(filePath, configXml, 0644)
 	return true
 }
 
-func loadRedisConfig() redisConfig {
-	filePath := filepath.Join(configsDir, "redisconfig.xml")
-	var config redisConfig
+func LoadRedisConfig() structs.RedisConfig {
+	filePath := filepath.Join(global.ConfigsDir, "redisconfig.xml")
+	var config structs.RedisConfig
 	configXml, err := os.ReadFile(filePath)
 	if err != nil {
 		return config
@@ -37,12 +39,12 @@ func loadRedisConfig() redisConfig {
 }
 
 // 连接到Redis
-func initRedis() *redis.Client {
-	filePath := filepath.Join(configsDir, "redisconfig.xml")
+func InitRedis() *redis.Client {
+	filePath := filepath.Join(global.ConfigsDir, "redisconfig.xml")
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		inputRedisInfo()
+		InputRedisInfo()
 	}
-	config := loadRedisConfig()
+	config := LoadRedisConfig()
 	rdb := redis.NewClient(&redis.Options{
 		Addr:     config.Address,
 		Password: config.Password,

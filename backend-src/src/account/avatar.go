@@ -1,17 +1,18 @@
-package main
+package account
 
 import (
 	"os"
 	"path/filepath"
+	"src/global"
 )
 
 // 创建存放头像的文件夹
-func initAvatarFolder() {
+func InitAvatarFolder() {
 	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
-	avatarsDir = filepath.Join(parentDir, "/avatars")
+	global.AvatarsDir = filepath.Join(global.ParentDir, "/avatars")
 	// 如果没找到avatars，则创建avatars文件夹
-	if _, err := os.Stat(avatarsDir); os.IsNotExist(err) {
-		os.Mkdir(avatarsDir, 0755)
+	if _, err := os.Stat(global.AvatarsDir); os.IsNotExist(err) {
+		os.Mkdir(global.AvatarsDir, 0755)
 	}
 }
 
