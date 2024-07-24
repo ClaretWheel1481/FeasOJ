@@ -106,42 +106,68 @@ func StartContainer() (string, error) {
 // TODO: 待测试 - 启动容器并编译运行文件、放入输入、捕获输出、对照输出
 func CompileAndRun(filename string) (bool, string) {
 	ext := filepath.Ext(filename)
-	var compileCmd, runCmd *exec.Cmd
+	var compileCmd *exec.Cmd
 
-	// FIXME: CPP输入异常、Java编译失败、Python找不到路径、Golang输入异常
+	// FIXME: Python找不到路径
 	switch ext {
 	case ".cpp":
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
 		if err := compileCmd.Run(); err != nil {
-			return false, "Compile error"
+			return false, "Compile Failed"
 		}
-		runCmd = exec.Command("docker", "exec", global.ContainerID, "/workspace/a.out")
-	case ".py":
-		runCmd = exec.Command("docker", "exec", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
-	case ".go":
-		runCmd = exec.Command("docker", "exec", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
+		// Java果然是我最讨厌的语言，没有之一!!!!
 	case ".java":
-		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", filename))
-		if err := compileCmd.Run(); err != nil {
-			return false, "Compile error"
+		// 临时重命名为Main.java
+		originalName := filename
+		tempName := "Main.java"
+		renameCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", originalName), fmt.Sprintf("/workspace/%s", tempName))
+		if err := renameCmd.Run(); err != nil {
+			return false, "Compile Failed"
 		}
-		className := strings.TrimSuffix(filepath.Base(filename), ".java")
-		runCmd = exec.Command("docker", "exec", global.ContainerID, "java", fmt.Sprintf("/workspace/%s", className))
-	default:
-		return false, "Compile error"
+
+		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", tempName))
+		output, err := compileCmd.CombinedOutput()
+		if err != nil {
+			fmt.Println("Error compiling Java code:", err)
+			fmt.Println("Compile output:", string(output))
+			return false, "Compile Failed"
+		}
+
+		// 编译完成后改回原名
+		renameBackCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", tempName), fmt.Sprintf("/workspace/%s", originalName))
+		if err := renameBackCmd.Run(); err != nil {
+			return false, "Compile Failed"
+		}
 	}
 	// 获取输入输出样例
 	testCases := utils.SelectTestCasesByPid(strings.Split(filename, "_")[1])
 	for _, testCase := range testCases {
-		fmt.Println(testCase.InputData)
+		var runCmd *exec.Cmd
+		switch ext {
+		case ".cpp":
+			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "/workspace/a.out")
+		case ".py":
+			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
+		case ".go":
+			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
+		case ".java":
+			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "java", "Main")
+		default:
+			return false, "Failed"
+		}
+
+		// TODO: 测试完成后记得把输出删除！！！
+		fmt.Println("Input Data:", testCase.InputData)
 		runCmd.Stdin = strings.NewReader(testCase.InputData)
-		output, err := runCmd.Output()
-		fmt.Println(strings.TrimSpace(string(output)))
+		output, err := runCmd.CombinedOutput()
+		fmt.Println(string(output))
 		if err != nil {
 			return false, "Failed"
 		}
-		if strings.TrimSpace(string(output)) != strings.TrimSpace(testCase.OutputData) {
-			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", string(output))
+		outputStr := string(output)
+		fmt.Println("Output:", outputStr)
+		if strings.TrimSpace(outputStr) != strings.TrimSpace(testCase.OutputData) {
+			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", outputStr)
 			return false, "Failed"
 		}
 	}
@@ -164,11 +190,6 @@ func TerminateContainer(containerID string) bool {
 	if err := cli.ContainerStop(ctx, containerID, container.StopOptions{}); err != nil {
 		panic(err)
 	}
-
-	// 删除容器
-	// if err := cli.ContainerRemove(ctx, containerID, container.RemoveOptions{}); err != nil {
-	// 	panic(err)
-	// }
 
 	return true
 }
