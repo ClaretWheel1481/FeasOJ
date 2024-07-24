@@ -78,6 +78,8 @@ const getResultStyle = (result) => {
       return 'color: green; font-weight: bold;';
     case 'Failed':
       return 'color: orange; font-weight: bold;';
+    case 'Wrong Answer':
+      return 'color: orange; font-weight: bold;';
     default:
       return '';
   }

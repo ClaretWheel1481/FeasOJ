@@ -159,8 +159,7 @@ func CompileAndRun(filename string) string {
 		}
 		outputStr := string(output)
 		if strings.TrimSpace(outputStr) != strings.TrimSpace(testCase.OutputData) {
-			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", outputStr)
-			return "Failed"
+			return "Wrong Answer"
 		}
 	}
 
