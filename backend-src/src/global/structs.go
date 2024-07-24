@@ -94,7 +94,7 @@ type ProblemInfoRequest struct {
 	Output      string `json:"output"`
 }
 
-// 提交代码请求体
+// 测试样例请求体
 type TestCaseRequest struct {
 	InputData  string `json:"input"`
 	OutputData string `json:"output"`

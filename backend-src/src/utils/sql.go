@@ -259,7 +259,14 @@ func DeleteCommentByCid(Cid int) bool {
 	return connectSql().Table("Comments").Where("Cid = ?", Cid).Delete(&global.Comment{}).Error == nil
 }
 
-// 获取指定题目所有输入输出样例
+// 获取指定题目的测试样例
+func SelectTestCasesByPid(pid string) []global.TestCaseRequest {
+	var testCases []global.TestCaseRequest
+	connectSql().Table("test_cases").Where("pid = ?", pid).Select("input_data,output_data").Find(&testCases)
+	return testCases
+}
+
+// 获取指定题目所有信息
 func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 	var problem global.Problem
 	var testCases []global.TestCaseRequest

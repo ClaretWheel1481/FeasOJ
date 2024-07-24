@@ -49,12 +49,12 @@ func main() {
 		fmt.Println("[FeasOJ]SandBox构建失败！")
 		return
 	}
-	if codehandler.StartContainer() {
-		fmt.Println("[FeasOJ]SandBox启动成功！")
-	} else {
-		fmt.Println("[FeasOJ]SandBox启动失败！")
-		return
-	}
+	// if codehandler.StartContainer() {
+	// 	fmt.Println("[FeasOJ]SandBox启动成功！")
+	// } else {
+	// 	fmt.Println("[FeasOJ]SandBox启动失败！")
+	// 	return
+	// }
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -147,6 +147,10 @@ func main() {
 	fmt.Println("[FeasOJ]服务已启动。")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 
+	// 实时检测Redis JudgeTask中是否有任务
+	rdb := utils.InitRedis()
+	go codehandler.ProcessJudgeTasks(rdb)
+
 	// 启动服务器
 	go func() {
 		if err := r.Run("0.0.0.0:37881"); err != nil {
@@ -160,7 +164,7 @@ func main() {
 		for scanner.Scan() {
 			if scanner.Text() == "quit" {
 				fmt.Println("[FeasOJ]正在关闭服务器....")
-				codehandler.TerminateContainer(global.ContainerID)
+				// codehandler.TerminateContainer(global.ContainerID)
 				os.Exit(0)
 			}
 		}

@@ -5,7 +5,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"src/global"
+	"src/utils"
+	"strings"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -54,14 +58,14 @@ func BuildImage() bool {
 }
 
 // 启动Docker容器
-func StartContainer() bool {
+func StartContainer() (string, error) {
 	// 创建context
 	ctx := context.Background()
 
 	// 创建Docker客户端
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 	fmt.Println("[FeasOJ]正在启动SandBox...")
 
@@ -81,27 +85,68 @@ func StartContainer() bool {
 		Binds: []string{
 			global.CodeDir + ":/workspace", // 绑定卷
 		},
+		AutoRemove: true, // 容器退出后自动删除
 	}
 
 	// 创建容器
 	resp, err := cli.ContainerCreate(ctx, containerConfig, hostConfig, nil, nil, "")
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	// 启动容器
 	if err := cli.ContainerStart(ctx, resp.ID, container.StartOptions{}); err != nil {
-		panic(err)
+		return "", err
 	}
 
-	out, err := cli.ContainerLogs(ctx, resp.ID, container.LogsOptions{ShowStdout: true})
-	if err != nil {
-		panic(err)
-	}
-	defer out.Close()
-	io.Copy(os.Stdout, out)
 	global.ContainerID = resp.ID
-	return true
+	return resp.ID, nil
+}
+
+// TODO: 待测试 - 启动容器并编译运行文件、放入输入、捕获输出、对照输出
+func CompileAndRun(filename string) (bool, string) {
+	ext := filepath.Ext(filename)
+	var compileCmd, runCmd *exec.Cmd
+
+	// FIXME: CPP输入异常、Java编译失败、Python找不到路径、Golang输入异常
+	switch ext {
+	case ".cpp":
+		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
+		if err := compileCmd.Run(); err != nil {
+			return false, "Compile error"
+		}
+		runCmd = exec.Command("docker", "exec", global.ContainerID, "/workspace/a.out")
+	case ".py":
+		runCmd = exec.Command("docker", "exec", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
+	case ".go":
+		runCmd = exec.Command("docker", "exec", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
+	case ".java":
+		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", filename))
+		if err := compileCmd.Run(); err != nil {
+			return false, "Compile error"
+		}
+		className := strings.TrimSuffix(filepath.Base(filename), ".java")
+		runCmd = exec.Command("docker", "exec", global.ContainerID, "java", fmt.Sprintf("/workspace/%s", className))
+	default:
+		return false, "Compile error"
+	}
+	// 获取输入输出样例
+	testCases := utils.SelectTestCasesByPid(strings.Split(filename, "_")[1])
+	for _, testCase := range testCases {
+		fmt.Println(testCase.InputData)
+		runCmd.Stdin = strings.NewReader(testCase.InputData)
+		output, err := runCmd.Output()
+		fmt.Println(strings.TrimSpace(string(output)))
+		if err != nil {
+			return false, "Failed"
+		}
+		if strings.TrimSpace(string(output)) != strings.TrimSpace(testCase.OutputData) {
+			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", string(output))
+			return false, "Failed"
+		}
+	}
+
+	return true, "Success"
 }
 
 // 终止并删除Docker容器
@@ -121,9 +166,9 @@ func TerminateContainer(containerID string) bool {
 	}
 
 	// 删除容器
-	if err := cli.ContainerRemove(ctx, containerID, container.RemoveOptions{}); err != nil {
-		panic(err)
-	}
+	// if err := cli.ContainerRemove(ctx, containerID, container.RemoveOptions{}); err != nil {
+	// 	panic(err)
+	// }
 
 	return true
 }

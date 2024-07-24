@@ -37,7 +37,7 @@ func LoadRedisConfig() global.RedisConfig {
 	return config
 }
 
-// 连接到Redis
+// 连接到Redis并返回redis.Client对象
 func InitRedis() *redis.Client {
 	filePath := filepath.Join(global.ConfigsDir, "redisconfig.xml")
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {

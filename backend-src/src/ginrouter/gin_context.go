@@ -259,6 +259,14 @@ func UploadCodes(c *gin.Context) {
 	if err := c.SaveUploadedFile(file, "../codefiles/"+file.Filename); err != nil {
 		return
 	}
+
+	// TODO: 上传任务至Redis任务队列
+	rdb := utils.InitRedis()
+	err = rdb.RPush("judgeTask", file.Filename).Err()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码上传成功。"})
 }
 
