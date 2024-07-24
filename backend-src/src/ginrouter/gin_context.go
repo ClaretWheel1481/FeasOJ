@@ -260,7 +260,7 @@ func UploadCodes(c *gin.Context) {
 		return
 	}
 
-	// TODO: 上传任务至Redis任务队列
+	// 上传任务至Redis任务队列
 	rdb := utils.InitRedis()
 	err = rdb.RPush("judgeTask", file.Filename).Err()
 	if err != nil {

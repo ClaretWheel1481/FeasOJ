@@ -103,12 +103,11 @@ func StartContainer() (string, error) {
 	return resp.ID, nil
 }
 
-// TODO: 待测试 - 启动容器并编译运行文件、放入输入、捕获输出、对照输出
+// 启动容器并编译运行文件、放入输入、捕获输出、对照输出
 func CompileAndRun(filename string) (bool, string) {
 	ext := filepath.Ext(filename)
 	var compileCmd *exec.Cmd
 
-	// FIXME: Python找不到路径
 	switch ext {
 	case ".cpp":
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
@@ -126,10 +125,7 @@ func CompileAndRun(filename string) (bool, string) {
 		}
 
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", tempName))
-		output, err := compileCmd.CombinedOutput()
-		if err != nil {
-			fmt.Println("Error compiling Java code:", err)
-			fmt.Println("Compile output:", string(output))
+		if err := compileCmd.Run(); err != nil {
 			return false, "Compile Failed"
 		}
 
@@ -156,16 +152,12 @@ func CompileAndRun(filename string) (bool, string) {
 			return false, "Failed"
 		}
 
-		// TODO: 测试完成后记得把输出删除！！！
-		fmt.Println("Input Data:", testCase.InputData)
 		runCmd.Stdin = strings.NewReader(testCase.InputData)
 		output, err := runCmd.CombinedOutput()
-		fmt.Println(string(output))
 		if err != nil {
 			return false, "Failed"
 		}
 		outputStr := string(output)
-		fmt.Println("Output:", outputStr)
 		if strings.TrimSpace(outputStr) != strings.TrimSpace(testCase.OutputData) {
 			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", outputStr)
 			return false, "Failed"
