@@ -1,6 +1,6 @@
 <!-- 首页 -->
 <script setup>
-import { VCard, VCarousel, VCarouselItem } from 'vuetify/lib/components/index.mjs';
+import { VCard, VExpansionPanel } from 'vuetify/lib/components/index.mjs';
 </script>
 
 <template>
@@ -8,12 +8,18 @@ import { VCard, VCarousel, VCarouselItem } from 'vuetify/lib/components/index.mj
         <v-img src="/logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
         <h1>FeasOJ</h1>
     </div>
-    <!-- TODO:轮播图组件待处理 -->
-    <v-card rounded="xl" style="margin: 50px;" elevation="10">
-        <v-carousel show-arrows="hover">
-            <v-carousel-item src="https://cdn.vuetifyjs.com/images/cards/docks.jpg" cover></v-carousel-item>
-            <v-carousel-item src="https://cdn.vuetifyjs.com/images/cards/hotel.jpg" cover></v-carousel-item>
-        </v-carousel>
+    <v-card rounded="xl" style="margin: 50px;" elevation="5">
+        <v-expansion-panels>
+            <v-expansion-panel
+                title="说明"
+                text="1.FeasOJ支持Python、C++、Golang、Java
+                2.若遇到Bug，欢迎来Github提交Issue或者提交代码帮我修复(
+                3.第一次写这种项目，写得不好的地方欢迎指正
+                4.还有小部分功能未实现（如用户管理、竞赛）"
+                style="white-space: pre-line;"
+            >
+            </v-expansion-panel>
+        </v-expansion-panels>
     </v-card>
 </template>
 

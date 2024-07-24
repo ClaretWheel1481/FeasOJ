@@ -83,7 +83,7 @@ func StartContainer() (string, error) {
 			NanoCPUs: 2 * 1e9,            // CPU限制为2核
 		},
 		Binds: []string{
-			global.CodeDir + ":/workspace", // 绑定卷
+			global.CodeDir + ":/workspace", // 挂载文件夹
 		},
 		AutoRemove: true, // 容器退出后自动删除
 	}
