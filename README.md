@@ -10,17 +10,17 @@ English | [简体中文](README_CN.md)
 ### How to run
 
 1. Clone this repository.
-2. Run `npm install -g pnpm` Install Pnpm.
-3. Run `pnpm i` Install dependencies.
-4. Run `pnpm dev` to start the front-end server.
-5. Run `cd backend-src\src` and `go mod tiny` to get the dependencies.
-6. Run `go run main.go` to start the backend server.
+2. Install Docker.
+3. Run `npm install -g pnpm` Install Pnpm.
+4. Run `pnpm i` Install dependencies.
+5. Run `pnpm dev` to start the front-end server.
+6. Run `cd backend-src\src` and `go mod tiny` to get the dependencies.
+7. Run `go run main.go` to start the backend server.
 
 ### TODO LIST
 
 1. Add Token Checksums to every API.
 2. Save Token to Cookies.
-3. Judge Core
 
 ### Notice
 
