@@ -38,6 +38,20 @@ const fetchData = async () => {
   }
 }
 
+// 根据结果不同显示不同颜色
+const getResultStyle = (result) => {
+  switch (result) {
+    case 'Compile Failed':
+      return 'color: red; font-weight: bold;';
+    case 'Success':
+      return 'color: green; font-weight: bold;';
+    case 'Failed':
+      return 'color: orange; font-weight: bold;';
+    default:
+      return '';
+  }
+};
+
 // 点击题目跳转
 const handleRowClick = (row) => {
   router.push({ path: `/problem/${row}` })
@@ -64,17 +78,20 @@ onMounted(async () => {
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
       :loading="loading" loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
       :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有状态数据。'">
-      <template v-slot:item="{ item }">
-        <tr>
-          <td class="tabletitle">
-            <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
-          </td>
-          <td>{{ item.Uid }}</td>
-          <td>{{ item.Result }}</td>
-          <td>{{ item.Language }}</td>
-          <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
-        </tr>
-      </template>
+        <template v-slot:item="{ item }">
+          <tr>
+            <td class="tabletitle">
+              <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+            </td>
+            <td>{{ item.Uid }}</td>
+            <td v-if="item.Result === 'Running...'" colspan="1">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            </td>
+            <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
+            <td>{{ item.Language }}</td>
+            <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
+          </tr>
+        </template>
     </v-data-table-server>
   </v-card>
 </template>

@@ -69,6 +69,20 @@ const fetchData = async () => {
   }
 }
 
+// 根据结果不同显示不同颜色
+const getResultStyle = (result) => {
+  switch (result) {
+    case 'Compile Failed':
+      return 'color: red; font-weight: bold;';
+    case 'Success':
+      return 'color: green; font-weight: bold;';
+    case 'Failed':
+      return 'color: orange; font-weight: bold;';
+    default:
+      return '';
+  }
+};
+
 // 检验获取用户信息
 onMounted(async () => {
   loading.value = true;
@@ -142,7 +156,10 @@ onMounted(async () => {
             <td class="tabletitle">
               <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
             </td>
-            <td>{{ item.Result }}</td>
+            <td v-if="item.Result === 'Running...'" colspan="1">
+                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            </td>
+            <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
             <td>{{ item.Language }}</td>
             <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
           </tr>

@@ -144,7 +144,7 @@ type SubmitRecord struct {
 	Sid      int       `gorm:"comment:提交ID;primaryKey;autoIncrement"`
 	Pid      int       `gorm:"comment:题目ID"`
 	Uid      int       `gorm:"comment:用户ID;not null"`
-	Result   string    `gorm:"comment:结果;not null"`
+	Result   string    `gorm:"comment:结果;"`
 	Time     time.Time `gorm:"comment:时间;not null"`
 	Language string    `gorm:"comment:语言;not null"`
 }

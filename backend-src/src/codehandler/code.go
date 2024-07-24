@@ -5,6 +5,9 @@ import (
 	"os"
 	"path/filepath"
 	"src/global"
+	"src/utils"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -27,18 +30,29 @@ func ProcessJudgeTasks(rdb *redis.Client) {
 		task, err := rdb.LPop("judgeTask").Result()
 		if err == redis.Nil {
 			// 如果队列为空，等待一段时间后再检查
-			time.Sleep(1 * time.Second)
+			time.Sleep(2 * time.Second)
 			continue
 		} else if err != nil {
-			fmt.Println("Error retrieving task from Redis:", err)
+			fmt.Println(err)
 			continue
 		}
 
 		// 执行任务
 		StartContainer()
-		status, strings := CompileAndRun(task)
-		fmt.Println(status, strings)
+		str := CompileAndRun(task)
+		// 将结果从数据库中修改
+		parts := strings.Split(task, "_")
+		uid := parts[0]
+		pid := strings.Split(parts[1], ".")[0]
+		uidInt, err := strconv.Atoi(uid)
+		if err != nil {
+			fmt.Println(err)
+		}
+		pidInt, err := strconv.Atoi(pid)
+		if err != nil {
+			fmt.Println(err)
+		}
+		utils.ModifyJudgeStatus(uidInt, pidInt, str)
 		TerminateContainer(global.ContainerID)
-		// 这里可以将结果返回至前端，具体实现取决于你的需求
 	}
 }

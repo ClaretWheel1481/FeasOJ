@@ -240,6 +240,11 @@ func UploadCodes(c *gin.Context) {
 		return
 	}
 	problem := c.Query("problem")
+	pidInt, err := strconv.Atoi(problem)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取题目ID。"})
+		return
+	}
 	encodedUsername := c.GetHeader("username")
 	username, err := url.QueryUnescape(encodedUsername)
 	if err != nil {
@@ -259,6 +264,18 @@ func UploadCodes(c *gin.Context) {
 	if err := c.SaveUploadedFile(file, "../codefiles/"+file.Filename); err != nil {
 		return
 	}
+	var language string
+	if path.Ext(file.Filename) == ".cpp" {
+		language = "C++"
+	} else if path.Ext(file.Filename) == ".java" {
+		language = "Java"
+	} else if path.Ext(file.Filename) == ".py" {
+		language = "Python"
+	} else if path.Ext(file.Filename) == ".go" {
+		language = "Go"
+	} else {
+		language = "Unknown"
+	}
 
 	// 上传任务至Redis任务队列
 	rdb := utils.InitRedis()
@@ -267,7 +284,8 @@ func UploadCodes(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码上传成功。"})
+	utils.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language)
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码提交成功，请等候判题结果。"})
 }
 
 // 管理员获取指定题目所有信息

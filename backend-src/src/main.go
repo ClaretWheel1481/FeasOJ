@@ -43,12 +43,6 @@ func main() {
 	}
 	utils.InitRedis()
 	utils.InitEmailConfig()
-	if codehandler.BuildImage() {
-		fmt.Println("[FeasOJ]SandBox构建成功！")
-	} else {
-		fmt.Println("[FeasOJ]SandBox构建失败！")
-		return
-	}
 	// if codehandler.StartContainer() {
 	// 	fmt.Println("[FeasOJ]SandBox启动成功！")
 	// } else {
@@ -143,7 +137,12 @@ func main() {
 
 	// 头像http服务器
 	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
-
+	if codehandler.BuildImage() {
+		fmt.Println("[FeasOJ]SandBox构建成功！")
+	} else {
+		fmt.Println("[FeasOJ]SandBox构建失败！")
+		return
+	}
 	fmt.Println("[FeasOJ]服务已启动。")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 

@@ -104,7 +104,7 @@ func StartContainer() (string, error) {
 }
 
 // 启动容器并编译运行文件、放入输入、捕获输出、对照输出
-func CompileAndRun(filename string) (bool, string) {
+func CompileAndRun(filename string) string {
 	ext := filepath.Ext(filename)
 	var compileCmd *exec.Cmd
 
@@ -112,7 +112,7 @@ func CompileAndRun(filename string) (bool, string) {
 	case ".cpp":
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
 		if err := compileCmd.Run(); err != nil {
-			return false, "Compile Failed"
+			return "Compile Failed"
 		}
 		// Java果然是我最讨厌的语言，没有之一!!!!
 	case ".java":
@@ -121,18 +121,18 @@ func CompileAndRun(filename string) (bool, string) {
 		tempName := "Main.java"
 		renameCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", originalName), fmt.Sprintf("/workspace/%s", tempName))
 		if err := renameCmd.Run(); err != nil {
-			return false, "Compile Failed"
+			return "Compile Failed"
 		}
 
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", tempName))
 		if err := compileCmd.Run(); err != nil {
-			return false, "Compile Failed"
+			return "Compile Failed"
 		}
 
 		// 编译完成后改回原名
 		renameBackCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", tempName), fmt.Sprintf("/workspace/%s", originalName))
 		if err := renameBackCmd.Run(); err != nil {
-			return false, "Compile Failed"
+			return "Compile Failed"
 		}
 	}
 	// 获取输入输出样例
@@ -149,22 +149,22 @@ func CompileAndRun(filename string) (bool, string) {
 		case ".java":
 			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "java", "Main")
 		default:
-			return false, "Failed"
+			return "Failed"
 		}
 
 		runCmd.Stdin = strings.NewReader(testCase.InputData)
 		output, err := runCmd.CombinedOutput()
 		if err != nil {
-			return false, "Failed"
+			return "Failed"
 		}
 		outputStr := string(output)
 		if strings.TrimSpace(outputStr) != strings.TrimSpace(testCase.OutputData) {
 			fmt.Println("Test case failed. Expected:", testCase.OutputData, "Got:", outputStr)
-			return false, "Failed"
+			return "Failed"
 		}
 	}
 
-	return true, "Success"
+	return "Success"
 }
 
 // 终止并删除Docker容器
