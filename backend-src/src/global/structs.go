@@ -8,7 +8,6 @@ type SqlConfig struct {
 	DbUser     string `xml:"dbuser"`
 	DbPassword string `xml:"dbpassword"`
 	DbAddress  string `xml:"dbaddress"`
-	DbPort     string `xml:"dbport"`
 }
 
 // Redis数据连接信息
