@@ -194,8 +194,14 @@ func GetSubmitRecordsByUids(c *gin.Context) {
 
 // 获取所有讨论列表
 func GetAllDiscussionss(c *gin.Context) {
-	discussions := utils.SelectDiscussList()
-	c.JSON(http.StatusOK, gin.H{"discussions": discussions})
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "12"))
+
+	discussions, total := utils.SelectDiscussList(page, itemsPerPage)
+	c.JSON(http.StatusOK, gin.H{
+		"discussions": discussions,
+		"total":       total,
+	})
 }
 
 // 获取指定id讨论信息

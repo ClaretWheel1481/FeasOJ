@@ -203,14 +203,19 @@ func SelectAllSubmitRecords() []global.SubmitRecord {
 }
 
 // 获取讨论列表
-func SelectDiscussList() []global.DiscussRequest {
+func SelectDiscussList(page int, itemsPerPage int) ([]global.DiscussRequest, int) {
 	var discussRequests []global.DiscussRequest
-	connectSql().Table("Discussions").
-		Select("Discussions.Did,Discussions.Title, Users.Username, Discussions.Create_at").
+	var total int64
+
+	db := connectSql().Table("Discussions").
+		Select("Discussions.Did, Discussions.Title, Users.Username, Discussions.Create_at").
 		Joins("JOIN Users ON Discussions.Uid = Users.Uid").
-		Order("Discussions.Create_at desc").
-		Find(&discussRequests)
-	return discussRequests
+		Order("Discussions.Create_at desc")
+
+	db.Count(&total) // 获取总讨论数
+	db.Offset((page - 1) * itemsPerPage).Limit(itemsPerPage).Find(&discussRequests)
+
+	return discussRequests, int(total)
 }
 
 // 获取指定Did的讨论以及User表中发帖人的头像

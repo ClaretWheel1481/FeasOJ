@@ -3,7 +3,7 @@
 import { VCard, VDataTableServer, VBtn, VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed,watch } from 'vue'
 import { getAllDis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token } from '../utils/account';
@@ -15,9 +15,11 @@ const headers = ref([
 ])
 
 const router = useRouter()
-
+// 用作分页
+const itemsPerPage = ref(12)
+const page = ref(1)
 const discuss = ref([])
-const allDiscuss = ref(0)
+const discussCount = ref(0)
 const loading = ref(true)
 
 // 计算属性来判断用户是否已经登录
@@ -27,9 +29,9 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllDis();
+    const response = await getAllDis(page.value,itemsPerPage.value);
     discuss.value = response.data.discussions
-    allDiscuss.value = discuss.value.length
+    discussCount.value = response.data.total
   } catch (error) {
     showAlert('错误，未找到数据！', '/discussion')
   } finally {
@@ -41,6 +43,11 @@ const fetchData = async () => {
 const handleRowClick = (row) => {
   router.push({ path: `/discussion/${row}` })
 }
+
+// 监听分页变化
+watch(page, async () => {
+  await fetchData()
+})
 
 // 初始化数据
 onMounted(async () => {
@@ -60,8 +67,8 @@ onMounted(async () => {
     <h1>讨论</h1>
   </div>
   <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
-    <v-data-table-server :headers="headers" :items="discuss" :items-length="allDiscuss" :loading="loading"
-      loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
+    <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"
+      loading-text="加载中..." @update="fetchData" :hide-default-footer="true" :items-per-page="itemsPerPage" v-model:page="page"
       :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '当前无帖子数据'">
       <template v-slot:item="{ item }">
         <tr>
@@ -71,6 +78,9 @@ onMounted(async () => {
           <td>{{ item.username }}</td>
           <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
         </tr>
+      </template>
+      <template v-slot:bottom>
+        <v-pagination v-model="page" :length="Math.ceil(discussCount / itemsPerPage)" rounded="xl"/>
       </template>
     </v-data-table-server>
   </v-card>

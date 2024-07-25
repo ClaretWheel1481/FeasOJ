@@ -41,6 +41,7 @@ const editorToolbar = [
   'link',
   'katex',
 ];
+
 // 用作分页
 const itemsPerPage = 5; 
 const totalPages = computed(() => {
@@ -203,7 +204,7 @@ const deleteDis = async () => {
             :length="totalPages"
             @input="onPageChange"
             rounded="xl"
-            ></v-pagination>
+            />
         </v-card>
     </div>
 </template>

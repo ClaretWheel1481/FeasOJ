@@ -56,8 +56,13 @@ export const getPbDetails = async (Pid) => {
 }
 
 // 获取讨论列表
-export const getAllDis = async () => {
-    return await axios.get(`${apiUrl}/v1/getAllDiscussions`)
+export const getAllDis = async (page,itemsPerPage) => {
+    return await axios.get(`${apiUrl}/v1/getAllDiscussions`,{
+        params: {
+            page: page,
+            itemsPerPage: itemsPerPage
+        }
+    })
 }
 
 // 获取讨论详细信息
