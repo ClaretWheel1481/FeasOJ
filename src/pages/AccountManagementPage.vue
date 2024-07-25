@@ -13,10 +13,28 @@ const userPrivilege = ref("")
 const users = ref([])
 const totalUsers = ref(0)
 const searchQuery = ref('')
+
+const getMenus = (item) => {
+  let filteredMenus = [
+    { title: '查看详情', icon: 'mdi-account' }
+  ]
+  if (!item.isBan) {
+    filteredMenus.push({ title: '封禁用户', icon: 'mdi-account-off' })
+  } else {
+    filteredMenus.push({ title: '解封用户', icon: 'mdi-account-check' })
+  }
+  if (item.role === 1) {
+    filteredMenus.push({ title: '降级为普通用户', icon: 'mdi-account-minus' })
+  } else {
+    filteredMenus.push({ title: '提升为管理员', icon: 'mdi-account-plus' })
+  }
+  return filteredMenus
+}
+
 const headers = ref([
     { title: 'UID', value: 'uid', align: 'center' },
     { title: '用户名', value: 'username', align: 'center' },
-    { title: '邮箱',value: 'email', align: 'center' },
+    { title: '邮箱', value: 'email', align: 'center' },
     { title: '角色', value: 'role', align: 'center' },
     { title: '注册时间', value: 'registerTime', align: 'center' },
     { title: '状态', value: 'status', align: 'center' },
@@ -29,6 +47,11 @@ const filteredUsers = computed(() => {
         user.username.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
 })
+
+// 根据结果不同显示不同颜色
+const getStatusStyle = (status) => {
+    return status ? 'color: red; font-weight: bold;' : 'color: green; font-weight: bold;';
+};
 
 // 获取数据
 const fetchData = async () => {
@@ -84,10 +107,23 @@ onMounted(async () => {
                 <td>{{ item.email }}</td>
                 <td>{{ item.role === 1 ? '管理员' : '普通用户' }}</td>
                 <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
-                <td>{{ item.is_ban ? '封禁' : '正常' }}</td>
+                <td :style="getStatusStyle(item.isBan)">{{ item.isBan ? '封禁' : '正常' }}</td>
                 <td>
-                    <v-btn v-if="!item.is_ban" variant="text" @click="" icon="mdi-account-off"></v-btn>
-                    <v-btn variant="text" @click="" icon="mdi-dots-horizontal"></v-btn>
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" variant="text" @click="" icon="mdi-dots-horizontal"></v-btn>
+                        </template>
+                        <v-list>
+                            <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index">
+                                <template v-slot:default="{ active, toggle }">
+                                    <div class="d-flex align-center">
+                                        <v-icon :icon="menu.icon" class="me-2"></v-icon>
+                                        <v-list-item-title>{{ menu.title }}</v-list-item-title>
+                                    </div>
+                                </template>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </td>
             </tr>
         </template>
@@ -96,8 +132,8 @@ onMounted(async () => {
 
 <style scoped>
 .searchbar {
-  position: sticky;
-  top: 0;
-  z-index: 100;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 </style>
