@@ -52,11 +52,11 @@ const handleRowClick = (row) => {
 const difficultyColor = (difficulty) => {
   switch (difficulty) {
     case '简单':
-      return 'easy';
+      return 'font-weight: bold;color: green;';
     case '中等':
-      return 'medium';
+      return 'font-weight: bold;color: orange;';
     case '困难':
-      return 'hard';
+      return 'font-weight: bold;color: red;';
     default:
       return '';
   }
@@ -89,7 +89,7 @@ onMounted(async () => {
         <td class="tabletitle">
           <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
         </td>
-        <td :class="difficultyColor(item.Difficulty)">{{ item.Difficulty }}</td>
+        <td :style="difficultyColor(item.Difficulty)">{{ item.Difficulty }}</td>
       </tr>
     </template>
   </v-data-table-server>
@@ -108,20 +108,5 @@ onMounted(async () => {
   position: sticky;
   top: 0;
   z-index: 100;
-}
-
-.easy {
-  font-weight: bold;
-  color: green;
-}
-
-.medium {
-  font-weight: bold;
-  color: orange;
-}
-
-.hard {
-  font-weight: bold;
-  color: red;
 }
 </style>

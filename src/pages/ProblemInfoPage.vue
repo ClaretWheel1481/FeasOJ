@@ -123,7 +123,7 @@ const uploadContentAsFile = async () => {
                         <v-select label="选择语言" v-model="lang" :items="['python', 'c_cpp', 'golang', 'java']"
                             variant="solo-filled"></v-select>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
-                            style="height: 800px;font-size: 16px;" />
+                            style="height: 800px;font-size: 14px;" />
                     </v-card>
                     <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">提交</v-btn>
                 </v-col>
