@@ -98,8 +98,11 @@ func main() {
 		// 获取指定帖子的讨论API
 		router.GET("/getComment/:Did", ginrouter.GetComments)
 
-		// 管理员获取指定题目的所有信息
+		// 管理员获取指定题目的所有信息API
 		router.GET("/getProblemAllInfo/:Pid", ginrouter.GetProblemAllInfos)
+
+		// 管理员获取所有用户信息API
+		router.GET("/getAllUserInfo", ginrouter.GetAllUsersInfos)
 	}
 
 	router2 := r.Group("/api/v2")

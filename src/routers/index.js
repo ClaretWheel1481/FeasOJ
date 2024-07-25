@@ -87,13 +87,19 @@ const routes = [
         path: '/discussion/:Did',
         component: () => import('../pages/DiscussionDetailsPage.vue'),
         meta: {
-            title: 'Discussion'
+            title: 'FeasOJ - 讨论'
         },
     },
     {
         path: '/psm', component: () => import('../pages/ProblemsetManagementPage.vue'),
         meta: {
             title: 'FeasOJ - 题目管理'
+        }
+    },
+    {
+        path: '/am', component: () => import('../pages/AccountManagementPage.vue'),
+        meta: {
+            title: 'FeasOJ - 用户管理'
         }
     },
     {

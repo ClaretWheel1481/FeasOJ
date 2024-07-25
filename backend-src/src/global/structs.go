@@ -79,6 +79,7 @@ type UserInfoRequest struct {
 	Score    int       `json:"score"`
 	CreateAt time.Time `json:"create_at"`
 	Role     int       `json:"role"`
+	IsBan    bool      `json:"isBan"`
 }
 
 // 题目信息请求体
@@ -124,6 +125,7 @@ type User struct {
 	CreateAt    time.Time `gorm:"comment:创建时间;not null"`
 	Role        int       `gorm:"comment:角色;not null"` // 0: 普通用户, 1: 管理员
 	TokenSecret string    `gorm:"comment:token密钥;not null"`
+	IsBan       bool      `gorm:"comment:是否被封禁;not null"`
 }
 
 // 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history

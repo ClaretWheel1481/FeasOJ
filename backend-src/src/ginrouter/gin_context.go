@@ -373,6 +373,27 @@ func DeleteProblems(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
 }
 
+// 管理员获取所有用户信息
+func GetAllUsersInfos(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
+	token := c.GetHeader("Authorization")
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if utils.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	usersInfo := utils.GetAllUsersInfo()
+	c.JSON(http.StatusOK, gin.H{"usersInfo": usersInfo})
+}
+
 // 获取指定讨论的评论
 func GetComments(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")

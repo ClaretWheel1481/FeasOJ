@@ -107,7 +107,7 @@ func InitSql() bool {
 // 注册用户添加至数据库
 func Register(username, password, email, tokensecret string, role int) bool {
 	time := time.Now()
-	err := connectSql().Create(&global.User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret}).Error
+	err := connectSql().Create(&global.User{Username: username, Password: password, Email: email, CreateAt: time, Role: role, TokenSecret: tokensecret, IsBan: false}).Error
 	return err == nil
 }
 
@@ -386,4 +386,11 @@ func ModifyJudgeStatus(Uid, Pid int, Result string) bool {
 	// 将result为Running...的记录修改为返回状态
 	err := connectSql().Table("submit_records").Where("uid = ? AND pid = ? AND result = ?", Uid, Pid, "Running...").Update("result", Result)
 	return err == nil
+}
+
+// 获取所有用户信息
+func GetAllUsersInfo() []global.UserInfoRequest {
+	var usersInfo []global.UserInfoRequest
+	connectSql().Table("users").Find(&usersInfo)
+	return usersInfo
 }

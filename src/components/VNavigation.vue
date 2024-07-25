@@ -88,6 +88,15 @@ onMounted(async () => {
       <v-list-item
         v-if="privilege === 1"
         rounded="xl"
+        prepend-icon="mdi-account"
+        title="用户管理"
+        @click="router.push('/am')"
+        value="account"
+        base-color="primary"
+      ></v-list-item>
+      <v-list-item
+        v-if="privilege === 1"
+        rounded="xl"
         prepend-icon="mdi-file"
         title="题目管理"
         @click="router.push('/psm')"

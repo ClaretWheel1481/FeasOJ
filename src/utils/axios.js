@@ -95,6 +95,16 @@ export const getProblemAllInfoByAdmin = async (pid, username, token) => {
     })
 }
 
+// 获取所有用户信息
+export const getAllUsersInfo = async(username,token) => {
+    return await axios.get(`${apiUrl}/v1/getAllUserInfo`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
 //    POST请求
 
 // 注册
