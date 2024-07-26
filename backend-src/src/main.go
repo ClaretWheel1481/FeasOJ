@@ -18,12 +18,8 @@ import (
 )
 
 func main() {
-	currentDir, err := os.Getwd()
-	if err != nil {
-		fmt.Println("[FeasOJ]获取目录失败，即将退出。")
-		return
-	}
-	global.ParentDir = filepath.Dir(currentDir)
+	global.CurrentDir, _ = os.Getwd()
+	global.ParentDir = filepath.Dir(global.CurrentDir)
 	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
 	global.ConfigsDir = filepath.Join(global.ParentDir, "/configs")
 	// 如果没有找到configs，则创建configs文件夹

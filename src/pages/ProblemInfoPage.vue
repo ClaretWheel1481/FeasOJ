@@ -53,6 +53,20 @@ const langFileExtension = {
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
+// 代码上传
+const uploadContentAsFile = async () => {
+    const blob = new Blob([content.value], { type: 'text/plain' });
+    const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
+    try {
+        const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
+        if (uploadResp.status === 200) {
+            showAlert('提交成功', "reload")
+        }
+    } catch (error) {
+        showAlert('提交代码时发生错误。', "");
+    }
+};
+
 onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
@@ -75,20 +89,6 @@ onMounted(async () => {
         content.value = templates[newLang];
     });
 });
-
-// 代码上传
-const uploadContentAsFile = async () => {
-    const blob = new Blob([content.value], { type: 'text/plain' });
-    const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
-    try {
-        const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
-        if (uploadResp.status === 200) {
-            showAlert('提交成功', "reload")
-        }
-    } catch (error) {
-        showAlert('提交代码时发生错误。', "");
-    }
-};
 </script>
 
 <template>

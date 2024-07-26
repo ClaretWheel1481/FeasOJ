@@ -5,7 +5,7 @@ import { VCard, VExpansionPanel } from 'vuetify/lib/components/index.mjs';
 
 <template>
     <div class="title">
-        <v-img src="/src/assets/logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
+        <v-img src="logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
         <h1>FeasOJ</h1>
     </div>
     <v-card rounded="xl" style="margin: 50px;" elevation="5">
