@@ -30,6 +30,7 @@ const userLoggedIn = computed(() => !!token.value)
 const logout = () => {
   localStorage.clear();
   window.location = '#/';
+  window.location.reload();
 };
 
 // 点击题目跳转

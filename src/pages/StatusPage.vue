@@ -64,7 +64,8 @@ onMounted(async () => {
   if (!userLoggedIn.value) {
     loading.value = false;
     setTimeout(() => {
-      router.push({ path: '/login' })
+      window.location = '#/login'
+      window.location.reload()
     }, 2000);
     return;
   }
