@@ -43,12 +43,6 @@ func main() {
 	}
 	utils.InitRedis()
 	utils.InitEmailConfig()
-	// if codehandler.StartContainer() {
-	// 	fmt.Println("[FeasOJ]SandBox启动成功！")
-	// } else {
-	// 	fmt.Println("[FeasOJ]SandBox启动失败！")
-	// 	return
-	// }
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -63,19 +57,12 @@ func main() {
 		// 获取验证码API
 		router.GET("/getCaptcha", ginrouter.GetCaptchas)
 
-		// 校验TokenAPI
-		router.GET("/verifyToken", ginrouter.VerifyTokens)
-
 		// 获取用户信息API
 		router.GET("/getUserInfo", ginrouter.GetUserInfos)
 
 		// 更新用户信息（非修改密码）API
 		// TODO:更新用户信息功能待实现、等待前端修改
 		router.GET("/updateUserInfo")
-
-		// 从消息队列中获取代码运行状态API
-		// TODO:等待获取代码运行状态功能实现、消息队列实现
-		router.GET("/getCodeStatus")
 
 		// 获取所有题目API
 		router.GET("/getAllProblems", ginrouter.GetAllProblemss)
@@ -156,7 +143,7 @@ func main() {
 	// 启动服务器
 	go func() {
 		if err := r.Run("0.0.0.0:37881"); err != nil {
-			fmt.Printf("Server exited with error: %v\n", err)
+			fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
 		}
 	}()
 
@@ -166,7 +153,6 @@ func main() {
 		for scanner.Scan() {
 			if scanner.Text() == "quit" {
 				fmt.Println("[FeasOJ]正在关闭服务器....")
-				// codehandler.TerminateContainer(global.ContainerID)
 				os.Exit(0)
 			}
 		}

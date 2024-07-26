@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, getUserInfo, verifyJWT } from '../utils/axios';
+import { getAllUsersInfo, getUserInfo } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token, userName } from '../utils/account'
 import { VBtn } from 'vuetify/components';
@@ -74,14 +74,13 @@ onMounted(async () => {
             window.location = "/login";
             return;
         }
-        const userInfoResponse = await getUserInfo(userName.value);
-        userPrivilege.value = userInfoResponse.data.Info.role;
-        if (userPrivilege.value !== 1) {
+        const userInfoResponse = await getUserInfo(userName.value, token.value);
+        if(userInfoResponse.data.status !== 200){
             window.location = '/403';
             return;
         }
-        const tokenVerificationResponse = await verifyJWT(userName.value, token.value);
-        if (tokenVerificationResponse.data.status !== 200) {
+        userPrivilege.value = userInfoResponse.data.Info.role;
+        if (userPrivilege.value !== 1) {
             window.location = '/403';
             return;
         }

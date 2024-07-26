@@ -45,12 +45,17 @@ func Registers(c *gin.Context) {
 func Logins(c *gin.Context) {
 	Username := c.Query("username")
 	Password := c.Query("password")
-	userPHash := utils.SelectPassword(Username)
-	if userPHash == "" {
+	userPassword := utils.SelectPassword(Username)
+	if userPassword == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {
+		// 用户是否被封禁
+		if utils.SelectUserInfo(Username).IsBan {
+			c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "该用户已被封禁。"})
+			return
+		}
 		// 校验密码是否正确
-		if account.VerifyPassword(Password, userPHash) {
+		if account.VerifyPassword(Password, userPassword) {
 			// 生成Token并返回至前端
 			token, err := utils.GenerateToken(Username)
 			if err != nil {
@@ -74,29 +79,18 @@ func GetCaptchas(c *gin.Context) {
 	}
 }
 
-// 校验TOKEN
-func VerifyTokens(c *gin.Context) {
+// 获取用户信息
+func GetUserInfos(c *gin.Context) {
 	token := c.GetHeader("Authorization")
+	// 返回至前端以显示个人资料
 	encodedUsername := c.GetHeader("username")
 	username, err := url.QueryUnescape(encodedUsername)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
 		return
 	}
-	if utils.VerifyToken(username, token) {
-		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "Token验证成功。"})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "Token验证失败。"})
-	}
-}
-
-// 获取用户信息
-func GetUserInfos(c *gin.Context) {
-	// 返回至前端以显示个人资料
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
 	// 根据uid来查询对应的用户信息
@@ -230,8 +224,8 @@ func CreateDiscussion(c *gin.Context) {
 
 // 删除讨论
 func DeleteDiscussion(c *gin.Context) {
-	did := c.Param("Did")
-	if utils.DelDiscussion(did) {
+	Did := c.Param("Did")
+	if utils.DelDiscussion(Did) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "删除讨论失败。"})
@@ -246,11 +240,7 @@ func UploadCodes(c *gin.Context) {
 		return
 	}
 	problem := c.Query("problem")
-	pidInt, err := strconv.Atoi(problem)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取题目ID。"})
-		return
-	}
+	pidInt, _ := strconv.Atoi(problem)
 	encodedUsername := c.GetHeader("username")
 	username, err := url.QueryUnescape(encodedUsername)
 	if err != nil {
@@ -359,11 +349,7 @@ func DeleteProblems(c *gin.Context) {
 	}
 	token := c.GetHeader("Authorization")
 	pid := c.Param("Pid")
-	pidInt, err := strconv.Atoi(pid)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "题目ID错误"})
-		return
-	}
+	pidInt, _ := strconv.Atoi(pid)
 	if !utils.VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
@@ -409,16 +395,13 @@ func GetComments(c *gin.Context) {
 		return
 	}
 	token := c.GetHeader("Authorization")
-	did := c.Param("Did")
-	didInt, err := strconv.Atoi(did)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "讨论ID错误"})
-	}
+	Did := c.Param("Did")
+	DidInt, _ := strconv.Atoi(Did)
 	if !utils.VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	comments := utils.GetCommentsByDid(didInt)
+	comments := utils.GetCommentsByDid(DidInt)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
 }
 
@@ -432,10 +415,7 @@ func DelComments(c *gin.Context) {
 	}
 	token := c.GetHeader("Authorization")
 	Cid := c.Param("Cid")
-	CidInt, err := strconv.Atoi(Cid)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "评论ID错误"})
-	}
+	CidInt, _ := strconv.Atoi(Cid)
 	if !utils.VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
@@ -457,10 +437,7 @@ func AddComments(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	content := c.PostForm("content")
 	Did := c.Param("Did")
-	DidInt, err := strconv.Atoi(Did)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "评论ID错误"})
-	}
+	DidInt, _ := strconv.Atoi(Did)
 	if !utils.VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return

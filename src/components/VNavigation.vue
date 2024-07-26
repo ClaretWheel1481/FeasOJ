@@ -7,8 +7,9 @@ import {
 } from "vuetify/components";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getUserInfo, verifyJWT } from "../utils/axios";
+import { getUserInfo } from "../utils/axios";
 import { token, userName } from "../utils/account";
+import { showAlert } from "../utils/alert";
 
 const privilege = ref("");
 // 计算属性来判断用户是否已经登录
@@ -29,13 +30,12 @@ const navigate = () => {
 // 校验Token后获取用户信息，若privilege为1则表明是管理员
 onMounted(async () => {
   if (userLoggedIn.value) {
-    const tokenResp = await verifyJWT(userName.value, token.value);
-    if (tokenResp.data.status === 200) {
-      const response = await getUserInfo(userName.value);
-      privilege.value = response.data.Info.role;
-    } else {
-      router.push("/403");
+    const resp = await getUserInfo(userName.value,token.value);
+    if (resp.data.status === 401){
+      showAlert("Token校验失败，请重新登录或修改密码！","reload");
+      localStorage.clear();
     }
+    privilege.value = resp.data.Info.role;
   }
 });
 </script>

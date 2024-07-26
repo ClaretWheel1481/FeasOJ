@@ -25,7 +25,8 @@ func BuildImage() bool {
 	// 创建Docker客户端
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		panic(err)
+		fmt.Println("[FeasOJ]请确认Docker是否在本机安装，并处于启动状态！")
+		return false
 	}
 
 	// 将Dockerfile目录打包成tar格式
@@ -45,7 +46,8 @@ func BuildImage() bool {
 	// 构建Docker镜像
 	buildResponse, err := cli.ImageBuild(ctx, tar, buildOptions)
 	if err != nil {
-		panic(err)
+		fmt.Println("[FeasOJ]请确认Docker是否在本机安装，并处于启动状态！")
+		return false
 	}
 	defer buildResponse.Body.Close()
 

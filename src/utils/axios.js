@@ -17,16 +17,6 @@ export const loginRequest = async (username, password) => {
     })
 }
 
-// Token校验
-export const verifyJWT = async (username, token) => {
-    return await axios.get(`${apiUrl}/v1/verifyToken`, {
-        headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
-        }
-    })
-}
-
 // 获取验证码
 export const getCaptchaCode = async (email) => {
     return await axios.get(`${apiUrl}/v1/getCaptcha`, {
@@ -37,10 +27,11 @@ export const getCaptchaCode = async (email) => {
 }
 
 // 获取用户信息
-export const getUserInfo = async (username) => {
+export const getUserInfo = async (username,token) => {
     return await axios.get(`${apiUrl}/v1/getUserInfo`, {
         headers: {
-            username: encodeURIComponent(username)
+            username: encodeURIComponent(username),
+            Authorization: token
         }
     });
 }

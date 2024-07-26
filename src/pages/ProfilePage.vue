@@ -7,7 +7,6 @@ import moment from 'moment';
 import { getUserSubmitRecords, uploadAvatar, avatarServer, getUserInfo } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { userId, userName, token } from '../utils/account';
-import { verifyJWT } from '../utils/axios';
 
 const userInfo = ref({});
 const showCropper = ref(false);
@@ -93,12 +92,7 @@ onMounted(async () => {
       window.location = "/login";
       return;
     }
-    const tokenVerificationResponse = await verifyJWT(userName.value, token.value);
-    if (tokenVerificationResponse.data.status !== 200) {
-      window.location = '/403'
-      return;
-    }
-    const userInfoResponse = await getUserInfo(userName.value);
+    const userInfoResponse = await getUserInfo(userName.value,token.value);
     if (userInfoResponse.data.status !== 200) {
       window.location = '/403'
       return;

@@ -21,7 +21,7 @@ const login = async () => {
     if (loginResponse.data.status === 200) {
       localStorage.setItem('token', loginResponse.data.token)
       localStorage.setItem('username', forms.username)
-      const response = await getUserInfo(forms.username);
+      const response = await getUserInfo(forms.username, loginResponse.data.token);
       localStorage.setItem('userid', response.data.Info.uid);
       showAlert(loginResponse.data.message, "/");
     } else {
