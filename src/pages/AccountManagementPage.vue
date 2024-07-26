@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, getUserInfo } from '../utils/axios';
+import { getAllUsersInfo, getUserInfo,promoteUser,demoteUser,banUser,unbanUser } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token, userName } from '../utils/account'
 import { VBtn } from 'vuetify/components';
@@ -29,6 +29,46 @@ const getMenus = (item) => {
     filteredMenus.push({ title: '提升为管理员', icon: 'mdi-account-plus' })
   }
   return filteredMenus
+}
+
+const handleMenuClick = async(menu,item)=> {
+    switch(menu.title){
+        case "查看详情":
+            //TODO: 待做
+            break;
+        case "封禁用户":
+            const resp = await banUser(userName.value,token.value,item.uid)
+            if(resp.data.status === 200){
+                showAlert("封禁用户成功！","reload")
+            }else{
+                showAlert("封禁用户失败！","")
+            }
+            break;
+        case "解封用户":
+            const resp2 = await unbanUser(userName.value,token.value,item.uid)
+            if(resp2.data.status === 200){
+                showAlert("解封用户成功！","reload")
+            }else{
+                showAlert("解封用户失败！","")
+            }
+            break;
+        case "降级为普通用户":
+            const resp3 = await demoteUser(userName.value,token.value,item.uid)
+            if(resp3.data.status === 200){
+                showAlert("降级为普通用户成功！","reload")
+            }else{
+                showAlert("降级为普通用户失败！","")
+            }
+            break;
+        case "提升为管理员":
+            const resp4 = await promoteUser(userName.value,token.value,item.uid)
+            if(resp4.data.status === 200){
+                showAlert("提升为管理员成功！","reload")
+            }else{
+                showAlert("提升为管理员失败！","")
+            }
+            break;
+    }
 }
 
 const headers = ref([
@@ -113,7 +153,7 @@ onMounted(async () => {
                             <v-btn v-bind="props" variant="text" @click="" icon="mdi-dots-horizontal"></v-btn>
                         </template>
                         <v-list>
-                            <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index">
+                            <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index" @click="handleMenuClick(menu,item)">
                                 <template v-slot:default="{ active, toggle }">
                                     <div class="d-flex align-center">
                                         <v-icon :icon="menu.icon" class="me-2"></v-icon>

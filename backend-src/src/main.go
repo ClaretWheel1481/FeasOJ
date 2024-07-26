@@ -52,56 +52,56 @@ func main() {
 	router := r.Group("/api/v1")
 	{
 		// 登录API
-		router.GET("/login", ginrouter.Logins)
+		router.GET("/login", ginrouter.Login)
 
 		// 获取验证码API
-		router.GET("/getCaptcha", ginrouter.GetCaptchas)
+		router.GET("/getCaptcha", ginrouter.GetCaptcha)
 
 		// 获取用户信息API
-		router.GET("/getUserInfo", ginrouter.GetUserInfos)
+		router.GET("/getUserInfo", ginrouter.GetUserInfo)
 
 		// 更新用户信息（非修改密码）API
 		// TODO:更新用户信息功能待实现、等待前端修改
 		router.GET("/updateUserInfo")
 
 		// 获取所有题目API
-		router.GET("/getAllProblems", ginrouter.GetAllProblemss)
+		router.GET("/getAllProblems", ginrouter.GetAllProblems)
 
 		// 根据题目ID获取题目信息
-		router.GET("/getProblemInfo/:id", ginrouter.GetProblemInfos)
+		router.GET("/getProblemInfo/:id", ginrouter.GetProblemInfo)
 
 		// 获取总提交记录API
-		router.GET("/getAllSubmitRecords", ginrouter.GetAllSubmitRecordss)
+		router.GET("/getAllSubmitRecords", ginrouter.GetAllSubmitRecords)
 
 		// 获取指定用户的提交记录API
-		router.GET("/getSubmitRecordsByUid/:uid", ginrouter.GetSubmitRecordsByUids)
+		router.GET("/getSubmitRecordsByUid/:uid", ginrouter.GetSubmitRecordsByUid)
 
 		// 获取所有讨论帖子API
-		router.GET("/getAllDiscussions", ginrouter.GetAllDiscussionss)
+		router.GET("/getAllDiscussions", ginrouter.GetAllDiscussions)
 
 		// 获取指定Did的帖子API
-		router.GET("/getDiscussionByDid/:Did", ginrouter.GetDiscussionByDids)
+		router.GET("/getDiscussionByDid/:Did", ginrouter.GetDiscussionByDid)
 
 		// 获取指定帖子的讨论API
-		router.GET("/getComment/:Did", ginrouter.GetComments)
+		router.GET("/getComment/:Did", ginrouter.GetComment)
 
 		// 管理员获取指定题目的所有信息API
-		router.GET("/getProblemAllInfo/:Pid", ginrouter.GetProblemAllInfos)
+		router.GET("/getProblemAllInfo/:Pid", ginrouter.GetProblemAllInfo)
 
 		// 管理员获取所有用户信息API
-		router.GET("/getAllUserInfo", ginrouter.GetAllUsersInfos)
+		router.GET("/getAllUserInfo", ginrouter.GetAllUsersInfo)
 	}
 
 	router2 := r.Group("/api/v2")
 	{
 		// 用户上传头像API
-		router2.POST("/uploadAvatar", ginrouter.UploadAvatars)
+		router2.POST("/uploadAvatar", ginrouter.UploadAvatar)
 
 		// 注册API
-		router2.POST("/register", ginrouter.Registers)
+		router2.POST("/register", ginrouter.Register)
 
 		// 密码修改API
-		router2.POST("/updatePassword", ginrouter.UpdatePasswords)
+		router2.POST("/updatePassword", ginrouter.UpdatePassword)
 
 		// 创建讨论API
 		router2.POST("/addDiscussion", ginrouter.CreateDiscussion)
@@ -110,19 +110,31 @@ func main() {
 		router2.POST("/deleteDiscussion/:Did", ginrouter.DeleteDiscussion)
 
 		// 添加评论API
-		router2.POST("/addComment/:Did", ginrouter.AddComments)
+		router2.POST("/addComment/:Did", ginrouter.AddComment)
 
 		// 删除评论API
-		router2.POST("/delComment/:Cid", ginrouter.DelComments)
+		router2.POST("/delComment/:Cid", ginrouter.DelComment)
 
 		// 上传代码文件API
-		router2.POST("/uploadCode", ginrouter.UploadCodes)
+		router2.POST("/uploadCode", ginrouter.UploadCode)
 
 		// 管理员更新题目信息API
-		router2.POST("/updateProblemInfo", ginrouter.UpdateProblemInfos)
+		router2.POST("/updateProblemInfo", ginrouter.UpdateProblemInfo)
 
 		// 管理员删除题目API
-		router2.POST("/delProblemAllInfo/:Pid", ginrouter.DeleteProblems)
+		router2.POST("/delProblemAllInfo/:Pid", ginrouter.DeleteProblem)
+
+		// 管理员晋升用户API
+		router2.POST("/promoteUser", ginrouter.PromoteUser)
+
+		// 管理员降级用户API
+		router2.POST("/demoteUser", ginrouter.DemoteUser)
+
+		// 管理员封禁用户API
+		router2.POST("/banUser", ginrouter.BanUser)
+
+		// 管理员解封用户API
+		router2.POST("/unbanUser", ginrouter.UnbanUser)
 	}
 
 	// 头像http服务器

@@ -213,3 +213,55 @@ export const deleteProblemAllInfo = async (pid, username, token) => {
         }
     })
 }
+
+// 封禁用户
+export const banUser = async (username, token, uid) => {
+    return await axios.post(`${apiUrl}/v2/banUser/`, {}, {
+        params: {
+            uid: uid
+        },
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 解封用户
+export const unbanUser = async (username, token, uid) => {
+    return await axios.post(`${apiUrl}/v2/unbanUser/`, {}, {
+        params: {
+            uid: uid
+        },
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 晋升用户
+export const promoteUser = async (username, token, uid) => {
+    return await axios.post(`${apiUrl}/v2/promoteUser/`, {}, {
+        params: {
+            uid: uid
+        },
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 降级用户
+export const demoteUser = async (username, token, uid) => {
+    return await axios.post(`${apiUrl}/v2/demoteUser/`, {}, {
+        params: {
+            uid: uid
+        },
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}

@@ -114,7 +114,6 @@ func Register(username, password, email, tokensecret string, role int) bool {
 // 查询管理员用户
 func SelectAdminUser(role int) bool {
 	// role = 1表示管理员
-	// 查询是否有role = 1，有则返回true，否则返回false
 	var user global.User
 	err := connectSql().Where("role = ?", role).First(&user).Error
 	return err == nil
@@ -398,4 +397,24 @@ func GetAllUsersInfo() []global.UserInfoRequest {
 	var usersInfo []global.UserInfoRequest
 	connectSql().Table("users").Find(&usersInfo)
 	return usersInfo
+}
+
+// 封禁用户
+func BanUser(Uid int) bool {
+	return connectSql().Table("users").Where("uid = ?", Uid).Update("is_ban", true).Error == nil
+}
+
+// 解除封禁
+func UnbanUser(Uid int) bool {
+	return connectSql().Table("users").Where("uid = ?", Uid).Update("is_ban", false).Error == nil
+}
+
+// 晋升为管理员
+func PromoteToAdmin(Uid int) bool {
+	return connectSql().Table("users").Where("uid = ?", Uid).Update("role", 1).Error == nil
+}
+
+// 降级为普通用户
+func DemoteToUser(Uid int) bool {
+	return connectSql().Table("users").Where("uid = ?", Uid).Update("role", 0).Error == nil
 }
