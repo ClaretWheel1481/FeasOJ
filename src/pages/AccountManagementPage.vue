@@ -97,7 +97,7 @@ const fetchData = async () => {
         totalUsers.value = usersInfoResp.data.usersInfo.length;
         loading.value = false;
     } catch (error) {
-        showAlert("获取用户信息失败，请稍后重试。");
+        showAlert("获取用户信息失败，请稍后重试。","");
         loading.value = false;
     }
 }
