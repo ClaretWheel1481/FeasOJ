@@ -67,7 +67,8 @@ onMounted(async () => {
   if (!userLoggedIn.value) {
     loading.value = false;
     setTimeout(() => {
-      window.location = '/login'
+      window.location = '#/login'
+      window.location.reload()
     }, 2000);
     return;
   }

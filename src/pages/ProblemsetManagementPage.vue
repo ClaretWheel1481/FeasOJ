@@ -135,23 +135,23 @@ onMounted(async () => {
     loading.value = true;
     try {
         if (!userLoggedIn.value) {
-            window.location = "/login";
+            window.location = "#/login";
             return;
         }
         const userInfoResponse = await getUserInfo(userName.value,token.value);
         if(userInfoResponse.data.status !== 200){
-            window.location = '/403';
+            window.location = '#/403';
             return;
         }
         userPrivilege.value = userInfoResponse.data.Info.role;
         if (userPrivilege.value !== 1) {
-            window.location = '/403';
+            window.location = '#/403';
             return;
         }
         await fetchData();
         loading.value = false;
     } catch (error) {
-        window.location = '/403';
+        window.location = '#/403';
     }
 });
 </script>

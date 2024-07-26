@@ -82,7 +82,7 @@ onMounted(async () => {
             loading.value = false;
         }
     } else {
-        window.location = '/login'
+        window.location = '#/login'
     }
 
     watch(lang, (newLang) => {

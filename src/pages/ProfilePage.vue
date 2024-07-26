@@ -26,9 +26,10 @@ const headers = ref([
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
+// 登出
 const logout = () => {
   localStorage.clear();
-  window.location = '/'
+  window.location = '#/';
 };
 
 // 点击题目跳转
@@ -89,23 +90,23 @@ onMounted(async () => {
   loading.value = true;
   try {
     if (!userLoggedIn.value) {
-      window.location = "/login";
+      router.push({ path: '/login' });
       return;
     }
     const userInfoResponse = await getUserInfo(userName.value,token.value);
     if (userInfoResponse.data.status !== 200) {
-      window.location = '/403'
+      router.push({ path: '/403' });
       return;
     }
     userInfo.value = userInfoResponse.data.Info;
     if (currentUsername !== userInfo.value.username) {
-      window.location = '/403'
+      router.push({ path: '/403' });
       return;
     }
     await fetchData();
     loading.value = false;
   } catch (error) {
-    window.location = '/403'
+    router.push({ path: '/403' });
   }
 });
 </script>

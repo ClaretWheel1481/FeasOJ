@@ -54,7 +54,8 @@ onMounted(async () => {
   if (!userLoggedIn.value) {
     loading.value = false;
     setTimeout(() => {
-      window.location = '/login'
+      window.location = '#/login'
+      window.location.reload()
     }, 2000);
     return;
   }
@@ -85,7 +86,7 @@ onMounted(async () => {
     </v-data-table-server>
   </v-card>
   <div class="fab">
-    <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading"
+    <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="userLoggedIn && !loading"
       @click="$router.push('/discussion/create')"></v-fab>
   </div>
 </template>

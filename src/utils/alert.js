@@ -9,12 +9,21 @@ export const showAlert = (message, path) => {
   if (path === "reload") {
     setTimeout(() => {
       location.reload();
+      dialog.value = false;
     }, 800);
   } else if (path === "") {
     return
-  } else {
+  } else if (path === "/") {
     setTimeout(() => {
-      window.location = path;
+      window.location = '#'+path;
+      location.reload();
+      dialog.value = false;
+    }, 1000);
+  }else {
+    setTimeout(() => {
+      window.location = '#/'+path;
+      location.reload();
+      dialog.value = false;
     }, 1000);
   }
 };

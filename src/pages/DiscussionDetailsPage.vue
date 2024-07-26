@@ -77,7 +77,8 @@ onMounted(async () => {
             loading.value = false;
         }
     } else {
-        window.location = "/login";
+        window.location = "#/login";
+        window.location.reload();
     }
 });
 
@@ -90,7 +91,7 @@ const addComments = async (content) => {
             showAlert("评论成功！", "reload");
         }
     } catch (error) {
-        window.location = "/403";
+        window.location = "#/403";
     } finally {
         loading.value = false;
     }
@@ -105,7 +106,7 @@ const deleteCommentByID = async(commentID) => {
             showAlert("删除成功！", "reload");
         }
     } catch (error) {
-        window.location = "/403";
+        window.location = "#/403";
     } finally {
         loading.value = false;
     }
@@ -120,7 +121,7 @@ const deleteDis = async () => {
             showAlert("删除成功！", "/discussion");
         }
     } catch (error) {
-        window.location = "/403";
+        window.location = "#/403";
     } finally {
         loading.value = false;
     }

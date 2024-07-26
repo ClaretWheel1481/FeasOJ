@@ -18,7 +18,7 @@ const userLoggedIn = computed(() => !!token.value)
 onMounted(async () => {
     loading.value = true;
     if (!userLoggedIn.value) {
-        window.location = "/login";
+        window.location = "#/login";
     } else {
         loading.value = false;
     }

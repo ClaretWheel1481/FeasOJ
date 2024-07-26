@@ -3,12 +3,12 @@
 import { VEmptyState, VBtn, VCard } from 'vuetify/components';
 
 const back = () => {
-  window.location = '/'
+  window.location = '#/'
 };
 
 const logout = () => {
   localStorage.clear();
-  window.location = '/'
+  window.location = '#/'
 };
 
 </script>
