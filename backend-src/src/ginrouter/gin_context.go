@@ -143,7 +143,7 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 	newFilename := fmt.Sprintf("%d%s", userInfo.Uid, path.Ext(file.Filename))
-	filePath := filepath.Join("../avatars", newFilename)
+	filePath := filepath.Join(global.AvatarsDir, newFilename)
 	if _, err := os.Stat(filePath); err == nil {
 		os.Remove(filePath)
 	}
@@ -264,9 +264,10 @@ func UploadCode(c *gin.Context) {
 	// 获取用户ID
 	userInfo := utils.SelectUserInfo(username)
 	// 将文件名改为用户ID_题目ID
-	file.Filename = fmt.Sprintf("%d_%s%s", userInfo.Uid, problem, path.Ext(file.Filename))
+	newFileName := fmt.Sprintf("%d_%s%s", userInfo.Uid, problem, path.Ext(file.Filename))
+	filepath := filepath.Join(global.CodeDir, newFileName)
 	// 保存文件到指定路径
-	if err := c.SaveUploadedFile(file, "../codefiles/"+file.Filename); err != nil {
+	if err := c.SaveUploadedFile(file, filepath); err != nil {
 		return
 	}
 	var language string
@@ -284,7 +285,7 @@ func UploadCode(c *gin.Context) {
 
 	// 上传任务至Redis任务队列
 	rdb := utils.InitRedis()
-	err = rdb.RPush("judgeTask", file.Filename).Err()
+	err = rdb.RPush("judgeTask", newFileName).Err()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})
 		return

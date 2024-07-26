@@ -107,6 +107,7 @@ func StartContainer() (string, error) {
 
 // 启动容器并编译运行文件、放入输入、捕获输出、对照输出
 func CompileAndRun(filename string) string {
+	fmt.Println(filename)
 	ext := filepath.Ext(filename)
 	var compileCmd *exec.Cmd
 
