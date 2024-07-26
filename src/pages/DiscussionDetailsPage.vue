@@ -115,11 +115,7 @@ const deleteCommentByID = async(commentID) => {
 const deleteDis = async () => {
     loading.value = true;
     try {
-        const resp = await deleteDiscussion(
-            localStorage.getItem("username"),
-            localStorage.getItem("token"),
-            Did
-        );
+        const resp = await deleteDiscussion(userName.value,token.value, Did);
         if (resp.status === 200) {
             showAlert("删除成功！", "/discussion");
         }

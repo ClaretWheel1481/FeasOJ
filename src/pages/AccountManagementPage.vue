@@ -15,9 +15,7 @@ const totalUsers = ref(0)
 const searchQuery = ref('')
 
 const getMenus = (item) => {
-  let filteredMenus = [
-    { title: '查看详情', icon: 'mdi-account' }
-  ]
+  let filteredMenus = []
   if (!item.isBan) {
     filteredMenus.push({ title: '封禁用户', icon: 'mdi-account-off' })
   } else {
@@ -33,9 +31,6 @@ const getMenus = (item) => {
 
 const handleMenuClick = async(menu,item)=> {
     switch(menu.title){
-        case "查看详情":
-            //TODO: 待做
-            break;
         case "封禁用户":
             const resp = await banUser(userName.value,token.value,item.uid)
             if(resp.data.status === 200){

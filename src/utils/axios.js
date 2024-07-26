@@ -136,10 +136,12 @@ export const addDiscussion = async (Title, Content, Username) => {
 
 // 删除讨论
 export const deleteDiscussion = async (username, token, Did) => {
-    const tokenVerifyResp = await verifyJWT(username, token);
-    if (tokenVerifyResp.status === 200) {
-        return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`)
-    }
+    return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`,{},{
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
 }
 
 // 添加讨论评论

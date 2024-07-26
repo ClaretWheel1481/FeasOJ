@@ -1,6 +1,6 @@
 <!-- 个人信息页 -->
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
 import { VCard, VCardActions, VCardText, VRow, VProgressCircular, VTextField, VBtn, VAvatar, VImg, VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
