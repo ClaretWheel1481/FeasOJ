@@ -6,6 +6,32 @@ English | [简体中文](README_CN.md)
 </p>
 
 # FeasOJ
+### Project Description
+FeasOJ is an online programming practice platform based on Vue and Golang, aiming to provide users with a convenient and efficient learning and practice environment.
+
+### Project Structure
+- src：Frontend
+  - assets：
+  - components：
+  - pages：
+  - routers：
+  - utils：
+  - plugins：
+
+- backend-src：Backend
+  - src：
+    - account：
+    - codehandler：
+    - ginrouter：
+    - global：
+    - utils：
+    - main.go：
+    - go.mod：
+  - Sandbox: Dockerfile
+
+### Screenshots
+![image](/public/Screenshot_1.png)
+![image](/public/Screenshot_2.png)
 
 ### How to run
 
@@ -16,11 +42,6 @@ English | [简体中文](README_CN.md)
 5. Run `pnpm dev` to start the front-end server.
 6. Run `cd backend-src\src` and `go mod tiny` to get the dependencies.
 7. Run `go run main.go` to start the backend server.
-
-### TODO LIST
-
-1. Add Token Checksums to every API.
-2. Save Token to Cookies.
 
 ### Notice
 
@@ -39,3 +60,6 @@ If you find any bugs, please open an issue.
 - [Gin](https://github.com/gin-gonic/gin)
 - [gorm](https://github.com/go-gorm/gorm)
 - [jwt-go](https://github.com/golang-jwt/jwt)
+- [docker](https://github.com/moby/moby)
+- [gomail](https://github.com/go-gomail/gomail)
+- [go-redis](https://github.com/redis/go-redis)
