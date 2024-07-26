@@ -17,8 +17,6 @@ const isButtonDisabled = ref(false);
 const countdown = ref(60);
 
 const nextStep = async () => {
-    localStorage.clear();
-    window.location = '/';
     if (forms.email === "" || forms.password === "" || forms.confirmPassword === "" || forms.vcode === "") {
         showAlert('请确认所有内容都已经输入。', "");
         return;
@@ -34,6 +32,7 @@ const nextStep = async () => {
     try {
         const response = await updatePassword(forms.email, forms.vcode, forms.password);
         if (response.data.status === 200) {
+            localStorage.clear();
             showAlert(response.data.message, "/login");
             return;
         } else {
