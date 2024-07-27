@@ -82,7 +82,7 @@ func StartContainer() (string, error) {
 	hostConfig := &container.HostConfig{
 		Resources: container.Resources{
 			Memory:   1024 * 1024 * 1024, // 内存限制为1GB
-			NanoCPUs: 2 * 1e9,            // CPU限制为2核
+			NanoCPUs: 1 * 1e9,            // CPU限制为1核
 		},
 		Binds: []string{
 			global.CodeDir + ":/workspace", // 挂载文件夹
