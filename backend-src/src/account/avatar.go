@@ -15,11 +15,3 @@ func InitAvatarFolder() {
 		os.Mkdir(global.AvatarsDir, 0755)
 	}
 }
-
-// TODO:压缩头像分辨率为512*512
-// func compressAvatar(filePath string) {
-// 	var width uint = 64
-// 	var height uint = 64
-// }
-
-// TODO:接入头像检测API

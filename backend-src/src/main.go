@@ -20,7 +20,7 @@ import (
 func main() {
 	global.CurrentDir, _ = os.Getwd()
 	global.ParentDir = filepath.Dir(global.CurrentDir)
-	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
+	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
 	global.ConfigsDir = filepath.Join(global.CurrentDir, "/configs")
 	global.CertDir = filepath.Join(global.CurrentDir, "/certificate")
 	// 如果没有找到configs，则创建configs文件夹
@@ -50,7 +50,6 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	//TODO:响应前端部分功能待实现
 	// 设置路由组
 	router := r.Group("/api/v1")
 	{
@@ -63,8 +62,7 @@ func main() {
 		// 获取用户信息API
 		router.GET("/getUserInfo", ginrouter.GetUserInfo)
 
-		// 更新用户信息（非修改密码）API
-		// TODO:更新用户信息功能待实现、等待前端修改
+		// TODO: 更新用户信息（非修改密码）API
 		router.GET("/updateUserInfo")
 
 		// 获取所有题目API
@@ -157,18 +155,20 @@ func main() {
 
 	// TODO: 注意注意！！
 	// HTTP服务器
-	// go func() {
-	// 	if err := r.Run("0.0.0.0:37881"); err != nil {
-	// 		fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
-	// 	}
-	// }()
-
-	// 启动HTTPS服务器
 	go func() {
-		if err := r.RunTLS("0.0.0.0:37881", "./certificate/fullchain.pem", "./certificate/privkey.pem"); err != nil {
+		if err := r.Run("0.0.0.0:37881"); err != nil {
 			fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
+			return
 		}
 	}()
+
+	// 启动HTTPS服务器
+	// go func() {
+	// 	if err := r.RunTLS("0.0.0.0:37881", "./certificate/fullchain.pem", "./certificate/privkey.pem"); err != nil {
+	// 		fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
+	// 		return
+	// 	}
+	// }()
 
 	// 监听终端输入
 	go func() {
