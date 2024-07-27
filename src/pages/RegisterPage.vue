@@ -13,7 +13,7 @@ const formState = reactive({
   confirmPassword: '',
   vcode: ''
 });
-
+const networkloading = ref(false);
 const isButtonDisabled = ref(false);
 const countdown = ref(60);
 
@@ -31,16 +31,20 @@ const register = async () => {
     return;
   }
   try {
+    networkloading.value = true;
     const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
     if (response.data.status === 200) {
+      networkloading.value = false;
       showAlert(response.data.message, "/login");
       return;
     } else {
+      networkloading.value = false;
       showAlert(response.data.message, "");
       return;
     }
   } catch (error) {
-    alert(error.response.data.message, "");
+    networkloading.value = false;
+    showAlert(error.response.data.message, "");
     return;
   }
 };
@@ -55,8 +59,10 @@ const getCaptcha = async () => {
     return;
   }
   try {
+    networkloading.value = true;
     const response = await getCaptchaCode(formState.userEmail);
     if (response.data.status === 200) {
+      networkloading.value = false;
       showAlert('验证码发送成功，请检查您的邮箱。', "");
       if (isButtonDisabled.value) {
         return;
@@ -72,15 +78,24 @@ const getCaptcha = async () => {
         }
       }, 1000);
     } else {
+      networkloading.value = false;
       showAlert("验证码发送失败，请稍后再试。", "");
     }
   } catch (error) {
+    networkloading.value = false;
     showAlert('验证码请求失败，请稍后再试。', "");
   }
 }
 </script>
 
 <template>
+  <v-dialog v-model="networkloading" max-width="500px">
+    <v-card rounded=xl>
+        <div class="networkloading">
+            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+        </div>
+    </v-card>
+  </v-dialog>
   <v-app-bar :elevation="0">
     <template v-slot:prepend>
       <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -113,3 +128,13 @@ const getCaptcha = async () => {
     </v-form>
   </v-sheet>
 </template>
+
+<style scoped>
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
+}
+</style>

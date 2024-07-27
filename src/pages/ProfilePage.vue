@@ -121,8 +121,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-dialog v-model="networkloading" max-width="600px">
-    <v-card>
+  <v-dialog v-model="networkloading" max-width="500px">
+    <v-card rounded=xl>
         <div class="networkloading">
             <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
         </div>

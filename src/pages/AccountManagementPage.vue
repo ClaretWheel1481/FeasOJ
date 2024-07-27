@@ -13,6 +13,7 @@ const userPrivilege = ref("")
 const users = ref([])
 const totalUsers = ref(0)
 const searchQuery = ref('')
+const networkloading = ref(false);
 
 const getMenus = (item) => {
   let filteredMenus = []
@@ -32,34 +33,46 @@ const getMenus = (item) => {
 const handleMenuClick = async(menu,item)=> {
     switch(menu.title){
         case "封禁用户":
+            networkloading.value = true;
             const resp = await banUser(userName.value,token.value,item.uid)
             if(resp.data.status === 200){
+                networkloading.value = false;
                 showAlert("封禁用户成功！","reload")
             }else{
+                networkloading.value = false;
                 showAlert("封禁用户失败！","")
             }
             break;
         case "解封用户":
+            networkloading.value = true;
             const resp2 = await unbanUser(userName.value,token.value,item.uid)
             if(resp2.data.status === 200){
+                networkloading.value = false;
                 showAlert("解封用户成功！","reload")
             }else{
+                networkloading.value = false;
                 showAlert("解封用户失败！","")
             }
             break;
         case "降级为普通用户":
+            networkloading.value = true;
             const resp3 = await demoteUser(userName.value,token.value,item.uid)
             if(resp3.data.status === 200){
+                networkloading.value = false;
                 showAlert("降级为普通用户成功！","reload")
             }else{
+                networkloading.value = false;
                 showAlert("降级为普通用户失败！","")
             }
             break;
         case "提升为管理员":
+            networkloading.value = true;
             const resp4 = await promoteUser(userName.value,token.value,item.uid)
             if(resp4.data.status === 200){
+                networkloading.value = false;
                 showAlert("提升为管理员成功！","reload")
             }else{
+                networkloading.value = false;
                 showAlert("提升为管理员失败！","")
             }
             break;
@@ -129,6 +142,13 @@ onMounted(async () => {
 </script>
 
 <template>
+    <v-dialog v-model="networkloading" max-width="500px">
+        <v-card rounded=xl>
+            <div class="networkloading">
+                <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+            </div>
+        </v-card>
+    </v-dialog>
     <div class="searchbar">
         <v-text-field v-model="searchQuery" variant="solo-filled" placeholder="搜索用户" rounded="sm"></v-text-field>
     </div>
@@ -170,5 +190,13 @@ onMounted(async () => {
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
 }
 </style>
