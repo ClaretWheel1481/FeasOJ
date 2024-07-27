@@ -22,11 +22,17 @@ func main() {
 	global.ParentDir = filepath.Dir(global.CurrentDir)
 	// TODO:每次编译前需要修改为currentDir，debug时用parentDir
 	global.ConfigsDir = filepath.Join(global.CurrentDir, "/configs")
-
+	global.CertDir = filepath.Join(global.CurrentDir, "/certificate")
 	// 如果没有找到configs，则创建configs文件夹
 	if _, err := os.Stat(global.ConfigsDir); os.IsNotExist(err) {
 		os.Mkdir(global.ConfigsDir, os.ModePerm)
 	}
+
+	// 如果没有找到certificate，则创建certificate文件夹
+	if _, err := os.Stat(global.CertDir); os.IsNotExist(err) {
+		os.Mkdir(global.CertDir, os.ModePerm)
+	}
+
 	// 创建存放头像文件夹
 	account.InitAvatarFolder()
 	// 创建存放代码文件夹
@@ -149,9 +155,17 @@ func main() {
 	rdb := utils.InitRedis()
 	go codehandler.ProcessJudgeTasks(rdb)
 
-	// 启动服务器
+	// TODO: 注意注意！！
+	// HTTP服务器
+	// go func() {
+	// 	if err := r.Run("0.0.0.0:37881"); err != nil {
+	// 		fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
+	// 	}
+	// }()
+
+	// 启动HTTPS服务器
 	go func() {
-		if err := r.Run("0.0.0.0:37881"); err != nil {
+		if err := r.RunTLS("0.0.0.0:37881", "./certificate/fullchain.pem", "./certificate/privkey.pem"); err != nil {
 			fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
 		}
 	}()
