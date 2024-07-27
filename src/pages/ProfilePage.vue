@@ -16,6 +16,7 @@ const currentUsername = route.params.Username;
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
+const networkloading = ref(false);
 const headers = ref([
   { title: '题目ID', value: 'Pid', align: 'center' },
   { title: '结果', value: 'Result', align: 'center' },
@@ -52,8 +53,15 @@ const uploadAvat = async (cropper) => {
 
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
-    await uploadAvatar(newFile, userName.value, token.value);
-    showAlert("上传成功！", "reload");
+    networkloading.value = true;
+    const resp = await uploadAvatar(newFile, userName.value, token.value);
+    if(resp.data.status === 200){
+      networkloading.value = false;
+      showAlert("上传成功！", "reload");
+    }else {
+      networkloading.value = false;
+      showAlert("上传失败，请重试。", "")
+    }
   } catch (error) {
     showAlert("上传失败，请重试。", "")
   }
@@ -113,6 +121,13 @@ onMounted(async () => {
 </script>
 
 <template>
+  <v-dialog v-model="networkloading" max-width="800px">
+    <v-card>
+        <div class="networkloading">
+            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+        </div>
+    </v-card>
+  </v-dialog>
   <div v-if="loading" class="loading">
     <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
   </div>
@@ -169,6 +184,14 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
+}
+
 .loading {
   display: flex;
   justify-content: center;

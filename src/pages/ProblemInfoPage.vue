@@ -10,6 +10,7 @@ import { token, userName } from "../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
 
+const networkloading = ref(false);
 const id = 'preview-only';
 const route = useRoute();
 const loading = ref(true)
@@ -58,8 +59,10 @@ const uploadContentAsFile = async () => {
     const blob = new Blob([content.value], { type: 'text/plain' });
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
+        networkloading.value = true;
         const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
         if (uploadResp.status === 200) {
+            networkloading.value = false;
             showAlert('提交成功', "reload")
         }
     } catch (error) {
@@ -92,6 +95,13 @@ onMounted(async () => {
 </script>
 
 <template>
+    <v-dialog v-model="networkloading" max-width="800px">
+    <v-card>
+        <div class="networkloading">
+            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+        </div>
+    </v-card>
+  </v-dialog>
     <v-app-bar :elevation="0">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -133,6 +143,14 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
+}
+
 .tags {
     font-size: 18px;
     font-weight: bold;
