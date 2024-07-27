@@ -5,6 +5,7 @@ import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
 import { loginRequest, getUserInfo } from '../utils/axios.js'
 import { showAlert } from '../utils/alert';
 
+const networkloading = ref(false);
 const forms = reactive({
   username: '',
   password: '',
@@ -18,17 +19,21 @@ const login = async () => {
   }
   try {
     const loginResponse = await loginRequest(forms.username, forms.password);
+    networkloading.value = true;
     if (loginResponse.data.status === 200) {
       localStorage.setItem('token', loginResponse.data.token)
       localStorage.setItem('username', forms.username)
       const response = await getUserInfo(forms.username, loginResponse.data.token);
       localStorage.setItem('userid', response.data.Info.uid);
+      networkloading.value = false;
       showAlert(loginResponse.data.message, "/");
     } else {
+      networkloading.value = true;
       showAlert(loginResponse.data.message, "");
       return;
     }
   } catch (error) {
+    networkloading.value = true;
     showAlert(error.response.data.message, "");
     return;
   }
@@ -36,6 +41,13 @@ const login = async () => {
 </script>
 
 <template>
+  <v-dialog v-model="networkloading" max-width="600px">
+    <v-card>
+        <div class="networkloading">
+            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+        </div>
+    </v-card>
+  </v-dialog>
   <div class="title">
     <h1>登录</h1>
   </div>
@@ -52,4 +64,12 @@ const login = async () => {
   </v-sheet>
 </template>
 
-<style></style>
+<style scoped>
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
+}
+</style>

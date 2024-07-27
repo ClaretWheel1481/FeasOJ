@@ -95,13 +95,13 @@ onMounted(async () => {
 </script>
 
 <template>
-    <v-dialog v-model="networkloading" max-width="800px">
-    <v-card>
-        <div class="networkloading">
-            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
-        </div>
-    </v-card>
-  </v-dialog>
+    <v-dialog v-model="networkloading" max-width="600px">
+        <v-card>
+            <div class="networkloading">
+                <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+            </div>
+        </v-card>
+    </v-dialog>
     <v-app-bar :elevation="0">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
