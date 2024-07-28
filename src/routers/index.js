@@ -1,50 +1,49 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { nextTick } from 'vue';
 
 const routes = [
     {
         path: '/',
         component: () => import('../pages/MainPage.vue'),
         meta: {
-            title: 'FeasOJ - 首页'
+            titleKey: 'message.mainpage'
         }
     },
     {
         path: '/about',
         component: () => import('../pages/AboutPage.vue'),
         meta: {
-            title: 'FeasOJ - 关于',
+            titleKey: 'message.about'
         }
     },
     {
         path: '/problemset',
         component: () => import('../pages/ProblemSetPage.vue'),
         meta: {
-            title: 'FeasOJ - 题目'
+            titleKey: 'message.problem'
         }
     },
     {
         path: '/login',
         component: () => import('../pages/LoginPage.vue'),
         meta: {
-            title: 'FeasOJ - 登录'
+            titleKey: 'message.login'
         }
     },
     {
         path: '/register',
         component: () => import('../pages/RegisterPage.vue'),
         meta: {
-            title: 'FeasOJ - 注册'
+            titleKey: 'message.register'
         }
     },
     {
         path: '/profile/:Username',
         component: () => import('../pages/ProfilePage.vue'),
         meta: {
-            title: 'FeasOJ - 个人资料'
+            titleKey: 'message.profile'
         },
         beforeEnter: (to, from, next) => {
-            to.meta.title = to.params.Username + '的资料';
+            to.meta.title = to.params.Username;
             next();
         }
     },
@@ -62,50 +61,50 @@ const routes = [
     {
         path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
         meta: {
-            title: 'FeasOJ - 重置密码'
+            titleKey: 'message.resetpwd'
         }
     },
     {
         path: '/status', component: () => import('../pages/StatusPage.vue'),
         meta: {
-            title: 'FeasOJ - 状态'
+            titleKey: 'message.status'
         }
     },
     {
         path: '/discussion', component: () => import('../pages/DiscussPage.vue'),
         meta: {
-            title: 'FeasOJ - 讨论'
+            titleKey: 'message.discussion'
         }
     },
     {
         path: '/discussion/create', component: () => import('../pages/NewDiscussionPage.vue'),
         meta: {
-            title: 'FeasOJ - 创建讨论'
+            titleKey: 'message.createDiscussion'
         }
     },
     {
         path: '/discussion/:Did',
         component: () => import('../pages/DiscussionDetailsPage.vue'),
         meta: {
-            title: 'FeasOJ - 讨论'
+            titleKey: 'message.discussion'
         },
     },
     {
         path: '/psm', component: () => import('../pages/ProblemsetManagementPage.vue'),
         meta: {
-            title: 'FeasOJ - 题目管理'
+            titleKey: 'message.problemmanagement'
         }
     },
     {
         path: '/am', component: () => import('../pages/AccountManagementPage.vue'),
         meta: {
-            title: 'FeasOJ - 用户管理'
+            titleKey: 'message.usermanagement'
         }
     },
     {
         path: '/403', component: () => import('../pages/NoPermissionPage.vue'),
         meta: {
-            title: 'FeasOJ - 没有权限',
+            titleKey: 'message.nopermission'
         }
     }
 ];
@@ -113,12 +112,6 @@ const routes = [
 const router = createRouter({
     history: createWebHashHistory(),
     routes,
-});
-
-router.afterEach((to) => {
-    nextTick(() => {
-        document.title = to.meta.title || 'FeasOJ';
-    });
 });
 
 export default router;

@@ -4,6 +4,13 @@ import 'vuetify/styles';
 import router from './routers/index';
 import './assets/style.css';
 import { registerPlugins } from './plugins';
+import { i18n } from './plugins/vue-i18n';
+import { nextTick } from 'vue';
+
+const settingLanguage = localStorage.getItem('language');
+if (settingLanguage) {
+  i18n.global.locale.value = settingLanguage;
+}
 
 // FIXME:Firefox无效
 // 避免用户修改 localStorage 中的数据
@@ -13,11 +20,13 @@ window.addEventListener('storage', function (e) {
 
 router.beforeEach((to, from, next) => {
     /* 路由发生变化修改页面title */
-    if (to.meta.title) {
-        document.title = to.meta.title
-    }
-    next()
-})
+    nextTick(() => {
+        const titleKey = to.meta.titleKey;
+        const title = titleKey ? i18n.global.t(titleKey) : to.meta.title;
+        document.title = title || 'FeasOJ';
+    });
+    next();
+});
 
 const app = createApp(App);
 

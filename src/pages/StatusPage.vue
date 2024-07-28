@@ -79,7 +79,7 @@ onMounted(async () => {
   </div>
   <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
-      :loading="loading" loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
+      :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有状态数据。'">
         <template v-slot:item="{ item }">
           <tr>
