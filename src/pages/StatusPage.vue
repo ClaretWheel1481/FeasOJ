@@ -75,7 +75,7 @@ onMounted(async () => {
 
 <template>
   <div class="title">
-    <h1>状态</h1>
+    <h1>{{ $t('message.status') }}</h1>
   </div>
   <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"

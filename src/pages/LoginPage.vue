@@ -49,16 +49,16 @@ const login = async () => {
     </v-card>
   </v-dialog>
   <div class="title">
-    <h1>登录</h1>
+    <h1>{{ $t('message.login') }}</h1>
   </div>
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
-      <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" label="用户名" />
-      <v-text-field v-model="forms.password" rounded="xl" variant="solo-filled" type="password" label="密码" />
+      <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" :label="$t('message.username')" />
+      <v-text-field v-model="forms.password" rounded="xl" variant="solo-filled" type="password" :label="$t('message.password')" />
       <v-row justify="end">
-        <v-btn type="submit" color="primary" rounded="xl">登录</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/register')">注册</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/reset')">忘记密码</v-btn>
+        <v-btn type="submit" color="primary" rounded="xl">{{ $t('message.login') }}</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/register')">{{ $t('message.register') }}</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/reset')">{{ $t('message.forget') }}</v-btn>
       </v-row>
     </v-form>
   </v-sheet>

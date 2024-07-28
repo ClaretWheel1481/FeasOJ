@@ -30,7 +30,7 @@ func BuildImage() bool {
 	}
 	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
 	// 将Dockerfile目录打包成tar格式
-	tar, err := archive.TarWithOptions(global.CurrentDir, &archive.TarOptions{})
+	tar, err := archive.TarWithOptions(global.ParentDir, &archive.TarOptions{})
 	if err != nil {
 		panic(err)
 	}

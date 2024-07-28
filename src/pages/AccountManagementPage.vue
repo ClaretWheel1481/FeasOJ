@@ -166,7 +166,7 @@ onMounted(async () => {
                 <td>
                     <v-menu>
                         <template v-slot:activator="{ props }">
-                            <v-btn v-bind="props" variant="text" @click="" icon="mdi-dots-horizontal"></v-btn>
+                            <v-btn v-bind="props" variant="text" icon="mdi-dots-horizontal"></v-btn>
                         </template>
                         <v-list>
                             <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index" @click="handleMenuClick(menu,item)">

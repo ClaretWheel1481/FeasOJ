@@ -102,12 +102,12 @@ const getCaptcha = async () => {
     </template>
   </v-app-bar>
   <div class="title">
-    <h1>注册</h1>
+    <h1>{{ $t('message.register') }}</h1>
   </div>
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="register">
       <v-text-field v-model="formState.username" :rules="[rules.username.required]" rounded="xl" variant="solo-filled"
-        label="用户名" />
+      :label="$t('message.username')" />
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]"
         rounded="xl" variant="solo-filled" label="邮箱" />
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled"
@@ -120,11 +120,11 @@ const getCaptcha = async () => {
         </template>
       </v-text-field>
       <v-text-field v-model="formState.password" :rules="[rules.password.required, rules.password.minLength]"
-        rounded="xl" variant="solo-filled" type="password" label="密码" />
+        rounded="xl" variant="solo-filled" type="password" :label="$t('message.password')" />
       <v-text-field v-model="formState.confirmPassword"
         :rules="[rules.confirmPassword.required, rules.confirmPassword.minLength]" rounded="xl" variant="solo-filled"
         type="password" label="确认密码" />
-      <v-btn type="submit" color="primary" rounded="xl">注册</v-btn>
+      <v-btn type="submit" color="primary" rounded="xl">{{ $t('message.register') }}</v-btn>
     </v-form>
   </v-sheet>
 </template>

@@ -14,7 +14,7 @@ import { RouterView } from 'vue-router';
       <RouterView></RouterView>
       <div style="margin-top: 50px"></div>
       <!-- 备案组件 -->
-      <VFill class="fill"></VFill>
+      <!-- <VFill class="fill"></VFill> -->
     </v-main>
   </v-app>
 </template>

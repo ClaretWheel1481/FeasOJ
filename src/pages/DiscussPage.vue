@@ -65,7 +65,7 @@ onMounted(async () => {
 
 <template>
   <div class="title">
-    <h1>讨论</h1>
+    <h1>{{ $t('message.discussion') }}</h1>
   </div>
   <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
     <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"

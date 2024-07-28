@@ -21,8 +21,8 @@ func main() {
 	global.CurrentDir, _ = os.Getwd()
 	global.ParentDir = filepath.Dir(global.CurrentDir)
 	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
-	global.ConfigsDir = filepath.Join(global.CurrentDir, "/configs")
-	global.CertDir = filepath.Join(global.CurrentDir, "/certificate")
+	global.ConfigsDir = filepath.Join(global.ParentDir, "/configs")
+	global.CertDir = filepath.Join(global.ParentDir, "/certificate")
 	// 如果没有找到configs，则创建configs文件夹
 	if _, err := os.Stat(global.ConfigsDir); os.IsNotExist(err) {
 		os.Mkdir(global.ConfigsDir, os.ModePerm)
