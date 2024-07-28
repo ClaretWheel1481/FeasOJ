@@ -1,6 +1,6 @@
 [English](README.md) | 简体中文
 <p align="center">
-    <a href="https://github.com/ClaretWheel1481/easyweather">
+    <a href="https://github.com/ClaretWheel1481/FeasOJ">
         <img src="public/logo.png" height="200"/>
     </a>
 </p>
@@ -8,6 +8,7 @@
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用户提供一个方便、高效的学习和练习环境。
+[Demo](https://oj.claret.space)
 
 ### 项目结构
 - src：前端代码
