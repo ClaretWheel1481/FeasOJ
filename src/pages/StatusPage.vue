@@ -7,15 +7,18 @@ import moment from 'moment';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert';
 import { token } from "../utils/account";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter();
 
 const headers = ref([
-  { title: '题目ID', value: 'Pid', align: 'center' },
-  { title: '用户UID', value: 'Uid', align: 'center' },
-  { title: '结果', value: 'Result', align: 'center' },
-  { title: '语言', value: 'Language', align: 'center' },
-  { title: '时间', value: 'Time', align: 'center' },
+  { title: t('message.problemId'), value: 'Pid', align: 'center' },
+  { title: t('message.userId'), value: 'Uid', align: 'center' },
+  { title: t('message.result'), value: 'Result', align: 'center' },
+  { title: t('message.lang'), value: 'Language', align: 'center' },
+  { title: t('message.when'), value: 'Time', align: 'center' },
 ])
 const submitrecords = ref([])
 const submitRecordsLength = ref(0)
@@ -80,7 +83,7 @@ onMounted(async () => {
   <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
       :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
-      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有状态数据。'">
+      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : $t('message.nodata')">
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">

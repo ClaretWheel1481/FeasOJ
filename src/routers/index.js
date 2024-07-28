@@ -19,7 +19,7 @@ const routes = [
         path: '/problemset',
         component: () => import('../pages/ProblemSetPage.vue'),
         meta: {
-            titleKey: 'message.problem'
+            titleKey: 'message.problemset'
         }
     },
     {

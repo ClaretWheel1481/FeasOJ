@@ -163,7 +163,7 @@ onMounted(async () => {
     <div style="margin: 30px"></div>
     <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
       <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
-        :loading="loading" loading-text="加载中..." @update="fetchData" :hide-default-footer="true" no-data-text="没有状态数据。">
+        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :no-data-text="$t('message.loading')">
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">

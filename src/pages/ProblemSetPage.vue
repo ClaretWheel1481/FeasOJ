@@ -6,13 +6,16 @@ import { VTextField, VDataTableServer, VBtn } from 'vuetify/lib/components/index
 import { getAllProblems } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token } from "../utils/account";
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const router = useRouter()
 
 const headers = ref([
-  { title: 'ID', value: 'Pid', align: 'center' },
-  { title: '题目', value: 'Title', align: 'center' },
-  { title: '难度', value: 'Difficulty', align: 'center' }
+  { title: t('message.problemId'), value: 'Pid', align: 'center' },
+  { title: t('message.problem'), value: 'Title', align: 'center' },
+  { title: t('message.difficulty'), value: 'Difficulty', align: 'center' }
 ])
 const problems = ref([])
 const totalProblems = ref(0)
@@ -79,10 +82,10 @@ onMounted(async () => {
 <template>
   <!-- 搜索栏 -->
   <div class="searchbar">
-    <v-text-field v-model="searchQuery" variant="solo-filled" placeholder="搜索题目" rounded="sm"></v-text-field>
+    <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchProblem')" rounded="sm"></v-text-field>
   </div>
   <v-data-table-server :headers="headers" :items="filteredProblems" :items-length="totalProblems" :loading="loading"
-    loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
+  :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
     :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有题目数据。'">
     <template v-slot:item="{ item }">
       <tr>

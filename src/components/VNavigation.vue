@@ -78,7 +78,7 @@ onMounted(async () => {
       <v-list-item rounded="xl" prepend-icon="mdi-file" value="PROBLEMSET" @click="$router.push('/problemset')"
         color="primary" class="list-item">
         <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.problem') }}</span>
+          <span class="multi-line-title">{{ $t('message.problemset') }}</span>
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"
