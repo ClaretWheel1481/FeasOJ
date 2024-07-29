@@ -7,7 +7,10 @@ import { showAlert } from '../utils/alert';
 import { token, userName } from "../utils/account";
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
+const { locale } = useI18n();
 const title = ref('');
 const content = ref('');
 const loading = ref(false);
@@ -26,16 +29,16 @@ onMounted(async () => {
 
 const submit = async () => {
     if (!title.value || !content.value) {
-        showAlert("请填写完整信息。", "");
+        showAlert(t("message.formCheckfailed")+"!", "");
         return;
     }
     loading.value = true;
     const response = await addDiscussion(title.value, content.value, userName.value)
     if (response.status === 200) {
-        showAlert("创建成功！", "/discussion");
+        showAlert(t("message.success")+"!", "/discussion");
         loading.value = false;
     } else {
-        showAlert("创建讨论失败。", "");
+        showAlert(t("message.failed")+"!", "");
         loading.value = false;
     }
 };
@@ -52,16 +55,16 @@ const submit = async () => {
             </template>
             <v-row style="align-items: center;">
                 <div style="margin-left: 30px;"></div>
-                <p class="font-weight-black">创建讨论</p>
+                <p class="font-weight-black">{{$t('message.createDiscussion')}}</p>
             </v-row>
         </v-app-bar>
         <div style="margin-top: 60px"></div>
         <div class="form-align">
             <v-form style="min-width: 50%" @submit.prevent="submit">
-                <v-text-field v-model="title" label="标题" rounded="xl" variant="solo-filled"></v-text-field>
-                <MdEditor v-model="content" :noUploadImg="true" />
+                <v-text-field v-model="title" :label="$t('message.title')" rounded="xl" variant="solo-filled"></v-text-field>
+                <MdEditor v-model="content" :noUploadImg="true" :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                 <div style="margin-top: 30px;"></div>
-                <v-btn rounded="xl" type="submit" color="primary">提交</v-btn>
+                <v-btn rounded="xl" type="submit" color="primary">{{$t('message.submit')}}</v-btn>
             </v-form>
         </div>
     </div>

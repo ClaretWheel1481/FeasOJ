@@ -7,11 +7,14 @@ import { ref, onMounted, computed,watch } from 'vue'
 import { getAllDis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token } from '../utils/account';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const headers = ref([
-  { title: '帖子', value: 'Title', align: 'center' },
-  { title: '发帖人', value: 'Owner', align: 'center' },
-  { title: '发布时间', value: 'Description', align: 'center' }
+  { title: t('message.discussion'), value: 'Title', align: 'center' },
+  { title: t('message.discussionOwner'), value: 'Owner', align: 'center' },
+  { title: t('message.when'), value: 'Description', align: 'center' }
 ])
 
 const router = useRouter()
@@ -33,7 +36,7 @@ const fetchData = async () => {
     discuss.value = response.data.discussions
     discussCount.value = response.data.total
   } catch (error) {
-    showAlert('错误，未找到数据！', '/discussion')
+    showAlert(t("message.failed")+"!", '/discussion')
   } finally {
     loading.value = false
   }
@@ -69,8 +72,8 @@ onMounted(async () => {
   </div>
   <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
     <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"
-      loading-text="加载中..." @update="fetchData" :hide-default-footer="true" :items-per-page="itemsPerPage" v-model:page="page"
-      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '当前无帖子数据'">
+      :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :items-per-page="itemsPerPage" v-model:page="page"
+      :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
       <template v-slot:item="{ item }">
         <tr>
           <td class="disctitle">

@@ -18,7 +18,9 @@ import { token, userName } from "../utils/account";
 import { MdPreview,MdEditor } from "md-editor-v3";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";
+import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const route = useRoute();
 const loading = ref(true);
 const discussionInfos = ref({});
@@ -26,7 +28,7 @@ const Did = route.params.Did;
 const id = "preview-only";
 const page = ref(1);
 const comments = ref([]);
-const commentContent = ref("写一条评论吧！");
+const commentContent = ref("");
 const editorToolbar = [
   'bold',
   'underline',
@@ -72,7 +74,7 @@ onMounted(async () => {
                 discussionInfos.value = response.data.discussionInfo;
             }
         } catch (error) {
-            showAlert(`错误，未找到对象。`, "/discussion");
+            showAlert(t("message.failed")+"!", "/discussion");
         } finally {
             loading.value = false;
         }
@@ -88,7 +90,7 @@ const addComments = async (content) => {
     try {
         const resp = await addComment(Did, content, userName.value, token.value);
         if (resp.status === 200) {
-            showAlert("评论成功！", "reload");
+            showAlert(t("message.success")+"!", "reload");
         }
     } catch (error) {
         window.location = "#/403";
@@ -103,7 +105,7 @@ const deleteCommentByID = async(commentID) => {
     try {
         const delCommentResp = await deleteComment(userName.value,token.value, commentID);
         if (delCommentResp.status === 200) {
-            showAlert("删除成功！", "reload");
+            showAlert(t("message.success")+"!", "reload");
         }
     } catch (error) {
         window.location = "#/403";
@@ -118,7 +120,7 @@ const deleteDis = async () => {
     try {
         const resp = await deleteDiscussion(userName.value,token.value, Did);
         if (resp.status === 200) {
-            showAlert("删除成功！", "/discussion");
+            showAlert(t("message.success")+"!", "/discussion");
         }
     } catch (error) {
         window.location = "#/403";
@@ -159,13 +161,13 @@ const deleteDis = async () => {
         <div style="margin-top: 50px"></div>
         <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
             <template v-slot:title>
-                <span class="font-weight-black">评论</span>
+                <span class="font-weight-black">{{$t('message.comments')}}</span>
             </template>
             <div style="max-height: 300px">
                 <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true" :preview="false" :footers="[]"/>
             </div>
             <div style="margin: 10px;">
-                <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">发布</v-btn>
+                <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{$t('message.submit')}}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -191,7 +193,7 @@ const deleteDis = async () => {
                     <div class="buttons">
                         <!-- TODO: 回复暂不添加 -->
                         <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
-                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary" @click="deleteCommentByID(comment.cid)">删除</v-btn>
+                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary" @click="deleteCommentByID(comment.cid)">{{$t('message.delete')}}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>

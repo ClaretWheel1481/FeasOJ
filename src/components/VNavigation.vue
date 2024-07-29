@@ -56,7 +56,7 @@ onMounted(async () => {
   if (userLoggedIn.value) {
     const resp = await getUserInfo(userName.value, token.value);
     if (resp.data.status === 401) {
-      showAlert("Token校验失败，请重新登录或修改密码！", "reload");
+      showAlert(t("message.tokenCheckfailed")+"!", "reload");
       localStorage.clear();
     }
     privilege.value = resp.data.Info.role;

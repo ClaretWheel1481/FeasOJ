@@ -5,6 +5,9 @@ import { showAlert } from '../utils/alert';
 import { token, userName } from '../utils/account'
 import { VBtn } from 'vuetify/components';
 import moment from 'moment';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -18,62 +21,62 @@ const networkloading = ref(false);
 const getMenus = (item) => {
   let filteredMenus = []
   if (!item.isBan) {
-    filteredMenus.push({ title: '封禁用户', icon: 'mdi-account-off' })
+    filteredMenus.push({ title: t("message.banUser"), icon: 'mdi-account-off' })
   } else {
-    filteredMenus.push({ title: '解封用户', icon: 'mdi-account-check' })
+    filteredMenus.push({ title: t("message.unbanUser"), icon: 'mdi-account-check' })
   }
   if (item.role === 1) {
-    filteredMenus.push({ title: '降级为普通用户', icon: 'mdi-account-minus' })
+    filteredMenus.push({ title: t("message.demoteUser"), icon: 'mdi-account-minus' })
   } else {
-    filteredMenus.push({ title: '提升为管理员', icon: 'mdi-account-plus' })
+    filteredMenus.push({ title: t("message.promoteUser"), icon: 'mdi-account-plus' })
   }
   return filteredMenus
 }
 
 const handleMenuClick = async(menu,item)=> {
     switch(menu.title){
-        case "封禁用户":
+        case t("message.banUser"):
             networkloading.value = true;
             const resp = await banUser(userName.value,token.value,item.uid)
             if(resp.data.status === 200){
                 networkloading.value = false;
-                showAlert("封禁用户成功！","reload")
+                showAlert(t("message.success")+"!","reload")
             }else{
                 networkloading.value = false;
-                showAlert("封禁用户失败！","")
+                showAlert(t("message.failed")+"!","")
             }
             break;
-        case "解封用户":
+        case t("message.unbanUser"):
             networkloading.value = true;
             const resp2 = await unbanUser(userName.value,token.value,item.uid)
             if(resp2.data.status === 200){
                 networkloading.value = false;
-                showAlert("解封用户成功！","reload")
+                showAlert(t("message.success")+"!","reload")
             }else{
                 networkloading.value = false;
-                showAlert("解封用户失败！","")
+                showAlert(t("message.failed")+"!","")
             }
             break;
-        case "降级为普通用户":
+        case t("message.demoteUser"):
             networkloading.value = true;
             const resp3 = await demoteUser(userName.value,token.value,item.uid)
             if(resp3.data.status === 200){
                 networkloading.value = false;
-                showAlert("降级为普通用户成功！","reload")
+                showAlert(t("message.success")+"!","reload")
             }else{
                 networkloading.value = false;
-                showAlert("降级为普通用户失败！","")
+                showAlert(t("message.failed")+"!","")
             }
             break;
-        case "提升为管理员":
+        case t("message.promoteUser"):
             networkloading.value = true;
             const resp4 = await promoteUser(userName.value,token.value,item.uid)
             if(resp4.data.status === 200){
                 networkloading.value = false;
-                showAlert("提升为管理员成功！","reload")
+                showAlert(t("message.success")+"!","reload")
             }else{
                 networkloading.value = false;
-                showAlert("提升为管理员失败！","")
+                showAlert(t("message.failed")+"!","")
             }
             break;
     }
@@ -81,12 +84,12 @@ const handleMenuClick = async(menu,item)=> {
 
 const headers = ref([
     { title: 'UID', value: 'uid', align: 'center' },
-    { title: '用户名', value: 'username', align: 'center' },
-    { title: '邮箱', value: 'email', align: 'center' },
-    { title: '角色', value: 'role', align: 'center' },
-    { title: '注册时间', value: 'registerTime', align: 'center' },
-    { title: '状态', value: 'status', align: 'center' },
-    { title: '操作', value: 'actions', align: 'center' },
+    { title: t("message.username"), value: 'username', align: 'center' },
+    { title: t("message.email"), value: 'email', align: 'center' },
+    { title: t("message.role"), value: 'role', align: 'center' },
+    { title: t("message.timeOfRegister"), value: 'registerTime', align: 'center' },
+    { title: t("message.status"), value: 'status', align: 'center' },
+    { title: t("message.operation"), value: 'actions', align: 'center' },
 ])
 
 // 通过用户名搜索
@@ -110,7 +113,7 @@ const fetchData = async () => {
         totalUsers.value = usersInfoResp.data.usersInfo.length;
         loading.value = false;
     } catch (error) {
-        showAlert("获取用户信息失败，请稍后重试。","");
+        showAlert(t("message.failed")+"!","");
         loading.value = false;
     }
 }
@@ -150,19 +153,19 @@ onMounted(async () => {
         </v-card>
     </v-dialog>
     <div class="searchbar">
-        <v-text-field v-model="searchQuery" variant="solo-filled" placeholder="搜索用户" rounded="sm"></v-text-field>
+        <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')" rounded="sm"></v-text-field>
     </div>
     <v-data-table-server :headers="headers" :items="filteredUsers" :items-length="totalUsers" :loading="loading"
-        loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
-        :no-data-text="!userLoggedIn ? '' : '没有用户数据。'">
+    :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+        :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
         <template v-slot:item="{ item }">
             <tr>
                 <td>{{ item.uid }}</td>
                 <td>{{ item.username }}</td>
                 <td>{{ item.email }}</td>
-                <td>{{ item.role === 1 ? '管理员' : '普通用户' }}</td>
+                <td>{{ item.role === 1 ? $t('message.admin') : $t('message.regularUser') }}</td>
                 <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
-                <td :style="getStatusStyle(item.isBan)">{{ item.isBan ? '封禁' : '正常' }}</td>
+                <td :style="getStatusStyle(item.isBan)">{{ item.isBan ? $t('message.isBan') : $t('message.normal') }}</td>
                 <td>
                     <v-menu>
                         <template v-slot:activator="{ props }">

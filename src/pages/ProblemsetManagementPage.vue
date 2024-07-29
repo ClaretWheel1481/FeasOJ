@@ -7,6 +7,10 @@ import { VDataTableServer, VFab, VDialog, VCard, VCardTitle, VCardText, VBtn, VT
 import { showAlert } from '../utils/alert';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
+import { useI18n } from 'vue-i18n';
+
+const { locale } = useI18n();
+const { t } = useI18n();
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
@@ -29,7 +33,7 @@ const problemFields = reactive({
 });
 const headers = ref([
     { title: 'ID', value: 'Pid', align: 'center' },
-    { title: '题目', value: 'Title', align: 'center' },
+    { title: t('message.problem'), value: 'Title', align: 'center' },
 ])
 const isCreate = ref(false)
 
@@ -48,13 +52,13 @@ const removeTestCase = () => {
 const validateFields = () => {
     for (const key in problemFields) {
         if (problemFields[key] === "" || (Array.isArray(problemFields[key]) && problemFields[key].length === 0)) {
-            showAlert("请填写所有数据。", "");
+            showAlert(t("message.formCheckfailed")+"!", "");
             return false;
         }
     }
     for (const testCase of problemFields.test_cases) {
         if (testCase.input === "" || testCase.output === "") {
-            showAlert("请填写所有测试样例的输入和输出。", "");
+            showAlert(t("message.formCheckfailed")+"!", "");
             return false;
         }
     }
@@ -70,10 +74,10 @@ const save = async () => {
         const updateResp = await updateProblemInfo(userName.value, token.value, problemData);
         if (updateResp.data.status === 200) {
             networkloading.value = false;
-            showAlert("更新成功！", "reload");
+            showAlert(t("message.success")+"!", "reload");
         }
     } catch (error) {
-        showAlert("更新失败，请重试。", "reload");
+        showAlert(t("message.failed")+"!", "reload");
     }
     dialog.value = false;
 };
@@ -87,7 +91,7 @@ const fetchData = async () => {
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
     } catch (error) {
-        showAlert('无法获取数据，请重试。', "")
+        showAlert(t("message.failed")+"!", "")
     } finally {
         loading.value = false
     }
@@ -124,9 +128,9 @@ const goToEditProblem = async (pid) => {
 const delProblem = async () => {
     const delProblemResp = await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
     if (delProblemResp.data.status === 200) {
-        showAlert("删除成功！", "reload");
+        showAlert(t("message.success")+"!", "reload");
     } else {
-        showAlert("删除失败，请重试。", "");
+        showAlert(t("message.failed")+"!", "");
     }
     dialog.value = false;
 }
@@ -158,8 +162,8 @@ onMounted(async () => {
 
 <template>
     <v-data-table-server :headers="headers" :items="problems" :items-length="totalProblems" :loading="loading"
-        loading-text="加载中..." @update="fetchData" :hide-default-footer="true"
-        :no-data-text="!userLoggedIn ? '' : '没有题目数据。'">
+        :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+        :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
         <template v-slot:item="{ item }">
             <tr>
                 <td>{{ item.Pid }}</td>
@@ -176,50 +180,50 @@ onMounted(async () => {
             </div>
             <div v-else>
                 <v-card-title>
-                    <span class="headline">编辑题目</span>
+                    <span class="headline">{{$t('message.edit')}}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-form>
-                        <v-text-field label="题目ID" v-model="problemFields.pid" variant="solo-filled"
+                        <v-text-field label="ID" v-model="problemFields.pid" variant="solo-filled"
                             readonly></v-text-field>
                         <!-- 题目名称 -->
-                        <v-text-field label="题目名称" v-model="problemFields.title" variant="solo-filled"></v-text-field>
+                        <v-text-field :label="$t('message.title')" v-model="problemFields.title" variant="solo-filled"></v-text-field>
                         <!-- 题目描述 -->
-                        <md-editor v-model="problemFields.content" :noUploadImg="true" :tabWidth="4" />
+                        <md-editor v-model="problemFields.content" :footers="[]" :noUploadImg="true" :tabWidth="4" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'"/>
                         <div style="margin-top: 20px;"></div>
                         <!-- 难易程度 -->
-                        <v-select :items="['简单', '中等', '困难']" label="难易程度" v-model="problemFields.difficulty"
+                        <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')" v-model="problemFields.difficulty"
                             variant="solo-filled"></v-select>
                         <v-row class="limitRow">
-                            <v-text-field label="时间限制s" v-model="problemFields.time_limit"
+                            <v-text-field :label="$t('message.timeLimit')+'S'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>
                             <div style="margin-inline: 30px;"></div>
-                            <v-text-field label="内存限制MB" v-model="problemFields.memory_limit"
+                            <v-text-field :label="$t('message.memoryLimit')+'MB'" v-model="problemFields.memory_limit"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
                         <v-row class="limitRow">
-                            <v-text-field label="显示输入案例" v-model="problemFields.input"
+                            <v-text-field :label="$t('message.displayInputCase')" v-model="problemFields.input"
                                 variant="solo-filled"></v-text-field>
                             <div style="margin-inline: 30px;"></div>
-                            <v-text-field label="显示输出案例" v-model="problemFields.output"
+                            <v-text-field :label="$t('message.displayOutputCase')" v-model="problemFields.output"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
                         <!-- 输入输出测试样例 -->
                         <div v-for="(testCase, index) in problemFields.test_cases" :key="index">
-                            <span>测试样例 {{ index + 1 }}</span>
-                            <v-text-field label="输入" v-model="testCase.input" variant="solo-filled"></v-text-field>
-                            <v-text-field label="输出" v-model="testCase.output" variant="solo-filled"></v-text-field>
+                            <span>{{$t('message.displayOutputCase')+ (index + 1) }}</span>
+                            <v-text-field :label="$t('message.input')" v-model="testCase.input" variant="solo-filled"></v-text-field>
+                            <v-text-field :label="$t('message.output')" v-model="testCase.output" variant="solo-filled"></v-text-field>
                         </div>
                         <!-- 添加新的输入输出测试样例 -->
-                        <v-btn @click="addTestCase" color="primary" rounded="xl">添加测试样例</v-btn>
-                        <v-btn @click="removeTestCase" text rounded="xl">移除测试样例</v-btn>
+                        <v-btn @click="addTestCase" color="primary" rounded="xl">{{$t('message.addTestCase')}}</v-btn>
+                        <v-btn @click="removeTestCase" text rounded="xl">{{$t('message.deleteTestCase')}}</v-btn>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">取消</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">删除</v-btn>
-                    <v-btn color="primary" @click="save" rounded="xl">保存</v-btn>
+                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{$t('message.cancel')}}</v-btn>
+                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">{{$t('message.delete')}}</v-btn>
+                    <v-btn color="primary" @click="save" rounded="xl">{{$t('message.save')}}</v-btn>
                 </v-card-actions>
             </div>
         </v-card>

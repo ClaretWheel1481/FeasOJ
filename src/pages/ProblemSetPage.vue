@@ -40,7 +40,7 @@ const fetchData = async () => {
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {
-    showAlert('无法获取数据，请重试。', "")
+    showAlert(t("message.failed")+"!", "")
   } finally {
     loading.value = false
   }
@@ -86,7 +86,7 @@ onMounted(async () => {
   </div>
   <v-data-table-server :headers="headers" :items="filteredProblems" :items-length="totalProblems" :loading="loading"
   :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
-    :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : '没有题目数据。'">
+    :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
     <template v-slot:item="{ item }">
       <tr>
         <td>{{ item.Pid }}</td>

@@ -7,6 +7,9 @@ import moment from 'moment';
 import { getUserSubmitRecords, uploadAvatar, avatarServer, getUserInfo } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { userId, userName, token } from '../utils/account';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const userInfo = ref({});
 const showCropper = ref(false);
@@ -18,10 +21,10 @@ const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
 const networkloading = ref(false);
 const headers = ref([
-  { title: '题目ID', value: 'Pid', align: 'center' },
-  { title: '结果', value: 'Result', align: 'center' },
-  { title: '语言', value: 'Language', align: 'center' },
-  { title: '时间', value: 'Time', align: 'center' },
+  { title: t('message.problemId'), value: 'Pid', align: 'center' },
+  { title: t('message.result'), value: 'Result', align: 'center' },
+  { title: t('message.lang'), value: 'Language', align: 'center' },
+  { title: t('message.when'), value: 'Time', align: 'center' },
 ])
 
 // 计算属性来判断用户是否已经登录
@@ -57,13 +60,13 @@ const uploadAvat = async (cropper) => {
     const resp = await uploadAvatar(newFile, userName.value, token.value);
     if(resp.data.status === 200){
       networkloading.value = false;
-      showAlert("上传成功！", "reload");
+      showAlert(t("message.success")+"!", "reload");
     }else {
       networkloading.value = false;
-      showAlert("上传失败，请重试。", "")
+      showAlert(t("message.failed")+"!", "")
     }
   } catch (error) {
-    showAlert("上传失败，请重试。", "")
+    showAlert(t("message.failed")+"!", "")
   }
 };
 
@@ -74,7 +77,7 @@ const fetchData = async () => {
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
   } catch (error) {
-    showAlert("获取数据失败，请重试。", "")
+    showAlert(t("message.failed")+"!", "")
   }
 }
 
@@ -156,14 +159,14 @@ onMounted(async () => {
       </v-card-text>
       <v-card-actions style="justify-content: end;">
         <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
-          @click="$router.push('/reset')">修改密码</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">退出登录</v-btn>
+          @click="$router.push('/reset')">{{$t('message.resetpwd')}}</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{$t('message.logout')}}</v-btn>
       </v-card-actions>
     </v-card>
     <div style="margin: 30px"></div>
     <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
       <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
-        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :no-data-text="$t('message.loading')">
+        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :no-data-text="$t('message.nodata')">
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">
@@ -180,7 +183,7 @@ onMounted(async () => {
       </v-data-table-server>
     </v-card>
   </div>
-  <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: '取消' }" :upload-handler="uploadAvat" />
+  <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: $t('message.cancel') }" :upload-handler="uploadAvat" />
 </template>
 
 <style scoped>

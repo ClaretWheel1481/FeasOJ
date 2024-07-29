@@ -5,6 +5,9 @@ import { VAppBar, VBtn, VTextField, VForm, VSheet, VIcon } from 'vuetify/compone
 import { getCaptchaCode, registerRequest } from '../utils/axios';
 import { rules, regex } from '../utils/rules';
 import { showAlert } from '../utils/alert';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const formState = reactive({
   username: '',
@@ -19,15 +22,15 @@ const countdown = ref(60);
 
 const register = async () => {
   if (formState.username === "" || formState.userEmail === "" || formState.password === "" || formState.confirmPassword === "" || formState.vcode === "") {
-    showAlert('请确认所有内容都已经输入。', "");
+    showAlert(t("message.formCheckfailed")+"!", "");
     return;
   }
   if (formState.password.length < 8) {
-    showAlert('密码长度至少为8个字符。', "");
+    showAlert(t("message.formRuleCheckfailed")+"!", "");
     return;
   }
   if (formState.password !== formState.confirmPassword) {
-    showAlert('两次输入的密码不一致，请重新输入。', "");
+    showAlert(t("message.formRuleCheckfailed")+"!", "");
     return;
   }
   try {
@@ -35,27 +38,27 @@ const register = async () => {
     const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
     if (response.data.status === 200) {
       networkloading.value = false;
-      showAlert(response.data.message, "/login");
+      showAlert(t("message.success")+"!", "/login");
       return;
     } else {
       networkloading.value = false;
-      showAlert(response.data.message, "");
+      showAlert(t("message.failed")+"!", "");
       return;
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(error.response.data.message, "");
+    showAlert(t("message.failed")+"!", "");
     return;
   }
 };
 
 const getCaptcha = async () => {
   if (!regex.test(formState.userEmail)) {
-    showAlert("请输入有效的邮箱地址。", "");
+    showAlert(t("message.checkEmail")+"!", "");
     return;
   }
   if (!formState.userEmail) {
-    showAlert("请输入邮箱地址。", "");
+    showAlert(t("message.checkEmail")+"!", "");
     return;
   }
   try {
@@ -63,7 +66,7 @@ const getCaptcha = async () => {
     const response = await getCaptchaCode(formState.userEmail);
     if (response.data.status === 200) {
       networkloading.value = false;
-      showAlert('验证码发送成功，请检查您的邮箱。', "");
+      showAlert(t("message.success")+"!", "");
       if (isButtonDisabled.value) {
         return;
       }
@@ -79,11 +82,11 @@ const getCaptcha = async () => {
       }, 1000);
     } else {
       networkloading.value = false;
-      showAlert("验证码发送失败，请稍后再试。", "");
+      showAlert(t("message.failed")+"!", "");
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert('验证码请求失败，请稍后再试。', "");
+    showAlert(t("message.failed")+"!", "");
   }
 }
 </script>
@@ -109,9 +112,9 @@ const getCaptcha = async () => {
       <v-text-field v-model="formState.username" :rules="[rules.username.required]" rounded="xl" variant="solo-filled"
       :label="$t('message.username')" />
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]"
-        rounded="xl" variant="solo-filled" label="邮箱" />
+        rounded="xl" variant="solo-filled" :label="$t('message.email')" />
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled"
-        label="邮箱验证码">
+        :label="$t('message.vCode')">
         <template v-slot:append>
           <v-btn @click="getCaptcha" :disabled="isButtonDisabled" size="25" icon>
             <v-icon v-if="!isButtonDisabled" icon="mdi-email" />
@@ -123,7 +126,7 @@ const getCaptcha = async () => {
         rounded="xl" variant="solo-filled" type="password" :label="$t('message.password')" />
       <v-text-field v-model="formState.confirmPassword"
         :rules="[rules.confirmPassword.required, rules.confirmPassword.minLength]" rounded="xl" variant="solo-filled"
-        type="password" label="确认密码" />
+        type="password" :label="$t('message.confirmPwd')" />
       <v-btn type="submit" color="primary" rounded="xl">{{ $t('message.register') }}</v-btn>
     </v-form>
   </v-sheet>

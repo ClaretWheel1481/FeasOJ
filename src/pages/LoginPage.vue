@@ -4,6 +4,9 @@ import { reactive,ref } from 'vue';
 import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
 import { loginRequest, getUserInfo } from '../utils/axios.js'
 import { showAlert } from '../utils/alert';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 
 const networkloading = ref(false);
 const forms = reactive({
@@ -14,7 +17,7 @@ const forms = reactive({
 // 登录逻辑
 const login = async () => {
   if (forms.username === '' || forms.password === '') {
-    showAlert('用户名或密码不能为空。', "");
+    showAlert(t("message.formCheckfailed")+"!", "");
     return;
   }
   try {

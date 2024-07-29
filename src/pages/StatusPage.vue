@@ -35,7 +35,7 @@ const fetchData = async () => {
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
-    showAlert(error, "")
+    showAlert(t("message.failed")+"!", "")
   } finally {
     loading.value = false
   }
@@ -83,7 +83,7 @@ onMounted(async () => {
   <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
       :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
-      :no-data-text="!userLoggedIn ? '你没有登录，将在2秒后跳转到登录界面。' : $t('message.nodata')">
+      :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">
