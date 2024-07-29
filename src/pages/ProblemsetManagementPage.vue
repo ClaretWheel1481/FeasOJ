@@ -225,10 +225,10 @@ onMounted(async () => {
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false"
-                        rounded="xl">{{ $t('message.cancel') }}</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="delProblem"
-                        rounded="xl">{{ $t('message.delete') }}</v-btn>
+                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
+                        }}</v-btn>
+                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">{{ $t('message.delete')
+                        }}</v-btn>
                     <v-btn color="primary" @click="save" rounded="xl">{{ $t('message.save') }}</v-btn>
                 </v-card-actions>
             </div>

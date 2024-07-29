@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, getUserInfo,promoteUser,demoteUser,banUser,unbanUser } from '../utils/axios';
+import { getAllUsersInfo, getUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token, userName } from '../utils/account'
 import { VBtn } from 'vuetify/components';
@@ -19,64 +19,64 @@ const searchQuery = ref('')
 const networkloading = ref(false);
 
 const getMenus = (item) => {
-  let filteredMenus = []
-  if (!item.isBan) {
-    filteredMenus.push({ title: t("message.banUser"), icon: 'mdi-account-off' })
-  } else {
-    filteredMenus.push({ title: t("message.unbanUser"), icon: 'mdi-account-check' })
-  }
-  if (item.role === 1) {
-    filteredMenus.push({ title: t("message.demoteUser"), icon: 'mdi-account-minus' })
-  } else {
-    filteredMenus.push({ title: t("message.promoteUser"), icon: 'mdi-account-plus' })
-  }
-  return filteredMenus
+    let filteredMenus = []
+    if (!item.isBan) {
+        filteredMenus.push({ title: t("message.banUser"), icon: 'mdi-account-off' })
+    } else {
+        filteredMenus.push({ title: t("message.unbanUser"), icon: 'mdi-account-check' })
+    }
+    if (item.role === 1) {
+        filteredMenus.push({ title: t("message.demoteUser"), icon: 'mdi-account-minus' })
+    } else {
+        filteredMenus.push({ title: t("message.promoteUser"), icon: 'mdi-account-plus' })
+    }
+    return filteredMenus
 }
 
-const handleMenuClick = async(menu,item)=> {
-    switch(menu.title){
+const handleMenuClick = async (menu, item) => {
+    switch (menu.title) {
         case t("message.banUser"):
             networkloading.value = true;
-            const resp = await banUser(userName.value,token.value,item.uid)
-            if(resp.data.status === 200){
+            const resp = await banUser(userName.value, token.value, item.uid)
+            if (resp.data.status === 200) {
                 networkloading.value = false;
-                showAlert(t("message.success")+"!","reload")
-            }else{
+                showAlert(t("message.success") + "!", "reload")
+            } else {
                 networkloading.value = false;
-                showAlert(t("message.failed")+"!","")
+                showAlert(t("message.failed") + "!", "")
             }
             break;
         case t("message.unbanUser"):
             networkloading.value = true;
-            const resp2 = await unbanUser(userName.value,token.value,item.uid)
-            if(resp2.data.status === 200){
+            const resp2 = await unbanUser(userName.value, token.value, item.uid)
+            if (resp2.data.status === 200) {
                 networkloading.value = false;
-                showAlert(t("message.success")+"!","reload")
-            }else{
+                showAlert(t("message.success") + "!", "reload")
+            } else {
                 networkloading.value = false;
-                showAlert(t("message.failed")+"!","")
+                showAlert(t("message.failed") + "!", "")
             }
             break;
         case t("message.demoteUser"):
             networkloading.value = true;
-            const resp3 = await demoteUser(userName.value,token.value,item.uid)
-            if(resp3.data.status === 200){
+            const resp3 = await demoteUser(userName.value, token.value, item.uid)
+            if (resp3.data.status === 200) {
                 networkloading.value = false;
-                showAlert(t("message.success")+"!","reload")
-            }else{
+                showAlert(t("message.success") + "!", "reload")
+            } else {
                 networkloading.value = false;
-                showAlert(t("message.failed")+"!","")
+                showAlert(t("message.failed") + "!", "")
             }
             break;
         case t("message.promoteUser"):
             networkloading.value = true;
-            const resp4 = await promoteUser(userName.value,token.value,item.uid)
-            if(resp4.data.status === 200){
+            const resp4 = await promoteUser(userName.value, token.value, item.uid)
+            if (resp4.data.status === 200) {
                 networkloading.value = false;
-                showAlert(t("message.success")+"!","reload")
-            }else{
+                showAlert(t("message.success") + "!", "reload")
+            } else {
                 networkloading.value = false;
-                showAlert(t("message.failed")+"!","")
+                showAlert(t("message.failed") + "!", "")
             }
             break;
     }
@@ -113,7 +113,7 @@ const fetchData = async () => {
         totalUsers.value = usersInfoResp.data.usersInfo.length;
         loading.value = false;
     } catch (error) {
-        showAlert(t("message.failed")+"!","");
+        showAlert(t("message.failed") + "!", "");
         loading.value = false;
     }
 }
@@ -127,7 +127,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await getUserInfo(userName.value, token.value);
-        if(userInfoResponse.data.status !== 200){
+        if (userInfoResponse.data.status !== 200) {
             window.location = '#/403';
             return;
         }
@@ -153,10 +153,11 @@ onMounted(async () => {
         </v-card>
     </v-dialog>
     <div class="searchbar">
-        <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')" rounded="sm"></v-text-field>
+        <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')"
+            rounded="sm"></v-text-field>
     </div>
     <v-data-table-server :headers="headers" :items="filteredUsers" :items-length="totalUsers" :loading="loading"
-    :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+        :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
         :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
         <template v-slot:item="{ item }">
             <tr>
@@ -165,14 +166,16 @@ onMounted(async () => {
                 <td>{{ item.email }}</td>
                 <td>{{ item.role === 1 ? $t('message.admin') : $t('message.regularUser') }}</td>
                 <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
-                <td :style="getStatusStyle(item.isBan)">{{ item.isBan ? $t('message.isBan') : $t('message.normal') }}</td>
+                <td :style="getStatusStyle(item.isBan)">{{ item.isBan ? $t('message.isBan') : $t('message.normal') }}
+                </td>
                 <td>
                     <v-menu>
                         <template v-slot:activator="{ props }">
                             <v-btn v-bind="props" variant="text" icon="mdi-dots-horizontal"></v-btn>
                         </template>
                         <v-list>
-                            <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index" @click="handleMenuClick(menu,item)">
+                            <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index"
+                                @click="handleMenuClick(menu, item)">
                                 <template v-slot:default="{ active, toggle }">
                                     <div class="d-flex align-center">
                                         <v-icon :icon="menu.icon" class="me-2"></v-icon>

@@ -15,13 +15,13 @@ export const showAlert = (message, path) => {
     return
   } else if (path === "/") {
     setTimeout(() => {
-      window.location = '#'+path;
+      window.location = '#' + path;
       location.reload();
       dialog.value = false;
     }, 1000);
-  }else {
+  } else {
     setTimeout(() => {
-      window.location = '#'+path;
+      window.location = '#' + path;
       location.reload();
       dialog.value = false;
     }, 1000);

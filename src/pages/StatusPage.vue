@@ -35,7 +35,7 @@ const fetchData = async () => {
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
-    showAlert(t("message.failed")+"!", "")
+    showAlert(t("message.failed") + "!", "")
   } finally {
     loading.value = false
   }
@@ -84,20 +84,20 @@ onMounted(async () => {
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
       :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
-        <template v-slot:item="{ item }">
-          <tr>
-            <td class="tabletitle">
-              <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
-            </td>
-            <td>{{ item.Uid }}</td>
-            <td v-if="item.Result === 'Running...'" colspan="1">
-                <v-progress-circular indeterminate color="primary"></v-progress-circular>
-            </td>
-            <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
-            <td>{{ item.Language }}</td>
-            <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
-          </tr>
-        </template>
+      <template v-slot:item="{ item }">
+        <tr>
+          <td class="tabletitle">
+            <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+          </td>
+          <td>{{ item.Uid }}</td>
+          <td v-if="item.Result === 'Running...'" colspan="1">
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          </td>
+          <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
+          <td>{{ item.Language }}</td>
+          <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
+        </tr>
+      </template>
     </v-data-table-server>
   </v-card>
 </template>

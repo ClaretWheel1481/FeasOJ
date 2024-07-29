@@ -40,7 +40,7 @@ const fetchData = async () => {
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {
-    showAlert(t("message.failed")+"!", "")
+    showAlert(t("message.failed") + "!", "")
   } finally {
     loading.value = false
   }
@@ -82,10 +82,11 @@ onMounted(async () => {
 <template>
   <!-- 搜索栏 -->
   <div class="searchbar">
-    <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchProblem')" rounded="sm"></v-text-field>
+    <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchProblem')"
+      rounded="sm"></v-text-field>
   </div>
   <v-data-table-server :headers="headers" :items="filteredProblems" :items-length="totalProblems" :loading="loading"
-  :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+    :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
     :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
     <template v-slot:item="{ item }">
       <tr>

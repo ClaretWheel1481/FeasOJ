@@ -58,15 +58,15 @@ const uploadAvat = async (cropper) => {
     const newFile = new File([file], fileName, { type: fileType });
     networkloading.value = true;
     const resp = await uploadAvatar(newFile, userName.value, token.value);
-    if(resp.data.status === 200){
+    if (resp.data.status === 200) {
       networkloading.value = false;
-      showAlert(t("message.success")+"!", "reload");
-    }else {
+      showAlert(t("message.success") + "!", "reload");
+    } else {
       networkloading.value = false;
-      showAlert(t("message.failed")+"!", "")
+      showAlert(t("message.failed") + "!", "")
     }
   } catch (error) {
-    showAlert(t("message.failed")+"!", "")
+    showAlert(t("message.failed") + "!", "")
   }
 };
 
@@ -77,7 +77,7 @@ const fetchData = async () => {
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
   } catch (error) {
-    showAlert(t("message.failed")+"!", "")
+    showAlert(t("message.failed") + "!", "")
   }
 }
 
@@ -105,7 +105,7 @@ onMounted(async () => {
       router.push({ path: '/login' });
       return;
     }
-    const userInfoResponse = await getUserInfo(userName.value,token.value);
+    const userInfoResponse = await getUserInfo(userName.value, token.value);
     if (userInfoResponse.data.status !== 200) {
       router.push({ path: '/403' });
       return;
@@ -126,9 +126,9 @@ onMounted(async () => {
 <template>
   <v-dialog v-model="networkloading" max-width="500px">
     <v-card rounded=xl>
-        <div class="networkloading">
-            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
-        </div>
+      <div class="networkloading">
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+      </div>
     </v-card>
   </v-dialog>
   <div v-if="loading" class="loading">
@@ -159,21 +159,23 @@ onMounted(async () => {
       </v-card-text>
       <v-card-actions style="justify-content: end;">
         <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
-          @click="$router.push('/reset')">{{$t('message.resetpwd')}}</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{$t('message.logout')}}</v-btn>
+          @click="$router.push('/reset')">{{ $t('message.resetpwd') }}</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
+          @click="logout">{{ $t('message.logout') }}</v-btn>
       </v-card-actions>
     </v-card>
     <div style="margin: 30px"></div>
     <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
       <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
-        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :no-data-text="$t('message.nodata')">
+        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+        :no-data-text="$t('message.nodata')">
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">
               <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
             </td>
             <td v-if="item.Result === 'Running...'" colspan="1">
-                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+              <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </td>
             <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
             <td>{{ item.Language }}</td>
@@ -183,16 +185,17 @@ onMounted(async () => {
       </v-data-table-server>
     </v-card>
   </div>
-  <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: $t('message.cancel') }" :upload-handler="uploadAvat" />
+  <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: $t('message.cancel') }"
+    :upload-handler="uploadAvat" />
 </template>
 
 <style scoped>
 .networkloading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 100px;
 }
 
 .loading {

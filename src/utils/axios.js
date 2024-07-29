@@ -26,7 +26,7 @@ export const getCaptchaCode = async (email) => {
 }
 
 // 获取用户信息
-export const getUserInfo = async (username,token) => {
+export const getUserInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/v1/getUserInfo`, {
         headers: {
             username: encodeURIComponent(username),
@@ -46,8 +46,8 @@ export const getPbDetails = async (Pid) => {
 }
 
 // 获取讨论列表
-export const getAllDis = async (page,itemsPerPage) => {
-    return await axios.get(`${apiUrl}/v1/getAllDiscussions`,{
+export const getAllDis = async (page, itemsPerPage) => {
+    return await axios.get(`${apiUrl}/v1/getAllDiscussions`, {
         params: {
             page: page,
             itemsPerPage: itemsPerPage
@@ -91,7 +91,7 @@ export const getProblemAllInfoByAdmin = async (pid, username, token) => {
 }
 
 // 获取所有用户信息
-export const getAllUsersInfo = async(username,token) => {
+export const getAllUsersInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/v1/getAllUserInfo`, {
         headers: {
             username: encodeURIComponent(username),
@@ -135,7 +135,7 @@ export const addDiscussion = async (Title, Content, Username) => {
 
 // 删除讨论
 export const deleteDiscussion = async (username, token, Did) => {
-    return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`,{},{
+    return await axios.post(`${apiUrl}/v2/deleteDiscussion/${Did}`, {}, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token

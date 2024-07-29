@@ -16,6 +16,9 @@ const { locale } = useI18n();
 
 const langs = ref([
   { title: "English", value: "en" },
+  { title: "Español", value: "es" },
+  { title: "Français", value: "fr" },
+  { title: "Italiano", value: "it" },
   { title: "日本語", value: "ja" },
   { title: "简体中文", value: "zh_CN" },
   { title: "繁體中文", value: "zh_TW" },
@@ -56,7 +59,7 @@ onMounted(async () => {
   if (userLoggedIn.value) {
     const resp = await getUserInfo(userName.value, token.value);
     if (resp.data.status === 401) {
-      showAlert(t("message.tokenCheckfailed")+"!", "reload");
+      showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
     }
     privilege.value = resp.data.Info.role;
@@ -65,7 +68,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer :width="180" permanent :rail="isRail">
+  <v-navigation-drawer :width="170" permanent :rail="isRail">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
       <v-btn variant="text" rounded="xl" icon="mdi-menu" @click="toggleRail(isRail ? false : true)">
       </v-btn>

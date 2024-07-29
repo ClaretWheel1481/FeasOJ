@@ -22,15 +22,15 @@ const countdown = ref(60);
 
 const register = async () => {
   if (formState.username === "" || formState.userEmail === "" || formState.password === "" || formState.confirmPassword === "" || formState.vcode === "") {
-    showAlert(t("message.formCheckfailed")+"!", "");
+    showAlert(t("message.formCheckfailed") + "!", "");
     return;
   }
   if (formState.password.length < 8) {
-    showAlert(t("message.formRuleCheckfailed")+"!", "");
+    showAlert(t("message.formRuleCheckfailed") + "!", "");
     return;
   }
   if (formState.password !== formState.confirmPassword) {
-    showAlert(t("message.formRuleCheckfailed")+"!", "");
+    showAlert(t("message.formRuleCheckfailed") + "!", "");
     return;
   }
   try {
@@ -38,27 +38,27 @@ const register = async () => {
     const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
     if (response.data.status === 200) {
       networkloading.value = false;
-      showAlert(t("message.success")+"!", "/login");
+      showAlert(t("message.success") + "!", "/login");
       return;
     } else {
       networkloading.value = false;
-      showAlert(t("message.failed")+"!", "");
+      showAlert(t("message.failed") + "!", "");
       return;
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed")+"!", "");
+    showAlert(t("message.failed") + "!", "");
     return;
   }
 };
 
 const getCaptcha = async () => {
   if (!regex.test(formState.userEmail)) {
-    showAlert(t("message.checkEmail")+"!", "");
+    showAlert(t("message.checkEmail") + "!", "");
     return;
   }
   if (!formState.userEmail) {
-    showAlert(t("message.checkEmail")+"!", "");
+    showAlert(t("message.checkEmail") + "!", "");
     return;
   }
   try {
@@ -66,7 +66,7 @@ const getCaptcha = async () => {
     const response = await getCaptchaCode(formState.userEmail);
     if (response.data.status === 200) {
       networkloading.value = false;
-      showAlert(t("message.success")+"!", "");
+      showAlert(t("message.success") + "!", "");
       if (isButtonDisabled.value) {
         return;
       }
@@ -82,11 +82,11 @@ const getCaptcha = async () => {
       }, 1000);
     } else {
       networkloading.value = false;
-      showAlert(t("message.failed")+"!", "");
+      showAlert(t("message.failed") + "!", "");
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed")+"!", "");
+    showAlert(t("message.failed") + "!", "");
   }
 }
 </script>
@@ -94,9 +94,9 @@ const getCaptcha = async () => {
 <template>
   <v-dialog v-model="networkloading" max-width="500px">
     <v-card rounded=xl>
-        <div class="networkloading">
-            <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
-        </div>
+      <div class="networkloading">
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+      </div>
     </v-card>
   </v-dialog>
   <v-app-bar :elevation="0">
@@ -110,7 +110,7 @@ const getCaptcha = async () => {
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="register">
       <v-text-field v-model="formState.username" :rules="[rules.username.required]" rounded="xl" variant="solo-filled"
-      :label="$t('message.username')" />
+        :label="$t('message.username')" />
       <v-text-field v-model="formState.userEmail" :rules="[rules.userEmail.required, rules.userEmail.email]"
         rounded="xl" variant="solo-filled" :label="$t('message.email')" />
       <v-text-field v-model="formState.vcode" :rules="[rules.vcode.required]" rounded="xl" variant="solo-filled"
@@ -134,10 +134,10 @@ const getCaptcha = async () => {
 
 <style scoped>
 .networkloading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 100px;
 }
 </style>

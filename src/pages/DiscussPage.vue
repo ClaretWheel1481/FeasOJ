@@ -3,7 +3,7 @@
 import { VCard, VDataTableServer, VBtn, VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
-import { ref, onMounted, computed,watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import { getAllDis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token } from '../utils/account';
@@ -32,11 +32,11 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllDis(page.value,itemsPerPage.value);
+    const response = await getAllDis(page.value, itemsPerPage.value);
     discuss.value = response.data.discussions
     discussCount.value = response.data.total
   } catch (error) {
-    showAlert(t("message.failed")+"!", '/discussion')
+    showAlert(t("message.failed") + "!", '/discussion')
   } finally {
     loading.value = false
   }
@@ -72,7 +72,8 @@ onMounted(async () => {
   </div>
   <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
     <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"
-      :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true" :items-per-page="itemsPerPage" v-model:page="page"
+      :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+      :items-per-page="itemsPerPage" v-model:page="page"
       :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
       <template v-slot:item="{ item }">
         <tr>
@@ -84,7 +85,7 @@ onMounted(async () => {
         </tr>
       </template>
       <template v-slot:bottom>
-        <v-pagination v-model="page" :length="Math.ceil(discussCount / itemsPerPage)" rounded="xl"/>
+        <v-pagination v-model="page" :length="Math.ceil(discussCount / itemsPerPage)" rounded="xl" />
       </template>
     </v-data-table-server>
   </v-card>

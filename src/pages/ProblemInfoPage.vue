@@ -66,10 +66,10 @@ const uploadContentAsFile = async () => {
         const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
         if (uploadResp.status === 200) {
             networkloading.value = false;
-            showAlert(t("message.success")+"!", "reload")
+            showAlert(t("message.success") + "!", "reload")
         }
     } catch (error) {
-        showAlert(t("message.failed")+"!", "");
+        showAlert(t("message.failed") + "!", "");
     }
 };
 
@@ -83,7 +83,7 @@ onMounted(async () => {
                 problemInfo.value = resp.data.problemInfo;
             }
         } catch (error) {
-            showAlert(t("message.failed")+"!", "");
+            showAlert(t("message.failed") + "!", "");
         } finally {
             loading.value = false;
         }
@@ -119,26 +119,26 @@ onMounted(async () => {
                 <v-col cols="12" md="6">
                     <h1>{{ problemInfo.title }}</h1>
                     <div style="margin: 10px;"></div>
-                    <p class="subtitle">{{ $t("message.difficulty")+": "+problemInfo.difficulty }}</p>
-                    <p class="subtitle">{{ $t("message.timeLimit")+": "+problemInfo.time_limit }} S</p>
-                    <p class="subtitle">{{ $t("message.memoryLimit")+": "+problemInfo.memory_limit }} MB</p>
+                    <p class="subtitle">{{ $t("message.difficulty") + ": " + problemInfo.difficulty }}</p>
+                    <p class="subtitle">{{ $t("message.timeLimit") + ": " + problemInfo.time_limit }} S</p>
+                    <p class="subtitle">{{ $t("message.memoryLimit") + ": " + problemInfo.memory_limit }} MB</p>
                     <div style="margin: 10px;"></div>
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
                     <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
-                    <p class="tags">{{$t("message.displayInputCase")}}</p>
+                    <p class="tags">{{ $t("message.displayInputCase") }}</p>
                     <p class="example">{{ problemInfo.input }}</p>
-                    <p class="tags">{{$t("message.displayOutputCase")}}</p>
+                    <p class="tags">{{ $t("message.displayOutputCase") }}</p>
                     <p class="example">{{ problemInfo.output }}</p>
                 </v-col>
                 <v-col cols="12" md="6">
                     <v-card class="mx-auto my-8" width="100%" height="800" elevation="5">
-                        <v-select :label="$t('message.lang')" v-model="lang" :items="['python', 'c_cpp', 'golang', 'java']"
-                            variant="solo-filled"></v-select>
+                        <v-select :label="$t('message.lang')" v-model="lang"
+                            :items="['python', 'c_cpp', 'golang', 'java']" variant="solo-filled"></v-select>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
                             style="height: 800px;font-size: 14px;" />
                     </v-card>
-                    <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">{{$t("message.submit")}}</v-btn>
+                    <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">{{ $t("message.submit") }}</v-btn>
                 </v-col>
             </v-row>
         </v-container>

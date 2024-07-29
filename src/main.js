@@ -19,7 +19,7 @@ window.addEventListener('storage', function (e) {
 });
 
 router.beforeEach((to, from, next) => {
-    /* 路由发生变化修改页面title */
+// 路由发生变化修改页面title
     nextTick(() => {
         const titleKey = to.meta.titleKey;
         const title = titleKey ? i18n.global.t(titleKey) : to.meta.title;

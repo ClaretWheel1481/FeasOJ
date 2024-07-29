@@ -29,16 +29,16 @@ onMounted(async () => {
 
 const submit = async () => {
     if (!title.value || !content.value) {
-        showAlert(t("message.formCheckfailed")+"!", "");
+        showAlert(t("message.formCheckfailed") + "!", "");
         return;
     }
     loading.value = true;
     const response = await addDiscussion(title.value, content.value, userName.value)
     if (response.status === 200) {
-        showAlert(t("message.success")+"!", "/discussion");
+        showAlert(t("message.success") + "!", "/discussion");
         loading.value = false;
     } else {
-        showAlert(t("message.failed")+"!", "");
+        showAlert(t("message.failed") + "!", "");
         loading.value = false;
     }
 };
@@ -55,16 +55,18 @@ const submit = async () => {
             </template>
             <v-row style="align-items: center;">
                 <div style="margin-left: 30px;"></div>
-                <p class="font-weight-black">{{$t('message.createDiscussion')}}</p>
+                <p class="font-weight-black">{{ $t('message.createDiscussion') }}</p>
             </v-row>
         </v-app-bar>
         <div style="margin-top: 60px"></div>
         <div class="form-align">
             <v-form style="min-width: 50%" @submit.prevent="submit">
-                <v-text-field v-model="title" :label="$t('message.title')" rounded="xl" variant="solo-filled"></v-text-field>
-                <MdEditor v-model="content" :noUploadImg="true" :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                <v-text-field v-model="title" :label="$t('message.title')" rounded="xl"
+                    variant="solo-filled"></v-text-field>
+                <MdEditor v-model="content" :noUploadImg="true" :footers="[]"
+                    :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                 <div style="margin-top: 30px;"></div>
-                <v-btn rounded="xl" type="submit" color="primary">{{$t('message.submit')}}</v-btn>
+                <v-btn rounded="xl" type="submit" color="primary">{{ $t('message.submit') }}</v-btn>
             </v-form>
         </div>
     </div>

@@ -11,11 +11,11 @@ import {
     VListItemTitle,
 } from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
-import { getDisDetails, deleteDiscussion, avatarServer, getComments,deleteComment,addComment } from "../utils/axios";
+import { getDisDetails, deleteDiscussion, avatarServer, getComments, deleteComment, addComment } from "../utils/axios";
 import { useRoute } from "vue-router";
 import { showAlert } from "../utils/alert";
 import { token, userName } from "../utils/account";
-import { MdPreview,MdEditor } from "md-editor-v3";
+import { MdPreview, MdEditor } from "md-editor-v3";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";
 import { useI18n } from 'vue-i18n';
@@ -30,34 +30,34 @@ const page = ref(1);
 const comments = ref([]);
 const commentContent = ref("");
 const editorToolbar = [
-  'bold',
-  'underline',
-  'italic',
-  '-',
-  'title',
-  'strikeThrough',
-  'quote',
-  '-',
-  'codeRow',
-  'code',
-  'link',
-  'katex',
+    'bold',
+    'underline',
+    'italic',
+    '-',
+    'title',
+    'strikeThrough',
+    'quote',
+    '-',
+    'codeRow',
+    'code',
+    'link',
+    'katex',
 ];
 
 // 用作分页
-const itemsPerPage = 5; 
+const itemsPerPage = 5;
 const totalPages = computed(() => {
-  return Math.ceil(comments.value.length / itemsPerPage);
+    return Math.ceil(comments.value.length / itemsPerPage);
 });
 
 const paginatedComments = computed(() => {
-  const start = (page.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  return comments.value.slice(start, end);
+    const start = (page.value - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    return comments.value.slice(start, end);
 });
 
 const onPageChange = (newPage) => {
-  page.value = newPage;
+    page.value = newPage;
 };
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
@@ -68,13 +68,13 @@ onMounted(async () => {
         try {
             const response = await getDisDetails(Did);
             // 获取评论
-            const commentsResp = await getComments(Did,userName.value,token.value);
+            const commentsResp = await getComments(Did, userName.value, token.value);
             comments.value = commentsResp.data.comments;
             if (response.status === 200) {
                 discussionInfos.value = response.data.discussionInfo;
             }
         } catch (error) {
-            showAlert(t("message.failed")+"!", "/discussion");
+            showAlert(t("message.failed") + "!", "/discussion");
         } finally {
             loading.value = false;
         }
@@ -90,7 +90,7 @@ const addComments = async (content) => {
     try {
         const resp = await addComment(Did, content, userName.value, token.value);
         if (resp.status === 200) {
-            showAlert(t("message.success")+"!", "reload");
+            showAlert(t("message.success") + "!", "reload");
         }
     } catch (error) {
         window.location = "#/403";
@@ -100,12 +100,12 @@ const addComments = async (content) => {
 }
 
 // 删除评论
-const deleteCommentByID = async(commentID) => {
+const deleteCommentByID = async (commentID) => {
     loading.value = true;
     try {
-        const delCommentResp = await deleteComment(userName.value,token.value, commentID);
+        const delCommentResp = await deleteComment(userName.value, token.value, commentID);
         if (delCommentResp.status === 200) {
-            showAlert(t("message.success")+"!", "reload");
+            showAlert(t("message.success") + "!", "reload");
         }
     } catch (error) {
         window.location = "#/403";
@@ -118,9 +118,9 @@ const deleteCommentByID = async(commentID) => {
 const deleteDis = async () => {
     loading.value = true;
     try {
-        const resp = await deleteDiscussion(userName.value,token.value, Did);
+        const resp = await deleteDiscussion(userName.value, token.value, Did);
         if (resp.status === 200) {
-            showAlert(t("message.success")+"!", "/discussion");
+            showAlert(t("message.success") + "!", "/discussion");
         }
     } catch (error) {
         window.location = "#/403";
@@ -161,13 +161,15 @@ const deleteDis = async () => {
         <div style="margin-top: 50px"></div>
         <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
             <template v-slot:title>
-                <span class="font-weight-black">{{$t('message.comments')}}</span>
+                <span class="font-weight-black">{{ $t('message.comments') }}</span>
             </template>
             <div style="max-height: 300px">
-                <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true" :preview="false" :footers="[]"/>
+                <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true"
+                    :preview="false" :footers="[]" />
             </div>
             <div style="margin: 10px;">
-                <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{$t('message.submit')}}</v-btn>
+                <v-btn color="primary" rounded="xl"
+                    @click="addComments(commentContent)">{{ $t('message.submit') }}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -187,23 +189,19 @@ const deleteDis = async () => {
                             </div>
                         </v-list-item-title>
                         <v-list-item class="comment-content">
-                            <md-preview :modelValue="comment.content"/>
+                            <md-preview :modelValue="comment.content" />
                         </v-list-item>
                     </v-list-item>
                     <div class="buttons">
                         <!-- TODO: 回复暂不添加 -->
                         <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
-                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary" @click="deleteCommentByID(comment.cid)">{{$t('message.delete')}}</v-btn>
+                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
+                            @click="deleteCommentByID(comment.cid)">{{ $t('message.delete') }}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>
             </v-list>
-            <v-pagination
-            v-model="page"
-            :length="totalPages"
-            @input="onPageChange"
-            rounded="xl"
-            />
+            <v-pagination v-model="page" :length="totalPages" @input="onPageChange" rounded="xl" />
         </v-card>
     </div>
 </template>
