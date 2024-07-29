@@ -52,13 +52,13 @@ const removeTestCase = () => {
 const validateFields = () => {
     for (const key in problemFields) {
         if (problemFields[key] === "" || (Array.isArray(problemFields[key]) && problemFields[key].length === 0)) {
-            showAlert(t("message.formCheckfailed")+"!", "");
+            showAlert(t("message.formCheckfailed") + "!", "");
             return false;
         }
     }
     for (const testCase of problemFields.test_cases) {
         if (testCase.input === "" || testCase.output === "") {
-            showAlert(t("message.formCheckfailed")+"!", "");
+            showAlert(t("message.formCheckfailed") + "!", "");
             return false;
         }
     }
@@ -74,10 +74,10 @@ const save = async () => {
         const updateResp = await updateProblemInfo(userName.value, token.value, problemData);
         if (updateResp.data.status === 200) {
             networkloading.value = false;
-            showAlert(t("message.success")+"!", "reload");
+            showAlert(t("message.success") + "!", "reload");
         }
     } catch (error) {
-        showAlert(t("message.failed")+"!", "reload");
+        showAlert(t("message.failed") + "!", "reload");
     }
     dialog.value = false;
 };
@@ -91,7 +91,7 @@ const fetchData = async () => {
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
     } catch (error) {
-        showAlert(t("message.failed")+"!", "")
+        showAlert(t("message.failed") + "!", "")
     } finally {
         loading.value = false
     }
@@ -128,9 +128,9 @@ const goToEditProblem = async (pid) => {
 const delProblem = async () => {
     const delProblemResp = await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
     if (delProblemResp.data.status === 200) {
-        showAlert(t("message.success")+"!", "reload");
+        showAlert(t("message.success") + "!", "reload");
     } else {
-        showAlert(t("message.failed")+"!", "");
+        showAlert(t("message.failed") + "!", "");
     }
     dialog.value = false;
 }
@@ -142,8 +142,8 @@ onMounted(async () => {
             window.location = "#/login";
             return;
         }
-        const userInfoResponse = await getUserInfo(userName.value,token.value);
-        if(userInfoResponse.data.status !== 200){
+        const userInfoResponse = await getUserInfo(userName.value, token.value);
+        if (userInfoResponse.data.status !== 200) {
             window.location = '#/403';
             return;
         }
@@ -180,25 +180,27 @@ onMounted(async () => {
             </div>
             <div v-else>
                 <v-card-title>
-                    <span class="headline">{{$t('message.edit')}}</span>
+                    <span class="headline">{{ $t('message.edit') }}</span>
                 </v-card-title>
                 <v-card-text>
                     <v-form>
                         <v-text-field label="ID" v-model="problemFields.pid" variant="solo-filled"
                             readonly></v-text-field>
                         <!-- 题目名称 -->
-                        <v-text-field :label="$t('message.title')" v-model="problemFields.title" variant="solo-filled"></v-text-field>
+                        <v-text-field :label="$t('message.title')" v-model="problemFields.title"
+                            variant="solo-filled"></v-text-field>
                         <!-- 题目描述 -->
-                        <md-editor v-model="problemFields.content" :footers="[]" :noUploadImg="true" :tabWidth="4" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'"/>
+                        <md-editor v-model="problemFields.content" :footers="[]" :noUploadImg="true" :tabWidth="4"
+                            :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                         <div style="margin-top: 20px;"></div>
                         <!-- 难易程度 -->
-                        <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')" v-model="problemFields.difficulty"
-                            variant="solo-filled"></v-select>
+                        <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
+                            v-model="problemFields.difficulty" variant="solo-filled"></v-select>
                         <v-row class="limitRow">
-                            <v-text-field :label="$t('message.timeLimit')+'S'" v-model="problemFields.time_limit"
+                            <v-text-field :label="$t('message.timeLimit') + 'S'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>
                             <div style="margin-inline: 30px;"></div>
-                            <v-text-field :label="$t('message.memoryLimit')+'MB'" v-model="problemFields.memory_limit"
+                            <v-text-field :label="$t('message.memoryLimit') + 'MB'" v-model="problemFields.memory_limit"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
                         <v-row class="limitRow">
@@ -210,20 +212,24 @@ onMounted(async () => {
                         </v-row>
                         <!-- 输入输出测试样例 -->
                         <div v-for="(testCase, index) in problemFields.test_cases" :key="index">
-                            <span>{{$t('message.displayOutputCase')+ (index + 1) }}</span>
-                            <v-text-field :label="$t('message.input')" v-model="testCase.input" variant="solo-filled"></v-text-field>
-                            <v-text-field :label="$t('message.output')" v-model="testCase.output" variant="solo-filled"></v-text-field>
+                            <span>{{ $t('message.testcases') + (index + 1) }}</span>
+                            <v-text-field :label="$t('message.input')" v-model="testCase.input"
+                                variant="solo-filled"></v-text-field>
+                            <v-text-field :label="$t('message.output')" v-model="testCase.output"
+                                variant="solo-filled"></v-text-field>
                         </div>
                         <!-- 添加新的输入输出测试样例 -->
-                        <v-btn @click="addTestCase" color="primary" rounded="xl">{{$t('message.addTestCase')}}</v-btn>
-                        <v-btn @click="removeTestCase" text rounded="xl">{{$t('message.deleteTestCase')}}</v-btn>
+                        <v-btn @click="addTestCase" color="primary" rounded="xl">{{ $t('message.addTestCase') }}</v-btn>
+                        <v-btn @click="removeTestCase" text rounded="xl">{{ $t('message.deleteTestCase') }}</v-btn>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{$t('message.cancel')}}</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">{{$t('message.delete')}}</v-btn>
-                    <v-btn color="primary" @click="save" rounded="xl">{{$t('message.save')}}</v-btn>
+                    <v-btn color="blue darken-1" text @click="dialog = false"
+                        rounded="xl">{{ $t('message.cancel') }}</v-btn>
+                    <v-btn v-if="!isCreate" color="primary" @click="delProblem"
+                        rounded="xl">{{ $t('message.delete') }}</v-btn>
+                    <v-btn color="primary" @click="save" rounded="xl">{{ $t('message.save') }}</v-btn>
                 </v-card-actions>
             </div>
         </v-card>
