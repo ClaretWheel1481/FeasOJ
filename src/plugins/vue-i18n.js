@@ -81,6 +81,7 @@ const messages = {
         vCodeLength: "Verification Code must be 4 digits.",
         passwordLength: "Password must be 8-20 characters.",
         confirmPwdLength: "Confirm Password must be 8-20 characters.",
+        back: "Back",
       },
     },
     zh_CN: {
@@ -163,6 +164,7 @@ const messages = {
         vCodeLength: "验证码必须是4位数字。",
         passwordLength: "密码必须是8-20位字符。",
         confirmPwdLength: "确认密码必须是8-20位字符。",
+        back: "返回",
       },
     },
     ja: {
@@ -245,6 +247,7 @@ const messages = {
         vCodeLength: "確認コードは4桁の数字です。",
         passwordLength: "パスワードは8-20文字です。",
         confirmPwdLength: "確認パスワードは8-20文字です。",
+        back: "戻る",
       },
     },
     zh_TW: {
@@ -327,6 +330,7 @@ const messages = {
         vCodeLength: "確認碼是4位數字。",
         passwordLength: "密碼長度為8-20個字符。",
         confirmPwdLength: "確認密碼長度為8-20個字符。",
+        back: "返回",
       },
     },
 };
