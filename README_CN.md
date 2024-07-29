@@ -55,6 +55,7 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用
 - [Vuetify](https://github.com/vuetifyjs/vuetify)
 - [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
+- [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)
 - [Go](https://github.com/golang/go)
 - [Gin](https://github.com/gin-gonic/gin)
