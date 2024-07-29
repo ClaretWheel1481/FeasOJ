@@ -29,15 +29,15 @@ const login = async () => {
       const response = await getUserInfo(forms.username, loginResponse.data.token);
       localStorage.setItem('userid', response.data.Info.uid);
       networkloading.value = false;
-      showAlert(loginResponse.data.message, "/");
+      showAlert(t("message.success")+"!", "/");
     } else {
       networkloading.value = false;
-      showAlert(loginResponse.data.message, "");
+      showAlert(t("message.failed")+"!", "");
       return;
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(error.response.data.message, "");
+    showAlert(t("message.failed")+"!", "");
     return;
   }
 }
