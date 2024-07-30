@@ -19,6 +19,7 @@ const currentUsername = route.params.Username;
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
+const sparklineData = ref([]);
 const networkloading = ref(false);
 const headers = ref([
   { title: t('message.problemId'), value: 'Pid', align: 'center' },
@@ -70,16 +71,48 @@ const uploadAvat = async (cropper) => {
   }
 };
 
-// 获取用户信息
+// 获取用户提交信息
 const fetchData = async () => {
   try {
     const submitResponse = await getUserSubmitRecords(userId.value);
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
+    processSparklineData();
   } catch (error) {
     showAlert(t("message.failed") + "!", "")
   }
 }
+
+// 图表数据计算
+const processSparklineData = () => {
+  const counts = {};
+  const now = new Date();
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(now.getDate() - 6);
+
+  // 初始化最近7天的日期，包括当天
+  for (let d = new Date(sevenDaysAgo); d <= now; d.setDate(d.getDate() + 1)) {
+    const dateString = d.toISOString().split('T')[0];
+    counts[dateString] = 0;
+  }
+
+  // 统计提交记录
+  userSubmitRecords.value.forEach(record => {
+    const date = new Date(record.Time);
+    if (date >= sevenDaysAgo && date <= now) {
+      const dateString = date.toISOString().split('T')[0];
+      counts[dateString] = (counts[dateString] || 0) + 1;
+    }
+  });
+
+  console.log('Counts:', counts); // 调试输出
+
+  sparklineData.value = Object.keys(counts)
+    .map(date => ({ date, count: counts[date] }))
+    .sort((a, b) => new Date(a.date) - new Date(b.date)); // 按日期排序
+
+  console.log('Sparkline Data:', sparklineData.value); // 调试输出
+};
 
 // 根据结果不同显示不同颜色
 const getResultStyle = (result) => {
@@ -160,9 +193,21 @@ onMounted(async () => {
       <v-card-actions style="justify-content: end;">
         <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
           @click="$router.push('/reset')">{{ $t('message.resetpwd') }}</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
-          @click="logout">{{ $t('message.logout') }}</v-btn>
+        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{
+          $t('message.logout') }}</v-btn>
       </v-card-actions>
+    </v-card>
+    <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10" style="margin-top: 30px;">
+      <v-card-text>
+        <v-sheet>
+          <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100"
+            padding="34" line-width="1.5" smooth>
+            <template v-slot:label="{ index }">
+              {{ sparklineData[index].date.split('-').slice(1).join('-') }}
+            </template>
+          </v-sparkline>
+        </v-sheet>
+      </v-card-text>
     </v-card>
     <div style="margin: 30px"></div>
     <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
