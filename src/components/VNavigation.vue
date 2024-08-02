@@ -32,7 +32,7 @@ const userLoggedIn = computed(() => !!token.value);
 const router = useRouter();
 
 // 缩小导航栏
-const isRail = ref(false);
+const isRail = ref(true);
 
 const toggleRail = (value) => {
   isRail.value = value;
@@ -40,9 +40,9 @@ const toggleRail = (value) => {
 
 // 改变语言
 const changeLanguage = (lang) => {
+  location.reload();
   locale.value = lang;
   localStorage.setItem('language', lang);
-  location.reload();
 };
 
 // 根据用户登录状态修改导航目的

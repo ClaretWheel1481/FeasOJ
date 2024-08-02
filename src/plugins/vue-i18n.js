@@ -82,6 +82,7 @@ const messages = {
       passwordLength: "Password must be 8-20 characters.",
       confirmPwdLength: "Confirm Password must be 8-20 characters.",
       back: "Back",
+      submissions: "Submissions",
     },
   },
   zh_CN: {
@@ -165,6 +166,7 @@ const messages = {
       passwordLength: "密码必须是8-20位字符。",
       confirmPwdLength: "确认密码必须是8-20位字符。",
       back: "返回",
+      submissions: "提交记录",
     },
   },
   ja: {
@@ -248,6 +250,7 @@ const messages = {
       passwordLength: "パスワードは8-20文字です。",
       confirmPwdLength: "確認パスワードは8-20文字です。",
       back: "戻る",
+      submissions: "提出記録",
     },
   },
   zh_TW: {
@@ -331,6 +334,7 @@ const messages = {
       passwordLength: "密碼長度為8-20個字符。",
       confirmPwdLength: "確認密碼長度為8-20個字符。",
       back: "返回",
+      submissions: "提交記錄",
     },
   },
   it: {
@@ -414,6 +418,7 @@ const messages = {
       passwordLength: "La password deve essere lunga tra 8 e 20 caratteri.",
       confirmPwdLength: "La conferma della password deve essere lunga tra 8 e 20 caratteri.",
       back: "Indietro",
+      submissions: "Record di invio",
     }
   },
   es: {
@@ -497,6 +502,7 @@ const messages = {
       passwordLength: "La contraseña debe tener entre 8 y 20 caracteres.",
       confirmPwdLength: "La confirmación de la contraseña debe tener entre 8 y 20 caracteres.",
       back: "Volver",
+      submissions: "Envíos",
     }
   },
   fr: {
@@ -579,7 +585,8 @@ const messages = {
       vCodeLength: "Le code de vérification doit être composé de 4 chiffres.",
       passwordLength: "Le mot de passe doit contenir entre 8 et 20 caractères.",
       confirmPwdLength: "La confirmation du mot de passe doit contenir entre 8 et 20 caractères.",
-      back: "Retour"
+      back: "Retour",
+      submissions: 'Soumissions',
     }
   }
 };

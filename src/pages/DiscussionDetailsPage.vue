@@ -11,15 +11,23 @@ import {
     VListItemTitle,
 } from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
-import { getDisDetails, deleteDiscussion, avatarServer, getComments, deleteComment, addComment } from "../utils/axios";
+import {
+    getDisDetails,
+    deleteDiscussion,
+    avatarServer,
+    getComments,
+    deleteComment,
+    addComment,
+} from "../utils/axios";
 import { useRoute } from "vue-router";
 import { showAlert } from "../utils/alert";
 import { token, userName } from "../utils/account";
 import { MdPreview, MdEditor } from "md-editor-v3";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";
-import { useI18n } from 'vue-i18n';
+import { useI18n } from "vue-i18n";
 
+const { locale } = useI18n();
 const { t } = useI18n();
 const route = useRoute();
 const loading = ref(true);
@@ -30,18 +38,18 @@ const page = ref(1);
 const comments = ref([]);
 const commentContent = ref("");
 const editorToolbar = [
-    'bold',
-    'underline',
-    'italic',
-    '-',
-    'title',
-    'strikeThrough',
-    'quote',
-    '-',
-    'codeRow',
-    'code',
-    'link',
-    'katex',
+    "bold",
+    "underline",
+    "italic",
+    "-",
+    "title",
+    "strikeThrough",
+    "quote",
+    "-",
+    "codeRow",
+    "code",
+    "link",
+    "katex",
 ];
 
 // 用作分页
@@ -97,13 +105,17 @@ const addComments = async (content) => {
     } finally {
         loading.value = false;
     }
-}
+};
 
 // 删除评论
 const deleteCommentByID = async (commentID) => {
     loading.value = true;
     try {
-        const delCommentResp = await deleteComment(userName.value, token.value, commentID);
+        const delCommentResp = await deleteComment(
+            userName.value,
+            token.value,
+            commentID
+        );
         if (delCommentResp.status === 200) {
             showAlert(t("message.success") + "!", "reload");
         }
@@ -112,7 +124,7 @@ const deleteCommentByID = async (commentID) => {
     } finally {
         loading.value = false;
     }
-}
+};
 
 // 删除讨论
 const deleteDis = async () => {
@@ -161,15 +173,15 @@ const deleteDis = async () => {
         <div style="margin-top: 50px"></div>
         <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
             <template v-slot:title>
-                <span class="font-weight-black">{{ $t('message.comments') }}</span>
+                <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>
             <div style="max-height: 300px">
                 <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true"
-                    :preview="false" :footers="[]" />
+                    :preview="false" :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
             </div>
-            <div style="margin: 10px;">
-                <v-btn color="primary" rounded="xl"
-                    @click="addComments(commentContent)">{{ $t('message.submit') }}</v-btn>
+            <div style="margin: 10px">
+                <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{ $t("message.submit")
+                    }}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -179,12 +191,12 @@ const deleteDis = async () => {
                             <v-avatar size="44" color="surface-variant">
                                 <v-img :src="avatarServer + comment.avatar" alt="Avatar" cover></v-img>
                             </v-avatar>
-                            <div style="margin: 5px;">
+                            <div style="margin: 5px">
                                 <div class="username">
                                     {{ comment.username }}
                                 </div>
                                 <div class="timeline">
-                                    {{ moment(comment.create_at).format('MM-DD HH:mm') }}
+                                    {{ moment(comment.create_at).format("MM-DD HH:mm") }}
                                 </div>
                             </div>
                         </v-list-item-title>
@@ -196,7 +208,7 @@ const deleteDis = async () => {
                         <!-- TODO: 回复暂不添加 -->
                         <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
-                            @click="deleteCommentByID(comment.cid)">{{ $t('message.delete') }}</v-btn>
+                            @click="deleteCommentByID(comment.cid)">{{ $t("message.delete") }}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>
@@ -223,7 +235,7 @@ const deleteDis = async () => {
 
 .username {
     font-weight: bold;
-    font-size: 1.0em
+    font-size: 1em;
 }
 
 .comment-content {

@@ -105,13 +105,9 @@ const processSparklineData = () => {
     }
   });
 
-  console.log('Counts:', counts); // 调试输出
-
   sparklineData.value = Object.keys(counts)
     .map(date => ({ date, count: counts[date] }))
     .sort((a, b) => new Date(a.date) - new Date(b.date)); // 按日期排序
-
-  console.log('Sparkline Data:', sparklineData.value); // 调试输出
 };
 
 // 根据结果不同显示不同颜色
@@ -178,7 +174,7 @@ onMounted(async () => {
         <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
       </div>
       <v-card-text>
-        <p class="text-h4 font-weight-black">{{ userName }}</p>
+        <p class="text-h4 font-weight-black">{{ userInfo.username }}</p>
         <div style="margin: 10px"></div>
         <p class="text-medium-emphasis">{{ userInfo.synopsis }}</p>
         <div style="margin: 20px"></div>
@@ -199,6 +195,7 @@ onMounted(async () => {
     </v-card>
     <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10" style="margin-top: 30px;">
       <v-card-text>
+        <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <v-sheet>
           <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100"
             padding="34" line-width="1.5" smooth>
