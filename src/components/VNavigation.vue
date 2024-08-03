@@ -70,8 +70,7 @@ onMounted(async () => {
 <template>
   <v-navigation-drawer :width="170" permanent :rail="isRail">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
-      <v-btn variant="text" rounded="xl" icon="mdi-menu" @click="toggleRail(isRail ? false : true)">
-      </v-btn>
+      <v-btn variant="text" rounded="xl" :icon="isRail ? 'mdi-menu-right' : 'mdi-menu-left'" @click="toggleRail(isRail ? false : true)"></v-btn>
       <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="$router.push('/')" color="primary"
         class="list-item">
         <template v-slot:title>

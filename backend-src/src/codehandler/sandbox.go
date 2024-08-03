@@ -19,7 +19,6 @@ import (
 
 // 构建Sandbox
 func BuildImage() bool {
-	// 创建context
 	ctx := context.Background()
 
 	// 创建Docker客户端
@@ -61,7 +60,6 @@ func BuildImage() bool {
 
 // 启动Docker容器
 func StartContainer() (string, error) {
-	// 创建context
 	ctx := context.Background()
 
 	// 创建Docker客户端
@@ -115,7 +113,6 @@ func CompileAndRun(filename string) string {
 		if err := compileCmd.Run(); err != nil {
 			return "Compile Failed"
 		}
-		// Java果然是我最讨厌的语言，没有之一!!!!
 	case ".java":
 		// 临时重命名为Main.java
 		originalName := filename
@@ -169,7 +166,6 @@ func CompileAndRun(filename string) string {
 
 // 终止并删除Docker容器
 func TerminateContainer(containerID string) bool {
-	// 创建context
 	ctx := context.Background()
 
 	// 创建Docker客户端
