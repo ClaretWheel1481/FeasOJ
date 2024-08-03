@@ -119,21 +119,18 @@ func SelectAdminUser(role int) bool {
 	return err == nil
 }
 
-// 查询指定用户的password加密值
-func SelectPassword(username string) string {
-	// 查询用户
+// 根据邮箱获取信息
+func SelectUserByEmail(email string) global.User {
 	var user global.User
-	// 查询用户名或邮箱
-	connectSql().Where("username = ?", username).First(&user)
-	return user.Password
+	connectSql().Where("email = ?", email).First(&user)
+	return user
 }
 
-// 查询指定用户的tokensecret
-func SelectTokenSecret(username string) string {
-	// 查询用户
+// 获取用户信息
+func SelectUser(username string) global.User {
 	var user global.User
 	connectSql().Where("username = ?", username).First(&user)
-	return user.TokenSecret
+	return user
 }
 
 // 根据username查询指定用户的除了password和tokensecret之外的所有信息

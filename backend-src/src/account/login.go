@@ -1,6 +1,8 @@
 package account
 
 import (
+	"regexp"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -17,4 +19,11 @@ func EncryptPassword(password string) string {
 func VerifyPassword(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
+}
+
+// 判断是否邮箱登录
+func IsEmail(email string) bool {
+	pattern := `^\w+([-+.]?\w+)*@\w+([-.]?\w+)*\.\w+([-.]?\w+)*$`
+	reg := regexp.MustCompile(pattern)
+	return reg.MatchString(email)
 }

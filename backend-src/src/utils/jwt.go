@@ -13,7 +13,7 @@ func GenerateToken(username string) (string, error) {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
 	// 生成Token
-	tokenString, err := token.SignedString([]byte(SelectTokenSecret(username)))
+	tokenString, err := token.SignedString([]byte(SelectUser(username).TokenSecret))
 	if err != nil {
 		return "", fmt.Errorf("生成Token失败：%v", err)
 	}
@@ -26,9 +26,9 @@ func VerifyToken(username, tokenString string) bool {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		// 验证签名
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("%v", token.Header["alg"])
 		}
-		return []byte(SelectTokenSecret(username)), nil
+		return []byte(SelectUser(username).TokenSecret), nil
 	})
 	if token.Valid {
 		return true

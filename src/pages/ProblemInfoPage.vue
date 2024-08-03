@@ -32,7 +32,7 @@ const templates = {
 using namespace std;
 
 int main() {
-
+    
     return 0;
 }`,
     golang:
@@ -41,7 +41,7 @@ int main() {
 import "fmt"
 
 func main() {
-
+    
 }`,
     python:
         ``
@@ -131,8 +131,9 @@ onMounted(async () => {
                     <p class="tags">{{ $t("message.displayOutputCase") }}</p>
                     <p class="example">{{ problemInfo.output }}</p>
                 </v-col>
+                <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
-                    <v-card class="mx-auto my-8" width="100%" height="800" elevation="5">
+                    <v-card class="mx-auto my-4" width="100%" height="800" elevation="5">
                         <v-select :label="$t('message.lang')" v-model="lang"
                             :items="['python', 'c_cpp', 'golang', 'java']" variant="solo-filled"></v-select>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang

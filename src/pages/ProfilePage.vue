@@ -165,7 +165,7 @@ onMounted(async () => {
   </div>
   <div v-else>
     <div style="margin: 10%"></div>
-    <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10">
       <div style="margin: 10px"></div>
       <div class="avatar-container">
         <v-avatar size="120" color="surface-variant">
@@ -193,12 +193,12 @@ onMounted(async () => {
           $t('message.logout') }}</v-btn>
       </v-card-actions>
     </v-card>
-    <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10" style="margin-top: 30px;">
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10" style="margin-top: 30px;">
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <v-sheet>
           <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100"
-            padding="34" line-width="1.5" smooth>
+            padding="34" line-width="1.2">
             <template v-slot:label="{ index }">
               {{ sparklineData[index].date.split('-').slice(1).join('-') }}
             </template>
@@ -207,7 +207,7 @@ onMounted(async () => {
       </v-card-text>
     </v-card>
     <div style="margin: 30px"></div>
-    <v-card class="mx-auto" max-width="50%" min-width="50%" rounded="xl" elevation="10">
+    <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10">
       <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
         :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
         :no-data-text="$t('message.nodata')">

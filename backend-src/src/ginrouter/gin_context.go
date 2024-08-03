@@ -41,9 +41,16 @@ func Register(c *gin.Context) {
 
 // 登录
 func Login(c *gin.Context) {
-	Username := c.Query("username")
+	var Username string
+	user := c.Query("username")
 	Password := c.Query("password")
-	userPassword := utils.SelectPassword(Username)
+	// 判断用户输入是否为邮箱
+	if account.IsEmail(user) {
+		Username = utils.SelectUserByEmail(user).Username
+	} else {
+		Username = user
+	}
+	userPassword := utils.SelectUser(Username).Password
 	if userPassword == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {
@@ -79,20 +86,26 @@ func GetCaptcha(c *gin.Context) {
 
 // 获取用户信息
 func GetUserInfo(c *gin.Context) {
+	var Username string
 	token := c.GetHeader("Authorization")
 	// 返回至前端以显示个人资料
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
+	user := c.GetHeader("username")
+	unescapeUsername, err := url.QueryUnescape(user)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
 		return
 	}
-	if !utils.VerifyToken(username, token) {
+	if account.IsEmail(unescapeUsername) {
+		Username = utils.SelectUserByEmail(unescapeUsername).Username
+	} else {
+		Username = unescapeUsername
+	}
+	if !utils.VerifyToken(Username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
 	// 查询对应的用户信息
-	userInfo := utils.SelectUserInfo(username)
+	userInfo := utils.SelectUserInfo(Username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {

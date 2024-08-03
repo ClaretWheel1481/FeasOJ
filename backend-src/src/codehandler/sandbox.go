@@ -69,7 +69,6 @@ func StartContainer() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fmt.Println("[FeasOJ]正在启动SandBox...")
 
 	// 配置容器配置
 	containerConfig := &container.Config{
