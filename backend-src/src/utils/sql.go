@@ -168,6 +168,13 @@ func UpdateAvatar(username, avatarpath string) bool {
 	return err == nil
 }
 
+// 更新个人简介
+func UpdateSynopsis(username, synopsis string) bool {
+	err := connectSql().Model(&global.User{}).
+		Where("username = ?", username).Update("synopsis", synopsis).Error
+	return err == nil
+}
+
 // 获取Problem表中的所有数据
 func SelectAllProblems() []global.Problem {
 	var problems []global.Problem
@@ -183,7 +190,7 @@ func SelectProblemInfo(pid string) global.ProblemInfoRequest {
 }
 
 // 倒序查询指定用户ID的30天内的提交题目记录
-func SelectSubmitRecordsByUid(uid string) []global.SubmitRecord {
+func SelectSubmitRecordsByUid(uid int) []global.SubmitRecord {
 	var records []global.SubmitRecord
 	connectSql().Where("uid = ?", uid).
 		Where("time > ?", time.Now().Add(-30*24*time.Hour)).Order("time desc").Find(&records)

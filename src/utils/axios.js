@@ -25,12 +25,21 @@ export const getCaptchaCode = async (email) => {
     });
 }
 
-// 获取用户信息
-export const getUserInfo = async (username, token) => {
-    return await axios.get(`${apiUrl}/v1/getUserInfo`, {
+// 验证个人用户信息
+export const verifyUserInfo = async (username, token) => {
+    return await axios.get(`${apiUrl}/v1/verifyUserInfo`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
+        }
+    });
+}
+
+// 获取用户信息
+export const getUserInfo = async (username) => {
+    return await axios.get(`${apiUrl}/v1/getUserInfo`, {
+        params: {
+            username: encodeURIComponent(username)
         }
     });
 }
@@ -61,8 +70,12 @@ export const getDisDetails = async (Did) => {
 }
 
 // 获取指定用户提交记录
-export const getUserSubmitRecords = async (userId) => {
-    return await axios.get(`${apiUrl}/v1/getSubmitRecordsByUid/${userId}`)
+export const getUserSubmitRecords = async (username) => {
+    return await axios.get(`${apiUrl}/v1/getSubmitRecordsByUsername/`,{
+        headers: {
+            username: encodeURIComponent(username)
+        }
+    })
 }
 
 // 获取30天内的提交记录
@@ -179,6 +192,18 @@ export const uploadCode = async (file, pid, username, token) => {
             Authorization: token
         },
     });
+}
+
+// 更新用户简介
+export const updateSynopsis = async (username, token, synopsis) => {
+    const formData = new FormData();
+    formData.append('synopsis', synopsis);
+    return await axios.post(`${apiUrl}/v2/updateSynopsis`, formData, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token,
+        }
+    })
 }
 
 // 上传头像

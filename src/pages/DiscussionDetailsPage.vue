@@ -19,7 +19,7 @@ import {
     deleteComment,
     addComment,
 } from "../utils/axios";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { showAlert } from "../utils/alert";
 import { token, userName } from "../utils/account";
 import { MdPreview, MdEditor } from "md-editor-v3";
@@ -30,6 +30,7 @@ import { useI18n } from "vue-i18n";
 const { locale } = useI18n();
 const { t } = useI18n();
 const route = useRoute();
+const router = useRouter();
 const loading = ref(true);
 const discussionInfos = ref({});
 const Did = route.params.Did;
@@ -70,28 +71,6 @@ const onPageChange = (newPage) => {
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
 
-onMounted(async () => {
-    loading.value = true;
-    if (userLoggedIn.value) {
-        try {
-            const response = await getDisDetails(Did);
-            // 获取评论
-            const commentsResp = await getComments(Did, userName.value, token.value);
-            comments.value = commentsResp.data.comments;
-            if (response.status === 200) {
-                discussionInfos.value = response.data.discussionInfo;
-            }
-        } catch (error) {
-            showAlert(t("message.failed") + "!", "/discussion");
-        } finally {
-            loading.value = false;
-        }
-    } else {
-        window.location = "#/login";
-        window.location.reload();
-    }
-});
-
 // 添加评论
 const addComments = async (content) => {
     loading.value = true;
@@ -126,6 +105,11 @@ const deleteCommentByID = async (commentID) => {
     }
 };
 
+// 跳转至个人页面
+const to = (username) => {
+    router.push("/profile/" + username);;
+};
+
 // 删除讨论
 const deleteDis = async () => {
     loading.value = true;
@@ -140,6 +124,28 @@ const deleteDis = async () => {
         loading.value = false;
     }
 };
+
+onMounted(async () => {
+    loading.value = true;
+    if (userLoggedIn.value) {
+        try {
+            const response = await getDisDetails(Did);
+            // 获取评论
+            const commentsResp = await getComments(Did, userName.value, token.value);
+            comments.value = commentsResp.data.comments;
+            if (response.status === 200) {
+                discussionInfos.value = response.data.discussionInfo;
+            }
+        } catch (error) {
+            showAlert(t("message.failed") + "!", "/discussion");
+        } finally {
+            loading.value = false;
+        }
+    } else {
+        window.location = "#/login";
+        window.location.reload();
+    }
+});
 </script>
 
 <template>
@@ -152,12 +158,11 @@ const deleteDis = async () => {
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
             <v-row style="align-items: center">
-                <div style="margin-left: 80px"></div>
+                <div style="margin-left: 50px"></div>
                 <v-avatar size="50" color="surface-variant">
                     <v-img :src="avatarServer + discussionInfos.avatar" cover></v-img>
                 </v-avatar>
-                <div style="margin-left: 10px"></div>
-                <p class="font-weight-black">{{ discussionInfos.username }}</p>
+                <v-btn variant="text" class="font-weight-black" @click="to(discussionInfos.username)">{{ discussionInfos.username }}</v-btn>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
                 <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>
@@ -192,7 +197,7 @@ const deleteDis = async () => {
                                 <v-img :src="avatarServer + comment.avatar" alt="Avatar" cover></v-img>
                             </v-avatar>
                             <div style="margin: 5px">
-                                <div class="username">
+                                <div class="username" @click="to(comment.username)">
                                     {{ comment.username }}
                                 </div>
                                 <div class="timeline">
@@ -236,6 +241,7 @@ const deleteDis = async () => {
 .username {
     font-weight: bold;
     font-size: 1em;
+    cursor: pointer;
 }
 
 .comment-content {

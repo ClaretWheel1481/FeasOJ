@@ -59,11 +59,14 @@ func main() {
 		// 获取验证码API
 		router.GET("/getCaptcha", ginrouter.GetCaptcha)
 
+		// 验证用户信息API
+		router.GET("/verifyUserInfo", ginrouter.VerifyUserInfo)
+
 		// 获取用户信息API
 		router.GET("/getUserInfo", ginrouter.GetUserInfo)
 
 		// TODO: 更新用户信息（非修改密码）API
-		router.GET("/updateUserInfo")
+		// router.GET("/updateUserInfo")
 
 		// 获取所有题目API
 		router.GET("/getAllProblems", ginrouter.GetAllProblems)
@@ -75,7 +78,7 @@ func main() {
 		router.GET("/getAllSubmitRecords", ginrouter.GetAllSubmitRecords)
 
 		// 获取指定用户的提交记录API
-		router.GET("/getSubmitRecordsByUid/:uid", ginrouter.GetSubmitRecordsByUid)
+		router.GET("/getSubmitRecordsByUsername/", ginrouter.GetSubmitRecordsByUsername)
 
 		// 获取所有讨论帖子API
 		router.GET("/getAllDiscussions", ginrouter.GetAllDiscussions)
@@ -103,6 +106,9 @@ func main() {
 
 		// 密码修改API
 		router2.POST("/updatePassword", ginrouter.UpdatePassword)
+
+		// 简介更新API
+		router2.POST("/updateSynopsis", ginrouter.UpdateSynopsis)
 
 		// 创建讨论API
 		router2.POST("/addDiscussion", ginrouter.CreateDiscussion)

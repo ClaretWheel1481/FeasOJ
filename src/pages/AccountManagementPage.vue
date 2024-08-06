@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, getUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../utils/axios';
+import { getAllUsersInfo, verifyUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../utils/axios';
 import { showAlert } from '../utils/alert';
 import { token, userName } from '../utils/account'
 import { VBtn } from 'vuetify/components';
@@ -126,7 +126,7 @@ onMounted(async () => {
             window.location.reload();
             return;
         }
-        const userInfoResponse = await getUserInfo(userName.value, token.value);
+        const userInfoResponse = await verifyUserInfo(userName.value, token.value);
         if (userInfoResponse.data.status !== 200) {
             window.location = '#/403';
             return;

@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../utils/account'
-import { getUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../utils/axios';
+import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../utils/axios';
 import { VDataTableServer, VFab, VDialog, VCard, VCardTitle, VCardText, VBtn, VTextField, VSelect, VForm, VSpacer, VCardActions, VRow } from 'vuetify/components'
 import { showAlert } from '../utils/alert';
 import { MdEditor } from 'md-editor-v3';
@@ -142,7 +142,7 @@ onMounted(async () => {
             window.location = "#/login";
             return;
         }
-        const userInfoResponse = await getUserInfo(userName.value, token.value);
+        const userInfoResponse = await verifyUserInfo(userName.value, token.value);
         if (userInfoResponse.data.status !== 200) {
             window.location = '#/403';
             return;

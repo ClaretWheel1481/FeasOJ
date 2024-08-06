@@ -84,8 +84,8 @@ func GetCaptcha(c *gin.Context) {
 	}
 }
 
-// 获取用户信息
-func GetUserInfo(c *gin.Context) {
+// 验证用户信息
+func VerifyUserInfo(c *gin.Context) {
 	var Username string
 	token := c.GetHeader("Authorization")
 	// 返回至前端以显示个人资料
@@ -111,7 +111,19 @@ func GetUserInfo(c *gin.Context) {
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 	}
+}
 
+// 获取用户信息
+func GetUserInfo(c *gin.Context) {
+	// 获取用户名
+	username := c.Query("username")
+	// 查询对应的用户信息
+	userInfo := utils.SelectUserInfo(username)
+	if userInfo.Username == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
+	} else {
+		c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
+	}
 }
 
 // 更新密码
@@ -127,6 +139,29 @@ func UpdatePassword(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "密码修改成功，2秒后跳转至登录页面。"})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码修改失败。"})
+	}
+}
+
+// 更新个人简介
+func UpdateSynopsis(c *gin.Context) {
+	synopsis := c.PostForm("synopsis")
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
+	token := c.GetHeader("Authorization")
+	// 校验Token
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	// 更新简介
+	if utils.UpdateSynopsis(username, synopsis) {
+		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "个人简介更新成功。"})
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "个人简介更新失败。"})
 	}
 }
 
@@ -192,8 +227,15 @@ func GetAllSubmitRecords(c *gin.Context) {
 }
 
 // 获取指定用户提交记录
-func GetSubmitRecordsByUid(c *gin.Context) {
-	submitrecords := utils.SelectSubmitRecordsByUid(c.Param("uid"))
+func GetSubmitRecordsByUsername(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
+		return
+	}
+	uid := utils.SelectUserInfo(username).Uid
+	submitrecords := utils.SelectSubmitRecordsByUid(uid)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
 

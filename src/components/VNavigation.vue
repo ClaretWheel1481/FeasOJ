@@ -7,7 +7,7 @@ import {
 } from "vuetify/components";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { getUserInfo } from "../utils/axios";
+import { verifyUserInfo } from "../utils/axios";
 import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
 import { useI18n } from 'vue-i18n';
@@ -46,7 +46,7 @@ const changeLanguage = (lang) => {
 };
 
 // 根据用户登录状态修改导航目的
-const navigate = () => {
+const navigate = async() => {
   if (userLoggedIn.value) {
     router.push("/profile/" + userName.value);
   } else {
@@ -57,8 +57,8 @@ const navigate = () => {
 // 校验Token后获取用户信息，若privilege为1则表明是管理员
 onMounted(async () => {
   if (userLoggedIn.value) {
-    const resp = await getUserInfo(userName.value, token.value);
-    if (resp.data.status === 401) {
+    const resp = await verifyUserInfo(userName.value, token.value);
+    if (resp.data.status !==200) {
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
     }
@@ -71,31 +71,31 @@ onMounted(async () => {
   <v-navigation-drawer :width="170" permanent :rail="isRail">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
       <v-btn variant="text" rounded="xl" :icon="isRail ? 'mdi-menu-right' : 'mdi-menu-left'" @click="toggleRail(isRail ? false : true)"></v-btn>
-      <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="$router.push('/')" color="primary"
+      <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="router.push('/')" color="primary"
         class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.mainpage') }}</span>
         </template>
       </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-file" value="PROBLEMSET" @click="$router.push('/problemset')"
+      <v-list-item rounded="xl" prepend-icon="mdi-file" value="PROBLEMSET" @click="router.push('/problemset')"
         color="primary" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.problemset') }}</span>
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"
-        @click="$router.push('/status')" color="primary" class="list-item">
+        @click="router.push('/status')" color="primary" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.status') }}</span>
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-chat" value="DISCUSS" color="primary"
-        @click="$router.push('/discussion')" class="list-item">
+        @click="router.push('/discussion')" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.discussion') }}</span>
         </template>
       </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-help-circle" value="ABOUT" @click="$router.push('/about')"
+      <v-list-item rounded="xl" prepend-icon="mdi-help-circle" value="ABOUT" @click="router.push('/about')"
         color="primary" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.about') }}</span>

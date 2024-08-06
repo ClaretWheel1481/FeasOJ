@@ -2,7 +2,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
-import { loginRequest, getUserInfo } from '../utils/axios.js'
+import { loginRequest, verifyUserInfo } from '../utils/axios.js'
 import { showAlert } from '../utils/alert';
 import { useI18n } from 'vue-i18n';
 
@@ -25,11 +25,11 @@ const login = async () => {
     const loginResponse = await loginRequest(forms.username, forms.password);
     if (loginResponse.data.status === 200) {
       localStorage.setItem('token', loginResponse.data.token)
-      const response = await getUserInfo(forms.username, loginResponse.data.token);
+      const response = await verifyUserInfo(forms.username, loginResponse.data.token);
       localStorage.setItem('username', response.data.Info.username)
-      localStorage.setItem('userid', response.data.Info.uid);
       networkloading.value = false;
       showAlert(t("message.success") + "!", "/");
+      return;
     } else {
       networkloading.value = false;
       showAlert(t("message.failed") + "!", "");

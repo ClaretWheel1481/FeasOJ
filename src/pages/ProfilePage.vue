@@ -1,12 +1,12 @@
 <!-- 个人信息页 -->
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { VCard, VCardActions, VCardText, VRow, VProgressCircular, VTextField, VBtn, VAvatar, VImg, VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
-import { getUserSubmitRecords, uploadAvatar, avatarServer, getUserInfo } from '../utils/axios';
+import { getUserSubmitRecords, uploadAvatar, avatarServer, verifyUserInfo, getUserInfo, updateSynopsis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
-import { userId, userName, token } from '../utils/account';
+import { userName, token } from '../utils/account';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -15,33 +15,35 @@ const userInfo = ref({});
 const showCropper = ref(false);
 const route = useRoute();
 const router = useRouter();
-const currentUsername = route.params.Username;
+const currentUsername = ref(route.params.Username);
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
 const sparklineData = ref([]);
 const networkloading = ref(false);
+const dialog = ref(false);
+const synopsis = ref('');
 const headers = ref([
   { title: t('message.problemId'), value: 'Pid', align: 'center' },
   { title: t('message.result'), value: 'Result', align: 'center' },
   { title: t('message.lang'), value: 'Language', align: 'center' },
   { title: t('message.when'), value: 'Time', align: 'center' },
-])
+]);
 
 // 计算属性来判断用户是否已经登录
-const userLoggedIn = computed(() => !!token.value)
+const userLoggedIn = computed(() => !!token.value);
 
 // 登出
 const logout = () => {
   localStorage.clear();
-  window.location.reload();
-  window.location = '#/login';
+  location.reload();
+  location = '#/login';
 };
 
 // 点击题目跳转
 const handleRowClick = (row) => {
-  router.push({ path: `/problem/${row}` })
-}
+  router.push({ path: `/problem/${row}` });
+};
 
 // 上传头像至服务器
 const uploadAvat = async (cropper) => {
@@ -64,24 +66,38 @@ const uploadAvat = async (cropper) => {
       showAlert(t("message.success") + "!", "reload");
     } else {
       networkloading.value = false;
-      showAlert(t("message.failed") + "!", "")
+      showAlert(t("message.failed") + "!", "");
     }
   } catch (error) {
-    showAlert(t("message.failed") + "!", "")
+    showAlert(t("message.failed") + "!", "");
   }
 };
 
 // 获取用户提交信息
 const fetchData = async () => {
   try {
-    const submitResponse = await getUserSubmitRecords(userId.value);
+    const submitResponse = await getUserSubmitRecords(currentUsername.value);
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
     processSparklineData();
   } catch (error) {
-    showAlert(t("message.failed") + "!", "")
+    showAlert(t("message.failed") + "!", "");
   }
-}
+};
+
+// 更新用户简介
+const updateSyn = async () => {
+  try {
+    const resp = await updateSynopsis(userName.value, token.value, synopsis.value);
+    if (resp.data.status === 200) {
+      showAlert(t("message.success") + "!", "reload");
+    } else {
+      showAlert(t("message.failed") + "!", "");
+    }
+  } catch (error) {
+    showAlert(t("message.failed") + "!", "");
+  }
+};
 
 // 图表数据计算
 const processSparklineData = () => {
@@ -127,28 +143,40 @@ const getResultStyle = (result) => {
 };
 
 // 检验获取用户信息
-onMounted(async () => {
+const verifyAndFetchUserInfo = async () => {
   loading.value = true;
   try {
     if (!userLoggedIn.value) {
       router.push({ path: '/login' });
       return;
     }
-    const userInfoResponse = await getUserInfo(userName.value, token.value);
+    const verifyUserInfoResponse = await verifyUserInfo(userName.value, token.value);
+    if (verifyUserInfoResponse.data.status !== 200) {
+      router.push({ path: '/403' });
+      return;
+    }
+    const userInfoResponse = await getUserInfo(currentUsername.value);
     if (userInfoResponse.data.status !== 200) {
       router.push({ path: '/403' });
       return;
     }
     userInfo.value = userInfoResponse.data.Info;
-    if (currentUsername !== userInfo.value.username) {
-      router.push({ path: '/403' });
-      return;
-    }
+    synopsis.value = userInfo.value.synopsis;
     await fetchData();
     loading.value = false;
   } catch (error) {
     router.push({ path: '/403' });
   }
+};
+
+// 监听路由参数变化
+watch(() => route.params.Username, (newUsername) => {
+  currentUsername.value = newUsername;
+  verifyAndFetchUserInfo();
+}, { immediate: true });
+
+onMounted(() => {
+  verifyAndFetchUserInfo();
 });
 </script>
 
@@ -171,14 +199,14 @@ onMounted(async () => {
         <v-avatar size="120" color="surface-variant">
           <v-img :src="avatarServer + userInfo.avatar" cover></v-img>
         </v-avatar>
-        <v-btn icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
+        <v-btn v-if="currentUsername===userName" icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
       </div>
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ userInfo.username }}</p>
         <div style="margin: 10px"></div>
-        <p class="text-medium-emphasis">{{ userInfo.synopsis }}</p>
+        <v-btn variant="text" class="text-medium-emphasis" @click="currentUsername===userName ? dialog = true : ''">{{ !userInfo.synopsis ? $t('message.nosynopsis') : userInfo.synopsis }}</v-btn>
         <div style="margin: 20px"></div>
-        <v-row style="justify-content: space-between;margin-inline:5px">
+        <v-row style="justify-content: space-between;margin-inline: 5px">
           <v-text-field label="Email" :model-value="userInfo.email" readonly rounded="xl"
             variant="solo-filled"></v-text-field>
           <div style="margin: 5px;"></div>
@@ -187,9 +215,9 @@ onMounted(async () => {
         </v-row>
       </v-card-text>
       <v-card-actions style="justify-content: end;">
-        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
+        <v-btn v-if="currentUsername===userName" color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
           @click="$router.push('/reset')">{{ $t('message.resetpwd') }}</v-btn>
-        <v-btn color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{
+        <v-btn v-if="currentUsername===userName" color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{
           $t('message.logout') }}</v-btn>
       </v-card-actions>
     </v-card>
@@ -229,6 +257,30 @@ onMounted(async () => {
   </div>
   <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: $t('message.cancel') }"
     :upload-handler="uploadAvat" />
+  <v-dialog v-model="dialog" max-width="600px">
+      <v-card rounded="xl">
+          <div v-if="networkloading" class="loading">
+              <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+          </div>
+          <div v-else>
+              <v-card-title>
+                  <span class="headline">{{ $t('message.edit') }}</span>
+              </v-card-title>
+              <v-card-text>
+                  <v-form>
+                      <v-text-field :label="$t('message.synopsis')" v-model="synopsis"
+                          variant="solo-filled"></v-text-field>
+                  </v-form>
+              </v-card-text>
+              <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
+                      }}</v-btn>
+                  <v-btn color="primary" @click="updateSyn" rounded="xl">{{ $t('message.save') }}</v-btn>
+              </v-card-actions>
+          </div>
+      </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>
