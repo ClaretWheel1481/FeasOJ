@@ -131,6 +131,8 @@ const getResultStyle = (result) => {
   switch (result) {
     case 'Compile Failed':
       return 'color: red; font-weight: bold;';
+    case 'Time Limit Exceeded':
+      return 'color: red; font-weight: bold;';
     case 'Success':
       return 'color: green; font-weight: bold;';
     case 'Failed':

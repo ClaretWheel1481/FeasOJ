@@ -10,6 +10,7 @@ import (
 	"src/global"
 	"src/utils"
 	"strings"
+	"time"
 
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
@@ -111,6 +112,7 @@ func CompileAndRun(filename string) string {
 	case ".cpp":
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
 		if err := compileCmd.Run(); err != nil {
+			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 	case ".java":
@@ -119,48 +121,64 @@ func CompileAndRun(filename string) string {
 		tempName := "Main.java"
 		renameCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", originalName), fmt.Sprintf("/workspace/%s", tempName))
 		if err := renameCmd.Run(); err != nil {
+			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 
 		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", tempName))
 		if err := compileCmd.Run(); err != nil {
+			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 
 		// 编译完成后改回原名
 		renameBackCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", tempName), fmt.Sprintf("/workspace/%s", originalName))
 		if err := renameBackCmd.Run(); err != nil {
+			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 	}
+
+	// 设置超时上下文
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
 	// 获取输入输出样例
 	testCases := utils.SelectTestCasesByPid(strings.Split(filename, "_")[1])
 	for _, testCase := range testCases {
 		var runCmd *exec.Cmd
 		switch ext {
 		case ".cpp":
-			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "/workspace/a.out")
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "/workspace/a.out")
 		case ".py":
-			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
 		case ".go":
-			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
 		case ".java":
-			runCmd = exec.Command("docker", "exec", "-i", global.ContainerID, "java", "Main")
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "java", "Main")
 		default:
+			TerminateContainer(global.ContainerID)
 			return "Failed"
 		}
 
 		runCmd.Stdin = strings.NewReader(testCase.InputData)
 		output, err := runCmd.CombinedOutput()
+		if ctx.Err() == context.DeadlineExceeded {
+			// 超时10s后强制停止容器
+			TerminateContainer(global.ContainerID)
+			return "Time Limit Exceeded"
+		}
 		if err != nil {
+			TerminateContainer(global.ContainerID)
 			return "Failed"
 		}
 		outputStr := string(output)
 		if strings.TrimSpace(outputStr) != strings.TrimSpace(testCase.OutputData) {
+			TerminateContainer(global.ContainerID)
 			return "Wrong Answer"
 		}
 	}
-
+	TerminateContainer(global.ContainerID)
 	return "Success"
 }
 

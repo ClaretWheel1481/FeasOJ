@@ -53,6 +53,5 @@ func ProcessJudgeTasks(rdb *redis.Client) {
 			fmt.Println(err)
 		}
 		utils.ModifyJudgeStatus(uidInt, pidInt, str)
-		TerminateContainer(global.ContainerID)
 	}
 }
