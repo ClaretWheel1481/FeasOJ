@@ -168,15 +168,6 @@ type Comment struct {
 	Create_at time.Time `gorm:"comment:创建时间;not null"`
 }
 
-// 回复评论表: Rid, Cid, Content, Uid, Create_at
-type Reply struct {
-	Rid       int       `gorm:"comment:回复ID;primaryKey;autoIncrement"`
-	Cid       int       `gorm:"comment:评论ID;not null"`
-	Content   string    `gorm:"comment:内容;not null"`
-	Uid       int       `gorm:"comment:用户ID;not null"`
-	Create_at time.Time `gorm:"comment:创建时间;not null"`
-}
-
 // 测试样例表: Tid, Pid, InputData, OutputData
 type TestCase struct {
 	Tid        int    `gorm:"comment:测试样例ID;primaryKey;autoIncrement"`

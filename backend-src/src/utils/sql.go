@@ -52,8 +52,7 @@ func InitAdminAccount() {
 	fmt.Print("[FeasOJ]请输入管理员邮箱:")
 	fmt.Scanln(&adminEmail)
 
-	tokensecret := uuid.New().String()
-	Register(adminUsername, account.EncryptPassword(adminPassword), adminEmail, tokensecret, 1)
+	Register(adminUsername, account.EncryptPassword(adminPassword), adminEmail, uuid.New().String(), 1)
 }
 
 func LoadSqlConfig() string {
@@ -99,7 +98,7 @@ func InitSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		InputSqlInfo()
 	}
-	connectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{}, &global.Reply{})
+	connectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{})
 	InitAdminAccount()
 	return true
 }

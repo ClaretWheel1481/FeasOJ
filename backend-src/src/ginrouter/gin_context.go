@@ -25,13 +25,12 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用。"})
 		return
 	}
-	tokensecret := uuid.New().String()
 	vcodeStatus := utils.CompareVerifyCode(req.Vcode, req.Email)
 	if !vcodeStatus {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
 	}
-	regstatus := utils.Register(req.Username, account.EncryptPassword(req.Password), req.Email, tokensecret, 0)
+	regstatus := utils.Register(req.Username, account.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
 	if regstatus {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功，2秒后跳转至登录界面。"})
 	} else {

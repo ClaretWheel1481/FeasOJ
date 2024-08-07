@@ -2,9 +2,6 @@ package codehandler
 
 import (
 	"fmt"
-	"os"
-	"path/filepath"
-	"src/global"
 	"src/utils"
 	"strconv"
 	"strings"
@@ -12,16 +9,6 @@ import (
 
 	"github.com/go-redis/redis"
 )
-
-// 初始化文件夹
-func InitCodeFolder() {
-	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
-	global.CodeDir = filepath.Join(global.ParentDir, "/codefiles")
-	// 如果没找到codefiles，则创建codefiles文件夹
-	if _, err := os.Stat(global.CodeDir); os.IsNotExist(err) {
-		os.Mkdir(global.CodeDir, 0755)
-	}
-}
 
 // 实时处理Redis任务队列中的任务
 func ProcessJudgeTasks(rdb *redis.Client) {

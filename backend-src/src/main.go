@@ -7,7 +7,6 @@ import (
 	"os"
 	"os/signal"
 	"path/filepath"
-	"src/account"
 	"src/codehandler"
 	"src/ginrouter"
 	"src/global"
@@ -20,32 +19,39 @@ import (
 func main() {
 	global.CurrentDir, _ = os.Getwd()
 	global.ParentDir = filepath.Dir(global.CurrentDir)
-	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
-	global.ConfigsDir = filepath.Join(global.ParentDir, "/configs")
-	global.CertDir = filepath.Join(global.ParentDir, "/certificate")
-	// 如果没有找到configs，则创建configs文件夹
-	if _, err := os.Stat(global.ConfigsDir); os.IsNotExist(err) {
-		os.Mkdir(global.ConfigsDir, os.ModePerm)
+
+	// 定义目录映射
+	dirs := map[string]*string{
+		"configs":     &global.ConfigsDir,
+		"certificate": &global.CertDir,
+		"avatars":     &global.AvatarsDir,
+		"codefiles":   &global.CodeDir,
 	}
 
-	// 如果没有找到certificate，则创建certificate文件夹
-	if _, err := os.Stat(global.CertDir); os.IsNotExist(err) {
-		os.Mkdir(global.CertDir, os.ModePerm)
+	// 遍历map，设置路径并创建不存在的目录
+	for name, dir := range dirs {
+		// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
+		*dir = filepath.Join(global.ParentDir, name)
+		if _, err := os.Stat(*dir); os.IsNotExist(err) {
+			os.Mkdir(*dir, os.ModePerm)
+		}
 	}
-
-	// 创建存放头像文件夹
-	account.InitAvatarFolder()
-	// 创建存放代码文件夹
-	codehandler.InitCodeFolder()
-	// 初始化数据库连接配置
+	// 初始化连接配置
 	if utils.InitSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
-	utils.InitRedis()
-	utils.InitEmailConfig()
+
+	// 构建沙盒镜像
+	if codehandler.BuildImage() {
+		fmt.Println("[FeasOJ]SandBox构建成功！")
+	} else {
+		fmt.Println("[FeasOJ]SandBox构建失败！")
+		return
+	}
+
 	// 启动服务器
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
@@ -146,12 +152,7 @@ func main() {
 
 	// 头像http服务器
 	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
-	if codehandler.BuildImage() {
-		fmt.Println("[FeasOJ]SandBox构建成功！")
-	} else {
-		fmt.Println("[FeasOJ]SandBox构建失败！")
-		return
-	}
+
 	fmt.Println("[FeasOJ]服务已启动。")
 	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
 
