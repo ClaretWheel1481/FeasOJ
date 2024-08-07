@@ -15,7 +15,7 @@ const router = useRouter();
 
 const headers = ref([
   { title: t('message.problemId'), value: 'Pid', align: 'center' },
-  { title: t('message.userId'), value: 'Uid', align: 'center' },
+  { title: t('message.username'), value: 'Username', align: 'center' },
   { title: t('message.result'), value: 'Result', align: 'center' },
   { title: t('message.lang'), value: 'Language', align: 'center' },
   { title: t('message.when'), value: 'Time', align: 'center' },
@@ -59,9 +59,14 @@ const getResultStyle = (result) => {
   }
 };
 
-// 点击题目跳转
-const handleRowClick = (row) => {
-  router.push({ path: `/problem/${row}` })
+// 题目跳转
+const toProblem = (item) => {
+  router.push({ path: `/problem/${item}` })
+}
+
+// 用户资料跳转
+const toProfile = (item) => {
+  router.push({ path: `/profile/${item}` })
 }
 
 // 初始化数据
@@ -89,9 +94,11 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td class="tabletitle">
-            <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+            <v-btn @click="toProblem(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
           </td>
-          <td>{{ item.Uid }}</td>
+          <td class="tabletitle">
+            <v-btn @click="toProfile(item.Username)" variant="text" block>{{ item.Username }}</v-btn>
+          </td>
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </td>

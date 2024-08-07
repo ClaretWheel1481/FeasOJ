@@ -29,6 +29,7 @@ const templates = {
 }`,
     c_cpp:
         `#include <iostream>
+            
 using namespace std;
 
 int main() {

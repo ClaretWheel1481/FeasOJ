@@ -383,8 +383,8 @@ func DeleteProblemAllInfo(pid int) bool {
 }
 
 // 添加提交记录
-func AddSubmitRecord(Uid, Pid int, Result, Language string) bool {
-	err := connectSql().Table("submit_records").Create(&global.SubmitRecord{Uid: Uid, Pid: Pid, Result: Result, Time: time.Now(), Language: Language})
+func AddSubmitRecord(Uid, Pid int, Result, Language, Username string) bool {
+	err := connectSql().Table("submit_records").Create(&global.SubmitRecord{Uid: Uid, Pid: Pid, Username: Username, Result: Result, Time: time.Now(), Language: Language})
 	return err == nil
 }
 

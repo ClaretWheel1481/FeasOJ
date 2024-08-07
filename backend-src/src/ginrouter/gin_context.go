@@ -324,7 +324,7 @@ func UploadCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})
 		return
 	}
-	utils.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language)
+	utils.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language, username)
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码提交成功，请等候判题结果。"})
 }
 
