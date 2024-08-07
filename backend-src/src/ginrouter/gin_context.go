@@ -115,7 +115,7 @@ func VerifyUserInfo(c *gin.Context) {
 // 获取用户信息
 func GetUserInfo(c *gin.Context) {
 	// 获取用户名
-	username := c.Query("username")
+	username := c.Param("username")
 	// 查询对应的用户信息
 	userInfo := utils.SelectUserInfo(username)
 	if userInfo.Username == "" {
@@ -144,12 +144,7 @@ func UpdatePassword(c *gin.Context) {
 // 更新个人简介
 func UpdateSynopsis(c *gin.Context) {
 	synopsis := c.PostForm("synopsis")
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
+	username := c.Param("username")
 	token := c.GetHeader("Authorization")
 	// 校验Token
 	if !utils.VerifyToken(username, token) {
@@ -172,12 +167,7 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 	token := c.GetHeader("Authorization")
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
+	username := c.Param("username")
 	// 校验Token
 	if !utils.VerifyToken(username, token) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
@@ -227,12 +217,7 @@ func GetAllSubmitRecords(c *gin.Context) {
 
 // 获取指定用户提交记录
 func GetSubmitRecordsByUsername(c *gin.Context) {
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
-		return
-	}
+	username := c.Param("username")
 	uid := utils.SelectUserInfo(username).Uid
 	submitrecords := utils.SelectSubmitRecordsByUid(uid)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
@@ -300,12 +285,7 @@ func UploadCode(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	problem := c.Query("problem")
 	pidInt, _ := strconv.Atoi(problem)
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
+	username := c.Param("username")
 	file, err := c.FormFile("code")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取代码文件。"})

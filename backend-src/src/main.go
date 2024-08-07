@@ -63,91 +63,85 @@ func main() {
 		router.GET("/login", ginrouter.Login)
 
 		// 获取验证码API
-		router.GET("/getCaptcha", ginrouter.GetCaptcha)
+		router.GET("/captcha", ginrouter.GetCaptcha)
 
 		// 验证用户信息API
-		router.GET("/verifyUserInfo", ginrouter.VerifyUserInfo)
+		router.GET("/verify", ginrouter.VerifyUserInfo)
 
 		// 获取用户信息API
-		router.GET("/getUserInfo", ginrouter.GetUserInfo)
-
-		// TODO: 更新用户信息（非修改密码）API
-		// router.GET("/updateUserInfo")
+		router.GET("/users/:username", ginrouter.GetUserInfo)
 
 		// 获取所有题目API
-		router.GET("/getAllProblems", ginrouter.GetAllProblems)
+		router.GET("/problems", ginrouter.GetAllProblems)
 
 		// 根据题目ID获取题目信息
-		router.GET("/getProblemInfo/:id", ginrouter.GetProblemInfo)
+		router.GET("/problems/:id", ginrouter.GetProblemInfo)
 
 		// 获取总提交记录API
-		router.GET("/getAllSubmitRecords", ginrouter.GetAllSubmitRecords)
+		router.GET("/submitrecords", ginrouter.GetAllSubmitRecords)
 
 		// 获取指定用户的提交记录API
-		router.GET("/getSubmitRecordsByUsername/", ginrouter.GetSubmitRecordsByUsername)
+		router.GET("/users/:username/submitrecords", ginrouter.GetSubmitRecordsByUsername)
 
 		// 获取所有讨论帖子API
-		router.GET("/getAllDiscussions", ginrouter.GetAllDiscussions)
+		router.GET("/discussions", ginrouter.GetAllDiscussions)
 
 		// 获取指定Did的帖子API
-		router.GET("/getDiscussionByDid/:Did", ginrouter.GetDiscussionByDid)
+		router.GET("/discussions/:Did", ginrouter.GetDiscussionByDid)
 
-		// 获取指定帖子的讨论API
-		router.GET("/getComment/:Did", ginrouter.GetComment)
+		// 获取指定帖子的评论API
+		router.GET("/discussions/:Did/comments", ginrouter.GetComment)
 
 		// 管理员获取指定题目的所有信息API
-		router.GET("/getProblemAllInfo/:Pid", ginrouter.GetProblemAllInfo)
+		router.GET("/admin/problems/:Pid", ginrouter.GetProblemAllInfo)
 
 		// 管理员获取所有用户信息API
-		router.GET("/getAllUserInfo", ginrouter.GetAllUsersInfo)
-	}
+		router.GET("/admin/users", ginrouter.GetAllUsersInfo)
 
-	router2 := r.Group("/api/v2")
-	{
-		// 用户上传头像API
-		router2.POST("/uploadAvatar", ginrouter.UploadAvatar)
+		// 上传代码API
+		router.POST("/users/:username/code", ginrouter.UploadCode)
+
+		// 管理员新增/更新题目信息API
+		router.POST("/admin/problems", ginrouter.UpdateProblemInfo)
 
 		// 注册API
-		router2.POST("/register", ginrouter.Register)
-
-		// 密码修改API
-		router2.POST("/updatePassword", ginrouter.UpdatePassword)
-
-		// 简介更新API
-		router2.POST("/updateSynopsis", ginrouter.UpdateSynopsis)
+		router.POST("/register", ginrouter.Register)
 
 		// 创建讨论API
-		router2.POST("/addDiscussion", ginrouter.CreateDiscussion)
-
-		// 删除讨论API
-		router2.POST("/deleteDiscussion/:Did", ginrouter.DeleteDiscussion)
+		router.POST("/discussions", ginrouter.CreateDiscussion)
 
 		// 添加评论API
-		router2.POST("/addComment/:Did", ginrouter.AddComment)
+		router.POST("/discussions/:Did/comments", ginrouter.AddComment)
 
-		// 删除评论API
-		router2.POST("/delComment/:Cid", ginrouter.DelComment)
+		// 用户修改头像API
+		router.PUT("/users/:username/avatar", ginrouter.UploadAvatar)
 
-		// 上传代码文件API
-		router2.POST("/uploadCode", ginrouter.UploadCode)
+		// 密码修改API
+		router.PUT("/users/password", ginrouter.UpdatePassword)
 
-		// 管理员更新题目信息API
-		router2.POST("/updateProblemInfo", ginrouter.UpdateProblemInfo)
-
-		// 管理员删除题目API
-		router2.POST("/delProblemAllInfo/:Pid", ginrouter.DeleteProblem)
+		// 简介更新API
+		router.PUT("/users/:username/synopsis", ginrouter.UpdateSynopsis)
 
 		// 管理员晋升用户API
-		router2.POST("/promoteUser", ginrouter.PromoteUser)
+		router.PUT("/admin/users/promote", ginrouter.PromoteUser)
 
 		// 管理员降级用户API
-		router2.POST("/demoteUser", ginrouter.DemoteUser)
+		router.PUT("/admin/users/demote", ginrouter.DemoteUser)
 
 		// 管理员封禁用户API
-		router2.POST("/banUser", ginrouter.BanUser)
+		router.PUT("/admin/users/ban", ginrouter.BanUser)
 
 		// 管理员解封用户API
-		router2.POST("/unbanUser", ginrouter.UnbanUser)
+		router.PUT("/admin/users/unban", ginrouter.UnbanUser)
+
+		// 删除讨论API
+		router.DELETE("/discussions/:Did", ginrouter.DeleteDiscussion)
+
+		// 删除评论API
+		router.DELETE("/comments/:Cid", ginrouter.DelComment)
+
+		// 管理员删除题目API
+		router.DELETE("/admin/problems/:Pid", ginrouter.DeleteProblem)
 	}
 
 	// 头像http服务器
