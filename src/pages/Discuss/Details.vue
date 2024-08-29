@@ -18,10 +18,10 @@ import {
     getComments,
     deleteComment,
     addComment,
-} from "../utils/axios";
+} from "../../utils/axios";
 import { useRoute, useRouter } from "vue-router";
-import { showAlert } from "../utils/alert";
-import { token, userName } from "../utils/account";
+import { showAlert } from "../../utils/alert";
+import { token, userName } from "../../utils/account";
 import { MdPreview, MdEditor } from "md-editor-v3";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";

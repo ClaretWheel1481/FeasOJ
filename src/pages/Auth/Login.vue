@@ -2,8 +2,8 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
-import { loginRequest, verifyUserInfo } from '../utils/axios.js'
-import { showAlert } from '../utils/alert';
+import { loginRequest, verifyUserInfo } from '../../utils/axios.js'
+import { showAlert } from '../../utils/alert.js';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

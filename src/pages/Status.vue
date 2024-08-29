@@ -5,8 +5,8 @@ import { getSubmitRecords } from '../utils/axios.js';
 import { onMounted, computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
-import { showAlert } from '../utils/alert';
-import { token } from "../utils/account";
+import { showAlert } from '../utils/alert.js';
+import { token } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

@@ -1,10 +1,10 @@
 <!-- 创建讨论页 -->
 <script setup>
-import { VProgressCircular, VAppBar, VRow, VBtn, VTextarea, VForm, VTextField } from 'vuetify/lib/components/index.mjs';
+import { VProgressCircular, VAppBar, VRow, VBtn, VForm, VTextField } from 'vuetify/lib/components/index.mjs';
 import { ref, computed, onMounted } from 'vue';
-import { addDiscussion } from '../utils/axios.js';
-import { showAlert } from '../utils/alert';
-import { token, userName } from "../utils/account";
+import { addDiscussion } from '../../utils/axios.js';
+import { showAlert } from '../../utils/alert.js';
+import { token, userName } from "../../utils/account.js";
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { useI18n } from 'vue-i18n';

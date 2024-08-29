@@ -3,42 +3,42 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 const routes = [
     {
         path: '/',
-        component: () => import('../pages/MainPage.vue'),
+        component: () => import('../pages/Main.vue'),
         meta: {
             titleKey: 'message.mainpage'
         }
     },
     {
         path: '/about',
-        component: () => import('../pages/AboutPage.vue'),
+        component: () => import('../pages/About.vue'),
         meta: {
             titleKey: 'message.about'
         }
     },
     {
         path: '/problemset',
-        component: () => import('../pages/ProblemSetPage.vue'),
+        component: () => import('../pages/Problem/Main.vue'),
         meta: {
             titleKey: 'message.problemset'
         }
     },
     {
         path: '/login',
-        component: () => import('../pages/LoginPage.vue'),
+        component: () => import('../pages/Auth/Login.vue'),
         meta: {
             titleKey: 'message.login'
         }
     },
     {
         path: '/register',
-        component: () => import('../pages/RegisterPage.vue'),
+        component: () => import('../pages/Auth/Register.vue'),
         meta: {
             titleKey: 'message.register'
         }
     },
     {
         path: '/profile/:Username',
-        component: () => import('../pages/ProfilePage.vue'),
+        component: () => import('../pages/Profile.vue'),
         meta: {
             titleKey: 'message.profile'
         },
@@ -49,7 +49,7 @@ const routes = [
     },
     {
         path: '/problem/:Pid',
-        component: () => import('../pages/ProblemInfoPage.vue'),
+        component: () => import('../pages/Problem/Details.vue'),
         meta: {
             title: 'Problem'
         },
@@ -59,50 +59,50 @@ const routes = [
         }
     },
     {
-        path: '/reset', component: () => import('../pages/PasswordResetPage.vue'),
+        path: '/reset', component: () => import('../pages/Auth/Reset.vue'),
         meta: {
             titleKey: 'message.resetpwd'
         }
     },
     {
-        path: '/status', component: () => import('../pages/StatusPage.vue'),
+        path: '/status', component: () => import('../pages/Status.vue'),
         meta: {
             titleKey: 'message.status'
         }
     },
     {
-        path: '/discussion', component: () => import('../pages/DiscussPage.vue'),
+        path: '/discussion', component: () => import('../pages/Discuss/Main.vue'),
         meta: {
             titleKey: 'message.discussion'
         }
     },
     {
-        path: '/discussion/create', component: () => import('../pages/NewDiscussionPage.vue'),
+        path: '/discussion/create', component: () => import('../pages/Discuss/New.vue'),
         meta: {
             titleKey: 'message.createDiscussion'
         }
     },
     {
         path: '/discussion/:Did',
-        component: () => import('../pages/DiscussionDetailsPage.vue'),
+        component: () => import('../pages/Discuss/Details.vue'),
         meta: {
             titleKey: 'message.discussion'
         },
     },
     {
-        path: '/psm', component: () => import('../pages/ProblemsetManagementPage.vue'),
+        path: '/psm', component: () => import('../pages/Admin/Problemset.vue'),
         meta: {
             titleKey: 'message.problemmanagement'
         }
     },
     {
-        path: '/am', component: () => import('../pages/AccountManagementPage.vue'),
+        path: '/am', component: () => import('../pages/Admin/Account.vue'),
         meta: {
             titleKey: 'message.usermanagement'
         }
     },
     {
-        path: '/403', component: () => import('../pages/NoPermissionPage.vue'),
+        path: '/403', component: () => import('../pages/403.vue'),
         meta: {
             titleKey: 'message.nopermission'
         }

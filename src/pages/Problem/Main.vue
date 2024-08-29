@@ -3,9 +3,9 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { VTextField, VDataTableServer, VBtn } from 'vuetify/lib/components/index.mjs';
-import { getAllProblems } from '../utils/axios';
-import { showAlert } from '../utils/alert';
-import { token } from "../utils/account";
+import { getAllProblems } from '../../utils/axios';
+import { showAlert } from '../../utils/alert';
+import { token } from "../../utils/account";
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

@@ -1,8 +1,8 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, verifyUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../utils/axios';
-import { showAlert } from '../utils/alert';
-import { token, userName } from '../utils/account'
+import { getAllUsersInfo, verifyUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../../utils/axios';
+import { showAlert } from '../../utils/alert';
+import { token, userName } from '../../utils/account'
 import { VBtn } from 'vuetify/components';
 import moment from 'moment';
 import { useI18n } from 'vue-i18n';

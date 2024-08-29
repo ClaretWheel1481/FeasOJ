@@ -2,9 +2,9 @@
 <script setup>
 import { VSheet, VForm, VTextField, VBtn, VAppBar } from 'vuetify/lib/components/index.mjs';
 import { ref, reactive } from 'vue';
-import { updatePassword, getCaptchaCode } from '../utils/axios';
-import { regex, rules } from '../utils/rules'
-import { showAlert } from '../utils/alert';
+import { updatePassword, getCaptchaCode } from '../../utils/axios';
+import { regex, rules } from '../../utils/rules'
+import { showAlert } from '../../utils/alert';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

@@ -1,10 +1,10 @@
 <!-- 题目后台管理页 -->
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
-import { token, userName } from '../utils/account'
-import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../utils/axios';
+import { token, userName } from '../../utils/account'
+import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../../utils/axios';
 import { VDataTableServer, VFab, VDialog, VCard, VCardTitle, VCardText, VBtn, VTextField, VSelect, VForm, VSpacer, VCardActions, VRow } from 'vuetify/components'
-import { showAlert } from '../utils/alert';
+import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
 import { useI18n } from 'vue-i18n';

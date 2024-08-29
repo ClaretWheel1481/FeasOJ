@@ -4,9 +4,9 @@ import { VCard, VDataTableServer, VBtn, VFab } from 'vuetify/components'
 import { useRouter } from 'vue-router'
 import moment from 'moment';
 import { ref, onMounted, computed, watch } from 'vue'
-import { getAllDis } from '../utils/axios';
-import { showAlert } from '../utils/alert';
-import { token } from '../utils/account';
+import { getAllDis } from '../../utils/axios';
+import { showAlert } from '../../utils/alert';
+import { token } from '../../utils/account';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();

@@ -3,10 +3,10 @@
 import { VAppBar, VBtn, VDivider, VCard, VCardText, VProgressCircular, VSelect, VContainer, VRow, VCol } from 'vuetify/components'
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRoute } from 'vue-router';
-import { getPbDetails, uploadCode } from '../utils/axios';
+import { getPbDetails, uploadCode } from '../../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
-import { showAlert } from '../utils/alert';
-import { token, userName } from "../utils/account";
+import { showAlert } from '../../utils/alert';
+import { token, userName } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import 'md-editor-v3/lib/preview.css';
 import { useI18n } from 'vue-i18n';

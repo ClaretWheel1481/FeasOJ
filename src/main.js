@@ -12,7 +12,6 @@ if (settingLanguage) {
   i18n.global.locale.value = settingLanguage;
 }
 
-// FIXME:Firefox无效
 // 避免用户修改 localStorage 中的数据
 window.addEventListener('storage', function (e) {
     localStorage.setItem(e.key, e.oldValue)
