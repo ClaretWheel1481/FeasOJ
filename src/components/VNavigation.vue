@@ -31,13 +31,6 @@ const userLoggedIn = computed(() => !!token.value);
 // 路由实例
 const router = useRouter();
 
-// 缩小导航栏
-const isRail = ref(true);
-
-const toggleRail = (value) => {
-  isRail.value = value;
-};
-
 // 改变语言
 const changeLanguage = (lang) => {
   location.reload();
@@ -70,7 +63,6 @@ onMounted(async () => {
 <template>
   <v-navigation-drawer :width="170" permanent :rail="isRail">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
-      <v-btn variant="text" rounded="xl" :icon="isRail ? 'mdi-menu-right' : 'mdi-menu-left'" @click="toggleRail(isRail ? false : true)"></v-btn>
       <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="router.push('/')" color="primary"
         class="list-item">
         <template v-slot:title>
@@ -103,16 +95,10 @@ onMounted(async () => {
       </v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>
-      <v-list-item v-if="privilege === 1" rounded="xl" prepend-icon="mdi-account" @click="router.push('/am')"
-        value="account" base-color="primary" class="list-item">
+      <v-list-item v-if="privilege === 1" rounded="xl" prepend-icon="mdi-tie" @click="router.push('/admin')"
+        value="admin" base-color="primary" class="list-item">
         <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.usermanagement') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item v-if="privilege === 1" rounded="xl" prepend-icon="mdi-file" @click="router.push('/psm')"
-        value="BACKEND" base-color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.problemmanagement') }}</span>
+          <span class="multi-line-title">{{ $t('message.management') }}</span>
         </template>
       </v-list-item>
       <v-menu location="end">

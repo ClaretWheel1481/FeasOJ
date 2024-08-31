@@ -10,6 +10,7 @@ const messages = {
       about: 'About',
       usermanagement: 'User Management',
       problemmanagement: 'Problem Management',
+      competitionmanagement: 'Competition Management',
       lang: 'Language',
       login: 'Login',
       logout: "Logout",
@@ -86,6 +87,7 @@ const messages = {
       confirmPwdLength: "Confirm Password must be 8-20 characters.",
       back: "Back",
       submissions: "Submissions",
+      management: "Management",
     },
   },
   zh_CN: {
@@ -97,6 +99,7 @@ const messages = {
       about: '关于',
       usermanagement: '用户管理',
       problemmanagement: '题目管理',
+      competitionmanagement: '竞赛管理',
       lang: '语言',
       login: '登录',
       logout: "登出",
@@ -173,6 +176,7 @@ const messages = {
       confirmPwdLength: "确认密码必须是8-20位字符。",
       back: "返回",
       submissions: "提交记录",
+      management: "管理",
     },
   },
   ja: {
@@ -184,6 +188,7 @@ const messages = {
       about: 'アバウト',
       usermanagement: 'ユーザー管理',
       problemmanagement: '問題管理',
+      competitionmanagement: 'コンペティション管理',
       lang: '言語',
       login: 'ログイン',
       logout: "ログアウト",
@@ -260,6 +265,7 @@ const messages = {
       confirmPwdLength: "確認パスワードは8-20文字です。",
       back: "戻る",
       submissions: "提出記録",
+      management: "管理",
     },
   },
   zh_TW: {
@@ -271,6 +277,7 @@ const messages = {
       about: '關於',
       usermanagement: '用戶管理',
       problemmanagement: '題目管理',
+      competitionmanagement: '競賽管理',
       lang: '語言',
       login: '登錄',
       logout: "登出",
@@ -347,6 +354,7 @@ const messages = {
       confirmPwdLength: "確認密碼長度為8-20個字符。",
       back: "返回",
       submissions: "提交記錄",
+      management: "管理",
     },
   },
   it: {
@@ -358,6 +366,7 @@ const messages = {
       about: 'About',
       usermanagement: 'Gestione utenti',
       problemmanagement: 'Gestione problemi',
+      competitionmanagement: 'Gestione competizioni',
       lang: 'Lingua',
       login: 'Login',
       logout: "Logout",
@@ -434,6 +443,7 @@ const messages = {
       confirmPwdLength: "La conferma della password deve essere lunga tra 8 e 20 caratteri.",
       back: "Indietro",
       submissions: "Record di invio",
+      management: "Gestione",
     }
   },
   es: {
@@ -445,6 +455,7 @@ const messages = {
       about: 'Acerca de',
       usermanagement: 'Gestión de usuarios',
       problemmanagement: 'Gestión de problemas',
+      competitionmanagement: 'Gestión de competición',
       lang: 'Idioma',
       login: 'Iniciar sesión',
       logout: "Cerrar sesión",
@@ -521,6 +532,7 @@ const messages = {
       confirmPwdLength: "La confirmación de la contraseña debe tener entre 8 y 20 caracteres.",
       back: "Volver",
       submissions: "Envíos",
+      management: "Gestión",
     }
   },
   fr: {
@@ -532,6 +544,7 @@ const messages = {
       about: 'À propos',
       usermanagement: 'Gestion des utilisateurs',
       problemmanagement: 'Gestion des problèmes',
+      competitionmanagement: 'Gestion des compétitions',
       lang: 'Langue',
       login: 'Connexion',
       logout: "Déconnexion",
@@ -608,6 +621,7 @@ const messages = {
       confirmPwdLength: "La confirmation du mot de passe doit contenir entre 8 et 20 caractères.",
       back: "Retour",
       submissions: 'Soumissions',
+      management: 'Gestion',
     }
   }
 };

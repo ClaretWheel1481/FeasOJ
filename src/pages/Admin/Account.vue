@@ -145,6 +145,15 @@ onMounted(async () => {
 </script>
 
 <template>
+    <v-app-bar :elevation="0">
+            <template v-slot:prepend>
+                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+            </template>
+            <div class="searchbar">
+                <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')"
+                        rounded="sm"></v-text-field>
+            </div>
+    </v-app-bar>
     <v-dialog v-model="networkloading" max-width="500px">
         <v-card rounded=xl>
             <div class="networkloading">
@@ -152,10 +161,6 @@ onMounted(async () => {
             </div>
         </v-card>
     </v-dialog>
-    <div class="searchbar">
-        <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')"
-            rounded="sm"></v-text-field>
-    </div>
     <v-data-table-server :headers="headers" :items="filteredUsers" :items-length="totalUsers" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
         :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
@@ -193,9 +198,8 @@ onMounted(async () => {
 
 <style scoped>
 .searchbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    width: 100%;
+    margin-top: 13px;
 }
 
 .networkloading {

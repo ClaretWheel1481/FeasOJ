@@ -1,0 +1,78 @@
+<script setup>
+import { VCard, VRow, VCol } from 'vuetify/components'
+import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router'
+import { verifyUserInfo } from '../../utils/axios';
+import { token, userName } from '../../utils/account'
+import { ref,computed,onMounted } from 'vue';
+
+const router = useRouter();
+const { locale } = useI18n();
+const { t } = useI18n();
+const loading = ref(true);
+const userPrivilege = ref("")
+
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value)
+
+onMounted(async () => {
+    loading.value = true;
+    try {
+        if (!userLoggedIn.value) {
+            window.location = "#/login";
+            return;
+        }
+        const userInfoResponse = await verifyUserInfo(userName.value, token.value);
+        if (userInfoResponse.data.status !== 200) {
+            window.location = '#/403';
+            return;
+        }
+        userPrivilege.value = userInfoResponse.data.Info.role;
+        if (userPrivilege.value !== 1) {
+            window.location = '#/403';
+            return;
+        }
+        loading.value = false;
+    } catch (error) {
+        window.location = '#/403';
+    }
+});
+</script>
+
+<template>
+    <div v-if="loading" class="loading">
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+    </div>
+    <div v-else>
+        <VRow justify="center" class="my-5">
+            <VCol cols="3">
+            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="router.push('/am')">
+                {{ $t('message.usermanagement') }}
+            </VCard>
+            </VCol>
+            <VCol cols="3">
+            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="router.push('/psm')">
+                {{ $t('message.problemmanagement') }}
+            </VCard>
+            </VCol>
+            <VCol cols="3">
+            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="">
+                {{ $t('message.competitionmanagement') }}
+            </VCard>
+            </VCol>
+        </VRow>
+    </div>
+</template>
+
+<style scoped>
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.bold {
+  font-weight: bold;
+}
+</style>

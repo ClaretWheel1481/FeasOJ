@@ -90,6 +90,12 @@ const routes = [
         },
     },
     {
+        path: '/admin', component: () => import('../pages/Admin/Main.vue'),
+        meta: {
+            titleKey: 'message.admin'
+        }
+    },
+    {
         path: '/psm', component: () => import('../pages/Admin/Problemset.vue'),
         meta: {
             titleKey: 'message.problemmanagement'

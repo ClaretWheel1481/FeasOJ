@@ -161,6 +161,11 @@ onMounted(async () => {
 </script>
 
 <template>
+    <v-app-bar :elevation="0">
+            <template v-slot:prepend>
+                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+            </template>
+    </v-app-bar>
     <v-data-table-server :headers="headers" :items="problems" :items-length="totalProblems" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
         :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">

@@ -176,10 +176,6 @@ watch(() => route.params.Username, (newUsername) => {
   currentUsername.value = newUsername;
   verifyAndFetchUserInfo();
 }, { immediate: true });
-
-onMounted(() => {
-  verifyAndFetchUserInfo();
-});
 </script>
 
 <template>
