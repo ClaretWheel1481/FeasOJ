@@ -85,5 +85,7 @@ export default{
         back: "Volver",
         submissions: "Envíos",
         management: "Gestión",
+        isvisible: "¿Es visible?",
+        contestid: "ID del concurso",
     }
 }

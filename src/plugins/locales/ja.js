@@ -85,5 +85,7 @@ export default{
         back: "戻る",
         submissions: "提出記録",
         management: "管理",
+        isvisible: "公開",
+        contestid: "コンテストID",
     }
 }

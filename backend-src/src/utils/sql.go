@@ -296,6 +296,8 @@ func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 		Memorylimit: problem.Memorylimit,
 		Input:       problem.Input,
 		Output:      problem.Output,
+		ContestID:   problem.ContestID,
+		IsVisible:   problem.IsVisible,
 		TestCases:   testCases,
 	}
 
@@ -314,6 +316,8 @@ func UpdateProblem(req global.AdminProblemInfoRequest) error {
 		Memorylimit: req.Memorylimit,
 		Input:       req.Input,
 		Output:      req.Output,
+		ContestID:   req.ContestID,
+		IsVisible:   req.IsVisible,
 	}
 	if err := connectSql().Save(&problem).Error; err != nil {
 		return err

@@ -85,5 +85,7 @@ export default{
         back: "返回",
         submissions: "提交記錄",
         management: "管理",
+        isvisible: "是否可見",
+        contestid: "競賽ID",
     }
 }

@@ -46,17 +46,17 @@ onMounted(async () => {
     <div v-else>
         <VRow justify="center" class="my-5">
             <VCol cols="3">
-            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="router.push('/am')">
+            <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh"  @click="router.push('/am')">
                 {{ $t('message.usermanagement') }}
             </VCard>
             </VCol>
             <VCol cols="3">
-            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="router.push('/psm')">
+            <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh" @click="router.push('/psm')">
                 {{ $t('message.problemmanagement') }}
             </VCard>
             </VCol>
             <VCol cols="3">
-            <VCard class="d-flex align-center justify-center bold" height="15vh" @click="">
+            <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh" @click="">
                 {{ $t('message.competitionmanagement') }}
             </VCard>
             </VCol>

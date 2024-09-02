@@ -85,5 +85,7 @@ export default{
         back: "Back",
         submissions: "Submissions",
         management: "Management",
+        isvisible: "Visible",
+        contestid: "Contest ID",
     }
 }

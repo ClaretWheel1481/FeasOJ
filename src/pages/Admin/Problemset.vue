@@ -29,6 +29,8 @@ const problemFields = reactive({
     memory_limit: "",
     input: "",
     output: "",
+    contest_id: null,
+    is_visible: true,
     test_cases: [{ input: '', output: '' }]
 });
 const headers = ref([
@@ -110,6 +112,8 @@ const createProblem = async () => {
     problemFields.memory_limit = "";
     problemFields.input = "";
     problemFields.output = "";
+    problemFields.contest_id = null;
+    problemFields.is_visible = true;
     problemFields.test_cases = [{ input: '', output: '' }];
 }
 
@@ -201,6 +205,18 @@ onMounted(async () => {
                         <!-- 难易程度 -->
                         <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
                             v-model="problemFields.difficulty" variant="solo-filled"></v-select>
+                        <!-- TODO: 所属竞赛ID为列表，通过后台数据库获取 -->
+                        <v-row class="limitRow">
+                            <v-text-field :label="$t('message.contestid')" v-model.number="problemFields.contest_id"
+                                variant="solo-filled"></v-text-field>
+                            <div style="margin-inline: 30px;"></div>
+                            <v-switch
+                                v-model="problemFields.is_visible"
+                                :label="$t('message.isvisible')"
+                                color="primary"
+                                inset
+                            ></v-switch>
+                        </v-row>
                         <v-row class="limitRow">
                             <v-text-field :label="$t('message.timeLimit') + 'S'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>

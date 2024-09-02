@@ -110,10 +110,12 @@ type AdminProblemInfoRequest struct {
 	Memorylimit string            `json:"memory_limit"`
 	Input       string            `json:"input"`
 	Output      string            `json:"output"`
+	ContestID   int               `json:"contest_id"`
+	IsVisible   bool              `json:"is_visible"`
 	TestCases   []TestCaseRequest `json:"test_cases"`
 }
 
-// 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at
+// 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at, role, token_secret, is_ban
 type User struct {
 	Uid         int       `gorm:"comment:用户ID;primaryKey;autoIncrement"`
 	Avatar      string    `gorm:"comment:头像存放路径"`
@@ -128,7 +130,7 @@ type User struct {
 	IsBan       bool      `gorm:"comment:是否被封禁;not null"`
 }
 
-// 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, submit_history
+// 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, is_visible
 type Problem struct {
 	Pid         int    `gorm:"comment:题目ID;primaryKey;autoIncrement"`
 	Difficulty  string `gorm:"comment:难度;not null"`
@@ -138,6 +140,8 @@ type Problem struct {
 	Memorylimit string `gorm:"comment:内存大小限制;not null"`
 	Input       string `gorm:"comment:输入样例;not null"`
 	Output      string `gorm:"comment:输出样例;not null"`
+	ContestID   int    `gorm:"comment:所属竞赛ID;not null"`
+	IsVisible   bool   `gorm:"comment:是否可见;not null"`
 }
 
 // 提交记录表: Pid,Uid,Username,Result,Time,Language
@@ -175,4 +179,23 @@ type TestCase struct {
 	Pid        int    `gorm:"comment:题目ID;not null"`
 	InputData  string `gorm:"comment:输入数据;not null"`
 	OutputData string `gorm:"comment:输出数据;not null"`
+}
+
+// 竞赛表：ContestID, Title, Subtitle, Difficulty, Password, Start_at, End_at
+type Contest struct {
+	ContestID  int       `gorm:"comment:比赛ID;primaryKey;autoIncrement"`
+	Title      string    `gorm:"comment:标题;not null"`
+	Subtitle   string    `gorm:"comment:副标题;not null"`
+	Difficulty string    `gorm:"comment:难度;not null"`
+	Password   string    `gorm:"comment:密码;not null"`
+	IsVisible  bool      `gorm:"comment:是否可见;not null"`
+	Start_at   time.Time `gorm:"comment:开始时间;not null"`
+	End_at     time.Time `gorm:"comment:结束时间;not null"`
+}
+
+// 竞赛参加表: ContestID, Uid, Username
+type ContestUser struct {
+	ContestID int    `gorm:"comment:比赛ID;primaryKey;autoIncrement;not null"`
+	Uid       int    `gorm:"comment:用户ID;not null"`
+	Username  string `gorm:"comment:用户名;not null"`
 }

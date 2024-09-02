@@ -85,5 +85,7 @@ export default{
         back: "Indietro",
         submissions: "Record di invio",
         management: "Gestione",
+        isvisible: "Visibile",
+        contestid: "ID Concorso",
     }
 }
