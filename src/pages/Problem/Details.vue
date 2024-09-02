@@ -82,6 +82,9 @@ onMounted(async () => {
             const resp = await getPbDetails(problemId);
             if (resp.status === 200) {
                 problemInfo.value = resp.data.problemInfo;
+                if(!problemInfo.value.is_visible){
+                    window.location = "#/403"
+                }
             }
         } catch (error) {
             showAlert(t("message.failed") + "!", "");

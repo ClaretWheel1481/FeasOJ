@@ -109,7 +109,7 @@ onMounted(async () => {
             </template>
           </v-list-item>
         </template>
-        <v-list>
+        <v-list rounded="xl">
           <v-list-item v-for="(item, index) in langs" :key="index" :value="index" @click="changeLanguage(item.value)">
             <v-list-item-title style="font-size: 13px;font-weight: bold;">{{ item.title }}</v-list-item-title>
           </v-list-item>

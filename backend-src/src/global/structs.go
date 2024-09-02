@@ -92,6 +92,8 @@ type ProblemInfoRequest struct {
 	Memorylimit int    `json:"memory_limit"`
 	Input       string `json:"input"`
 	Output      string `json:"output"`
+	ContestID   int    `json:"contest_id"`
+	IsVisible   bool   `json:"is_visible"`
 }
 
 // 测试样例请求体

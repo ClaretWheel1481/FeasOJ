@@ -306,6 +306,7 @@ func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 
 // 更新题目信息
 func UpdateProblem(req global.AdminProblemInfoRequest) error {
+	// TODO: ContestID从数据库中获取
 	// 更新题目表
 	problem := global.Problem{
 		Pid:         req.Pid,

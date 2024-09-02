@@ -89,7 +89,7 @@ onMounted(async () => {
     :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
     :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
     <template v-slot:item="{ item }">
-      <tr>
+      <tr v-if="item.IsVisible" >
         <td>{{ item.Pid }}</td>
         <td class="tabletitle">
           <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>

@@ -150,7 +150,7 @@ onMounted(async () => {
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
             <div class="searchbar">
-                <v-text-field v-model="searchQuery" variant="solo-filled" :placeholder="$t('message.searchUser')"
+                <v-text-field v-model="searchQuery" variant="plain" :placeholder="$t('message.searchUser')"
                         rounded="sm"></v-text-field>
             </div>
     </v-app-bar>
@@ -199,7 +199,7 @@ onMounted(async () => {
 <style scoped>
 .searchbar {
     width: 100%;
-    margin-top: 13px;
+    margin-top: 8px;
 }
 
 .networkloading {
