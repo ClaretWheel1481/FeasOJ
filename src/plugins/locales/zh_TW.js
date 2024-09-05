@@ -8,6 +8,7 @@ export default{
         usermanagement: '用戶管理',
         problemmanagement: '題目管理',
         competitionmanagement: '競賽管理',
+        competition: '競賽',
         lang: '語言',
         login: '登錄',
         logout: "登出",

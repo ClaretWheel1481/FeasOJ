@@ -98,7 +98,7 @@ func InitSql() bool {
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
 		InputSqlInfo()
 	}
-	connectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{})
+	connectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{}, &global.Competition{})
 	InitAdminAccount()
 	return true
 }
@@ -184,7 +184,7 @@ func SelectAllProblems() []global.Problem {
 // 获取指定PID的题目除了Input_full_path Output_full_path外的所有信息
 func SelectProblemInfo(pid string) global.ProblemInfoRequest {
 	var problem global.ProblemInfoRequest
-	connectSql().Table("Problems").Where("pid = ?", pid).First(&problem)
+	connectSql().Table("Problems").Where("pid = ? AND is_visible = ?", pid, true).First(&problem)
 	return problem
 }
 
@@ -251,7 +251,7 @@ func AddComment(content string, did, uid int) bool {
 }
 
 // 获取指定讨论ID的所有评论信息
-func GetCommentsByDid(Did int) []global.CommentRequest {
+func SelectCommentsByDid(Did int) []global.CommentRequest {
 	var comments []global.CommentRequest
 	connectSql().Table("Comments").
 		Select("Comments.Cid, Comments.Did, Comments.Content, Comments.Create_at, Users.Uid,Users.Username, Users.Avatar").
@@ -401,7 +401,7 @@ func ModifyJudgeStatus(Uid, Pid int, Result string) bool {
 }
 
 // 获取所有用户信息
-func GetAllUsersInfo() []global.UserInfoRequest {
+func SelectAllUsersInfo() []global.UserInfoRequest {
 	var usersInfo []global.UserInfoRequest
 	connectSql().Table("users").Find(&usersInfo)
 	return usersInfo
@@ -425,4 +425,25 @@ func PromoteToAdmin(Uid int) bool {
 // 降级为普通用户
 func DemoteToUser(Uid int) bool {
 	return connectSql().Table("users").Where("uid = ?", Uid).Update("role", 0).Error == nil
+}
+
+// 获取竞赛信息
+func SelectContestInfo() []global.CompetitionRequest {
+	var competitions []global.CompetitionRequest
+	connectSql().Table("competitions").Find(&competitions)
+	return competitions
+}
+
+// 管理员获取竞赛信息
+func SelectContestInfoAdmin() []global.AdminCompetitionInfoRequest {
+	var competitions []global.AdminCompetitionInfoRequest
+	connectSql().Table("competitions").Find(&competitions)
+	return competitions
+}
+
+// 管理员获取指定竞赛ID信息
+func SelectContestInfoAdminByCid(Cid int) global.AdminCompetitionInfoRequest {
+	var competition global.AdminCompetitionInfoRequest
+	connectSql().Table("competitions").Where("cid = ?", Cid).Find(&competition)
+	return competition
 }

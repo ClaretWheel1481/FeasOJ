@@ -42,11 +42,6 @@ const fetchData = async () => {
   }
 }
 
-// 点击讨论跳转
-const handleRowClick = (row) => {
-  router.push({ path: `/discussion/${row}` })
-}
-
 // 监听分页变化
 watch(page, async () => {
   await fetchData()
@@ -78,7 +73,7 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td class="disctitle">
-            <v-btn @click="handleRowClick(item.did)" variant="text" block>{{ item.title }}</v-btn>
+            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" block>{{ item.title }}</v-btn>
           </td>
           <td>{{ item.username }}</td>
           <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>

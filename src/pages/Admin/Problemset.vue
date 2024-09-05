@@ -112,7 +112,7 @@ const createProblem = async () => {
     problemFields.memory_limit = "";
     problemFields.input = "";
     problemFields.output = "";
-    problemFields.contest_id = null;
+    problemFields.contest_id = 0;
     problemFields.is_visible = true;
     problemFields.test_cases = [{ input: '', output: '' }];
 }
@@ -217,6 +217,7 @@ onMounted(async () => {
                                 inset
                             ></v-switch>
                         </v-row>
+                        <!-- 时间、内存限制 -->
                         <v-row class="limitRow">
                             <v-text-field :label="$t('message.timeLimit') + 'S'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>
@@ -224,6 +225,7 @@ onMounted(async () => {
                             <v-text-field :label="$t('message.memoryLimit') + 'MB'" v-model="problemFields.memory_limit"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
+                        <!-- 显示输入输出样例 -->
                         <v-row class="limitRow">
                             <v-text-field :label="$t('message.displayInputCase')" v-model="problemFields.input"
                                 variant="solo-filled"></v-text-field>

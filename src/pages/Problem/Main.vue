@@ -1,16 +1,15 @@
 <!-- 题库页 -->
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { VTextField, VDataTableServer, VBtn } from 'vuetify/lib/components/index.mjs';
 import { getAllProblems } from '../../utils/axios';
 import { showAlert } from '../../utils/alert';
 import { token } from "../../utils/account";
 import { useI18n } from 'vue-i18n';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const { t } = useI18n();
-
-const router = useRouter()
 
 const headers = ref([
   { title: t('message.problemId'), value: 'Pid', align: 'center' },
@@ -44,11 +43,6 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
-}
-
-// 点击题目跳转
-const handleRowClick = (row) => {
-  router.push({ path: `/problem/${row}` })
 }
 
 // 根据题目难度显示不同字体
@@ -89,10 +83,10 @@ onMounted(async () => {
     :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
     :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
     <template v-slot:item="{ item }">
-      <tr v-if="item.IsVisible" >
+      <tr>
         <td>{{ item.Pid }}</td>
         <td class="tabletitle">
-          <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
+          <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Title }}</v-btn>
         </td>
         <td :style="difficultyColor(item.Difficulty)">{{ item.Difficulty }}</td>
       </tr>

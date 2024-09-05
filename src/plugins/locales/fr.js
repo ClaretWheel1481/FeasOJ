@@ -8,6 +8,7 @@ export default{
         usermanagement: 'Gestion des utilisateurs',
         problemmanagement: 'Gestion des problèmes',
         competitionmanagement: 'Gestion des compétitions',
+        competition: 'Compétition',
         lang: 'Langue',
         login: 'Connexion',
         logout: "Déconnexion",

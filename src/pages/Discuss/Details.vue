@@ -105,11 +105,6 @@ const deleteCommentByID = async (commentID) => {
     }
 };
 
-// 跳转至个人页面
-const to = (username) => {
-    router.push("/profile/" + username);;
-};
-
 // 删除讨论
 const deleteDis = async () => {
     loading.value = true;
@@ -162,7 +157,7 @@ onMounted(async () => {
                 <v-avatar size="50" color="surface-variant">
                     <v-img :src="avatarServer + discussionInfos.avatar" cover></v-img>
                 </v-avatar>
-                <v-btn variant="text" class="font-weight-black" @click="to(discussionInfos.username)">{{ discussionInfos.username }}</v-btn>
+                <v-btn variant="text" class="font-weight-black" @click="router.push({ path: `/profile/${discussionInfos.username}` })">{{ discussionInfos.username }}</v-btn>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
                 <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>

@@ -92,6 +92,12 @@ func main() {
 		// 获取指定帖子的评论API
 		router.GET("/discussions/:Did/comments", ginrouter.GetComment)
 
+		// 获取竞赛列表
+		router.GET("/competitions", ginrouter.GetCompetitionList)
+
+		// 管理员获取竞赛列表
+		router.GET("/admin/competitions", ginrouter.GetCompetitionListAdmin)
+
 		// 管理员获取指定题目的所有信息API
 		router.GET("/admin/problems/:Pid", ginrouter.GetProblemAllInfo)
 

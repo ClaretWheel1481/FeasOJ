@@ -59,16 +59,6 @@ const getResultStyle = (result) => {
   }
 };
 
-// 题目跳转
-const toProblem = (item) => {
-  router.push({ path: `/problem/${item}` })
-}
-
-// 用户资料跳转
-const toProfile = (item) => {
-  router.push({ path: `/profile/${item}` })
-}
-
 // 初始化数据
 onMounted(async () => {
   if (!userLoggedIn.value) {
@@ -94,10 +84,10 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td class="tabletitle">
-            <v-btn @click="toProblem(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+            <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
           </td>
           <td class="tabletitle">
-            <v-btn @click="toProfile(item.Username)" variant="text" block>{{ item.Username }}</v-btn>
+            <v-btn @click="router.push({ path: `/Profile/${item.Username}` })" variant="text" block>{{ item.Username }}</v-btn>
           </td>
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>

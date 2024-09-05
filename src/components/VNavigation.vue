@@ -61,7 +61,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer :width="170" permanent>
+  <v-navigation-drawer :width="175" permanent location="left">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
       <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="router.push('/')" color="primary"
         class="list-item">
@@ -73,6 +73,12 @@ onMounted(async () => {
         color="primary" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.problemset') }}</span>
+        </template>
+      </v-list-item>
+      <v-list-item rounded="xl" prepend-icon="mdi-code-array" value="COMPETITION" color="primary"
+        @click="" class="list-item">
+        <template v-slot:title>
+          <span class="multi-line-title">{{ $t('message.competition') }}</span>
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"

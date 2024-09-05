@@ -8,6 +8,7 @@ export default{
         usermanagement: '用户管理',
         problemmanagement: '题目管理',
         competitionmanagement: '竞赛管理',
+        competition: '竞赛',
         lang: '语言',
         login: '登录',
         logout: "登出",

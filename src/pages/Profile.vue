@@ -1,6 +1,6 @@
 <!-- 个人信息页 -->
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { VCard, VCardActions, VCardText, VRow, VProgressCircular, VTextField, VBtn, VAvatar, VImg, VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
@@ -38,11 +38,6 @@ const logout = () => {
   localStorage.clear();
   location.reload();
   location = '#/login';
-};
-
-// 点击题目跳转
-const handleRowClick = (row) => {
-  router.push({ path: `/problem/${row}` });
 };
 
 // 上传头像至服务器
@@ -240,7 +235,7 @@ watch(() => route.params.Username, (newUsername) => {
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">
-              <v-btn @click="handleRowClick(item.Pid)" variant="text" block>{{ item.Pid }}</v-btn>
+              <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
             </td>
             <td v-if="item.Result === 'Running...'" colspan="1">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>

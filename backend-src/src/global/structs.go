@@ -93,7 +93,6 @@ type ProblemInfoRequest struct {
 	Input       string `json:"input"`
 	Output      string `json:"output"`
 	ContestID   int    `json:"contest_id"`
-	IsVisible   bool   `json:"is_visible"`
 }
 
 // 测试样例请求体
@@ -115,6 +114,30 @@ type AdminProblemInfoRequest struct {
 	ContestID   int               `json:"contest_id"`
 	IsVisible   bool              `json:"is_visible"`
 	TestCases   []TestCaseRequest `json:"test_cases"`
+}
+
+// 竞赛信息请求体
+type AdminCompetitionInfoRequest struct {
+	ContestID    int       `json:"contest_id"`
+	Title        string    `json:"title"`
+	Subtitle     string    `json:"subtitle"`
+	Difficulty   string    `json:"difficulty"`
+	Password     string    `json:"password"`
+	HavePassword bool      `json:"have_password"`
+	IsVisible    bool      `json:"is_visible"`
+	Start_at     time.Time `json:"start_at"`
+	End_at       time.Time `json:"end_at"`
+}
+
+// 用户获取竞赛请求体
+type CompetitionRequest struct {
+	ContestID    int       `json:"contest_id"`
+	Title        string    `json:"title"`
+	Subtitle     string    `json:"subtitle"`
+	Difficulty   string    `json:"difficulty"`
+	HavePassword bool      `json:"have_password"`
+	Start_at     time.Time `json:"start_at"`
+	End_at       time.Time `json:"end_at"`
 }
 
 // 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at, role, token_secret, is_ban
@@ -184,19 +207,20 @@ type TestCase struct {
 }
 
 // 竞赛表：ContestID, Title, Subtitle, Difficulty, Password, Start_at, End_at
-type Contest struct {
-	ContestID  int       `gorm:"comment:比赛ID;primaryKey;autoIncrement"`
-	Title      string    `gorm:"comment:标题;not null"`
-	Subtitle   string    `gorm:"comment:副标题;not null"`
-	Difficulty string    `gorm:"comment:难度;not null"`
-	Password   string    `gorm:"comment:密码;not null"`
-	IsVisible  bool      `gorm:"comment:是否可见;not null"`
-	Start_at   time.Time `gorm:"comment:开始时间;not null"`
-	End_at     time.Time `gorm:"comment:结束时间;not null"`
+type Competition struct {
+	ContestID    int       `gorm:"comment:比赛ID;primaryKey;autoIncrement"`
+	Title        string    `gorm:"comment:标题;not null"`
+	Subtitle     string    `gorm:"comment:副标题;not null"`
+	Difficulty   string    `gorm:"comment:难度;not null"`
+	Password     string    `gorm:"comment:密码;not null"`
+	HavePassword bool      `gorm:"comment:是否有密码;not null"`
+	IsVisible    bool      `gorm:"comment:是否可见;not null"`
+	Start_at     time.Time `gorm:"comment:开始时间;not null"`
+	End_at       time.Time `gorm:"comment:结束时间;not null"`
 }
 
 // 竞赛参加表: ContestID, Uid, Username
-type ContestUser struct {
+type CompetitionUser struct {
 	ContestID int    `gorm:"comment:比赛ID;primaryKey;autoIncrement;not null"`
 	Uid       int    `gorm:"comment:用户ID;not null"`
 	Username  string `gorm:"comment:用户名;not null"`

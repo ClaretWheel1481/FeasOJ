@@ -424,7 +424,7 @@ func GetAllUsersInfo(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	usersInfo := utils.GetAllUsersInfo()
+	usersInfo := utils.SelectAllUsersInfo()
 	c.JSON(http.StatusOK, gin.H{"usersInfo": usersInfo})
 }
 
@@ -443,7 +443,7 @@ func GetComment(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	comments := utils.GetCommentsByDid(DidInt)
+	comments := utils.SelectCommentsByDid(DidInt)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
 }
 
@@ -594,4 +594,62 @@ func UnbanUser(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "解封成功。"})
+}
+
+// 用户获取竞赛列表
+func GetCompetitionList(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	token := c.GetHeader("Authorization")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectContestInfo()})
+}
+
+// 管理员获取竞赛列表
+func GetCompetitionListAdmin(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	token := c.GetHeader("Authorization")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if utils.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectContestInfoAdmin()})
+}
+
+// 管理员获取指定竞赛ID信息
+func GetCompetitionInfoAdmin(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, err := url.QueryUnescape(encodedUsername)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
+		return
+	}
+	token := c.GetHeader("Authorization")
+	cid := c.Param("cid")
+	cidInt, _ := strconv.Atoi(cid)
+	if !utils.VerifyToken(username, token) {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+		return
+	}
+	if utils.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": utils.SelectContestInfoAdminByCid(cidInt)})
 }
