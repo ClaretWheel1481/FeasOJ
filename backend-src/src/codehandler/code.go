@@ -2,7 +2,7 @@ package codehandler
 
 import (
 	"fmt"
-	"src/utils"
+	"src/utils/sql"
 	"strconv"
 	"strings"
 	"time"
@@ -39,6 +39,6 @@ func ProcessJudgeTasks(rdb *redis.Client) {
 		if err != nil {
 			fmt.Println(err)
 		}
-		utils.ModifyJudgeStatus(uidInt, pidInt, str)
+		sql.ModifyJudgeStatus(uidInt, pidInt, str)
 	}
 }

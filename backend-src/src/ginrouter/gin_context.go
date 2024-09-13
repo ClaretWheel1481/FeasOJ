@@ -7,9 +7,9 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"src/account"
 	"src/global"
 	"src/utils"
+	"src/utils/sql"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -30,7 +30,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
 	}
-	regstatus := utils.Register(req.Username, account.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
+	regstatus := utils.Register(req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
 	if regstatus {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功，2秒后跳转至登录界面。"})
 	} else {
@@ -44,7 +44,7 @@ func Login(c *gin.Context) {
 	user := c.Query("username")
 	Password := c.Query("password")
 	// 判断用户输入是否为邮箱
-	if account.IsEmail(user) {
+	if utils.IsEmail(user) {
 		Username = utils.SelectUserByEmail(user).Username
 	} else {
 		Username = user
@@ -59,7 +59,7 @@ func Login(c *gin.Context) {
 			return
 		}
 		// 校验密码是否正确
-		if account.VerifyPassword(Password, userPassword) {
+		if utils.VerifyPassword(Password, userPassword) {
 			// 生成Token并返回至前端
 			token, err := utils.GenerateToken(Username)
 			if err != nil {
@@ -94,7 +94,7 @@ func VerifyUserInfo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
 		return
 	}
-	if account.IsEmail(unescapeUsername) {
+	if utils.IsEmail(unescapeUsername) {
 		Username = utils.SelectUserByEmail(unescapeUsername).Username
 	} else {
 		Username = unescapeUsername
@@ -199,19 +199,19 @@ func UploadAvatar(c *gin.Context) {
 
 // 获取所有题目
 func GetAllProblems(c *gin.Context) {
-	problems := utils.SelectAllProblems()
+	problems := sql.SelectAllProblems()
 	c.JSON(http.StatusOK, gin.H{"problems": problems})
 }
 
 // 获取题目信息
 func GetProblemInfo(c *gin.Context) {
-	problemInfo := utils.SelectProblemInfo(c.Param("id"))
+	problemInfo := sql.SelectProblemInfo(c.Param("id"))
 	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 }
 
 // 获取所有提交记录
 func GetAllSubmitRecords(c *gin.Context) {
-	submitrecords := utils.SelectAllSubmitRecords()
+	submitrecords := sql.SelectAllSubmitRecords()
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
 
@@ -219,7 +219,7 @@ func GetAllSubmitRecords(c *gin.Context) {
 func GetSubmitRecordsByUsername(c *gin.Context) {
 	username := c.Param("username")
 	uid := utils.SelectUserInfo(username).Uid
-	submitrecords := utils.SelectSubmitRecordsByUid(uid)
+	submitrecords := sql.SelectSubmitRecordsByUid(uid)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
 
@@ -228,7 +228,7 @@ func GetAllDiscussions(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	itemsPerPage, _ := strconv.Atoi(c.DefaultQuery("itemsPerPage", "12"))
 
-	discussions, total := utils.SelectDiscussList(page, itemsPerPage)
+	discussions, total := sql.SelectDiscussList(page, itemsPerPage)
 	c.JSON(http.StatusOK, gin.H{
 		"discussions": discussions,
 		"total":       total,
@@ -237,7 +237,7 @@ func GetAllDiscussions(c *gin.Context) {
 
 // 获取指定id讨论信息
 func GetDiscussionByDid(c *gin.Context) {
-	discussion := utils.SelectDiscussionByDid(c.Param("Did"))
+	discussion := sql.SelectDiscussionByDid(c.Param("Did"))
 	c.JSON(http.StatusOK, gin.H{"discussionInfo": discussion})
 }
 
@@ -252,7 +252,7 @@ func CreateDiscussion(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
 		return
 	}
-	if !utils.AddDiscussion(title, content, uid) {
+	if !sql.AddDiscussion(title, content, uid) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "创建讨论失败。"})
 		return
 	}
@@ -273,7 +273,7 @@ func DeleteDiscussion(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	if utils.DelDiscussion(Did) {
+	if sql.DelDiscussion(Did) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
 	} else {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "删除讨论失败。"})
@@ -324,7 +324,7 @@ func UploadCode(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})
 		return
 	}
-	utils.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language, username)
+	sql.AddSubmitRecord(userInfo.Uid, pidInt, "Running...", language, username)
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "代码提交成功，请等候判题结果。"})
 }
 
@@ -345,7 +345,7 @@ func GetProblemAllInfo(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	problemInfo := utils.SelectProblemTestCases(c.Param("Pid"))
+	problemInfo := sql.SelectProblemTestCases(c.Param("Pid"))
 	c.JSON(http.StatusOK, gin.H{"problemInfo": problemInfo})
 }
 
@@ -373,7 +373,7 @@ func UpdateProblemInfo(c *gin.Context) {
 	}
 
 	// 更新题目信息
-	if err := utils.UpdateProblem(req); err != nil {
+	if err := sql.UpdateProblem(req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新题目信息失败"})
 		return
 	}
@@ -400,7 +400,7 @@ func DeleteProblem(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	if !utils.DeleteProblemAllInfo(pidInt) {
+	if !sql.DeleteProblemAllInfo(pidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
 		return
 	}
@@ -443,7 +443,7 @@ func GetComment(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	comments := utils.SelectCommentsByDid(DidInt)
+	comments := sql.SelectCommentsByDid(DidInt)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
 }
 
@@ -462,7 +462,7 @@ func DelComment(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	if !utils.DeleteCommentByCid(CidInt) {
+	if !sql.DeleteCommentByCid(CidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
@@ -486,7 +486,7 @@ func AddComment(c *gin.Context) {
 	}
 	// 获取用户ID
 	userInfo := utils.SelectUserInfo(username)
-	if !utils.AddComment(content, DidInt, userInfo.Uid) {
+	if !sql.AddComment(content, DidInt, userInfo.Uid) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "添加失败。"})
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "添加成功。"})
@@ -609,7 +609,7 @@ func GetCompetitionList(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectContestInfo()})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectCompetitionInfo()})
 }
 
 // 管理员获取竞赛列表
@@ -629,7 +629,7 @@ func GetCompetitionListAdmin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectContestInfoAdmin()})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectCompetitionInfoAdmin()})
 }
 
 // 管理员获取指定竞赛ID信息
@@ -651,5 +651,5 @@ func GetCompetitionInfoAdmin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": utils.SelectContestInfoAdminByCid(cidInt)})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": utils.SelectCompetitionInfoAdminByCid(cidInt)})
 }

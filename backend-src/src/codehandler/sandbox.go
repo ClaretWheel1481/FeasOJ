@@ -8,7 +8,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"src/global"
-	"src/utils"
+	"src/utils/sql"
 	"strings"
 	"time"
 
@@ -144,7 +144,7 @@ func CompileAndRun(filename string) string {
 	defer cancel()
 
 	// 获取输入输出样例
-	testCases := utils.SelectTestCasesByPid(strings.Split(filename, "_")[1])
+	testCases := sql.SelectTestCasesByPid(strings.Split(filename, "_")[1])
 	for _, testCase := range testCases {
 		var runCmd *exec.Cmd
 		switch ext {

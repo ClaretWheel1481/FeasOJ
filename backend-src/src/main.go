@@ -36,12 +36,17 @@ func main() {
 			os.Mkdir(*dir, os.ModePerm)
 		}
 	}
-	// 初始化连接配置
+	// 初始化数据库连接配置
 	if utils.InitSql() {
 		fmt.Println("[FeasOJ]MySQL初始化完毕！")
 	} else {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
+	}
+	if utils.SelectAdminUser(1) {
+		fmt.Println("[FeasOJ]管理员账号已存在！")
+	} else {
+		utils.InitAdminAccount()
 	}
 
 	// 构建沙盒镜像
