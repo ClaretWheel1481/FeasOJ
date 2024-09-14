@@ -1,4 +1,4 @@
-package ginrouter
+package gincontext
 
 import (
 	"fmt"
@@ -86,8 +86,6 @@ func GetCaptcha(c *gin.Context) {
 // 验证用户信息
 func VerifyUserInfo(c *gin.Context) {
 	var Username string
-	token := c.GetHeader("Authorization")
-	// 返回至前端以显示个人资料
 	user := c.GetHeader("username")
 	unescapeUsername, err := url.QueryUnescape(user)
 	if err != nil {
@@ -98,10 +96,6 @@ func VerifyUserInfo(c *gin.Context) {
 		Username = utils.SelectUserByEmail(unescapeUsername).Username
 	} else {
 		Username = unescapeUsername
-	}
-	if !utils.VerifyToken(Username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
 	}
 	// 查询对应的用户信息
 	userInfo := utils.SelectUserInfo(Username)
@@ -144,7 +138,8 @@ func UpdatePassword(c *gin.Context) {
 // 更新个人简介
 func UpdateSynopsis(c *gin.Context) {
 	synopsis := c.PostForm("synopsis")
-	username := c.Param("username")
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
 	token := c.GetHeader("Authorization")
 	// 校验Token
 	if !utils.VerifyToken(username, token) {
@@ -166,13 +161,8 @@ func UploadAvatar(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取头像文件。"})
 		return
 	}
-	token := c.GetHeader("Authorization")
-	username := c.Param("username")
-	// 校验Token
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
 	// 获取用户信息
 	userInfo := utils.SelectUserInfo(username)
 	if userInfo.Username == "" {
@@ -244,14 +234,10 @@ func GetDiscussionByDid(c *gin.Context) {
 // 创建讨论
 func CreateDiscussion(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
+	username, _ := url.QueryUnescape(encodedUsername)
 	title := c.PostForm("title")
 	content := c.PostForm("content")
 	uid := utils.SelectUserInfo(username).Uid
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
-		return
-	}
 	if !sql.AddDiscussion(title, content, uid) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "创建讨论失败。"})
 		return
@@ -262,17 +248,6 @@ func CreateDiscussion(c *gin.Context) {
 // 删除讨论
 func DeleteDiscussion(c *gin.Context) {
 	Did := c.Param("Did")
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	if sql.DelDiscussion(Did) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除讨论成功。"})
 	} else {
@@ -282,17 +257,13 @@ func DeleteDiscussion(c *gin.Context) {
 
 // 上传代码
 func UploadCode(c *gin.Context) {
-	token := c.GetHeader("Authorization")
 	problem := c.Query("problem")
 	pidInt, _ := strconv.Atoi(problem)
-	username := c.Param("username")
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
 	file, err := c.FormFile("code")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取代码文件。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
 		return
 	}
 	// 获取用户ID
@@ -331,16 +302,7 @@ func UploadCode(c *gin.Context) {
 // 管理员获取指定题目所有信息
 func GetProblemAllInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -352,19 +314,10 @@ func GetProblemAllInfo(c *gin.Context) {
 // 更新题目信息
 func UpdateProblemInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
+	username, _ := url.QueryUnescape(encodedUsername)
 	var req global.AdminProblemInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
-		return
-	}
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败"})
 		return
 	}
 	if utils.SelectUserInfo(username).Role != 1 {
@@ -384,18 +337,9 @@ func UpdateProblemInfo(c *gin.Context) {
 // 删除题目及其输入输出样例
 func DeleteProblem(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
+	username, _ := url.QueryUnescape(encodedUsername)
 	pid := c.Param("Pid")
 	pidInt, _ := strconv.Atoi(pid)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -410,16 +354,8 @@ func DeleteProblem(c *gin.Context) {
 // 管理员获取所有用户信息
 func GetAllUsersInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
+
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -430,19 +366,8 @@ func GetAllUsersInfo(c *gin.Context) {
 
 // 获取指定讨论的评论
 func GetComment(c *gin.Context) {
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
 	Did := c.Param("Did")
 	DidInt, _ := strconv.Atoi(Did)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	comments := sql.SelectCommentsByDid(DidInt)
 	c.JSON(http.StatusOK, gin.H{"comments": comments})
 }
@@ -451,17 +376,6 @@ func GetComment(c *gin.Context) {
 func DelComment(c *gin.Context) {
 	Cid := c.Param("Cid")
 	CidInt, _ := strconv.Atoi(Cid)
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	if !sql.DeleteCommentByCid(CidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
 	}
@@ -471,19 +385,10 @@ func DelComment(c *gin.Context) {
 // 添加评论
 func AddComment(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
+	username, _ := url.QueryUnescape(encodedUsername)
 	content := c.PostForm("content")
 	Did := c.Param("Did")
 	DidInt, _ := strconv.Atoi(Did)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	// 获取用户ID
 	userInfo := utils.SelectUserInfo(username)
 	if !sql.AddComment(content, DidInt, userInfo.Uid) {
@@ -497,16 +402,7 @@ func PromoteUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -523,16 +419,7 @@ func DemoteUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -549,16 +436,7 @@ func BanUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -575,16 +453,7 @@ func UnbanUser(c *gin.Context) {
 	uid := c.Query("uid")
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
@@ -598,58 +467,29 @@ func UnbanUser(c *gin.Context) {
 
 // 用户获取竞赛列表
 func GetCompetitionList(c *gin.Context) {
-	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectCompetitionInfo()})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": sql.SelectCompetitionInfo()})
 }
 
 // 管理员获取竞赛列表
 func GetCompetitionListAdmin(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
+	username, _ := url.QueryUnescape(encodedUsername)
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": utils.SelectCompetitionInfoAdmin()})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": sql.SelectCompetitionInfoAdmin()})
 }
 
 // 管理员获取指定竞赛ID信息
 func GetCompetitionInfoAdmin(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
-	username, err := url.QueryUnescape(encodedUsername)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户名。"})
-		return
-	}
-	token := c.GetHeader("Authorization")
+	username, _ := url.QueryUnescape(encodedUsername)
 	cid := c.Param("cid")
 	cidInt, _ := strconv.Atoi(cid)
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	if utils.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": utils.SelectCompetitionInfoAdminByCid(cidInt)})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": sql.SelectCompetitionInfoAdminByCid(cidInt)})
 }

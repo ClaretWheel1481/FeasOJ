@@ -106,27 +106,6 @@ func Register(username, password, email, tokensecret string, role int) bool {
 	return err == nil
 }
 
-// 管理员获取竞赛信息
-func SelectCompetitionInfoAdmin() []global.AdminCompetitionInfoRequest {
-	var competitions []global.AdminCompetitionInfoRequest
-	ConnectSql().Table("competitions").Find(&competitions)
-	return competitions
-}
-
-// 管理员获取指定竞赛ID信息
-func SelectCompetitionInfoAdminByCid(Cid int) global.AdminCompetitionInfoRequest {
-	var competition global.AdminCompetitionInfoRequest
-	ConnectSql().Table("competitions").Where("cid = ?", Cid).Find(&competition)
-	return competition
-}
-
-// 用户获取竞赛信息
-func SelectCompetitionInfo() []global.CompetitionRequest {
-	var competition []global.CompetitionRequest
-	ConnectSql().Table("competitions").Find(&competition)
-	return competition
-}
-
 // 查询管理员用户
 func SelectAdminUser(role int) bool {
 	// role = 1表示管理员
