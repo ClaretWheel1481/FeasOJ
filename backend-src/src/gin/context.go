@@ -21,7 +21,7 @@ func Register(c *gin.Context) {
 	var req global.RegisterRequest
 	c.ShouldBind(&req)
 	// 判断用户或邮箱是否存在
-	if utils.IsUserExist(req.Username, req.Email) {
+	if sql.IsUserExist(req.Username, req.Email) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在或邮箱已使用。"})
 		return
 	}
@@ -30,7 +30,7 @@ func Register(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
 	}
-	regstatus := utils.Register(req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
+	regstatus := sql.Register(req.Username, utils.EncryptPassword(req.Password), req.Email, uuid.New().String(), 0)
 	if regstatus {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "注册成功，2秒后跳转至登录界面。"})
 	} else {
@@ -45,7 +45,7 @@ func Login(c *gin.Context) {
 	Password := c.Query("password")
 	// 判断用户输入是否为邮箱
 	if utils.IsEmail(user) {
-		Username = utils.SelectUserByEmail(user).Username
+		Username = sql.SelectUserByEmail(user).Username
 	} else {
 		Username = user
 	}
@@ -54,7 +54,7 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {
 		// 用户是否被封禁
-		if utils.SelectUserInfo(Username).IsBan {
+		if sql.SelectUserInfo(Username).IsBan {
 			c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "该用户已被封禁。"})
 			return
 		}
@@ -93,12 +93,12 @@ func VerifyUserInfo(c *gin.Context) {
 		return
 	}
 	if utils.IsEmail(unescapeUsername) {
-		Username = utils.SelectUserByEmail(unescapeUsername).Username
+		Username = sql.SelectUserByEmail(unescapeUsername).Username
 	} else {
 		Username = unescapeUsername
 	}
 	// 查询对应的用户信息
-	userInfo := utils.SelectUserInfo(Username)
+	userInfo := sql.SelectUserInfo(Username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {
@@ -111,7 +111,7 @@ func GetUserInfo(c *gin.Context) {
 	// 获取用户名
 	username := c.Param("username")
 	// 查询对应的用户信息
-	userInfo := utils.SelectUserInfo(username)
+	userInfo := sql.SelectUserInfo(username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
 	} else {
@@ -128,7 +128,8 @@ func UpdatePassword(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码错误。"})
 		return
 	}
-	if utils.UpdatePassword(req.Email, req.NewPassword) {
+	newPassword := utils.EncryptPassword(req.NewPassword)
+	if sql.UpdatePassword(req.Email, newPassword) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "密码修改成功，2秒后跳转至登录页面。"})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "密码修改失败。"})
@@ -147,7 +148,7 @@ func UpdateSynopsis(c *gin.Context) {
 		return
 	}
 	// 更新简介
-	if utils.UpdateSynopsis(username, synopsis) {
+	if sql.UpdateSynopsis(username, synopsis) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "个人简介更新成功。"})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "个人简介更新失败。"})
@@ -164,7 +165,7 @@ func UploadAvatar(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	// 获取用户信息
-	userInfo := utils.SelectUserInfo(username)
+	userInfo := sql.SelectUserInfo(username)
 	if userInfo.Username == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "无法获取用户信息。"})
 		return
@@ -180,7 +181,7 @@ func UploadAvatar(c *gin.Context) {
 		return
 	}
 	// 上传头像路径至数据库
-	if !utils.UpdateAvatar(username, filepath.Join(newFilename)) {
+	if !sql.UpdateAvatar(username, filepath.Join(newFilename)) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "头像路径更新失败。"})
 		return
 	}
@@ -208,7 +209,7 @@ func GetAllSubmitRecords(c *gin.Context) {
 // 获取指定用户提交记录
 func GetSubmitRecordsByUsername(c *gin.Context) {
 	username := c.Param("username")
-	uid := utils.SelectUserInfo(username).Uid
+	uid := sql.SelectUserInfo(username).Uid
 	submitrecords := sql.SelectSubmitRecordsByUid(uid)
 	c.JSON(http.StatusOK, gin.H{"submitrecords": submitrecords})
 }
@@ -237,7 +238,7 @@ func CreateDiscussion(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	title := c.PostForm("title")
 	content := c.PostForm("content")
-	uid := utils.SelectUserInfo(username).Uid
+	uid := sql.SelectUserInfo(username).Uid
 	if !sql.AddDiscussion(title, content, uid) {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "创建讨论失败。"})
 		return
@@ -267,7 +268,7 @@ func UploadCode(c *gin.Context) {
 		return
 	}
 	// 获取用户ID
-	userInfo := utils.SelectUserInfo(username)
+	userInfo := sql.SelectUserInfo(username)
 	// 将文件名改为用户ID_题目ID
 	newFileName := fmt.Sprintf("%d_%s%s", userInfo.Uid, problem, path.Ext(file.Filename))
 	filepath := filepath.Join(global.CodeDir, newFileName)
@@ -303,7 +304,7 @@ func UploadCode(c *gin.Context) {
 func GetProblemAllInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
@@ -320,7 +321,7 @@ func UpdateProblemInfo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
 		return
 	}
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足"})
 		return
 	}
@@ -340,7 +341,7 @@ func DeleteProblem(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	pid := c.Param("Pid")
 	pidInt, _ := strconv.Atoi(pid)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
@@ -356,11 +357,11 @@ func GetAllUsersInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	usersInfo := utils.SelectAllUsersInfo()
+	usersInfo := sql.SelectAllUsersInfo()
 	c.JSON(http.StatusOK, gin.H{"usersInfo": usersInfo})
 }
 
@@ -390,7 +391,7 @@ func AddComment(c *gin.Context) {
 	Did := c.Param("Did")
 	DidInt, _ := strconv.Atoi(Did)
 	// 获取用户ID
-	userInfo := utils.SelectUserInfo(username)
+	userInfo := sql.SelectUserInfo(username)
 	if !sql.AddComment(content, DidInt, userInfo.Uid) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "添加失败。"})
 	}
@@ -403,11 +404,11 @@ func PromoteUser(c *gin.Context) {
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	if !utils.PromoteToAdmin(uidInt) {
+	if !sql.PromoteToAdmin(uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "晋升失败。"})
 		return
 	}
@@ -420,11 +421,11 @@ func DemoteUser(c *gin.Context) {
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	if !utils.DemoteToUser(uidInt) {
+	if !sql.DemoteToUser(uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "降级失败。"})
 		return
 	}
@@ -437,11 +438,11 @@ func BanUser(c *gin.Context) {
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	if !utils.BanUser(uidInt) {
+	if !sql.BanUser(uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "封禁失败。"})
 		return
 	}
@@ -454,11 +455,11 @@ func UnbanUser(c *gin.Context) {
 	uidInt, _ := strconv.Atoi(uid)
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
-	if !utils.UnbanUser(uidInt) {
+	if !sql.UnbanUser(uidInt) {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "解封失败。"})
 		return
 	}
@@ -474,7 +475,7 @@ func GetCompetitionList(c *gin.Context) {
 func GetCompetitionListAdmin(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}
@@ -487,7 +488,7 @@ func GetCompetitionInfoAdmin(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	cid := c.Param("cid")
 	cidInt, _ := strconv.Atoi(cid)
-	if utils.SelectUserInfo(username).Role != 1 {
+	if sql.SelectUserInfo(username).Role != 1 {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
 		return
 	}

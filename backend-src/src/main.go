@@ -12,6 +12,7 @@ import (
 	"src/global"
 	"src/middleware"
 	"src/utils"
+	"src/utils/sql"
 	"syscall"
 
 	"github.com/gin-gonic/gin"
@@ -44,10 +45,10 @@ func main() {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
-	if utils.SelectAdminUser(1) {
+	if sql.SelectAdminUser(1) {
 		fmt.Println("[FeasOJ]管理员账号已存在！")
 	} else {
-		utils.InitAdminAccount()
+		sql.Register(utils.InitAdminAccount())
 	}
 
 	// 构建沙盒镜像
