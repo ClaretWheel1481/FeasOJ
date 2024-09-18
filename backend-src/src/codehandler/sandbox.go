@@ -164,7 +164,6 @@ func CompileAndRun(filename string) string {
 		runCmd.Stdin = strings.NewReader(testCase.InputData)
 		output, err := runCmd.CombinedOutput()
 		if ctx.Err() == context.DeadlineExceeded {
-			// 超时10s后强制停止容器
 			TerminateContainer(global.ContainerID)
 			return "Time Limit Exceeded"
 		}

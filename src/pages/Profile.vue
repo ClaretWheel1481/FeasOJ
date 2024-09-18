@@ -69,7 +69,7 @@ const uploadAvat = async (cropper) => {
 };
 
 // 获取用户提交信息
-const fetchData = async () => {
+const fetchSubmitData = async () => {
   try {
     const submitResponse = await getUserSubmitRecords(currentUsername.value);
     userSubmitRecords.value = submitResponse.data.submitrecords;
@@ -159,7 +159,7 @@ const verifyAndFetchUserInfo = async () => {
     }
     userInfo.value = userInfoResponse.data.Info;
     synopsis.value = userInfo.value.synopsis;
-    await fetchData();
+    await fetchSubmitData();
     loading.value = false;
   } catch (error) {
     router.push({ path: '/403' });
@@ -230,7 +230,7 @@ watch(() => route.params.Username, (newUsername) => {
     <div style="margin: 30px"></div>
     <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10">
       <v-data-table-server :headers="headers" :items="userSubmitRecords" :items-length="userSubmitRecordsLength"
-        :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+        :loading="loading" :loading-text="$t('message.loading')" @update="fetchSubmitData" :hide-default-footer="true"
         :no-data-text="$t('message.nodata')">
         <template v-slot:item="{ item }">
           <tr>

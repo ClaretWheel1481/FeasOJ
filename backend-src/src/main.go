@@ -45,6 +45,8 @@ func main() {
 		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
 		return
 	}
+
+	// 初始化管理员账户
 	if sql.SelectAdminUser(1) {
 		fmt.Println("[FeasOJ]管理员账号已存在！")
 	} else {
@@ -125,40 +127,40 @@ func main() {
 		router1.DELETE("/comments/:Cid", gincontext.DelComment)
 	}
 
-	router2 := r.Group("/api/v2")
+	router1 = r.Group("/api/v1")
 	{
 		// 注册API
-		router2.POST("/register", gincontext.Register)
+		router1.POST("/register", gincontext.Register)
 
 		// 登录API
-		router2.GET("/login", gincontext.Login)
+		router1.GET("/login", gincontext.Login)
 
 		// 获取验证码API
-		router2.GET("/captcha", gincontext.GetCaptcha)
+		router1.GET("/captcha", gincontext.GetCaptcha)
 
 		// 获取用户信息API
-		router2.GET("/users/:username", gincontext.GetUserInfo)
+		router1.GET("/users/:username", gincontext.GetUserInfo)
 
 		// 获取所有题目API
-		router2.GET("/problems", gincontext.GetAllProblems)
+		router1.GET("/problems", gincontext.GetAllProblems)
 
 		// 根据题目ID获取题目信息
-		router2.GET("/problems/:id", gincontext.GetProblemInfo)
+		router1.GET("/problems/:id", gincontext.GetProblemInfo)
 
 		// 获取总提交记录API
-		router2.GET("/submitrecords", gincontext.GetAllSubmitRecords)
+		router1.GET("/submitrecords", gincontext.GetAllSubmitRecords)
 
 		// 获取指定用户的提交记录API
-		router2.GET("/users/:username/submitrecords", gincontext.GetSubmitRecordsByUsername)
+		router1.GET("/users/:username/submitrecords", gincontext.GetSubmitRecordsByUsername)
 
 		// 获取所有讨论帖子API
-		router2.GET("/discussions", gincontext.GetAllDiscussions)
+		router1.GET("/discussions", gincontext.GetAllDiscussions)
 
 		// 获取指定Did的帖子API
-		router2.GET("/discussions/:Did", gincontext.GetDiscussionByDid)
+		router1.GET("/discussions/:Did", gincontext.GetDiscussionByDid)
 
 		// 密码修改API
-		router2.PUT("/users/password", gincontext.UpdatePassword)
+		router1.PUT("/users/password", gincontext.UpdatePassword)
 	}
 
 	// 挂载头像文件夹

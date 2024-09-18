@@ -7,6 +7,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"src/config"
 	"src/global"
 	"src/utils"
 	"src/utils/sql"
@@ -76,7 +77,7 @@ func Login(c *gin.Context) {
 func GetCaptcha(c *gin.Context) {
 	// 获取邮箱地址
 	emails := c.Query("email")
-	if utils.SendVerifycode(utils.InitEmailConfig(), emails, utils.GenerateVerifycode()) == "Success" {
+	if utils.SendVerifycode(config.InitEmailConfig(), emails, utils.GenerateVerifycode()) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
 	} else {
 		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "验证码发送失败，可能是我们的问题。"})
@@ -141,12 +142,6 @@ func UpdateSynopsis(c *gin.Context) {
 	synopsis := c.PostForm("synopsis")
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
-	token := c.GetHeader("Authorization")
-	// 校验Token
-	if !utils.VerifyToken(username, token) {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
-		return
-	}
 	// 更新简介
 	if sql.UpdateSynopsis(username, synopsis) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "个人简介更新成功。"})
