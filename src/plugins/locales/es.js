@@ -88,5 +88,6 @@ export default{
         management: "Gestión",
         isvisible: "¿Es visible?",
         contestid: "ID del concurso",
+        enter: "Entrar",
     }
 }

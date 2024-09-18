@@ -6,7 +6,7 @@ import moment from 'moment';
 import { ref, onMounted, computed, watch } from 'vue'
 import { getAllDis } from '../../utils/axios';
 import { showAlert } from '../../utils/alert';
-import { token } from '../../utils/account';
+import { token, userName } from '../../utils/account';
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -32,7 +32,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllDis(page.value, itemsPerPage.value);
+    const response = await getAllDis(page.value, itemsPerPage.value,userName.value,token.value);
     discuss.value = response.data.discussions
     discussCount.value = response.data.total
   } catch (error) {

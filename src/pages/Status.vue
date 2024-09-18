@@ -6,7 +6,7 @@ import { onMounted, computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert.js';
-import { token } from "../utils/account.js";
+import { token, userName } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
 
 const { t } = useI18n();
@@ -31,7 +31,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getSubmitRecords()
+    const response = await getSubmitRecords(userName.value, token.value)
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {
@@ -87,7 +87,8 @@ onMounted(async () => {
             <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
           </td>
           <td class="tabletitle">
-            <v-btn @click="router.push({ path: `/Profile/${item.Username}` })" variant="text" block>{{ item.Username }}</v-btn>
+            <v-btn @click="router.push({ path: `/Profile/${item.Username}` })" variant="text" block>{{ item.Username
+              }}</v-btn>
           </td>
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>

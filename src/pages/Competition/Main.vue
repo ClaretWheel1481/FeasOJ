@@ -1,0 +1,88 @@
+<script setup>
+import { token, userName } from "../../utils/account";
+import { ref, onMounted, computed } from "vue";
+import { getAllCompetitions } from "../../utils/axios";
+import moment from "moment";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
+const contests = ref([]);
+const loading = ref(false);
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value);
+
+// 根据题目难度显示不同字体
+const difficultyColor = (difficulty) => {
+    switch (difficulty) {
+        case "简单":
+            return "font-weight: bold;color: green;";
+        case "中等":
+            return "font-weight: bold;color: orange;";
+        case "困难":
+            return "font-weight: bold;color: red;";
+        default:
+            return "";
+    }
+};
+
+onMounted(async () => {
+    if (!userLoggedIn.value) {
+        loading.value = false;
+        setTimeout(() => {
+            window.location = "#/login";
+            window.location.reload();
+        }, 2000);
+        return;
+    }
+    loading.value = true;
+    const response = await getAllCompetitions(userName.value, token.value);
+    contests.value = response.data.contests;
+    loading.value = false;
+});
+</script>
+
+<template>
+    <div class="title" style="margin: 50px">
+        <h1>{{ $t("message.competition") }}</h1>
+    </div>
+    <div v-if="loading" class="loading">
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+    </div>
+    <div v-else>
+        <v-container>
+            <v-row>
+                <v-col v-for="contest in contests" :key="contest.contest_id" cols="12" md="4">
+                    <v-card rounded="xl" elevation="8">
+                        <v-card-title style="font-weight: bold;">{{ contest.title }}</v-card-title>
+                        <v-card-subtitle>{{ contest.subtitle }}</v-card-subtitle>
+                        <v-card-text>
+                            <p :style="difficultyColor(contest.difficulty)">
+                                {{ contest.difficulty }}
+                            </p>
+                            <p>
+                                {{ moment(contest.start_at).format("MM/DD HH:mm") }} -
+                                {{ moment(contest.end_at).format("MM/DD HH:mm") }}
+                            </p>
+                        </v-card-text>
+                        <template v-slot:actions>
+                            <v-btn color="primary" block>{{ $t("message.enter") }}</v-btn>
+                        </template>
+                    </v-card>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
+</template>
+
+<style scoped>
+.v-card {
+    margin-bottom: 20px;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+</style>

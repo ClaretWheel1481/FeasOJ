@@ -124,7 +124,7 @@ onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
         try {
-            const response = await getDisDetails(Did);
+            const response = await getDisDetails(Did, userName.value, token.value);
             // 获取评论
             const commentsResp = await getComments(Did, userName.value, token.value);
             comments.value = commentsResp.data.comments;

@@ -76,7 +76,7 @@ onMounted(async () => {
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-code-array" value="COMPETITION" color="primary"
-        @click="" class="list-item">
+        @click="router.push('/competitions')" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.competition') }}</span>
         </template>

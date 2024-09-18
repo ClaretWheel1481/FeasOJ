@@ -88,7 +88,7 @@ const save = async () => {
 const fetchData = async () => {
     loading.value = true
     try {
-        const response = await getAllProblems();
+        const response = await getAllProblems(userName.value, token.value);
         problems.value = response.data.problems
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
@@ -219,10 +219,10 @@ onMounted(async () => {
                         </v-row>
                         <!-- 时间、内存限制 -->
                         <v-row class="limitRow">
-                            <v-text-field :label="$t('message.timeLimit') + 'S'" v-model="problemFields.time_limit"
+                            <v-text-field :label="$t('message.timeLimit') + '(S)'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>
                             <div style="margin-inline: 30px;"></div>
-                            <v-text-field :label="$t('message.memoryLimit') + 'MB'" v-model="problemFields.memory_limit"
+                            <v-text-field :label="$t('message.memoryLimit') + '(MB)'" v-model="problemFields.memory_limit"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
                         <!-- 显示输入输出样例 -->

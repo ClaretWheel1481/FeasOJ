@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { components } from 'vuetify/dist/vuetify-labs.js';
 
 const routes = [
     {
@@ -68,6 +69,12 @@ const routes = [
         path: '/status', component: () => import('../pages/Status.vue'),
         meta: {
             titleKey: 'message.status'
+        }
+    },
+    {
+        path: '/competitions', component: () => import('../pages/Competition/Main.vue'),
+        meta: {
+            titleKey: 'message.competition'
         }
     },
     {

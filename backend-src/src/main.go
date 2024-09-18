@@ -78,6 +78,21 @@ func main() {
 		// 获取竞赛列表
 		router1.GET("/competitions", gincontext.GetCompetitionList)
 
+		// 获取所有题目API
+		router1.GET("/problems", gincontext.GetAllProblems)
+
+		// 获取所有讨论帖子API
+		router1.GET("/discussions", gincontext.GetAllDiscussions)
+
+		// 根据题目ID获取题目信息
+		router1.GET("/problems/:id", gincontext.GetProblemInfo)
+
+		// 获取总提交记录API
+		router1.GET("/submitrecords", gincontext.GetAllSubmitRecords)
+
+		// 获取指定Did的帖子API
+		router1.GET("/discussions/:Did", gincontext.GetDiscussionByDid)
+
 		// 上传代码API
 		router1.POST("/users/code", gincontext.UploadCode)
 
@@ -141,23 +156,8 @@ func main() {
 		// 获取用户信息API
 		router1.GET("/users/:username", gincontext.GetUserInfo)
 
-		// 获取所有题目API
-		router1.GET("/problems", gincontext.GetAllProblems)
-
-		// 根据题目ID获取题目信息
-		router1.GET("/problems/:id", gincontext.GetProblemInfo)
-
-		// 获取总提交记录API
-		router1.GET("/submitrecords", gincontext.GetAllSubmitRecords)
-
 		// 获取指定用户的提交记录API
 		router1.GET("/users/:username/submitrecords", gincontext.GetSubmitRecordsByUsername)
-
-		// 获取所有讨论帖子API
-		router1.GET("/discussions", gincontext.GetAllDiscussions)
-
-		// 获取指定Did的帖子API
-		router1.GET("/discussions/:Did", gincontext.GetDiscussionByDid)
 
 		// 密码修改API
 		router1.PUT("/users/password", gincontext.UpdatePassword)

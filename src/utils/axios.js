@@ -39,28 +39,57 @@ export const getUserInfo = async (username) => {
 }
 
 // 获取题目列表
-export const getAllProblems = async () => {
-    return await axios.get(`${apiUrl}problems`);
+export const getAllProblems = async (username, token) => {
+    return await axios.get(`${apiUrl}problems`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    });
 }
 
 // 获取题目详细信息
-export const getPbDetails = async (Pid) => {
-    return await axios.get(`${apiUrl}problems/${Pid}`);
+export const getPbDetails = async (Pid, username, token) => {
+    return await axios.get(`${apiUrl}problems/${Pid}`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    });
 }
 
 // 获取讨论列表
-export const getAllDis = async (page, itemsPerPage) => {
+export const getAllDis = async (page, itemsPerPage, username, token) => {
     return await axios.get(`${apiUrl}discussions`, {
         params: {
             page: page,
             itemsPerPage: itemsPerPage
+        },
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
         }
     })
 }
 
 // 获取讨论详细信息
-export const getDisDetails = async (Did) => {
-    return await axios.get(`${apiUrl}discussions/${Did}`)
+export const getDisDetails = async (Did, username, token) => {
+    return await axios.get(`${apiUrl}discussions/${Did}`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 获取竞赛列表
+export const getAllCompetitions = async (username, token) => {
+    return await axios.get(`${apiUrl}competitions`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
 }
 
 // 获取指定用户提交记录
@@ -69,8 +98,13 @@ export const getUserSubmitRecords = async (username) => {
 }
 
 // 获取30天内的提交记录
-export const getSubmitRecords = async () => {
-    return await axios.get(`${apiUrl}submitrecords`)
+export const getSubmitRecords = async (username, token) => {
+    return await axios.get(`${apiUrl}submitrecords`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
 }
 
 // 获取指定讨论的所有回复
@@ -114,7 +148,7 @@ export const registerRequest = async (username, password, email, vcode) => {
 }
 
 // 添加讨论
-export const addDiscussion = async (Title, Content, Username,token) => {
+export const addDiscussion = async (Title, Content, Username, token) => {
     const formData = new FormData();
     formData.append('title', Title);
     formData.append('content', Content);

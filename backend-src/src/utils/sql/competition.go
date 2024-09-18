@@ -22,6 +22,6 @@ func SelectCompetitionInfoAdminByCid(Cid int) global.AdminCompetitionInfoRequest
 // 用户获取竞赛信息
 func SelectCompetitionInfo() []global.CompetitionRequest {
 	var competition []global.CompetitionRequest
-	utils.ConnectSql().Table("competitions").Find(&competition)
+	utils.ConnectSql().Table("competitions").Where("is_visible = ?", true).Order("start_at DESC").Find(&competition)
 	return competition
 }

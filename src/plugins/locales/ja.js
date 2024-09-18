@@ -88,5 +88,6 @@ export default{
         management: "管理",
         isvisible: "公開",
         contestid: "コンテストID",
+        enter: "入力",
     }
 }

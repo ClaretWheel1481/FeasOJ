@@ -79,7 +79,7 @@ onMounted(async () => {
     if (userLoggedIn.value) {
         try {
             const problemId = route.params.Pid;
-            const resp = await getPbDetails(problemId);
+            const resp = await getPbDetails(problemId, userName.value, token.value);
             if (resp.status === 200) {
                 problemInfo.value = resp.data.problemInfo;
             }

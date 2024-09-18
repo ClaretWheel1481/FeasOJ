@@ -88,5 +88,6 @@ export default{
         management: 'Gestion',
         isvisible: 'Visible',
         contestid: 'ID du concours',
+        enter: 'Entrer',
     }
 }

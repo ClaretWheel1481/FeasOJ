@@ -88,5 +88,6 @@ export default{
         management: "管理",
         isvisible: "是否可見",
         contestid: "競賽ID",
+        enter: "進入",
     }
 }
