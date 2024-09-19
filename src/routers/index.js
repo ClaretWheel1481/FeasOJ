@@ -1,5 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import { components } from 'vuetify/dist/vuetify-labs.js';
 
 const routes = [
     {
@@ -25,14 +24,14 @@ const routes = [
     },
     {
         path: '/login',
-        component: () => import('../pages/Auth/Login.vue'),
+        component: () => import('../pages/Account/Login.vue'),
         meta: {
             titleKey: 'message.login'
         }
     },
     {
         path: '/register',
-        component: () => import('../pages/Auth/Register.vue'),
+        component: () => import('../pages/Account/Register.vue'),
         meta: {
             titleKey: 'message.register'
         }
@@ -60,7 +59,7 @@ const routes = [
         }
     },
     {
-        path: '/reset', component: () => import('../pages/Auth/Reset.vue'),
+        path: '/reset', component: () => import('../pages/Account/Reset.vue'),
         meta: {
             titleKey: 'message.resetpwd'
         }

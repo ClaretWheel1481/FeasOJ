@@ -81,16 +81,16 @@ onMounted(async () => {
           <span class="multi-line-title">{{ $t('message.competition') }}</span>
         </template>
       </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"
-        @click="router.push('/status')" color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.status') }}</span>
-        </template>
-      </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-chat" value="DISCUSS" color="primary"
         @click="router.push('/discussion')" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.discussion') }}</span>
+        </template>
+      </v-list-item>
+      <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"
+        @click="router.push('/status')" color="primary" class="list-item">
+        <template v-slot:title>
+          <span class="multi-line-title">{{ $t('message.status') }}</span>
         </template>
       </v-list-item>
       <v-list-item rounded="xl" prepend-icon="mdi-help-circle" value="ABOUT" @click="router.push('/about')"

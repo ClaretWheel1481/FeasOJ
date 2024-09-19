@@ -207,7 +207,7 @@ onMounted(async () => {
                     <div class="buttons">
                         <!-- TODO: 回复暂不添加 -->
                         <!-- <v-btn rounded="xl" variant="text" color="primary" @click="">回复</v-btn> -->
-                        <v-btn v-if="comment.username === userName || discussionInfos.username === userName" rounded="xl" variant="text" color="primary"
+                        <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
                             @click="deleteCommentByID(comment.cid)">{{ $t("message.delete") }}</v-btn>
                     </div>
                     <v-divider></v-divider>
