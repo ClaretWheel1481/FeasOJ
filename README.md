@@ -8,31 +8,32 @@ English | [简体中文](README_CN.md)
 # FeasOJ
 ### Project Description
 FeasOJ is an online programming practice platform based on Vue and Golang, aiming to provide users with a convenient and efficient learning and practice environment.
-[Demo](https://oj.claret.space)
 
 ### Project Structure
-- src：Frontend
-  - assets：
-  - components：
-  - pages：
-  - routers：
-  - utils：
-  - plugins：
+- src:
+  - assets:
+  - components:
+  - pages:
+  - routers:
+  - utils:
+  - plugins:
 
-- backend-src：Backend
+- backend-src:
   - src：
-    - account：
-    - codehandler：
-    - ginrouter：
-    - global：
-    - utils：
-    - main.go：
-    - go.mod：
+    - codehandler:
+    - config:
+    - gin:
+    - global:
+    - middleware:
+    - utils:
+      - sql:
+    - main.go:
+    - go.mod:
   - Sandbox: Dockerfile
 
 ### Screenshots
-![image](/public/Screenshot_1.png)
-![image](/public/Screenshot_2.png)
+![image](/assets/Screenshot1.png)
+![image](/assets/Screenshot2.png)
 
 ### How to run
 

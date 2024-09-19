@@ -8,31 +8,32 @@
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用户提供一个方便、高效的学习和练习环境。
-[Demo](https://oj.claret.space)
 
 ### 项目结构
-- src：前端代码
-  - assets：静态资源
-  - components：组件
-  - pages：页面
-  - routers：路由
-  - utils：工具函数
-  - plugins：插件
+- src:
+  - assets:
+  - components:
+  - pages:
+  - plugins:
+  - routers:
+  - utils:
 
-- backend-src：后端代码
-  - src：主要代码文件夹
-    - account：用户模块
-    - codehandler：代码处理模块
-    - ginrouter：路由模块
-    - global：全局变量
-    - utils：工具函数
-    - main.go：主文件
-    - go.mod：依赖管理文件
+- backend-src:
+  - src：
+    - codehandler:
+    - config:
+    - gin:
+    - global:
+    - middleware:
+    - utils:
+      - sql:
+    - main.go:
+    - go.mod:
   - Sandbox: Dockerfile
 
 ### 项目截图
-![image](/public/Screenshot_1.png)
-![image](/public/Screenshot_2.png)
+![image](/assets/Screenshot1.png)
+![image](/assets/Screenshot2.png)
 
 ### 如何运行
 
