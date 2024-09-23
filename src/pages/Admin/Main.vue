@@ -1,14 +1,11 @@
 <script setup>
 import { VCard, VRow, VCol } from 'vuetify/components'
-import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router'
 import { verifyUserInfo } from '../../utils/axios';
 import { token, userName } from '../../utils/account'
 import { ref,computed,onMounted } from 'vue';
 
 const router = useRouter();
-const { locale } = useI18n();
-const { t } = useI18n();
 const loading = ref(true);
 const userPrivilege = ref("")
 
@@ -56,7 +53,7 @@ onMounted(async () => {
             </VCard>
             </VCol>
             <VCol cols="3">
-            <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh" @click="">
+            <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh" @click="router.push('/cm')">
                 {{ $t('message.competitionmanagement') }}
             </VCard>
             </VCol>

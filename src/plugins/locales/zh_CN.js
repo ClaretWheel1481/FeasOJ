@@ -38,6 +38,7 @@ export default{
         nodata: '没有数据',
         nologin: '请登录后再试！',
         title: '标题',
+        subtitle: '副标题',
         submit: '提交',
         discussionOwner: '创建者',
         comments: '评论',

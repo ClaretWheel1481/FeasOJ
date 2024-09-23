@@ -38,6 +38,7 @@ export default{
         nodata: 'No Data',
         nologin: 'Please login and check again!',
         title: 'Title',
+        subtitle: 'Subtitle',
         submit: 'Submit',
         discussionOwner: 'Owner',
         comments: 'Comments',

@@ -38,6 +38,7 @@ export default{
         nodata: '沒有數據',
         nologin: '請先登錄！',
         title: '標題',
+        subtitle: '副標題',
         submit: '提交',
         discussionOwner: '創建者',
         comments: '評論',

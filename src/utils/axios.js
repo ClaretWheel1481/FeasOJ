@@ -92,6 +92,26 @@ export const getAllCompetitions = async (username, token) => {
     })
 }
 
+// 管理员获取竞赛列表
+export const getAllCompetitionsInfo = async (username, token) => {
+    return await axios.get(`${apiUrl}admin/competitions`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 管理员获取指定列表信息
+export const getCompetitionInfoByIDAdmin = async (username, token, cid) => {
+    return await axios.get(`${apiUrl}admin/competitions/${cid}`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
 // 获取指定用户提交记录
 export const getUserSubmitRecords = async (username) => {
     return await axios.get(`${apiUrl}users/${username}/submitrecords`)

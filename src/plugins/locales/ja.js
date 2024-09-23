@@ -38,6 +38,7 @@ export default{
         nodata: 'データがありません',
         nologin: 'ログインしてください！',
         title: 'タイトル',
+        subtitle: 'サブタイトル',
         submit: '提出',
         discussionOwner: '作成者',
         comments: 'コメント',

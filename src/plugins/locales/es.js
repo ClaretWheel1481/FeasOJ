@@ -38,6 +38,7 @@ export default{
         nodata: 'No hay datos',
         nologin: 'No has iniciado sesión!',
         title: 'Título',
+        subtitle: 'Subtítulo',
         submit: 'Enviar',
         discussionOwner: 'Propietario de la discusión',
         comments: 'Comentarios',

@@ -108,6 +108,12 @@ const routes = [
         }
     },
     {
+        path: '/cm', component: () => import('../pages/Admin/Competitions.vue'),
+        meta: {
+            titleKey: 'message.competitionmanagement'
+        }
+    },
+    {
         path: '/am', component: () => import('../pages/Admin/Account.vue'),
         meta: {
             titleKey: 'message.usermanagement'

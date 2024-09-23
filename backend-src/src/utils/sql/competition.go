@@ -15,7 +15,7 @@ func SelectCompetitionInfoAdmin() []global.AdminCompetitionInfoRequest {
 // 管理员获取指定竞赛ID信息
 func SelectCompetitionInfoAdminByCid(Cid int) global.AdminCompetitionInfoRequest {
 	var competition global.AdminCompetitionInfoRequest
-	utils.ConnectSql().Table("competitions").Where("cid = ?", Cid).Find(&competition)
+	utils.ConnectSql().Table("competitions").Where("contest_id = ?", Cid).Find(&competition)
 	return competition
 }
 

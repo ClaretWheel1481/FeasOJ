@@ -123,6 +123,9 @@ func main() {
 		// 管理员获取竞赛列表
 		router1.GET("/admin/competitions", gincontext.GetCompetitionListAdmin)
 
+		// 管理员获取指定竞赛ID信息
+		router1.GET("/admin/competitions/:cid", gincontext.GetCompetitionInfoAdmin)
+
 		// 管理员获取指定题目的所有信息API
 		router1.GET("/admin/problems/:Pid", gincontext.GetProblemAllInfo)
 

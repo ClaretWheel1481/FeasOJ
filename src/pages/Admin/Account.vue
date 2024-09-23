@@ -146,13 +146,12 @@ onMounted(async () => {
 
 <template>
     <v-app-bar :elevation="0">
-            <template v-slot:prepend>
-                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
-            </template>
-            <div class="searchbar">
-                <v-text-field v-model="searchQuery" variant="plain" :placeholder="$t('message.searchUser')"
-                        rounded="sm"></v-text-field>
-            </div>
+        <template v-slot:prepend>
+            <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+        </template>
+        <div class="searchbar">
+            <v-text-field v-model="searchQuery" variant="solo" :placeholder="$t('message.searchUser')"></v-text-field>
+        </div>
     </v-app-bar>
     <v-dialog v-model="networkloading" max-width="500px">
         <v-card rounded=xl>
@@ -199,7 +198,7 @@ onMounted(async () => {
 <style scoped>
 .searchbar {
     width: 100%;
-    margin-top: 8px;
+    margin-top: 10px;
 }
 
 .networkloading {

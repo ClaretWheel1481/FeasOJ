@@ -107,7 +107,7 @@ const createProblem = async () => {
     problemFields.pid = totalProblems.value + 1;
     problemFields.title = "";
     problemFields.content = "";
-    problemFields.difficulty = "";
+    problemFields.difficulty = "简单";
     problemFields.time_limit = "";
     problemFields.memory_limit = "";
     problemFields.input = "";
