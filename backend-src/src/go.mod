@@ -3,7 +3,7 @@ module src
 go 1.22.5
 
 require (
-	github.com/docker/docker v27.2.1+incompatible
+	github.com/docker/docker v27.3.1+incompatible
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/golang-jwt/jwt/v5 v5.2.1
