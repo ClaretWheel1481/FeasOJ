@@ -17,6 +17,7 @@ export default{
         usernameoremail: '用户名/邮箱',
         username: '用户名',
         password: '密码',
+        withapwd: '密码保护',
         confirmPwd: '确认密码',
         vCode: '验证码',
         profile: '个人资料',
@@ -89,6 +90,8 @@ export default{
         management: "管理",
         isvisible: "是否可见",
         contestid: "竞赛ID",
-        enter: "进入"
+        enter: "进入",
+        start_date: "开始日期",
+        end_date: "结束日期",
     }
 }

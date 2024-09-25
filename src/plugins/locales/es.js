@@ -18,6 +18,7 @@ export default{
         username: 'Nombre de usuario',
         password: 'Contraseña',
         confirmPwd: 'Confirmar contraseña',
+        withapwd: 'Con contraseña',
         vCode: 'Código de verificación',
         profile: 'Perfil',
         synopsis: 'Sinopsis',
@@ -90,5 +91,7 @@ export default{
         isvisible: "¿Es visible?",
         contestid: "ID del concurso",
         enter: "Entrar",
+        start_date: "Fecha de inicio",
+        end_date: "Fecha de finalización",
     }
 }

@@ -18,6 +18,7 @@ export default{
         username: 'Username',
         password: 'Password',
         confirmPwd: 'Confirm Password',
+        withapwd: 'With a password',
         vCode: 'Verification Code',
         profile: 'Profile',
         synopsis: 'Synopsis',
@@ -90,5 +91,7 @@ export default{
         isvisible: "Visible",
         contestid: "Contest ID",
         enter: "Enter",
+        start_date: "Start Date",
+        end_date: "End Date",
     }
 }

@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
-import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo } from '../../utils/axios';
+import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/axios';
 import { VDataTableServer, VFab, VDialog, VCard, VCardTitle, VCardText, VBtn, VTextField, VSelect, VForm, VSpacer, VCardActions, VRow } from 'vuetify/components'
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
@@ -19,6 +19,7 @@ const networkloading = ref(false)
 const userPrivilege = ref("")
 const problems = ref([])
 const totalProblems = ref(0)
+const competitionIds = ref([0])
 const dialog = ref(false)
 const problemFields = reactive({
     pid: null,
@@ -44,6 +45,7 @@ const addTestCase = () => {
     problemFields.test_cases.push({ input: '', output: '' });
 };
 
+// 删除测试样例
 const removeTestCase = () => {
     if (problemFields.test_cases.length > 0) {
         problemFields.test_cases.pop();
@@ -88,7 +90,7 @@ const save = async () => {
 const fetchData = async () => {
     loading.value = true
     try {
-        const response = await getAllProblems(userName.value, token.value);
+        const response = await getAllProblemsAdmin(userName.value, token.value);
         problems.value = response.data.problems
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
@@ -101,6 +103,7 @@ const fetchData = async () => {
 
 // 创建题目
 const createProblem = async () => {
+    networkloading.value = true;
     isCreate.value = true;
     dialog.value = true;
     // 重置内容
@@ -115,6 +118,9 @@ const createProblem = async () => {
     problemFields.contest_id = 0;
     problemFields.is_visible = true;
     problemFields.test_cases = [{ input: '', output: '' }];
+    const compResp = await getAllCompetitionsInfo(userName.value, token.value);
+    competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
+    networkloading.value = false;
 }
 
 // 编辑题目显示
@@ -123,9 +129,10 @@ const goToEditProblem = async (pid) => {
     dialog.value = true;
     networkloading.value = true;
     const problemResp = await getProblemAllInfoByAdmin(pid, userName.value, token.value);
-    networkloading.value = false;
-
     Object.assign(problemFields, problemResp.data.problemInfo);
+    const compResp = await getAllCompetitionsInfo(userName.value, token.value);
+    competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
+    networkloading.value = false;
 };
 
 // 删除题目
@@ -166,9 +173,9 @@ onMounted(async () => {
 
 <template>
     <v-app-bar :elevation="0">
-            <template v-slot:prepend>
-                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
-            </template>
+        <template v-slot:prepend>
+            <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+        </template>
     </v-app-bar>
     <v-data-table-server :headers="headers" :items="problems" :items-length="totalProblems" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
@@ -205,25 +212,20 @@ onMounted(async () => {
                         <!-- 难易程度 -->
                         <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
                             v-model="problemFields.difficulty" variant="solo-filled"></v-select>
-                        <!-- TODO: 所属竞赛ID为列表，通过后台数据库获取 -->
+                        <!-- 所属竞赛ID及是否可见 -->
                         <v-row class="limitRow">
-                            <v-text-field :label="$t('message.contestid')" v-model.number="problemFields.contest_id"
-                                variant="solo-filled"></v-text-field>
+                            <v-select :items="competitionIds" :label="$t('message.contestid')" v-model.number="problemFields.contest_id" variant="solo-filled"></v-select>
                             <div style="margin-inline: 30px;"></div>
-                            <v-switch
-                                v-model="problemFields.is_visible"
-                                :label="$t('message.isvisible')"
-                                color="primary"
-                                inset
-                            ></v-switch>
+                            <v-switch v-model="problemFields.is_visible" :label="$t('message.isvisible')"
+                                color="primary" inset></v-switch>
                         </v-row>
                         <!-- 时间、内存限制 -->
                         <v-row class="limitRow">
                             <v-text-field :label="$t('message.timeLimit') + '(S)'" v-model="problemFields.time_limit"
                                 variant="solo-filled"></v-text-field>
                             <div style="margin-inline: 30px;"></div>
-                            <v-text-field :label="$t('message.memoryLimit') + '(MB)'" v-model="problemFields.memory_limit"
-                                variant="solo-filled"></v-text-field>
+                            <v-text-field :label="$t('message.memoryLimit') + '(MB)'"
+                                v-model="problemFields.memory_limit" variant="solo-filled"></v-text-field>
                         </v-row>
                         <!-- 显示输入输出样例 -->
                         <v-row class="limitRow">

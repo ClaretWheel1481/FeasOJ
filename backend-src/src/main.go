@@ -123,6 +123,9 @@ func main() {
 		// 管理员获取竞赛列表
 		router1.GET("/admin/competitions", gincontext.GetCompetitionListAdmin)
 
+		// 管理员获取所有题目API
+		router1.GET("/admin/problems", gincontext.GetAllProblemsAdmin)
+
 		// 管理员获取指定竞赛ID信息
 		router1.GET("/admin/competitions/:cid", gincontext.GetCompetitionInfoAdmin)
 
@@ -135,8 +138,14 @@ func main() {
 		// 管理员新增/更新题目信息API
 		router1.POST("/admin/problems", gincontext.UpdateProblemInfo)
 
+		// 管理员新增/更新竞赛信息API
+		router1.POST("/admin/competitions", gincontext.UpdateCompetitionInfo)
+
 		// 管理员删除题目API
 		router1.DELETE("/admin/problems/:Pid", gincontext.DeleteProblem)
+
+		// 管理员删除竞赛API
+		router1.DELETE("/admin/competitions/:cid", gincontext.DeleteCompetition)
 
 		// 删除讨论API
 		router1.DELETE("/discussions/:Did", gincontext.DeleteDiscussion)

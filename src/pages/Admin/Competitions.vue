@@ -2,7 +2,9 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
 import { useI18n } from 'vue-i18n';
-import { getAllCompetitionsInfo, verifyUserInfo, getCompetitionInfoByIDAdmin } from '../../utils/axios';
+import { getAllCompetitionsInfo, verifyUserInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo } from '../../utils/axios';
+import { showAlert } from '../../utils/alert';
+import moment from 'moment';
 
 const { locale } = useI18n();
 const { t } = useI18n();
@@ -16,6 +18,9 @@ const competitions = ref([])
 const totalCompetitions = ref(0)
 const dialog = ref(false)
 const isCreate = ref(false)
+const showPwd = ref(false)
+const formatStartDate = ref("")
+const formatEndDate = ref("")
 const competitionFields = reactive({
     contest_id: null,
     title: "",
@@ -36,19 +41,37 @@ const headers = ref([
 // 字段检查
 const validateFields = () => {
     for (const key in competitionFields) {
+        if (key === "password" && !competitionFields.have_password) {
+            continue; // 跳过 password 检查
+        }
         if (competitionFields[key] === "" || (Array.isArray(competitionFields[key]) && competitionFields[key].length === 0)) {
             showAlert(t("message.formCheckfailed") + "!", "");
-            return false;
-        }
-    }
-    for (const testCase of competitionFields.test_cases) {
-        if (testCase.input === "" || testCase.output === "") {
-            showAlert(t("message.formCheckfailed") + "!", "");
+            console.log(key + competitionFields[key]);
             return false;
         }
     }
     return true;
 };
+
+// 删除竞赛
+const delCompetition = async () => {
+    networkloading = true;
+    const delResp = await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
+    networkloading = false;
+    if (delResp.data.status === 200) {
+        showAlert(t("message.success") + "!", "reload");
+    } else {
+        showAlert(t("message.failed") + "!", "");
+    }
+    dialog.value = false;
+}
+
+// 清除密码
+const clearPassword = () => {
+    if (!competitionFields.have_password) {
+        competitionFields.password = '';
+    }
+}
 
 // 创建竞赛
 const createCompetition = async () => {
@@ -66,6 +89,25 @@ const createCompetition = async () => {
     competitionFields.end_at = "";
 }
 
+// 数据传至后端
+const save = async () => {
+    competitionFields.start_at = new Date(formatStartDate.value).toISOString();
+    competitionFields.end_at = new Date(formatEndDate.value).toISOString();
+    if (!validateFields()) return;
+    networkloading.value = true;
+    const comData = { ...competitionFields };
+    try {
+        const updateResp = await updateComInfo(userName.value, token.value, comData);
+        if (updateResp.data.status === 200) {
+            networkloading.value = false;
+            showAlert(t("message.success") + "!", "reload");
+        }
+    } catch (error) {
+        showAlert(t("message.failed") + "!", "reload");
+    }
+    dialog.value = false;
+};
+
 // 编辑/创建竞赛
 const goToEditCompetition = async (contest_id) => {
     isCreate.value = false;
@@ -75,7 +117,9 @@ const goToEditCompetition = async (contest_id) => {
     networkloading.value = false;
 
     Object.assign(competitionFields, comResp.data.contest);
-};
+    formatStartDate.value = moment(competitionFields.start_at).format('YYYY-MM-DD HH:mm');
+    formatEndDate.value = moment(competitionFields.end_at).format('YYYY-MM-DD HH:mm');
+}
 
 // 从后端获取数据
 const fetchData = async () => {
@@ -154,10 +198,31 @@ onMounted(async () => {
                         <!-- 竞赛副标题 -->
                         <v-text-field :label="$t('message.subtitle')" v-model="competitionFields.subtitle"
                             variant="solo-filled"></v-text-field>
-                        <!-- 难易程度 -->
-                        <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
-                            v-model="competitionFields.difficulty" variant="solo-filled"></v-select>
-                        <!-- TODO：密码、密码是否可视化、是否可见 -->
+                        <v-row class="limitRow">
+                            <!-- 难易程度 -->
+                            <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
+                                v-model="competitionFields.difficulty" variant="solo-filled"></v-select>
+                            <div style="margin-inline: 30px;"></div>
+                            <!-- 是否可见 -->
+                            <v-switch v-model="competitionFields.is_visible" :label="$t('message.isvisible')"
+                                color="primary" inset></v-switch>
+                            <div style="margin-inline: 30px;"></div>
+                            <!-- 启用密码 -->
+                            <v-switch v-model="competitionFields.have_password" :label="$t('message.withapwd')"
+                                color="primary" inset @change="clearPassword"></v-switch>
+                        </v-row>
+                        <v-text-field v-if="competitionFields.have_password" v-model="competitionFields.password"
+                            :append-icon="showPwd ? 'mdi-eye' : 'mdi-eye-off'" variant="solo-filled"
+                            :type="showPwd ? 'text' : 'password'" :label="$t('message.password')" counter
+                            @click:append="showPwd = !showPwd"></v-text-field>
+                        <!-- 竞赛开始时间日期 -->
+                        <v-row class="limitRow">
+                            <v-text-field :label="$t('message.start_date') + '(YYYY-MM-DD HH:mm)'"
+                                v-model="formatStartDate" variant="solo-filled"></v-text-field>
+                            <div style="margin-inline: 30px;"></div>
+                            <v-text-field :label="$t('message.end_date') + '(YYYY-MM-DD HH:mm)'" v-model="formatEndDate"
+                                variant="solo-filled"></v-text-field>
+                        </v-row>
                     </v-form>
                 </v-card-text>
                 <v-card-actions>
@@ -165,19 +230,26 @@ onMounted(async () => {
                     <!-- TODO: 部分方法待实现 -->
                     <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
                         }}</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="" rounded="xl">{{ $t('message.delete')
+                    <v-btn v-if="!isCreate" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.delete')
                         }}</v-btn>
-                    <v-btn color="primary" @click="" rounded="xl">{{ $t('message.save') }}</v-btn>
+                    <v-btn color="primary" @click="save" rounded="xl">{{ $t('message.save') }}</v-btn>
                 </v-card-actions>
             </div>
         </v-card>
     </v-dialog>
     <div class="fab">
-        <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading" @click="createCompetition"></v-fab>
+        <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading"
+            @click="createCompetition"></v-fab>
     </div>
 </template>
 
-<style>
+<style scoped>
+.limitRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+}
+
 .loading {
     display: flex;
     justify-content: center;

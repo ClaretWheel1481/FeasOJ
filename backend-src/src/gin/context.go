@@ -189,6 +189,18 @@ func GetAllProblems(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"problems": problems})
 }
 
+// 管理员获取所有题目
+func GetAllProblemsAdmin(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
+	if sql.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	problems := sql.SelectAllProblemsAdmin()
+	c.JSON(http.StatusOK, gin.H{"problems": problems})
+}
+
 // 获取题目信息
 func GetProblemInfo(c *gin.Context) {
 	problemInfo := sql.SelectProblemInfo(c.Param("id"))
@@ -488,4 +500,44 @@ func GetCompetitionInfoAdmin(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": sql.SelectCompetitionInfoAdminByCid(cidInt)})
+}
+
+// 删除指定ID竞赛
+func DeleteCompetition(c *gin.Context) {
+	cid := c.Param("cid")
+	cidInt, _ := strconv.Atoi(cid)
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
+	if sql.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		return
+	}
+	if !sql.DeleteCompetition(cidInt) {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "删除失败。"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "删除成功。"})
+}
+
+// 更新/添加竞赛信息
+func UpdateCompetitionInfo(c *gin.Context) {
+	encodedUsername := c.GetHeader("username")
+	username, _ := url.QueryUnescape(encodedUsername)
+	var req global.AdminCompetitionInfoRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
+		return
+	}
+	if sql.SelectUserInfo(username).Role != 1 {
+		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足"})
+		return
+	}
+
+	// 更新题目信息
+	if err := sql.UpdateCompetition(req); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新竞赛信息失败"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "竞赛信息更新成功"})
 }

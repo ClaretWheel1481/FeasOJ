@@ -15,10 +15,12 @@ func HeaderVerify() gin.HandlerFunc {
 		token := c.GetHeader("Authorization")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "未找到该用户。"})
+			c.Abort()
 			return
 		}
 		if !utils.VerifyToken(username, token) {
 			c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "Token验证失败。"})
+			c.Abort()
 			return
 		}
 		c.Next()

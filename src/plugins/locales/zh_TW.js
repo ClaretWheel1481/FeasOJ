@@ -17,6 +17,7 @@ export default{
         usernameoremail: '用戶名/郵箱',
         username: '用戶名',
         password: '密碼',
+        withapwd: '密碼保護',
         confirmPwd: '確認密碼',
         vCode: '驗證碼',
         profile: '個人資料',
@@ -90,5 +91,7 @@ export default{
         isvisible: "是否可見",
         contestid: "競賽ID",
         enter: "進入",
+        start_date: "開始日期",
+        end_date: "結束日期",
     }
 }

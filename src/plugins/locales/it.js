@@ -17,6 +17,7 @@ export default{
         usernameoremail: 'Nome utente/Email',
         username: 'Nome utente',
         password: 'Password',
+        withapwd: 'Con password',
         confirmPwd: 'Conferma password',
         vCode: 'Codice di verifica',
         profile: 'Profilo',
@@ -90,5 +91,7 @@ export default{
         isvisible: "Visibile",
         contestid: "ID Concorso",
         enter: "Entra",
+        start_date: "Data di inizio",
+        end_date: "Data di fine",
     }
 }

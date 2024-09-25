@@ -80,8 +80,10 @@ onMounted(async () => {
         try {
             const problemId = route.params.Pid;
             const resp = await getPbDetails(problemId, userName.value, token.value);
-            if (resp.status === 200) {
+            if (resp.status === 200 && resp.data.problemInfo.pid !== 0) {
                 problemInfo.value = resp.data.problemInfo;
+            }else {
+                window.location = '#/403'
             }
         } catch (error) {
             showAlert(t("message.failed") + "!", "");

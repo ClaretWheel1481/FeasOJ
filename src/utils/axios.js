@@ -334,3 +334,34 @@ export const demoteUser = async (username, token, uid) => {
         }
     })
 }
+
+// 管理眼获取题目列表
+export const getAllProblemsAdmin = async (username, token) => {
+    return await axios.get(`${apiUrl}admin/problems`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    });
+}
+
+// 删除竞赛
+export const deleteCompetition = async (cid, username, token) => {
+    return await axios.delete(`${apiUrl}admin/competitions/${cid}`, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token
+        }
+    })
+}
+
+// 添加/更新竞赛信息
+export const updateComInfo = async (username, token, comInfo) => {
+    return await axios.post(`${apiUrl}admin/competitions`, comInfo, {
+        headers: {
+            username: encodeURIComponent(username),
+            Authorization: token,
+            "Content-Type": "application/json"
+        }
+    })
+}

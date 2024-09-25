@@ -50,6 +50,9 @@ onMounted(async () => {
             <h1>{{ $t("message.competition") }}</h1>
         </div>
         <div v-if="userLoggedIn">
+            <div v-if="contests.length === 0">
+                <p>{{ $t("message.nodata") }}</p>
+            </div>
             <v-container>
                 <v-row>
                     <v-col v-for="contest in contests" :key="contest.contest_id" cols="12" md="4">

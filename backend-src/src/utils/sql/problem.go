@@ -10,6 +10,13 @@ import (
 // 获取Problem表中的所有数据
 func SelectAllProblems() []global.Problem {
 	var problems []global.Problem
+	utils.ConnectSql().Where("is_visible = ?", true).Find(&problems)
+	return problems
+}
+
+// 管理员获取Problem表中的所有数据
+func SelectAllProblemsAdmin() []global.Problem {
+	var problems []global.Problem
 	utils.ConnectSql().Find(&problems)
 	return problems
 }
@@ -61,7 +68,6 @@ func SelectProblemTestCases(pid string) global.AdminProblemInfoRequest {
 
 // 更新题目信息
 func UpdateProblem(req global.AdminProblemInfoRequest) error {
-	// TODO: ContestID从数据库中获取
 	// 更新题目表
 	problem := global.Problem{
 		Pid:         req.Pid,

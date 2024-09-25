@@ -25,3 +25,16 @@ func SelectCompetitionInfo() []global.CompetitionRequest {
 	utils.ConnectSql().Table("competitions").Where("is_visible = ?", true).Order("start_at DESC").Find(&competition)
 	return competition
 }
+
+// 管理员删除竞赛
+func DeleteCompetition(Cid int) bool {
+	return utils.ConnectSql().Table("competitions").Where("contest_id = ?", Cid).Delete(&global.CompetitionRequest{}) != nil
+}
+
+// 管理员更新/添加竞赛
+func UpdateCompetition(req global.AdminCompetitionInfoRequest) error {
+	if err := utils.ConnectSql().Table("competitions").Where("contest_id = ?", req.ContestID).Save(&req).Error; err != nil {
+		return err
+	}
+	return nil
+}

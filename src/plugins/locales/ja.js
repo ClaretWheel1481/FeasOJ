@@ -17,6 +17,7 @@ export default{
         usernameoremail: 'ユーザー名/メール',
         username: 'ユーザー名',
         password: 'パスワード',
+        withapwd: 'パスワード付き',
         vCode: '確認コード',
         confirmPwd: 'パスワード確認',
         profile: 'プロフィール',
@@ -90,5 +91,7 @@ export default{
         isvisible: "公開",
         contestid: "コンテストID",
         enter: "入力",
+        start_date: "開始日時",
+        end_date: "終了日時",
     }
 }
