@@ -31,6 +31,7 @@ func IsEmail(email string) bool {
 }
 
 // 用户Token生成后返回给前端
+// TODO: 适配30天过期
 func GenerateToken(username string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	// 设置Token的Claims

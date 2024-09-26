@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"os/signal"
@@ -40,24 +40,24 @@ func main() {
 	}
 	// 初始化数据库连接配置
 	if utils.InitSql() {
-		fmt.Println("[FeasOJ]MySQL初始化完毕！")
+		log.Println("[FeasOJ]MySQL initialization complete.")
 	} else {
-		fmt.Println("[FeasOJ]MySQL初始化失败，请确认数据库连接是否正确！")
+		log.Println("[FeasOJ]MySQL initialization failed, please make sure the database connection is correct.")
 		return
 	}
 
 	// 初始化管理员账户
 	if sql.SelectAdminUser(1) {
-		fmt.Println("[FeasOJ]管理员账号已存在！")
+		log.Println("[FeasOJ]The administrator account already exists and will continue to the next step.")
 	} else {
 		sql.Register(utils.InitAdminAccount())
 	}
 
 	// 构建沙盒镜像
 	if codehandler.BuildImage() {
-		fmt.Println("[FeasOJ]SandBox构建成功！")
+		log.Println("[FeasOJ]SandBox builds successfully.")
 	} else {
-		fmt.Println("[FeasOJ]SandBox构建失败！")
+		log.Println("[FeasOJ]SandBox builds fail, please make sure Docker is running and up to date!")
 		return
 	}
 
@@ -178,8 +178,8 @@ func main() {
 	// 挂载头像文件夹
 	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
 
-	fmt.Println("[FeasOJ]服务已启动。")
-	fmt.Println("[FeasOJ]若要修改数据库连接与邮箱配置信息，请修改目录下对应的.xml文件。")
+	log.Println("[FeasOJ]Server activated.")
+	log.Println("[FeasOJ]To modify the database connection and email configuration information, modify the corresponding .xml file in the configs directory.")
 
 	// 实时检测Redis JudgeTask中是否有任务
 	rdb := utils.InitRedis()
@@ -189,7 +189,7 @@ func main() {
 	// HTTP服务器
 	go func() {
 		if err := r.Run("0.0.0.0:37881"); err != nil {
-			fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
+			log.Printf("[FeasOJ]Server start error: %v\n", err)
 			return
 		}
 	}()
@@ -197,7 +197,7 @@ func main() {
 	// 启动HTTPS服务器
 	// go func() {
 	// 	if err := r.RunTLS("0.0.0.0:37881", "./certificate/fullchain.pem", "./certificate/privkey.pem"); err != nil {
-	// 		fmt.Printf("[FeasOJ]服务器启动错误: %v\n", err)
+	// 		log.Printf("[FeasOJ]Server start error: %v\n", err)
 	// 		return
 	// 	}
 	// }()
@@ -207,15 +207,15 @@ func main() {
 		scanner := bufio.NewScanner(os.Stdin)
 		for scanner.Scan() {
 			if scanner.Text() == "quit" {
-				fmt.Println("[FeasOJ]正在关闭服务器....")
+				log.Println("[FeasOJ]The server is being shut down....")
 				os.Exit(0)
 			}
 		}
 	}()
 
-	// 等待中断信号以优雅地关闭服务器
+	// 等待中断信号关闭服务器
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	fmt.Println("[FeasOJ]输入“quit”可停止服务器并删除容器。")
+	log.Println("[FeasOJ]Input “quit” to stop the server and delete the container.")
 	<-quit
 }

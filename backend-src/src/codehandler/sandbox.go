@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -25,14 +26,13 @@ func BuildImage() bool {
 	// 创建Docker客户端
 	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
-		fmt.Println("[FeasOJ]请确认Docker是否在本机安装，并处于启动状态！")
 		return false
 	}
 	// TODO: 每次编译前需要修改为CurrentDir，debug时用ParentDir
 	// 将Dockerfile目录打包成tar格式
 	tar, err := archive.TarWithOptions(global.ParentDir, &archive.TarOptions{})
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 
 	// 设置镜像构建选项
@@ -42,11 +42,10 @@ func BuildImage() bool {
 		Tags:       []string{"judgecore:latest"}, // 镜像标签
 	}
 
-	fmt.Println("[FeasOJ]正在构建SandBox...")
+	log.Println("[FeasOJ]SandBox is being built...")
 	// 构建Docker镜像
 	buildResponse, err := cli.ImageBuild(ctx, tar, buildOptions)
 	if err != nil {
-		fmt.Println("[FeasOJ]请确认Docker是否在本机安装，并处于启动状态！")
 		return false
 	}
 	defer buildResponse.Body.Close()
@@ -54,7 +53,7 @@ func BuildImage() bool {
 	// 打印构建响应
 	_, err = io.Copy(os.Stdout, buildResponse.Body)
 	if err != nil {
-		panic(err)
+		log.Panic(err)
 	}
 	return true
 }
@@ -72,7 +71,7 @@ func StartContainer() (string, error) {
 	// 配置容器配置
 	containerConfig := &container.Config{
 		Image: "judgecore:latest",
-		Cmd:   []string{"bash"},
+		Cmd:   []string{"sh"},
 		Tty:   true,
 	}
 
@@ -110,7 +109,7 @@ func CompileAndRun(filename string) string {
 
 	switch ext {
 	case ".cpp":
-		compileCmd = exec.Command("docker", "exec", global.ContainerID, "g++", fmt.Sprintf("/workspace/%s", filename), "-o", "/workspace/a.out")
+		compileCmd = exec.Command("docker", "exec", global.ContainerID, "sh", "-c", fmt.Sprintf("g++ /workspace/%s -o /workspace/a.out", filename))
 		if err := compileCmd.Run(); err != nil {
 			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
@@ -119,20 +118,20 @@ func CompileAndRun(filename string) string {
 		// 临时重命名为Main.java
 		originalName := filename
 		tempName := "Main.java"
-		renameCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", originalName), fmt.Sprintf("/workspace/%s", tempName))
+		renameCmd := exec.Command("docker", "exec", global.ContainerID, "sh", "-c", fmt.Sprintf("mv /workspace/%s /workspace/%s", originalName, tempName))
 		if err := renameCmd.Run(); err != nil {
 			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 
-		compileCmd = exec.Command("docker", "exec", global.ContainerID, "javac", fmt.Sprintf("/workspace/%s", tempName))
+		compileCmd = exec.Command("docker", "exec", global.ContainerID, "sh", "-c", fmt.Sprintf("javac /workspace/%s", tempName))
 		if err := compileCmd.Run(); err != nil {
 			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
 		}
 
 		// 编译完成后改回原名
-		renameBackCmd := exec.Command("docker", "exec", global.ContainerID, "mv", fmt.Sprintf("/workspace/%s", tempName), fmt.Sprintf("/workspace/%s", originalName))
+		renameBackCmd := exec.Command("docker", "exec", global.ContainerID, "sh", "-c", fmt.Sprintf("mv /workspace/%s /workspace/%s", tempName, originalName))
 		if err := renameBackCmd.Run(); err != nil {
 			TerminateContainer(global.ContainerID)
 			return "Compile Failed"
@@ -149,13 +148,13 @@ func CompileAndRun(filename string) string {
 		var runCmd *exec.Cmd
 		switch ext {
 		case ".cpp":
-			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "/workspace/a.out")
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "sh", "-c", "/workspace/a.out")
 		case ".py":
-			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "python", fmt.Sprintf("/workspace/%s", filename))
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "sh", "-c", fmt.Sprintf("python /workspace/%s", filename))
 		case ".go":
-			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "go", "run", fmt.Sprintf("/workspace/%s", filename))
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "sh", "-c", fmt.Sprintf("go run /workspace/%s", filename))
 		case ".java":
-			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "java", "Main")
+			runCmd = exec.CommandContext(ctx, "docker", "exec", "-i", global.ContainerID, "sh", "-c", "java Main")
 		default:
 			TerminateContainer(global.ContainerID)
 			return "Failed"

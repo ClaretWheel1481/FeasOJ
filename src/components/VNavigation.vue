@@ -93,12 +93,6 @@ onMounted(async () => {
           <span class="multi-line-title">{{ $t('message.status') }}</span>
         </template>
       </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-help-circle" value="ABOUT" @click="router.push('/about')"
-        color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.about') }}</span>
-        </template>
-      </v-list-item>
       <v-divider></v-divider>
       <div class="flex-grow-space"></div>
       <v-list-item v-if="privilege === 1" rounded="xl" prepend-icon="mdi-tie" @click="router.push('/admin')"

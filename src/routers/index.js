@@ -9,13 +9,6 @@ const routes = [
         }
     },
     {
-        path: '/about',
-        component: () => import('../pages/About.vue'),
-        meta: {
-            titleKey: 'message.about'
-        }
-    },
-    {
         path: '/problemset',
         component: () => import('../pages/Problem/Main.vue'),
         meta: {

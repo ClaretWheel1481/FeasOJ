@@ -1,21 +1,17 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
 # 更新包列表并安装必要的软件
-RUN apt-get update && apt-get install -y \
-    build-essential \
+RUN apk update && apk add --no-cache \
+    build-base \
     gcc \
     g++ \
-    openjdk-17-jdk \
-    golang \
+    openjdk17 \
+    go \
     python3 \
-    python3-pip \
-    && apt-get clean
-
-# 创建符号链接Python
-RUN ln -s /usr/bin/python3 /usr/bin/python
+    py3-pip
 
 # 设置工作目录
 WORKDIR /workspace
 
 # 设置默认命令
-CMD ["bash"]
+CMD ["sh"]

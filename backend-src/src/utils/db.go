@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"src/config"
@@ -18,12 +19,12 @@ func InitAdminAccount() (string, string, string, string, int) {
 	var adminUsername string
 	var adminPassword string
 	var adminEmail string
-	fmt.Println("[FeasOJ]创建管理员账户")
-	fmt.Print("[FeasOJ]请输入管理员账号:")
+	log.Println("[FeasOJ]Please input the administrator account configuration: ")
+	log.Print("[FeasOJ]Admin account: ")
 	fmt.Scanln(&adminUsername)
-	fmt.Print("[FeasOJ]请输入管理员密码:")
+	log.Print("[FeasOJ]Admin password: ")
 	fmt.Scanln(&adminPassword)
-	fmt.Print("[FeasOJ]请输入管理员邮箱:")
+	log.Print("[FeasOJ]Admin email: ")
 	fmt.Scanln(&adminEmail)
 
 	return adminUsername, EncryptPassword(adminPassword), adminEmail, uuid.New().String(), 1
@@ -45,12 +46,12 @@ func ConnectSql() *gorm.DB {
 	dsn := config.LoadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		fmt.Println("[FeasOJ]数据库连接失败，请手动前往config.xml进行配置。")
+		log.Println("[FeasOJ]Database connection failed, please go to sqlconfig.xml manually to configure.")
 		return nil
 	}
 	sqlDB, err := db.DB()
 	if err != nil {
-		fmt.Println("[FeasOJ]获取通用数据库对象失败。")
+		log.Println("[FeasOJ]Failed to get generic database object.")
 		return nil
 	}
 
