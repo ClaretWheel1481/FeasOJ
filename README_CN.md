@@ -10,30 +10,38 @@
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用户提供一个方便、高效的学习和练习环境。
 
 ### 项目结构
-- src:
-  - assets:
-  - components:
-  - pages:
-  - plugins:
-  - routers:
-  - utils:
+```
+FeasOJ
+│ 
+├─src
+│  ├─public
+│  ├─components
+│  ├─pages
+│  ├─routers
+│  ├─utils
+│  └─plugins
+│ 
+├─backend-src
+│  ├─src
+│  │  ├─codehandler
+│  │  ├─config
+│  │  ├─gin
+│  │  ├─global
+│  │  ├─middleware
+│  │  ├─utils
+│  │  │  └─sql
+│  │  ├─main.go
+│  │  └─go.mod
+│  └─Sandbox
+```
 
-- backend-src:
-  - src：
-    - codehandler:
-    - config:
-    - gin:
-    - global:
-    - middleware:
-    - utils:
-      - sql:
-    - main.go:
-    - go.mod:
-  - Sandbox: Dockerfile
-
-### 项目截图
-![image](/assets/Screenshot1.png)
-![image](/assets/Screenshot2.png)
+### 软件环境
+- Vue 3
+- Pnpm
+- Golang 1.23.1
+- Redis
+- MySQL 8.0+
+- Docker
 
 ### 如何运行
 
@@ -49,6 +57,10 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用
 
 这是我第一次用Vue + Golang写大项目，所以代码会很糟糕，不过我会一直去改进它！
 如果你找到任何Bug请发布Issue告诉我。
+
+### 项目截图
+![image](/assets/Screenshot1.png)
+![image](/assets/Screenshot2.png)
 
 ### 致谢
 

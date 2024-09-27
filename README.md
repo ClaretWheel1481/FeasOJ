@@ -10,34 +10,42 @@ English | [简体中文](README_CN.md)
 FeasOJ is an online programming practice platform based on Vue and Golang, aiming to provide users with a convenient and efficient learning and practice environment.
 
 ### Project Structure
-- src:
-  - assets:
-  - components:
-  - pages:
-  - routers:
-  - utils:
-  - plugins:
+```
+FeasOJ
+│ 
+├─src
+│  ├─public
+│  ├─components
+│  ├─pages
+│  ├─routers
+│  ├─utils
+│  └─plugins
+│ 
+├─backend-src
+│  ├─src
+│  │  ├─codehandler
+│  │  ├─config
+│  │  ├─gin
+│  │  ├─global
+│  │  ├─middleware
+│  │  ├─utils
+│  │  │  └─sql
+│  │  ├─main.go
+│  │  └─go.mod
+│  └─Sandbox
+```
 
-- backend-src:
-  - src：
-    - codehandler:
-    - config:
-    - gin:
-    - global:
-    - middleware:
-    - utils:
-      - sql:
-    - main.go:
-    - go.mod:
-  - Sandbox: Dockerfile
-
-### Screenshots
-![image](/assets/Screenshot1.png)
-![image](/assets/Screenshot2.png)
+### Environment
+- Vue 3
+- Pnpm
+- Golang 1.23.1
+- Redis
+- MySQL 8.0+
+- Docker
 
 ### How to run
 
-1. Clone this repository.
+1. Clone repository.
 2. Install Docker.
 3. Run `npm install -g pnpm` Install Pnpm.
 4. Run `pnpm i` Install dependencies.
@@ -50,6 +58,9 @@ FeasOJ is an online programming practice platform based on Vue and Golang, aimin
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
 If you find any bugs, please open an issue.
 
+### Screenshots
+![image](/assets/Screenshot1.png)
+![image](/assets/Screenshot2.png)
 
 ### Thanks
 
