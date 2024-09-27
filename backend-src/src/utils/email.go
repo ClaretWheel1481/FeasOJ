@@ -21,7 +21,7 @@ func SendVerifycode(config global.MailConfig, to string, verifycode string) bool
 	m.SetAddressHeader("From", config.User, "FeasOJ")
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", "FeasOJ验证码")
-	m.SetBody("text/plain", "注意，您正在进行敏感操作：\n您的验证码是："+verifycode+"，5分钟后失效。")
+	m.SetBody("text/html", "<div style='text-align: center;'><h1><b>FeasOJ</b></h1><p>您正在进行敏感操作，<span style='color:red;'>5分钟后</span>失效</p><h1 style='letter-spacing: 10px;'><b>"+verifycode+"</b></h1></div>")
 	d := gomail.NewDialer(config.Host, config.Port, config.User, config.Pass)
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 	if err := d.DialAndSend(m); err != nil {

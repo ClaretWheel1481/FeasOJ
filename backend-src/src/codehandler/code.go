@@ -1,7 +1,7 @@
 package codehandler
 
 import (
-	"fmt"
+	"log"
 	"src/utils/sql"
 	"strconv"
 	"strings"
@@ -20,7 +20,7 @@ func ProcessJudgeTasks(rdb *redis.Client) {
 			time.Sleep(2 * time.Second)
 			continue
 		} else if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 			continue
 		}
 
@@ -33,11 +33,11 @@ func ProcessJudgeTasks(rdb *redis.Client) {
 		pid := strings.Split(parts[1], ".")[0]
 		uidInt, err := strconv.Atoi(uid)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 		pidInt, err := strconv.Atoi(pid)
 		if err != nil {
-			fmt.Println(err)
+			log.Panic(err)
 		}
 		sql.ModifyJudgeStatus(uidInt, pidInt, str)
 	}

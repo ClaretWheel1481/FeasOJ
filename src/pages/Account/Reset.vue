@@ -78,7 +78,7 @@ const getCaptcha = async () => {
             showAlert(t("message.failed") + "!", "");
         }
     } catch (error) {
-        showAlert(t("message.failed") + "!", "");
+        showAlert(t("message.nodata") + "!", "");
     }
 }
 </script>

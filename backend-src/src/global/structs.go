@@ -140,7 +140,7 @@ type CompetitionRequest struct {
 	End_at       time.Time `json:"end_at"`
 }
 
-// 用户表：uid, avatar, username, password, email, score, synopsis, submit_history, create_at, role, token_secret, is_ban
+// 用户表：uid, avatar, username, password, email, score, synopsis, create_at, role, token_secret, is_ban
 type User struct {
 	Uid         int       `gorm:"comment:用户ID;primaryKey;autoIncrement"`
 	Avatar      string    `gorm:"comment:头像存放路径"`
@@ -155,7 +155,7 @@ type User struct {
 	IsBan       bool      `gorm:"comment:是否被封禁;not null"`
 }
 
-// 题目表: pid, title, content, time_limit, memory_limit, input, output, contest, is_visible
+// 题目表: pid, difficulty, title, content, time_limit, memory_limit, input, output, contestid, is_visible
 type Problem struct {
 	Pid         int    `gorm:"comment:题目ID;primaryKey;autoIncrement"`
 	Difficulty  string `gorm:"comment:难度;not null"`
@@ -169,7 +169,7 @@ type Problem struct {
 	IsVisible   bool   `gorm:"comment:是否可见;not null"`
 }
 
-// 提交记录表: Pid,Uid,Username,Result,Time,Language
+// 提交记录表: Sid,Pid,Uid,Username,Result,Time,Language
 type SubmitRecord struct {
 	Sid      int       `gorm:"comment:提交ID;primaryKey;autoIncrement"`
 	Pid      int       `gorm:"comment:题目ID"`
@@ -180,7 +180,7 @@ type SubmitRecord struct {
 	Language string    `gorm:"comment:语言;not null"`
 }
 
-// 讨论帖子表: Tid,Title,Content,Uid,Create_at
+// 讨论帖子表: Did,Title,Content,Uid,Create_at
 type Discussion struct {
 	Did       int       `gorm:"comment:讨论ID;primaryKey;autoIncrement"`
 	Title     string    `gorm:"comment:标题;not null"`
@@ -189,7 +189,7 @@ type Discussion struct {
 	Create_at time.Time `gorm:"comment:创建时间;not null"`
 }
 
-// 讨论评论表: Cid,Tid,Content,Uid,Create_at
+// 讨论评论表: Cid,Did,Content,Uid,Create_at
 type Comment struct {
 	Cid       int       `gorm:"comment:评论ID;primaryKey;autoIncrement"`
 	Did       int       `gorm:"comment:帖子ID;not null"`

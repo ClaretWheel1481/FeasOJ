@@ -52,11 +52,11 @@ func Login(c *gin.Context) {
 	}
 	userPassword := utils.SelectUser(Username).Password
 	if userPassword == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
+		c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
 	} else {
 		// 用户是否被封禁
 		if sql.SelectUserInfo(Username).IsBan {
-			c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "该用户已被封禁。"})
+			c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "该用户已被封禁。"})
 			return
 		}
 		// 校验密码是否正确
@@ -77,6 +77,10 @@ func Login(c *gin.Context) {
 func GetCaptcha(c *gin.Context) {
 	// 获取邮箱地址
 	emails := c.Query("email")
+	if sql.SelectUserByEmail(emails).Username == "" {
+		c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
+		return
+	}
 	if utils.SendVerifycode(config.InitEmailConfig(), emails, utils.GenerateVerifycode()) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
 	} else {
@@ -101,7 +105,7 @@ func VerifyUserInfo(c *gin.Context) {
 	// 查询对应的用户信息
 	userInfo := sql.SelectUserInfo(Username)
 	if userInfo.Username == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
+		c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 	}
@@ -114,7 +118,7 @@ func GetUserInfo(c *gin.Context) {
 	// 查询对应的用户信息
 	userInfo := sql.SelectUserInfo(username)
 	if userInfo.Username == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户不存在。"})
+		c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
 	} else {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "Info": userInfo})
 	}
@@ -194,7 +198,7 @@ func GetAllProblemsAdmin(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	problems := sql.SelectAllProblemsAdmin()
@@ -312,7 +316,7 @@ func GetProblemAllInfo(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	problemInfo := sql.SelectProblemTestCases(c.Param("Pid"))
@@ -325,21 +329,21 @@ func UpdateProblemInfo(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	var req global.AdminProblemInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误。"})
 		return
 	}
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 
 	// 更新题目信息
 	if err := sql.UpdateProblem(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新题目信息失败"})
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新题目信息失败。"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "题目信息更新成功"})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "题目信息更新成功。"})
 }
 
 // 删除题目及其输入输出样例
@@ -349,7 +353,7 @@ func DeleteProblem(c *gin.Context) {
 	pid := c.Param("Pid")
 	pidInt, _ := strconv.Atoi(pid)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.DeleteProblemAllInfo(pidInt) {
@@ -365,7 +369,7 @@ func GetAllUsersInfo(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	usersInfo := sql.SelectAllUsersInfo()
@@ -412,7 +416,7 @@ func PromoteUser(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.PromoteToAdmin(uidInt) {
@@ -429,7 +433,7 @@ func DemoteUser(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.DemoteToUser(uidInt) {
@@ -446,7 +450,7 @@ func BanUser(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.BanUser(uidInt) {
@@ -463,7 +467,7 @@ func UnbanUser(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.UnbanUser(uidInt) {
@@ -483,7 +487,7 @@ func GetCompetitionListAdmin(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "contests": sql.SelectCompetitionInfoAdmin()})
@@ -496,7 +500,7 @@ func GetCompetitionInfoAdmin(c *gin.Context) {
 	cid := c.Param("cid")
 	cidInt, _ := strconv.Atoi(cid)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{"status": 200, "contest": sql.SelectCompetitionInfoAdminByCid(cidInt)})
@@ -509,7 +513,7 @@ func DeleteCompetition(c *gin.Context) {
 	encodedUsername := c.GetHeader("username")
 	username, _ := url.QueryUnescape(encodedUsername)
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足。"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 	if !sql.DeleteCompetition(cidInt) {
@@ -525,19 +529,19 @@ func UpdateCompetitionInfo(c *gin.Context) {
 	username, _ := url.QueryUnescape(encodedUsername)
 	var req global.AdminCompetitionInfoRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误"})
+		c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "请求参数错误。"})
 		return
 	}
 	if sql.SelectUserInfo(username).Role != 1 {
-		c.JSON(http.StatusUnauthorized, gin.H{"status": 401, "message": "权限不足"})
+		c.JSON(http.StatusForbidden, gin.H{"status": 403, "message": "权限不足。"})
 		return
 	}
 
 	// 更新题目信息
 	if err := sql.UpdateCompetition(req); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新竞赛信息失败"})
+		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "更新竞赛信息失败。"})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "竞赛信息更新成功"})
+	c.JSON(http.StatusOK, gin.H{"status": 200, "message": "竞赛信息更新成功。"})
 }
