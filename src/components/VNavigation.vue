@@ -47,15 +47,34 @@ const navigate = async() => {
   }
 };
 
+// 校验Token是否过期
+const isTokenExpired = () => {
+  const expirationTime = localStorage.getItem('tokenExpiration');
+  if (!expirationTime) {
+    return true;
+  }
+  return Date.now() > expirationTime;
+}
+
+
 // 校验Token后获取用户信息，若privilege为1则表明是管理员
 onMounted(async () => {
   if (userLoggedIn.value) {
+    if (isTokenExpired()) {
+      showAlert(t("message.tokenExpired") + "!", "#/login");
+      localStorage.clear();
+      userLoggedIn.value = false;
+      return;
+    }
+
     const resp = await verifyUserInfo(userName.value, token.value);
-    if (resp.data.status !==200) {
+    if (resp.data.status !== 200) {
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
+      userLoggedIn.value = false;
+    } else {
+      privilege.value = resp.data.Info.role;
     }
-    privilege.value = resp.data.Info.role;
   }
 });
 </script>

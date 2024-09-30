@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"regexp"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
@@ -31,12 +32,12 @@ func IsEmail(email string) bool {
 }
 
 // 用户Token生成后返回给前端
-// TODO: 适配30天过期
 func GenerateToken(username string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	// 设置Token的Claims
 	claims := token.Claims.(jwt.MapClaims)
 	claims["username"] = username
+	claims["exp"] = time.Now().Add(30 * 24 * time.Hour).Unix() // 设置30天过期时间
 	// 生成Token
 	tokenString, err := token.SignedString([]byte(SelectUser(username).TokenSecret))
 	if err != nil {

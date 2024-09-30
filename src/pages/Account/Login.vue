@@ -5,6 +5,7 @@ import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
 import { loginRequest, verifyUserInfo } from '../../utils/axios.js'
 import { showAlert } from '../../utils/alert.js';
 import { useI18n } from 'vue-i18n';
+import { jwtDecode } from "jwt-decode";
 
 const { t } = useI18n();
 
@@ -24,9 +25,14 @@ const login = async () => {
     networkloading.value = true;
     const loginResponse = await loginRequest(forms.username, forms.password);
     if (loginResponse.data.status === 200) {
-      localStorage.setItem('token', loginResponse.data.token)
-      const response = await verifyUserInfo(forms.username, loginResponse.data.token);
-      localStorage.setItem('username', response.data.Info.username)
+      const token = loginResponse.data.token;
+      const decodedToken = jwtDecode(token);
+      console.log(decodedToken);
+      const expirationTime = decodedToken.exp * 1000; // 将秒转换为毫秒
+      localStorage.setItem('token', token);
+      localStorage.setItem('tokenExpiration', expirationTime);
+      const response = await verifyUserInfo(forms.username, token);
+      localStorage.setItem('username', response.data.Info.username);
       networkloading.value = false;
       showAlert(t("message.success") + "!", "/");
       return;
@@ -41,6 +47,7 @@ const login = async () => {
     return;
   }
 }
+
 </script>
 
 <template>
@@ -56,7 +63,8 @@ const login = async () => {
   </div>
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
-      <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled" :label="$t('message.usernameoremail')" />
+      <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled"
+        :label="$t('message.usernameoremail')" />
       <v-text-field v-model="forms.password" rounded="xl" variant="solo-filled" type="password"
         :label="$t('message.password')" />
       <v-row justify="end">
