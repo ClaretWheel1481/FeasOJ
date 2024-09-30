@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"src/codehandler"
+	"src/config"
 	gincontext "src/gin"
 	"src/global"
 	"src/middleware"
@@ -24,10 +25,11 @@ func main() {
 
 	// 定义目录映射
 	dirs := map[string]*string{
-		"configs":     &global.ConfigsDir,
+		"config":      &global.ConfigDir,
 		"certificate": &global.CertDir,
 		"avatars":     &global.AvatarsDir,
 		"codefiles":   &global.CodeDir,
+		"logs":        &global.LogDir,
 	}
 
 	// 遍历map，设置路径并创建不存在的目录
@@ -38,20 +40,30 @@ func main() {
 			os.Mkdir(*dir, os.ModePerm)
 		}
 	}
-	// 初始化数据库连接配置
-	if utils.InitSql() {
-		log.Println("[FeasOJ]MySQL initialization complete.")
-	} else {
-		log.Println("[FeasOJ]MySQL initialization failed, please make sure the database connection is correct.")
+
+	// 初始化Logger
+	logFile, err := utils.InitializeLogger()
+	if err != nil {
+		log.Fatalf("[FeasOJ]Failed to initialize logger: %v", err)
+	}
+	defer utils.CloseLogger(logFile)
+
+	// 初始化配置文件
+	config.InitConfig()
+
+	// 初始化数据库
+	if utils.ConnectSql() == nil {
 		return
 	}
+	utils.InitTable()
 
 	// 初始化管理员账户
 	if sql.SelectAdminUser(1) {
-		log.Println("[FeasOJ]The administrator account already exists and will continue to the next step.")
+		log.Println("[FeasOJ]The administrator account already exists and will continue.")
 	} else {
 		sql.Register(utils.InitAdminAccount())
 	}
+	log.Println("[FeasOJ]MySQL initialization complete.")
 
 	// 构建沙盒镜像
 	if codehandler.BuildImage() {
@@ -67,6 +79,7 @@ func main() {
 
 	// 设置路由组
 	router1 := r.Group("/api/v1")
+	router1.Use(middleware.Logger())
 	router1.Use(middleware.HeaderVerify())
 	{
 		// 验证用户信息API
@@ -155,6 +168,7 @@ func main() {
 	}
 
 	router1 = r.Group("/api/v1")
+	router1.Use(middleware.Logger())
 	{
 		// 注册API
 		router1.POST("/register", gincontext.Register)
@@ -179,10 +193,9 @@ func main() {
 	r.StaticFS("/avatar", http.Dir(global.AvatarsDir))
 
 	log.Println("[FeasOJ]Server activated.")
-	log.Println("[FeasOJ]To modify the database connection and email configuration information, modify the corresponding .xml file in the configs directory.")
 
 	// 实时检测Redis JudgeTask中是否有任务
-	rdb := utils.InitRedis()
+	rdb := utils.ConnectRedis()
 	go codehandler.ProcessJudgeTasks(rdb)
 
 	// TODO: 注意注意！！
@@ -216,6 +229,10 @@ func main() {
 	// 等待中断信号关闭服务器
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	log.Println("[FeasOJ]Input “quit” to stop the server and delete the container.")
+	log.Println("[FeasOJ]Input “quit” or Ctrl+C to stop the server.")
 	<-quit
+
+	// 关闭服务器前的清理工作
+	log.Println("[FeasOJ]The server is shutting down...")
+	utils.CloseLogger(logFile)
 }

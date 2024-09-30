@@ -58,7 +58,7 @@ const getCaptcha = async () => {
         return;
     }
     try {
-        const response = await getCaptchaCode(forms.email);
+        const response = await getCaptchaCode(forms.email,"false");
         if (response.data.status === 200) {
             showAlert(t("message.success") + "!", "");
             if (isButtonDisabled.value) {

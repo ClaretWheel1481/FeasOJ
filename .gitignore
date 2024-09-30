@@ -22,7 +22,8 @@ dist-ssr
 *.sw?
 backend-src/main
 backend-src/src/go.sum
-backend-src/configs
+backend-src/config
+backend-src/logs
 backend-src/avatars
 backend-src/pkg
 backend-src/codefiles

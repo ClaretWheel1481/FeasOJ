@@ -15,10 +15,13 @@ export const loginRequest = async (username, password) => {
 }
 
 // 获取验证码
-export const getCaptchaCode = async (email) => {
+export const getCaptchaCode = async (email,iscreate) => {
     return await axios.get(`${apiUrl}captcha`, {
         params: {
             email: email
+        },
+        headers: {
+            iscreate: iscreate
         }
     });
 }

@@ -3,8 +3,6 @@ package utils
 import (
 	"fmt"
 	"log"
-	"os"
-	"path/filepath"
 	"src/config"
 	"src/global"
 	"time"
@@ -20,23 +18,18 @@ func InitAdminAccount() (string, string, string, string, int) {
 	var adminPassword string
 	var adminEmail string
 	log.Println("[FeasOJ]Please input the administrator account configuration: ")
-	log.Print("[FeasOJ]Admin account: ")
+	fmt.Print("[FeasOJ]Admin account: ")
 	fmt.Scanln(&adminUsername)
-	log.Print("[FeasOJ]Admin password: ")
+	fmt.Print("[FeasOJ]Admin password: ")
 	fmt.Scanln(&adminPassword)
-	log.Print("[FeasOJ]Admin email: ")
+	fmt.Print("[FeasOJ]Admin email: ")
 	fmt.Scanln(&adminEmail)
 
 	return adminUsername, EncryptPassword(adminPassword), adminEmail, uuid.New().String(), 1
 }
 
 // 创建表
-func InitSql() bool {
-	filePath := filepath.Join(global.ConfigsDir, "sqlconfig.xml")
-	//判断是否有config.xml文件，没有则输入
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		config.InputSqlInfo()
-	}
+func InitTable() bool {
 	ConnectSql().AutoMigrate(&global.User{}, &global.Problem{}, &global.SubmitRecord{}, &global.Discussion{}, &global.Comment{}, &global.TestCase{}, &global.Competition{})
 	return true
 }
@@ -46,7 +39,7 @@ func ConnectSql() *gorm.DB {
 	dsn := config.LoadSqlConfig()
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Println("[FeasOJ]Database connection failed, please go to sqlconfig.xml manually to configure.")
+		log.Println("[FeasOJ]Database connection failed, please go to config.xml manually to configure.")
 		return nil
 	}
 	sqlDB, err := db.DB()

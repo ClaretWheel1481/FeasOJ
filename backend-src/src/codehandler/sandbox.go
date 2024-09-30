@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"os/exec"
 	"path/filepath"
 	"src/global"
@@ -51,10 +50,11 @@ func BuildImage() bool {
 	defer buildResponse.Body.Close()
 
 	// 打印构建响应
-	_, err = io.Copy(os.Stdout, buildResponse.Body)
+	_, err = io.Copy(log.Writer(), buildResponse.Body)
 	if err != nil {
-		log.Panic(err)
+		log.Printf("Error copying build response: %v", err)
 	}
+
 	return true
 }
 

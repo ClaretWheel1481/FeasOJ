@@ -77,9 +77,17 @@ func Login(c *gin.Context) {
 func GetCaptcha(c *gin.Context) {
 	// 获取邮箱地址
 	emails := c.Query("email")
-	if sql.SelectUserByEmail(emails).Username == "" {
-		c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
-		return
+	isCreate := c.GetHeader("iscreate")
+	if isCreate == "false" {
+		if sql.SelectUserByEmail(emails).Username == "" {
+			c.JSON(http.StatusNotFound, gin.H{"status": 404, "message": "用户不存在。"})
+			return
+		}
+	} else {
+		if sql.SelectUserByEmail(emails).Username != "" {
+			c.JSON(http.StatusBadRequest, gin.H{"status": 400, "message": "用户已存在。"})
+			return
+		}
 	}
 	if utils.SendVerifycode(config.InitEmailConfig(), emails, utils.GenerateVerifycode()) {
 		c.JSON(http.StatusOK, gin.H{"status": 200, "message": "验证码发送成功。"})
@@ -301,7 +309,7 @@ func UploadCode(c *gin.Context) {
 	}
 
 	// 上传任务至Redis任务队列
-	rdb := utils.InitRedis()
+	rdb := utils.ConnectRedis()
 	err = rdb.RPush("judgeTask", newFileName).Err()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"status": 500, "message": "代码任务提交失败，请尝试重新提交。"})

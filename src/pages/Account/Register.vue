@@ -63,7 +63,7 @@ const getCaptcha = async () => {
   }
   try {
     networkloading.value = true;
-    const response = await getCaptchaCode(formState.userEmail);
+    const response = await getCaptchaCode(formState.userEmail,"true");
     if (response.data.status === 200) {
       networkloading.value = false;
       showAlert(t("message.success") + "!", "");

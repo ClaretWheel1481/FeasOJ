@@ -1,6 +1,17 @@
 package global
 
-import "time"
+import (
+	"encoding/xml"
+	"time"
+)
+
+// 配置文件结构体
+type Config struct {
+	XMLName     xml.Name    `xml:"config"`
+	SqlConfig   SqlConfig   `xml:"sqlConfig"`
+	RedisConfig RedisConfig `xml:"redisConfig"`
+	MailConfig  MailConfig  `xml:"mailConfig"`
+}
 
 // MySQL数据库连接信息
 type SqlConfig struct {
@@ -18,10 +29,10 @@ type RedisConfig struct {
 
 // 邮件服务连接信息
 type MailConfig struct {
-	Host string `xml:"host"`
-	Port int    `xml:"port"`
-	User string `xml:"user"`
-	Pass string `xml:"pass"`
+	Host     string `xml:"host"`
+	Port     int    `xml:"port"`
+	User     string `xml:"user"`
+	Password string `xml:"password"`
 }
 
 // 注册请求体
