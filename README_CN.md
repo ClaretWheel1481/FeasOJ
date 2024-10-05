@@ -24,20 +24,17 @@ FeasOJ
 │  └─plugins
 ```
 
-### 前端环境
+### 环境
 - Vue 3
 - Pnpm
 
 ### 如何运行
-
 1. 克隆此库。
-2. 安装 Docker。
-3. 运行 `npm install -g pnpm` 安装 Pnpm。
-4. 运行 `pnpm i` 安装依赖项。
-5. 运行 `pnpm dev` 启动前端服务器。
+2. 运行 `npm install -g pnpm` 安装 Pnpm。
+3. 运行 `pnpm i` 安装依赖项。
+4. 运行 `pnpm dev` 启动前端服务器。
 
 ### 注意
-
 这是我第一次用Vue + Golang写大项目，所以代码会很糟糕，不过我会一直去改进它！
 如果你找到任何Bug请发布Issue告诉我。
 
@@ -46,17 +43,9 @@ FeasOJ
 ![image](/assets/Screenshot2.png)
 
 ### 致谢
-
 - [Vue](https://github.com/vuejs/vue)
 - [Vuetify](https://github.com/vuetifyjs/vuetify)
 - [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)
-- [Go](https://github.com/golang/go)
-- [Gin](https://github.com/gin-gonic/gin)
-- [gorm](https://github.com/go-gorm/gorm)
-- [jwt-go](https://github.com/golang-jwt/jwt)
-- [docker](https://github.com/moby/moby)
-- [gomail](https://github.com/go-gomail/gomail)
-- [go-redis](https://github.com/redis/go-redis)
