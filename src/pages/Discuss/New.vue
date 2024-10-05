@@ -35,10 +35,10 @@ const submit = async () => {
     loading.value = true;
     const response = await addDiscussion(title.value, content.value, userName.value)
     if (response.status === 200) {
-        showAlert(t("message.success") + "!", "/discussion");
+        showAlert(response.data.message, "/discussion");
         loading.value = false;
     } else {
-        showAlert(t("message.failed") + "!", "");
+        showAlert(response.data.message + "!", "");
         loading.value = false;
     }
 };

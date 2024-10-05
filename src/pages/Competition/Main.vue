@@ -73,7 +73,7 @@ onMounted(async () => {
                                 </p>
                             </v-card-text>
                             <template v-slot:actions>
-                                <v-btn color="primary" append-icon="mdi-chevron-right">{{ $t("message.enter")
+                                <v-btn color="primary" append-icon="mdi-chevron-right" @click="">{{ $t("message.enter")
                                     }}</v-btn>
                             </template>
                         </v-card>

@@ -20,7 +20,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        if (userInfoResponse.data.status !== 200) {
+        if (userInfoResponse.status !== 200) {
             window.location = '#/403';
             return;
         }

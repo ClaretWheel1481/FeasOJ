@@ -55,10 +55,10 @@ const validateFields = () => {
 
 // 删除竞赛
 const delCompetition = async () => {
-    networkloading = true;
+    networkloading.value = true;
     const delResp = await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
-    networkloading = false;
-    if (delResp.data.status === 200) {
+    networkloading.value = false;
+    if (delResp.status === 200) {
         showAlert(t("message.success") + "!", "reload");
     } else {
         showAlert(t("message.failed") + "!", "");
@@ -98,7 +98,7 @@ const save = async () => {
     const comData = { ...competitionFields };
     try {
         const updateResp = await updateComInfo(userName.value, token.value, comData);
-        if (updateResp.data.status === 200) {
+        if (updateResp.status === 200) {
             networkloading.value = false;
             showAlert(t("message.success") + "!", "reload");
         }
@@ -144,7 +144,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        if (userInfoResponse.data.status !== 200) {
+        if (userInfoResponse.status !== 200) {
             window.location = '#/403';
             return;
         }

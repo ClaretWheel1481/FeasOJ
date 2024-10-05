@@ -36,18 +36,18 @@ const register = async () => {
   try {
     networkloading.value = true;
     const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
-    if (response.data.status === 200) {
+    if (response.status === 200) {
       networkloading.value = false;
-      showAlert(t("message.success") + "!", "/login");
+      showAlert(response.data.message, "/login");
       return;
     } else {
       networkloading.value = false;
-      showAlert(t("message.failed") + "!", "");
+      showAlert(response.data.message, "");
       return;
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed") + "!", "");
+    showAlert(error.response.data.message, "");
     return;
   }
 };
@@ -64,9 +64,9 @@ const getCaptcha = async () => {
   try {
     networkloading.value = true;
     const response = await getCaptchaCode(formState.userEmail,"true");
-    if (response.data.status === 200) {
+    if (response.status === 200) {
       networkloading.value = false;
-      showAlert(t("message.success") + "!", "");
+      showAlert(response.data.message, "");
       if (isButtonDisabled.value) {
         return;
       }
@@ -82,11 +82,11 @@ const getCaptcha = async () => {
       }, 1000);
     } else {
       networkloading.value = false;
-      showAlert(t("message.failed") + "!", "");
+      showAlert(response.data.message, "");
     }
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed") + "!", "");
+    showAlert(error.response.data.message, "");
   }
 }
 </script>

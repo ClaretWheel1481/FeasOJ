@@ -12,6 +12,7 @@ import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
 import { useI18n } from 'vue-i18n';
 
+const { t } = useI18n();
 const { locale } = useI18n();
 
 const langs = ref([
@@ -68,7 +69,7 @@ onMounted(async () => {
     }
 
     const resp = await verifyUserInfo(userName.value, token.value);
-    if (resp.data.status !== 200) {
+    if (resp.status !== 200) {
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
       userLoggedIn.value = false;

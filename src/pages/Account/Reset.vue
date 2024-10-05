@@ -34,16 +34,16 @@ const nextStep = async () => {
     }
     try {
         const response = await updatePassword(forms.email, forms.vcode, forms.password);
-        if (response.data.status === 200) {
+        if (response.status === 200) {
             localStorage.clear();
-            showAlert(t("message.success") + "!", "/login");
+            showAlert(response.data.message, "/login");
             return;
         } else {
-            showAlert(t("message.failed") + "!", "");
+            showAlert(response.data.message, "");
             return;
         }
     } catch (error) {
-        showAlert(t("message.failed") + "!", "");
+        showAlert(error.response.data.message, "");
         return;
     }
 }
@@ -59,8 +59,8 @@ const getCaptcha = async () => {
     }
     try {
         const response = await getCaptchaCode(forms.email,"false");
-        if (response.data.status === 200) {
-            showAlert(t("message.success") + "!", "");
+        if (response.status === 200) {
+            showAlert(response.data.message, "");
             if (isButtonDisabled.value) {
                 return;
             }
@@ -75,10 +75,10 @@ const getCaptcha = async () => {
                 }
             }, 1000);
         } else {
-            showAlert(t("message.failed") + "!", "");
+            showAlert(response.data.message, "");
         }
     } catch (error) {
-        showAlert(t("message.nodata") + "!", "");
+        showAlert(error.response.data.message, "");
     }
 }
 </script>

@@ -148,12 +148,12 @@ const verifyAndFetchUserInfo = async () => {
       return;
     }
     const verifyUserInfoResponse = await verifyUserInfo(userName.value, token.value);
-    if (verifyUserInfoResponse.data.status !== 200) {
+    if (verifyUserInfoResponse.status !== 200) {
       router.push({ path: '/403' });
       return;
     }
     const userInfoResponse = await getUserInfo(currentUsername.value);
-    if (userInfoResponse.data.status !== 200) {
+    if (userInfoResponse.status !== 200) {
       router.push({ path: '/403' });
       return;
     }

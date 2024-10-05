@@ -8,6 +8,8 @@
 # FeasOJ
 ### 项目简介
 FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用户提供一个方便、高效的学习和练习环境。
+<br>
+[FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend)
 
 ### 项目结构
 ```
@@ -20,28 +22,11 @@ FeasOJ
 │  ├─routers
 │  ├─utils
 │  └─plugins
-│ 
-├─backend-src
-│  ├─src
-│  │  ├─codehandler
-│  │  ├─config
-│  │  ├─gin
-│  │  ├─global
-│  │  ├─middleware
-│  │  ├─utils
-│  │  │  └─sql
-│  │  ├─main.go
-│  │  └─go.mod
-│  └─Sandbox
 ```
 
-### 软件环境
+### 前端环境
 - Vue 3
 - Pnpm
-- Golang 1.23.1
-- Redis
-- MySQL 8.0+
-- Docker
 
 ### 如何运行
 
@@ -50,8 +35,6 @@ FeasOJ
 3. 运行 `npm install -g pnpm` 安装 Pnpm。
 4. 运行 `pnpm i` 安装依赖项。
 5. 运行 `pnpm dev` 启动前端服务器。
-6. 运行 `cd backend-src\src` 和 `go mod tidy` 下载依赖。
-7. 运行 `go run main.go` 启动后端服务器。
 
 ### 注意
 

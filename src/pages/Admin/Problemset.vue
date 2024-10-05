@@ -76,7 +76,7 @@ const save = async () => {
     const problemData = { ...problemFields };
     try {
         const updateResp = await updateProblemInfo(userName.value, token.value, problemData);
-        if (updateResp.data.status === 200) {
+        if (updateResp.status === 200) {
             networkloading.value = false;
             showAlert(t("message.success") + "!", "reload");
         }
@@ -137,8 +137,10 @@ const goToEditProblem = async (pid) => {
 
 // 删除题目
 const delProblem = async () => {
+    networkloading.value = true;
     const delProblemResp = await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
-    if (delProblemResp.data.status === 200) {
+    networkloading.value = false;
+    if (delProblemResp.status === 200) {
         showAlert(t("message.success") + "!", "reload");
     } else {
         showAlert(t("message.failed") + "!", "");
@@ -154,7 +156,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        if (userInfoResponse.data.status !== 200) {
+        if (userInfoResponse.status !== 200) {
             window.location = '#/403';
             return;
         }
