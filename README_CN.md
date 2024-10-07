@@ -15,6 +15,7 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用
 ```
 FeasOJ
 │ 
+├─public
 ├─src
 │  ├─assets
 │  ├─components
@@ -41,6 +42,11 @@ FeasOJ
 ### 项目截图
 ![image](/assets/Screenshot1.png)
 ![image](/assets/Screenshot2.png)
+
+### 待办事项
+- 竞赛及其附属功能
+- 分离并优化判题服务，实现分布式判题
+- 优化前端外观、性能
 
 ### 致谢
 - [Vue](https://github.com/vuejs/vue)

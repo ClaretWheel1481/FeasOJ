@@ -15,6 +15,7 @@ FeasOJ is an online programming practice platform based on Vue and Golang, aimin
 ```
 FeasOJ
 │ 
+├─public
 ├─src
 │  ├─assets
 │  ├─components
@@ -41,6 +42,11 @@ If you find any bugs, please open an issue.
 ### Screenshots
 ![image](/assets/Screenshot1.png)
 ![image](/assets/Screenshot2.png)
+
+### To-do list
+- Competitions
+- Separate and optimize the judge service, realize distributed judge service.
+- Optimize the appearance and performance of the front-end
 
 ### Thanks
 - [Vue](https://github.com/vuejs/vue)
