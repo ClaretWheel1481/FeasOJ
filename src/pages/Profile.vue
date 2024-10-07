@@ -56,7 +56,7 @@ const uploadAvat = async (cropper) => {
     const newFile = new File([file], fileName, { type: fileType });
     networkloading.value = true;
     const resp = await uploadAvatar(newFile, userName.value, token.value);
-    if (resp.data.status === 200) {
+    if (resp.status === 200) {
       networkloading.value = false;
       showAlert(t("message.success") + "!", "reload");
     } else {
@@ -84,7 +84,7 @@ const fetchSubmitData = async () => {
 const updateSyn = async () => {
   try {
     const resp = await updateSynopsis(userName.value, token.value, synopsis.value);
-    if (resp.data.status === 200) {
+    if (resp.status === 200) {
       showAlert(t("message.success") + "!", "reload");
     } else {
       showAlert(t("message.failed") + "!", "");

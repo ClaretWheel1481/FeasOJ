@@ -33,7 +33,7 @@ const submit = async () => {
         return;
     }
     loading.value = true;
-    const response = await addDiscussion(title.value, content.value, userName.value)
+    const response = await addDiscussion(title.value, content.value, userName.value, token.value)
     if (response.status === 200) {
         showAlert(response.data.message, "/discussion");
         loading.value = false;

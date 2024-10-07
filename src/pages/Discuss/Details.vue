@@ -157,21 +157,27 @@ onMounted(async () => {
                 <v-avatar size="50" color="surface-variant">
                     <v-img :src="avatarServer + discussionInfos.avatar" cover></v-img>
                 </v-avatar>
-                <v-btn variant="text" class="font-weight-black" @click="router.push({ path: `/profile/${discussionInfos.username}` })">{{ discussionInfos.username }}</v-btn>
+                <v-btn variant="text" class="font-weight-black"
+                    @click="router.push({ path: `/profile/${discussionInfos.username}` })">
+                    {{ discussionInfos.username }}
+                </v-btn>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
                 <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>
             </template>
         </v-app-bar>
         <div style="margin-top: 30px"></div>
-        <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
+        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10">
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
             <MdPreview :editorId="id" :modelValue="discussionInfos.content" />
+            <v-card-subtitle style="justify-self: right;">
+                <p style="font-size: 12px;">{{ moment(discussionInfos.create_at).format('YYYY-MM-DD HH:mm') }}</p>
+            </v-card-subtitle>
         </v-card>
         <div style="margin-top: 50px"></div>
-        <v-card class="mx-auto" width="50%" rounded="xl" elevation="10">
+        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10">
             <template v-slot:title>
                 <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>
@@ -192,7 +198,7 @@ onMounted(async () => {
                                 <v-img :src="avatarServer + comment.avatar" alt="Avatar" cover></v-img>
                             </v-avatar>
                             <div style="margin: 5px">
-                                <div class="username" @click="to(comment.username)">
+                                <div class="username" @click="router.push({ path: `/profile/${comment.username}` })">
                                     {{ comment.username }}
                                 </div>
                                 <div class="timeline">

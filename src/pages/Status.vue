@@ -84,10 +84,10 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td class="tabletitle">
-            <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
+            <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
           </td>
           <td class="tabletitle">
-            <v-btn @click="router.push({ path: `/Profile/${item.Username}` })" variant="text" block>{{ item.Username
+            <v-btn @click="router.push({ path: `/profile/${item.Username}` })" variant="text" block>{{ item.Username
               }}</v-btn>
           </td>
           <td v-if="item.Result === 'Running...'" colspan="1">
