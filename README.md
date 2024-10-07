@@ -16,12 +16,12 @@ FeasOJ is an online programming practice platform based on Vue and Golang, aimin
 FeasOJ
 │ 
 ├─src
-│  ├─public
+│  ├─assets
 │  ├─components
 │  ├─pages
+│  ├─plugins
 │  ├─routers
-│  ├─utils
-│  └─plugins
+│  └─utils
 ```
 
 ### Environment

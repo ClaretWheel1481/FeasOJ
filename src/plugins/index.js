@@ -1,5 +1,5 @@
 import vuetify from './vuetify'
-import router from '../routers/index';
+import router from '../router/index';
 import vue3AceEditor from './vue3-ace-editor';
 import AvatarCropper from 'vue-avatar-cropper';
 import { i18n } from './vue-i18n';
