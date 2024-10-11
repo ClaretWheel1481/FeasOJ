@@ -1,6 +1,5 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import 'vuetify/styles';
 import router from './router/index';
 import './assets/style.css';
 import { registerPlugins } from './plugins';

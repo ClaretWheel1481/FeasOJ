@@ -1,6 +1,5 @@
 <!-- 重置密码页 -->
 <script setup>
-import { VSheet, VForm, VTextField, VBtn, VAppBar } from 'vuetify/lib/components/index.mjs';
 import { ref, reactive } from 'vue';
 import { updatePassword, getCaptchaCode } from '../../utils/axios';
 import { regex, rules } from '../../utils/rules'
@@ -34,14 +33,9 @@ const nextStep = async () => {
     }
     try {
         const response = await updatePassword(forms.email, forms.vcode, forms.password);
-        if (response.status === 200) {
-            localStorage.clear();
-            showAlert(response.data.message, "/login");
-            return;
-        } else {
-            showAlert(response.data.message, "");
-            return;
-        }
+        localStorage.clear();
+        showAlert(response.data.message, "/login");
+        return;
     } catch (error) {
         showAlert(error.response.data.message, "");
         return;
@@ -58,25 +52,21 @@ const getCaptcha = async () => {
         return;
     }
     try {
-        const response = await getCaptchaCode(forms.email,"false");
-        if (response.status === 200) {
-            showAlert(response.data.message, "");
-            if (isButtonDisabled.value) {
-                return;
-            }
-            isButtonDisabled.value = true;
-            let timer = setInterval(() => {
-                if (countdown.value > 0) {
-                    countdown.value--;
-                } else {
-                    clearInterval(timer);
-                    isButtonDisabled.value = false;
-                    countdown.value = 60; // 重置倒计时
-                }
-            }, 1000);
-        } else {
-            showAlert(response.data.message, "");
+        const response = await getCaptchaCode(forms.email, "false");
+        showAlert(response.data.message, "");
+        if (isButtonDisabled.value) {
+            return;
         }
+        isButtonDisabled.value = true;
+        let timer = setInterval(() => {
+            if (countdown.value > 0) {
+                countdown.value--;
+            } else {
+                clearInterval(timer);
+                isButtonDisabled.value = false;
+                countdown.value = 60; // 重置倒计时
+            }
+        }, 1000);
     } catch (error) {
         showAlert(error.response.data.message, "");
     }

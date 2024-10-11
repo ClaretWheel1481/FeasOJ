@@ -1,9 +1,8 @@
 <!-- 讨论帖子列表页 -->
 <script setup>
-import { VCard, VDataTableServer, VBtn, VFab } from 'vuetify/components'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import moment from 'moment';
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue';
 import { getAllDis } from '../../utils/axios';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from '../../utils/account';

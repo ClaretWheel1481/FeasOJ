@@ -1,7 +1,6 @@
 <!-- 登录页 -->
 <script setup>
 import { reactive, ref } from 'vue';
-import { VBtn, VTextField, VForm, VSheet, VRow } from 'vuetify/components';
 import { loginRequest, verifyUserInfo } from '../../utils/axios.js'
 import { showAlert } from '../../utils/alert.js';
 import { useI18n } from 'vue-i18n';
@@ -24,22 +23,16 @@ const login = async () => {
   try {
     networkloading.value = true;
     const loginResponse = await loginRequest(forms.username, forms.password);
-    if (loginResponse.status === 200) {
-      const token = loginResponse.data.token;
-      const decodedToken = jwtDecode(token);
-      const expirationTime = decodedToken.exp * 1000; // 将秒转换为毫秒
-      localStorage.setItem('token', token);
-      localStorage.setItem('tokenExpiration', expirationTime);
-      const response = await verifyUserInfo(forms.username, token);
-      localStorage.setItem('username', response.data.Info.username);
-      networkloading.value = false;
-      showAlert(loginResponse.data.message, "/");
-      return;
-    } else {
-      networkloading.value = false;
-      showAlert(loginResponse.data.message, "");
-      return;
-    }
+    const token = loginResponse.data.token;
+    const decodedToken = jwtDecode(token);
+    const expirationTime = decodedToken.exp * 1000; // 将秒转换为毫秒
+    localStorage.setItem('token', token);
+    localStorage.setItem('tokenExpiration', expirationTime);
+    const response = await verifyUserInfo(forms.username, token);
+    localStorage.setItem('username', response.data.Info.username);
+    networkloading.value = false;
+    showAlert(loginResponse.data.message, "/");
+    return;
   } catch (error) {
     networkloading.value = false;
     showAlert(error.response.data.message, "");

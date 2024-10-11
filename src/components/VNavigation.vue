@@ -1,10 +1,4 @@
 <script setup>
-import {
-  VNavigationDrawer,
-  VList,
-  VListItem,
-  VDivider,
-} from "vuetify/components";
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { verifyUserInfo } from "../utils/axios";
@@ -67,14 +61,13 @@ onMounted(async () => {
       userLoggedIn.value = false;
       return;
     }
-
-    const resp = await verifyUserInfo(userName.value, token.value);
-    if (resp.status !== 200) {
+    try{
+      const resp = await verifyUserInfo(userName.value, token.value);
+      privilege.value = resp.data.Info.role;
+    } catch(error){
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
       userLoggedIn.value = false;
-    } else {
-      privilege.value = resp.data.Info.role;
     }
   }
 });

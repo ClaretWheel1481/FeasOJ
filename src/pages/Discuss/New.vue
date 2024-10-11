@@ -1,6 +1,5 @@
 <!-- 创建讨论页 -->
 <script setup>
-import { VProgressCircular, VAppBar, VRow, VBtn, VForm, VTextField } from 'vuetify/lib/components/index.mjs';
 import { ref, computed, onMounted } from 'vue';
 import { addDiscussion } from '../../utils/axios.js';
 import { showAlert } from '../../utils/alert.js';
@@ -33,12 +32,12 @@ const submit = async () => {
         return;
     }
     loading.value = true;
-    const response = await addDiscussion(title.value, content.value, userName.value, token.value)
-    if (response.status === 200) {
+    try {
+        const response = await addDiscussion(title.value, content.value, userName.value, token.value)
         showAlert(response.data.message, "/discussion");
         loading.value = false;
-    } else {
-        showAlert(response.data.message + "!", "");
+    } catch (error) {
+        showAlert(error.response.data.message + "!", "");
         loading.value = false;
     }
 };

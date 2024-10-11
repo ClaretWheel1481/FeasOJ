@@ -1,6 +1,6 @@
 <!-- 首页 -->
 <script setup>
-import { VCard, VExpansionPanel } from 'vuetify/lib/components/index.mjs';
+
 </script>
 
 <template>

@@ -1,5 +1,4 @@
 <script setup>
-import { VDialog, VCard, VCardText, VCardTitle, VCardActions, VBtn } from 'vuetify/components';
 import { dialog, dialogMessage } from '../utils/alert.js';
 </script>
 

@@ -2,8 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
-import { verifyUserInfo, getAllProblems, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/axios';
-import { VDataTableServer, VFab, VDialog, VCard, VCardTitle, VCardText, VBtn, VTextField, VSelect, VForm, VSpacer, VCardActions, VRow } from 'vuetify/components'
+import { verifyUserInfo, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/axios';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
 import 'md-editor-v3/lib/style.css';
@@ -60,6 +59,7 @@ const validateFields = () => {
             return false;
         }
     }
+    // TODO: 优化性能
     for (const testCase of problemFields.test_cases) {
         if (testCase.input === "" || testCase.output === "") {
             showAlert(t("message.formCheckfailed") + "!", "");
@@ -75,11 +75,9 @@ const save = async () => {
     networkloading.value = true;
     const problemData = { ...problemFields };
     try {
-        const updateResp = await updateProblemInfo(userName.value, token.value, problemData);
-        if (updateResp.status === 200) {
-            networkloading.value = false;
-            showAlert(t("message.success") + "!", "reload");
-        }
+        await updateProblemInfo(userName.value, token.value, problemData);
+        networkloading.value = false;
+        showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "reload");
     }
@@ -216,7 +214,8 @@ onMounted(async () => {
                             v-model="problemFields.difficulty" variant="solo-filled"></v-select>
                         <!-- 所属竞赛ID及是否可见 -->
                         <v-row class="limitRow">
-                            <v-select :items="competitionIds" :label="$t('message.contestid')" v-model.number="problemFields.contest_id" variant="solo-filled"></v-select>
+                            <v-select :items="competitionIds" :label="$t('message.contestid')"
+                                v-model.number="problemFields.contest_id" variant="solo-filled"></v-select>
                             <div style="margin-inline: 30px;"></div>
                             <v-switch v-model="problemFields.is_visible" :label="$t('message.isvisible')"
                                 color="primary" inset></v-switch>

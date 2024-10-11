@@ -1,15 +1,5 @@
 <!-- 讨论帖子详情页 -->
 <script setup>
-import {
-    VRow,
-    VAppBar,
-    VBtn,
-    VAvatar,
-    VProgressCircular,
-    VImg,
-    VCard,
-    VListItemTitle,
-} from "vuetify/components";
 import { ref, onMounted, computed } from "vue";
 import {
     getDisDetails,
@@ -75,10 +65,8 @@ const userLoggedIn = computed(() => !!token.value);
 const addComments = async (content) => {
     loading.value = true;
     try {
-        const resp = await addComment(Did, content, userName.value, token.value);
-        if (resp.status === 200) {
-            showAlert(t("message.success") + "!", "reload");
-        }
+        await addComment(Did, content, userName.value, token.value);
+        showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         window.location = "#/403";
     } finally {
@@ -90,14 +78,8 @@ const addComments = async (content) => {
 const deleteCommentByID = async (commentID) => {
     loading.value = true;
     try {
-        const delCommentResp = await deleteComment(
-            userName.value,
-            token.value,
-            commentID
-        );
-        if (delCommentResp.status === 200) {
-            showAlert(t("message.success") + "!", "reload");
-        }
+        await deleteComment(userName.value, token.value, commentID);
+        showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         window.location = "#/403";
     } finally {
@@ -109,10 +91,8 @@ const deleteCommentByID = async (commentID) => {
 const deleteDis = async () => {
     loading.value = true;
     try {
-        const resp = await deleteDiscussion(userName.value, token.value, Did);
-        if (resp.status === 200) {
-            showAlert(t("message.success") + "!", "/discussion");
-        }
+        await deleteDiscussion(userName.value, token.value, Did);
+        showAlert(t("message.success") + "!", "/discussion");
     } catch (error) {
         window.location = "#/403";
     } finally {
@@ -128,9 +108,7 @@ onMounted(async () => {
             // 获取评论
             const commentsResp = await getComments(Did, userName.value, token.value);
             comments.value = commentsResp.data.comments;
-            if (response.status === 200) {
-                discussionInfos.value = response.data.discussionInfo;
-            }
+            discussionInfos.value = response.data.discussionInfo;
         } catch (error) {
             showAlert(t("message.failed") + "!", "/discussion");
         } finally {
@@ -172,8 +150,10 @@ onMounted(async () => {
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
             <MdPreview :editorId="id" :modelValue="discussionInfos.content" />
-            <v-card-subtitle style="justify-self: right;">
-                <p style="font-size: 12px;">{{ moment(discussionInfos.create_at).format('YYYY-MM-DD HH:mm') }}</p>
+            <v-card-subtitle style="justify-self: right">
+                <p style="font-size: 12px">
+                    {{ moment(discussionInfos.create_at).format("YYYY-MM-DD HH:mm") }}
+                </p>
             </v-card-subtitle>
         </v-card>
         <div style="margin-top: 50px"></div>

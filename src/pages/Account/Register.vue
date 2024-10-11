@@ -1,7 +1,6 @@
 <!-- 注册页 -->
 <script setup>
 import { ref, reactive } from 'vue';
-import { VAppBar, VBtn, VTextField, VForm, VSheet, VIcon } from 'vuetify/components';
 import { getCaptchaCode, registerRequest } from '../../utils/axios';
 import { rules, regex } from '../../utils/rules';
 import { showAlert } from '../../utils/alert';
@@ -63,27 +62,22 @@ const getCaptcha = async () => {
   }
   try {
     networkloading.value = true;
-    const response = await getCaptchaCode(formState.userEmail,"true");
-    if (response.status === 200) {
-      networkloading.value = false;
-      showAlert(response.data.message, "");
-      if (isButtonDisabled.value) {
-        return;
-      }
-      isButtonDisabled.value = true;
-      let timer = setInterval(() => {
-        if (countdown.value > 0) {
-          countdown.value--;
-        } else {
-          clearInterval(timer);
-          isButtonDisabled.value = false;
-          countdown.value = 60; // 重置倒计时
-        }
-      }, 1000);
-    } else {
-      networkloading.value = false;
-      showAlert(response.data.message, "");
+    const response = await getCaptchaCode(formState.userEmail, "true");
+    networkloading.value = false;
+    showAlert(response.data.message, "");
+    if (isButtonDisabled.value) {
+      return;
     }
+    isButtonDisabled.value = true;
+    let timer = setInterval(() => {
+      if (countdown.value > 0) {
+        countdown.value--;
+      } else {
+        clearInterval(timer);
+        isButtonDisabled.value = false;
+        countdown.value = 60; // 重置倒计时
+      }
+    }, 1000);
   } catch (error) {
     networkloading.value = false;
     showAlert(error.response.data.message, "");

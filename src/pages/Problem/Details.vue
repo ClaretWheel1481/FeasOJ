@@ -1,7 +1,6 @@
 <!-- 题目详细页 -->
 <script setup>
-import { VAppBar, VBtn, VDivider, VCard, VCardText, VProgressCircular, VSelect, VContainer, VRow, VCol } from 'vuetify/components'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { getPbDetails, uploadCode } from '../../utils/axios';
 import { VAceEditor } from 'vue3-ace-editor';
@@ -64,11 +63,9 @@ const uploadContentAsFile = async () => {
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
         networkloading.value = true;
-        const uploadResp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
-        if (uploadResp.status === 200) {
-            networkloading.value = false;
-            showAlert(t("message.success") + "!", "reload")
-        }
+        await uploadCode(codefile, route.params.Pid, userName.value, token.value);
+        networkloading.value = false;
+        showAlert(t("message.success") + "!", "reload")
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
     }
@@ -80,9 +77,9 @@ onMounted(async () => {
         try {
             const problemId = route.params.Pid;
             const resp = await getPbDetails(problemId, userName.value, token.value);
-            if (resp.status === 200 && resp.data.problemInfo.pid !== 0) {
+            if (resp.data.problemInfo.pid !== 0) {
                 problemInfo.value = resp.data.problemInfo;
-            }else {
+            } else {
                 window.location = '#/403'
             }
         } catch (error) {

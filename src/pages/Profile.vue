@@ -2,7 +2,6 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { VCard, VCardActions, VCardText, VRow, VProgressCircular, VTextField, VBtn, VAvatar, VImg, VDataTableServer } from 'vuetify/components';
 import moment from 'moment';
 import { getUserSubmitRecords, uploadAvatar, avatarServer, verifyUserInfo, getUserInfo, updateSynopsis } from '../utils/axios';
 import { showAlert } from '../utils/alert';
@@ -55,15 +54,11 @@ const uploadAvat = async (cropper) => {
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
     networkloading.value = true;
-    const resp = await uploadAvatar(newFile, userName.value, token.value);
-    if (resp.status === 200) {
-      networkloading.value = false;
-      showAlert(t("message.success") + "!", "reload");
-    } else {
-      networkloading.value = false;
-      showAlert(t("message.failed") + "!", "");
-    }
+    await uploadAvatar(newFile, userName.value, token.value);
+    networkloading.value = false;
+    showAlert(t("message.success") + "!", "reload");
   } catch (error) {
+    networkloading.value = false;
     showAlert(t("message.failed") + "!", "");
   }
 };
@@ -83,12 +78,8 @@ const fetchSubmitData = async () => {
 // 更新用户简介
 const updateSyn = async () => {
   try {
-    const resp = await updateSynopsis(userName.value, token.value, synopsis.value);
-    if (resp.status === 200) {
-      showAlert(t("message.success") + "!", "reload");
-    } else {
-      showAlert(t("message.failed") + "!", "");
-    }
+    await updateSynopsis(userName.value, token.value, synopsis.value);
+    showAlert(t("message.success") + "!", "reload");
   } catch (error) {
     showAlert(t("message.failed") + "!", "");
   }
@@ -139,6 +130,18 @@ const getResultStyle = (result) => {
   }
 };
 
+// 预加载头像
+const preloadImage = (url) => {
+  return new Promise((resolve) => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = url;
+    link.onload = resolve;
+    document.head.appendChild(link);
+  });
+};
+
 // 检验获取用户信息
 const verifyAndFetchUserInfo = async () => {
   loading.value = true;
@@ -147,18 +150,14 @@ const verifyAndFetchUserInfo = async () => {
       router.push({ path: '/login' });
       return;
     }
-    const verifyUserInfoResponse = await verifyUserInfo(userName.value, token.value);
-    if (verifyUserInfoResponse.status !== 200) {
-      router.push({ path: '/403' });
-      return;
-    }
+    await verifyUserInfo(userName.value, token.value);
     const userInfoResponse = await getUserInfo(currentUsername.value);
-    if (userInfoResponse.status !== 200) {
-      router.push({ path: '/403' });
-      return;
-    }
     userInfo.value = userInfoResponse.data.Info;
     synopsis.value = userInfo.value.synopsis;
+    // 预加载头像
+    if(userInfo.value.avatar) {
+      await preloadImage(avatarServer + userInfo.value.avatar);
+    }
     await fetchSubmitData();
     loading.value = false;
   } catch (error) {
@@ -190,14 +189,16 @@ watch(() => route.params.Username, (newUsername) => {
       <div style="margin: 10px"></div>
       <div class="avatar-container">
         <v-avatar size="120" color="surface-variant">
-          <v-img :src="avatarServer + userInfo.avatar" cover></v-img>
+          <v-img :src="avatarServer + userInfo.avatar" cover alt="Avatar"></v-img>
         </v-avatar>
-        <v-btn v-if="currentUsername===userName" icon="mdi-pencil" size="30" @click="showCropper = true" class="edit-btn"></v-btn>
+        <v-btn v-if="currentUsername === userName" icon="mdi-pencil" size="30" @click="showCropper = true"
+          class="edit-btn"></v-btn>
       </div>
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ userInfo.username }}</p>
         <div style="margin: 10px"></div>
-        <v-btn variant="text" class="text-medium-emphasis" @click="currentUsername===userName ? dialog = true : ''">{{ !userInfo.synopsis ? $t('message.nosynopsis') : userInfo.synopsis }}</v-btn>
+        <v-btn variant="text" class="text-medium-emphasis" @click="currentUsername === userName ? dialog = true : ''">{{
+          !userInfo.synopsis ? $t('message.nosynopsis') : userInfo.synopsis }}</v-btn>
         <div style="margin: 20px"></div>
         <v-row style="justify-content: space-between;margin-inline: 5px">
           <v-text-field label="Email" :model-value="userInfo.email" readonly rounded="xl"
@@ -208,18 +209,19 @@ watch(() => route.params.Username, (newUsername) => {
         </v-row>
       </v-card-text>
       <v-card-actions style="justify-content: end;">
-        <v-btn v-if="currentUsername===userName" color="primary" variant="text" rounded="xl" style="margin-right: 10px;"
-          @click="$router.push('/reset')">{{ $t('message.resetpwd') }}</v-btn>
-        <v-btn v-if="currentUsername===userName" color="primary" variant="text" rounded="xl" style="margin-right: 10px;" @click="logout">{{
-          $t('message.logout') }}</v-btn>
+        <v-btn v-if="currentUsername === userName" color="primary" variant="text" rounded="xl"
+          style="margin-right: 10px;" @click="$router.push('/reset')">{{ $t('message.resetpwd') }}</v-btn>
+        <v-btn v-if="currentUsername === userName" color="primary" variant="text" rounded="xl"
+          style="margin-right: 10px;" @click="logout">{{
+            $t('message.logout') }}</v-btn>
       </v-card-actions>
     </v-card>
     <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10" style="margin-top: 30px;">
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <v-sheet>
-          <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100"
-            padding="34" line-width="1.2">
+          <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100" padding="34"
+            line-width="1.2">
             <template v-slot:label="{ index }">
               {{ sparklineData[index].date.split('-').slice(1).join('-') }}
             </template>
@@ -235,7 +237,7 @@ watch(() => route.params.Username, (newUsername) => {
         <template v-slot:item="{ item }">
           <tr>
             <td class="tabletitle">
-              <v-btn @click="router.push({ path: `/Problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
+              <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" block>{{ item.Pid }}</v-btn>
             </td>
             <td v-if="item.Result === 'Running...'" colspan="1">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>
@@ -251,28 +253,27 @@ watch(() => route.params.Username, (newUsername) => {
   <avatar-cropper v-model="showCropper" :labels="{ submit: '上传头像', cancel: $t('message.cancel') }"
     :upload-handler="uploadAvat" />
   <v-dialog v-model="dialog" max-width="600px">
-      <v-card rounded="xl">
-          <div v-if="networkloading" class="loading">
-              <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
-          </div>
-          <div v-else>
-              <v-card-title>
-                  <span class="headline">{{ $t('message.edit') }}</span>
-              </v-card-title>
-              <v-card-text>
-                  <v-form>
-                      <v-text-field :label="$t('message.synopsis')" v-model="synopsis"
-                          variant="solo-filled"></v-text-field>
-                  </v-form>
-              </v-card-text>
-              <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
-                      }}</v-btn>
-                  <v-btn color="primary" @click="updateSyn" rounded="xl">{{ $t('message.save') }}</v-btn>
-              </v-card-actions>
-          </div>
-      </v-card>
+    <v-card rounded="xl">
+      <div v-if="networkloading" class="loading">
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+      </div>
+      <div v-else>
+        <v-card-title>
+          <span class="headline">{{ $t('message.edit') }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-form>
+            <v-text-field :label="$t('message.synopsis')" v-model="synopsis" variant="solo-filled"></v-text-field>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
+            }}</v-btn>
+          <v-btn color="primary" @click="updateSyn" rounded="xl">{{ $t('message.save') }}</v-btn>
+        </v-card-actions>
+      </div>
+    </v-card>
   </v-dialog>
 </template>
 

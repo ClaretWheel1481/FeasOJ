@@ -56,11 +56,11 @@ const validateFields = () => {
 // 删除竞赛
 const delCompetition = async () => {
     networkloading.value = true;
-    const delResp = await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
-    networkloading.value = false;
-    if (delResp.status === 200) {
+    try{
+        await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
+        networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
-    } else {
+    } catch (error) {
         showAlert(t("message.failed") + "!", "");
     }
     dialog.value = false;
@@ -97,11 +97,9 @@ const save = async () => {
     networkloading.value = true;
     const comData = { ...competitionFields };
     try {
-        const updateResp = await updateComInfo(userName.value, token.value, comData);
-        if (updateResp.status === 200) {
-            networkloading.value = false;
-            showAlert(t("message.success") + "!", "reload");
-        }
+        await updateComInfo(userName.value, token.value, comData);
+        networkloading.value = false;
+        showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "reload");
     }
@@ -144,10 +142,6 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        if (userInfoResponse.status !== 200) {
-            window.location = '#/403';
-            return;
-        }
         userPrivilege.value = userInfoResponse.data.Info.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';

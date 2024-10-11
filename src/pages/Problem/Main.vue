@@ -1,7 +1,6 @@
 <!-- 题库页 -->
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { VTextField, VDataTableServer, VBtn } from 'vuetify/lib/components/index.mjs';
 import { getAllProblems } from '../../utils/axios';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from "../../utils/account";

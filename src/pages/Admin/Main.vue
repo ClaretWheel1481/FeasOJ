@@ -1,6 +1,5 @@
 <script setup>
-import { VCard, VRow, VCol } from 'vuetify/components'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 import { verifyUserInfo } from '../../utils/axios';
 import { token, userName } from '../../utils/account'
 import { ref,computed,onMounted } from 'vue';
@@ -20,10 +19,6 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        if (userInfoResponse.status !== 200) {
-            window.location = '#/403';
-            return;
-        }
         userPrivilege.value = userInfoResponse.data.Info.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';

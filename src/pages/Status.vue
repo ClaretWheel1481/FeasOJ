@@ -1,6 +1,5 @@
 <!-- 状态页 -->
 <script setup>
-import { VDataTableServer, VCard, VBtn } from 'vuetify/lib/components/index.mjs';
 import { getSubmitRecords } from '../utils/axios.js';
 import { onMounted, computed, ref } from 'vue';
 import moment from 'moment';
