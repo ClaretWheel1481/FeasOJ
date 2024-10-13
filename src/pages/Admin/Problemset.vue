@@ -59,12 +59,9 @@ const validateFields = () => {
             return false;
         }
     }
-    // TODO: 优化性能
-    for (const testCase of problemFields.test_cases) {
-        if (testCase.input === "" || testCase.output === "") {
-            showAlert(t("message.formCheckfailed") + "!", "");
-            return false;
-        }
+    if (problemFields.test_cases.some(testCase => testCase.input === "" || testCase.output === "")) {
+        showAlert(t("message.formCheckfailed") + "!", "");
+        return false;
     }
     return true;
 };

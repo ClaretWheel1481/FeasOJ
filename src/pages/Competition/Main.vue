@@ -46,7 +46,7 @@ onMounted(async () => {
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
-        <div class="title" style="margin: 50px">
+        <div class="title">
             <h1>{{ $t("message.competition") }}</h1>
         </div>
         <div v-if="userLoggedIn">

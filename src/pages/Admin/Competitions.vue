@@ -46,7 +46,6 @@ const validateFields = () => {
         }
         if (competitionFields[key] === "" || (Array.isArray(competitionFields[key]) && competitionFields[key].length === 0)) {
             showAlert(t("message.formCheckfailed") + "!", "");
-            console.log(key + competitionFields[key]);
             return false;
         }
     }
@@ -56,7 +55,7 @@ const validateFields = () => {
 // 删除竞赛
 const delCompetition = async () => {
     networkloading.value = true;
-    try{
+    try {
         await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
         networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
@@ -87,12 +86,19 @@ const createCompetition = async () => {
     competitionFields.is_visible = true;
     competitionFields.start_at = "";
     competitionFields.end_at = "";
+    formatStartDate.value = "";
+    formatEndDate.value = "";
 }
 
 // 数据传至后端
 const save = async () => {
-    competitionFields.start_at = new Date(formatStartDate.value).toISOString();
-    competitionFields.end_at = new Date(formatEndDate.value).toISOString();
+    try {
+        competitionFields.start_at = new Date(formatStartDate.value).toISOString();
+        competitionFields.end_at = new Date(formatEndDate.value).toISOString();
+    }catch(error){
+        showAlert(t('message.formRuleCheckfailed') + "!", "");
+        return;
+    }
     if (!validateFields()) return;
     networkloading.value = true;
     const comData = { ...competitionFields };
@@ -221,7 +227,6 @@ onMounted(async () => {
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <!-- TODO: 部分方法待实现 -->
                     <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
                         }}</v-btn>
                     <v-btn v-if="!isCreate" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.delete')
