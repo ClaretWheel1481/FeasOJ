@@ -47,11 +47,11 @@ onMounted(async () => {
     </div>
     <div v-else>
         <div class="title">
-            <h1>{{ $t("message.competition") }}</h1>
+            <h1>{{ t("message.competition") }}</h1>
         </div>
         <div v-if="userLoggedIn">
             <div v-if="contests.length === 0">
-                <p>{{ $t("message.nodata") }}</p>
+                <p>{{ t("message.nodata") }}</p>
             </div>
             <v-container>
                 <v-row>
@@ -83,9 +83,9 @@ onMounted(async () => {
         </div>
         <div v-else>
             <div class="title" style="margin: 50px">
-                <h1>{{ $t("message.competition") }}</h1>
+                <h1>{{ t("message.competition") }}</h1>
             </div>
-            <p>{{ $t("message.nologin") }}</p>
+            <p>{{ t("message.nologin") }}</p>
         </div>
     </div>
 </template>
