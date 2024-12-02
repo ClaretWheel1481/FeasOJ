@@ -2,11 +2,12 @@
 import { token, userName } from "../../utils/account";
 import { ref, onMounted, computed } from "vue";
 import { getAllCompetitions } from "../../utils/axios";
-import moment from "moment";
 import { useI18n } from "vue-i18n";
+import moment from "moment";
 
 const { t } = useI18n();
-const contests = ref([]);
+
+const competitions = ref([]);
 const loading = ref(false);
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
@@ -36,7 +37,7 @@ onMounted(async () => {
     }
     loading.value = true;
     const response = await getAllCompetitions(userName.value, token.value);
-    contests.value = response.data.contests;
+    competitions.value = response.data.contests;
     loading.value = false;
 });
 </script>
@@ -50,12 +51,12 @@ onMounted(async () => {
             <h1>{{ t("message.competition") }}</h1>
         </div>
         <div v-if="userLoggedIn">
-            <div v-if="contests.length === 0">
+            <div v-if="competitions.length === 0">
                 <p>{{ t("message.nodata") }}</p>
             </div>
             <v-container>
                 <v-row>
-                    <v-col v-for="contest in contests" :key="contest.contest_id" cols="12" md="4">
+                    <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
                         <v-card rounded="xl" elevation="8">
                             <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title
                                 }}</v-card-title>

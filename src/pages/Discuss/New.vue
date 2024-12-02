@@ -17,15 +17,6 @@ const loading = ref(false);
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
-onMounted(async () => {
-    loading.value = true;
-    if (!userLoggedIn.value) {
-        window.location = "#/login";
-    } else {
-        loading.value = false;
-    }
-});
-
 const submit = async () => {
     if (!title.value || !content.value) {
         showAlert(t("message.formCheckfailed") + "!", "");
@@ -41,6 +32,15 @@ const submit = async () => {
         loading.value = false;
     }
 };
+
+onMounted(async () => {
+    loading.value = true;
+    if (!userLoggedIn.value) {
+        window.location = "#/login";
+    } else {
+        loading.value = false;
+    }
+});
 </script>
 
 <template>

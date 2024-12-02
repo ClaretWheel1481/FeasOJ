@@ -7,8 +7,8 @@ import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
-import 'md-editor-v3/lib/preview.css';
 import { useI18n } from 'vue-i18n';
+import 'md-editor-v3/lib/preview.css';
 
 const { t } = useI18n();
 
@@ -18,6 +18,19 @@ const route = useRoute();
 const loading = ref(true)
 const problemInfo = ref({});
 const content = ref('');
+const lang = ref('python'); // 初始选中语言
+
+// 支持的语言
+const langFileExtension = {
+    java: 'java',
+    c_cpp: 'cpp',
+    golang: 'go',
+    python: 'py'
+};
+
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value)
+
 // 代码模板
 const templates = {
     java:
@@ -46,16 +59,6 @@ func main() {
     python:
         ``
 };
-const lang = ref('python');
-
-const langFileExtension = {
-    java: 'java',
-    c_cpp: 'cpp',
-    golang: 'go',
-    python: 'py'
-};
-// 计算属性来判断用户是否已经登录
-const userLoggedIn = computed(() => !!token.value)
 
 // 代码上传
 const uploadContentAsFile = async () => {

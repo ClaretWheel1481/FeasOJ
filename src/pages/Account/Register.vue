@@ -19,6 +19,7 @@ const networkloading = ref(false);
 const isButtonDisabled = ref(false);
 const countdown = ref(60);
 
+// 校验表单内容并注册
 const register = async () => {
   if (formState.username === "" || formState.userEmail === "" || formState.password === "" || formState.confirmPassword === "" || formState.vcode === "") {
     showAlert(t("message.formCheckfailed") + "!", "");
@@ -51,6 +52,7 @@ const register = async () => {
   }
 };
 
+// 获取验证码
 const getCaptcha = async () => {
   if (!regex.test(formState.userEmail)) {
     showAlert(t("message.checkEmail") + "!", "");

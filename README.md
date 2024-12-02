@@ -22,19 +22,18 @@ FeasOJ
 │  ├─components
 │  ├─pages
 │  ├─plugins
-│  ├─routers
+│  ├─router
 │  └─utils
 ```
 
 ### Environment
 - Vue 3
-- Pnpm
+- pnpm
 
 ### How to run
 1. Clone repository.
-2. Run `npm install -g pnpm` Install Pnpm.
-3. Run `pnpm i` Install dependencies.
-4. Run `pnpm dev` to start the front-end server.
+2. Run `pnpm i` Install dependencies.
+3. Run `pnpm dev` to start the front-end server.
 
 ### Notice
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
@@ -46,8 +45,8 @@ If you find any bugs, please open an issue.
 
 ### To-do list
 - Competitions
-- Separate and optimize the judge service, realize distributed judge service.
-- Optimize the appearance and performance of the front-end
+- Separate and optimize the judge service, realize distributed judge service
+- Optimize the Test data saving method (Make it allow importing data from other Online Judge)
 
 ### Thanks
 - [Vue](https://github.com/vuejs/vue)

@@ -13,21 +13,31 @@ import { useRoute, useRouter } from "vue-router";
 import { showAlert } from "../../utils/alert";
 import { token, userName } from "../../utils/account";
 import { MdPreview, MdEditor } from "md-editor-v3";
+import { useI18n } from "vue-i18n";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";
-import { useI18n } from "vue-i18n";
 
+// 用于获取当前语言
 const { locale } = useI18n();
 const { t } = useI18n();
+
+// 计算属性来判断用户是否已经登录
+const userLoggedIn = computed(() => !!token.value);
+
+// 用于获取路由的参数
 const route = useRoute();
+const Did = route.params.Did;
+
+// 用于路由处理
 const router = useRouter();
 const loading = ref(true);
 const discussionInfos = ref({});
-const Did = route.params.Did;
 const id = "preview-only";
 const page = ref(1);
 const comments = ref([]);
 const commentContent = ref("");
+
+// MDEDITOR工具栏限制
 const editorToolbar = [
     "bold",
     "underline",
@@ -58,8 +68,6 @@ const paginatedComments = computed(() => {
 const onPageChange = (newPage) => {
     page.value = newPage;
 };
-// 计算属性来判断用户是否已经登录
-const userLoggedIn = computed(() => !!token.value);
 
 // 添加评论
 const addComments = async (content) => {
