@@ -11,6 +11,7 @@ const competitions = ref([]);
 const loading = ref(false);
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
+const networkloading = ref(false);
 
 // 根据题目难度显示不同字体
 const difficultyColor = (difficulty) => {
@@ -43,6 +44,15 @@ onMounted(async () => {
 </script>
 
 <template>
+    <template>
+        <v-dialog v-model="networkloading" max-width="500px">
+            <v-card rounded=xl>
+                <div class="networkloading">
+                    <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+                </div>
+            </v-card>
+        </v-dialog>
+    </template>
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
@@ -58,8 +68,7 @@ onMounted(async () => {
                 <v-row>
                     <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
                         <v-card rounded="xl" elevation="8">
-                            <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title
-                                }}</v-card-title>
+                            <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title }}</v-card-title>
                             <v-card-subtitle style="justify-self: left;">{{ contest.subtitle }}</v-card-subtitle>
                             <template v-slot:append>
                                 <v-chip :style="difficultyColor(contest.difficulty)">

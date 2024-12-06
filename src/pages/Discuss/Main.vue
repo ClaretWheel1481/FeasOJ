@@ -31,9 +31,9 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllDis(page.value, itemsPerPage.value,userName.value,token.value);
-    discuss.value = response.data.discussions
-    discussCount.value = response.data.total
+    const response = await getAllDis(page.value, itemsPerPage.value, userName.value, token.value);
+    discuss.value = response.data.discussions ? response.data.discussions : [];
+    discussCount.value = response.data.total ? response.data.total : 0;
   } catch (error) {
     showAlert(t("message.failed") + "!", '/discussion')
   } finally {
