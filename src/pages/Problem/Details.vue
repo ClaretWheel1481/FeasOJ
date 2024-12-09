@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { getPbDetails, uploadCode } from '../../utils/axios';
+import { getPbDetails,uploadCode } from '../../utils/api/problems';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from "../../utils/account";

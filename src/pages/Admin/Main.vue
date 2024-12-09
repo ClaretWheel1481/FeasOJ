@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from 'vue-router';
-import { verifyUserInfo } from '../../utils/axios';
+import { verifyUserInfo } from '../../utils/api/auth';
 import { token, userName } from '../../utils/account'
 import { ref,computed,onMounted } from 'vue';
 

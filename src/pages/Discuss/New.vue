@@ -1,12 +1,12 @@
 <!-- 创建讨论页 -->
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { addDiscussion } from '../../utils/axios.js';
+import { addDiscussion } from '../../utils/api/discussions.js';
 import { showAlert } from '../../utils/alert.js';
 import { token, userName } from "../../utils/account.js";
 import { MdEditor } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
 import { useI18n } from 'vue-i18n';
+import 'md-editor-v3/lib/style.css';
 
 const { t } = useI18n();
 const { locale } = useI18n();

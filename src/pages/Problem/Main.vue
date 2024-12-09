@@ -1,7 +1,7 @@
 <!-- 题库页 -->
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import { getAllProblems } from '../../utils/axios';
+import { getAllProblems } from '../../utils/api/problems';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from "../../utils/account";
 import { useI18n } from 'vue-i18n';

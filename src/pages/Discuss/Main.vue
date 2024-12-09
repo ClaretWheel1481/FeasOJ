@@ -1,12 +1,12 @@
 <!-- 讨论帖子列表页 -->
 <script setup>
 import { useRouter } from 'vue-router';
-import moment from 'moment';
 import { ref, onMounted, computed, watch } from 'vue';
-import { getAllDis } from '../../utils/axios';
+import { getAllDis } from '../../utils/api/discussions';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from '../../utils/account';
 import { useI18n } from 'vue-i18n';
+import moment from 'moment';
 
 const { t } = useI18n();
 

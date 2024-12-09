@@ -2,11 +2,12 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
-import { verifyUserInfo, getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/axios';
+import { getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin} from '../../utils/api/admin';
+import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
-import 'md-editor-v3/lib/style.css';
 import { useI18n } from 'vue-i18n';
+import 'md-editor-v3/lib/style.css';
 
 const { locale } = useI18n();
 const { t } = useI18n();

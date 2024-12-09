@@ -2,7 +2,8 @@
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
 import { useI18n } from 'vue-i18n';
-import { getAllCompetitionsInfo, verifyUserInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo } from '../../utils/axios';
+import { getAllCompetitionsInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo } from '../../utils/api/admin';
+import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import moment from 'moment';
 

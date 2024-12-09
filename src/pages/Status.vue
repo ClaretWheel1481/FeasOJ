@@ -1,6 +1,6 @@
 <!-- 状态页 -->
 <script setup>
-import { getSubmitRecords } from '../utils/axios.js';
+import { getSubmitRecords } from '../utils/api/submit_records.js';
 import { onMounted, computed, ref } from 'vue';
 import moment from 'moment';
 import { useRouter } from 'vue-router';

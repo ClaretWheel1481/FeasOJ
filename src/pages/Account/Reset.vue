@@ -1,7 +1,7 @@
 <!-- 重置密码页 -->
 <script setup>
 import { ref, reactive } from 'vue';
-import { updatePassword, getCaptchaCode } from '../../utils/axios';
+import { updatePassword, getCaptchaCode } from '../../utils/api/auth';
 import { regex, rules } from '../../utils/rules'
 import { showAlert } from '../../utils/alert';
 import { useI18n } from 'vue-i18n';

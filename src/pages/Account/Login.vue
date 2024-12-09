@@ -1,7 +1,7 @@
 <!-- 登录页 -->
 <script setup>
 import { reactive, ref } from 'vue';
-import { loginRequest, verifyUserInfo } from '../../utils/axios.js'
+import { loginRequest, verifyUserInfo } from '../../utils/api/auth.js';
 import { showAlert } from '../../utils/alert.js';
 import { useI18n } from 'vue-i18n';
 import { jwtDecode } from "jwt-decode";

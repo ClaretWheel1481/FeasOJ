@@ -1,14 +1,8 @@
 <!-- 讨论帖子详情页 -->
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import {
-    getDisDetails,
-    deleteDiscussion,
-    avatarServer,
-    getComments,
-    deleteComment,
-    addComment,
-} from "../../utils/axios";
+import { getDisDetails,deleteDiscussion,getComments,deleteComment,addComment } from "../../utils/api/discussions";
+import { avatarServer } from "../../utils/axios";
 import { useRoute, useRouter } from "vue-router";
 import { showAlert } from "../../utils/alert";
 import { token, userName } from "../../utils/account";

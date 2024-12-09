@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
-import { getAllUsersInfo, verifyUserInfo, promoteUser, demoteUser, banUser, unbanUser } from '../../utils/axios';
+import { getAllUsersInfo, promoteUser, demoteUser, banUser, unbanUser } from '../../utils/api/admin';
+import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from '../../utils/account'
 import moment from 'moment';

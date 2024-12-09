@@ -1,7 +1,7 @@
 <!-- 注册页 -->
 <script setup>
 import { ref, reactive } from 'vue';
-import { getCaptchaCode, registerRequest } from '../../utils/axios';
+import { getCaptchaCode, registerRequest } from '../../utils/api/auth';
 import { rules, regex } from '../../utils/rules';
 import { showAlert } from '../../utils/alert';
 import { useI18n } from 'vue-i18n';

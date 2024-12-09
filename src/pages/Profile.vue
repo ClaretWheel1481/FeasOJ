@@ -2,11 +2,14 @@
 <script setup>
 import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import moment from 'moment';
-import { getUserSubmitRecords, uploadAvatar, avatarServer, verifyUserInfo, getUserInfo, updateSynopsis } from '../utils/axios';
+import { getUserSubmitRecords } from '../utils/api/submit_records';
+import { uploadAvatar, updateSynopsis } from '../utils/api/users';
+import { avatarServer } from '../utils/axios';
+import { verifyUserInfo, getUserInfo } from '../utils/api/auth';
 import { showAlert } from '../utils/alert';
 import { userName, token } from '../utils/account';
 import { useI18n } from 'vue-i18n';
+import moment from 'moment';
 
 const { t } = useI18n();
 
