@@ -4,8 +4,8 @@ import { getAllUsersInfo, promoteUser, demoteUser, banUser, unbanUser } from '..
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { token, userName } from '../../utils/account'
-import moment from 'moment';
 import { useI18n } from 'vue-i18n';
+import moment from 'moment';
 
 const { t } = useI18n();
 

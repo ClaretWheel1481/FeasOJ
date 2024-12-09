@@ -9,7 +9,6 @@ const logout = () => {
   window.location = '#/login';
   location.reload();
 };
-
 </script>
 
 <template>

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
 
-
 // 管理员获取竞赛列表
 export const getAllCompetitionsInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/admin/competitions`, {

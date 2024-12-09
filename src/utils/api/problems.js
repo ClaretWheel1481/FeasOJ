@@ -12,8 +12,8 @@ export const getAllProblems = async (username, token) => {
 }
 
 // 获取题目详细信息
-export const getPbDetails = async (Pid, username, token) => {
-    return await axios.get(`${apiUrl}/problems/${Pid}`, {
+export const getPbDetails = async (pid, username, token) => {
+    return await axios.get(`${apiUrl}/problems/${pid}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -25,10 +25,7 @@ export const getPbDetails = async (Pid, username, token) => {
 export const uploadCode = async (file, pid, username, token) => {
     let formData = new FormData();
     formData.append('code', file);
-    return await axios.post(`${apiUrl}/users/code`, formData, {
-        params: {
-            'problem': pid
-        },
+    return await axios.post(`${apiUrl}/problems/${pid}/code`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
             username: encodeURIComponent(username),

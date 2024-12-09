@@ -16,8 +16,8 @@ export const getAllDis = async (page, itemsPerPage, username, token) => {
 }
 
 // 获取讨论详细信息
-export const getDisDetails = async (Did, username, token) => {
-    return await axios.get(`${apiUrl}/discussions/${Did}`, {
+export const getDisDetails = async (did, username, token) => {
+    return await axios.get(`${apiUrl}/discussions/${did}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -26,8 +26,8 @@ export const getDisDetails = async (Did, username, token) => {
 }
 
 // 获取指定讨论的所有回复
-export const getComments = async (Did, username, token) => {
-    return await axios.get(`${apiUrl}/discussions/${Did}/comments`, {
+export const getComments = async (did, username, token) => {
+    return await axios.get(`${apiUrl}/discussions/comments/${did}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -49,10 +49,10 @@ export const addDiscussion = async (Title, Content, Username, token) => {
 }
 
 // 添加评论
-export const addComment = async (Did, content, username, token) => {
+export const addComment = async (did, content, username, token) => {
     const formData = new FormData();
     formData.append('content', content);
-    return await axios.post(`${apiUrl}/discussions/${Did}/comments`, formData, {
+    return await axios.post(`${apiUrl}/discussions/comments/${did}`, formData, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -61,8 +61,8 @@ export const addComment = async (Did, content, username, token) => {
 }
 
 // 删除讨论
-export const deleteDiscussion = async (username, token, Did) => {
-    return await axios.delete(`${apiUrl}/discussions/${Did}`, {
+export const deleteDiscussion = async (username, token, did) => {
+    return await axios.delete(`${apiUrl}/discussions/${did}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
@@ -71,8 +71,8 @@ export const deleteDiscussion = async (username, token, Did) => {
 }
 
 // 删除讨论评论
-export const deleteComment = async (username, token, Cid) => {
-    return await axios.delete(`${apiUrl}/comments/${Cid}`, {
+export const deleteComment = async (username, token, cid) => {
+    return await axios.delete(`${apiUrl}/discussions/comments/${cid}`, {
         headers: {
             username: encodeURIComponent(username),
             Authorization: token
