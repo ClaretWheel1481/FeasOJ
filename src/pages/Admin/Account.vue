@@ -37,46 +37,46 @@ const handleMenuClick = async (menu, item) => {
     switch (menu.title) {
         case t("message.banUser"):
             networkloading.value = true;
-            const resp = await banUser(userName.value, token.value, item.uid)
-            if (resp.status === 200) {
-                networkloading.value = false;
+            try {
+                const resp = await banUser(userName.value, token.value, item.uid)
+                networkloading = false;
                 showAlert(resp.data.message, "reload")
-            } else {
+            }catch (error) {
                 networkloading.value = false;
-                showAlert(resp.data.message, "")
+                showAlert(error.resp.data.message, "")
             }
             break;
         case t("message.unbanUser"):
             networkloading.value = true;
-            const resp2 = await unbanUser(userName.value, token.value, item.uid)
-            if (resp2.status === 200) {
+            try{
+                const resp2 = await unbanUser(userName.value, token.value, item.uid)
                 networkloading.value = false;
-                showAlert(resp.data.message, "reload")
-            } else {
+                showAlert(resp2.data.message, "reload")
+            }catch (error) {
                 networkloading.value = false;
-                showAlert(resp.data.message, "")
+                showAlert(error.resp.data.message, "")
             }
             break;
         case t("message.demoteUser"):
             networkloading.value = true;
-            const resp3 = await demoteUser(userName.value, token.value, item.uid)
-            if (resp3.status === 200) {
+            try{
+                const resp3 = await demoteUser(userName.value, token.value, item.uid)
                 networkloading.value = false;
-                showAlert(resp.data.message, "reload")
-            } else {
+                showAlert(resp3.data.message, "reload")
+            }catch (error) {
                 networkloading.value = false;
-                showAlert(resp.data.message, "")
+                showAlert(error.resp.data.message, "")
             }
             break;
         case t("message.promoteUser"):
             networkloading.value = true;
-            const resp4 = await promoteUser(userName.value, token.value, item.uid)
-            if (resp4.status === 200) {
+            try{
+                const resp4 = await promoteUser(userName.value, token.value, item.uid)
                 networkloading.value = false;
-                showAlert(resp.data.message, "reload")
-            } else {
+                showAlert(resp4.data.message, "reload")
+            }catch (error) {
                 networkloading.value = false;
-                showAlert(resp.data.message, "")
+                showAlert(error.resp.data.message, "")
             }
             break;
     }
@@ -127,7 +127,7 @@ onMounted(async () => {
             return;
         }
         const userInfoResponse = await verifyUserInfo(userName.value, token.value);
-        userPrivilege.value = userInfoResponse.data.Info.role;
+        userPrivilege.value = userInfoResponse.data.info.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;

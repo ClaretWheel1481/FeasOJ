@@ -29,13 +29,13 @@ const login = async () => {
     localStorage.setItem('token', token);
     localStorage.setItem('tokenExpiration', expirationTime);
     const response = await verifyUserInfo(forms.username, token);
-    localStorage.setItem('username', response.data.Info.username);
+    localStorage.setItem('username', response.data.info.username);
     networkloading.value = false;
     showAlert(loginResponse.data.message, "/");
     return;
   } catch (error) {
     networkloading.value = false;
-    showAlert(error.response.data.message, "");
+    showAlert(error.response.message, "");
     return;
   }
 }

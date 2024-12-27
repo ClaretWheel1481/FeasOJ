@@ -54,10 +54,10 @@ onMounted(async () => {
     <template>
         <v-dialog v-model="withPwdDialog" max-width="500px">
             <v-card rounded=xl>
-                <v-card-title class="text-h5">确认要加入该竞赛？</v-card-title>
-                <v-card-subtitle>加入后需要遵循竞赛规则。</v-card-subtitle>
+                <v-card-title class="text-h5">{{ t('message.joinCompetition') }}</v-card-title>
+                <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-text>
-                    <v-text-field v-model="password" label="密码" type="password" rounded="xl" variant="solo-filled"></v-text-field>
+                    <v-text-field v-model="password" :label="t('message.password')" type="password" rounded="xl" variant="solo-filled"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -70,8 +70,8 @@ onMounted(async () => {
     <template>
         <v-dialog v-model="noPwdDialog" max-width="500px">
             <v-card rounded=xl>
-                <v-card-title class="text-h5">确认要加入该竞赛？</v-card-title>
-                <v-card-subtitle>加入后需要遵循竞赛规则。</v-card-subtitle>
+                <v-card-title class="text-h5">{{ t('message.joinCompetition') }}</v-card-title>
+                <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="noPwdDialog = false">{{ t("message.cancel") }}</v-btn>

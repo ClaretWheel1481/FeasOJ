@@ -155,7 +155,7 @@ const verifyAndFetchUserInfo = async () => {
     }
     await verifyUserInfo(userName.value, token.value);
     const userInfoResponse = await getUserInfo(currentUsername.value);
-    userInfo.value = userInfoResponse.data.Info;
+    userInfo.value = userInfoResponse.data.info;
     synopsis.value = userInfo.value.synopsis;
     // 预加载头像
     if(userInfo.value.avatar) {

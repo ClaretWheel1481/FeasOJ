@@ -93,5 +93,7 @@ export default{
         enter: "进入",
         start_date: "开始日期",
         end_date: "结束日期",
+        followRules: "请遵守规则",
+        joinCompetition: "参加竞赛",
     }
 }

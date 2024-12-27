@@ -156,7 +156,7 @@ onMounted(async () => {
             window.location = '#/403';
             return;
         }
-        userPrivilege.value = userInfoResponse.data.Info.role;
+        userPrivilege.value = userInfoResponse.data.info.role;
         if (userPrivilege.value !== 1) {
             window.location = '#/403';
             return;

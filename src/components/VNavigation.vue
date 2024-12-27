@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { verifyUserInfo } from "../utils/axios";
+import { verifyUserInfo } from "../utils/api/auth";
 import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
 import { useI18n } from 'vue-i18n';
@@ -63,7 +63,7 @@ onMounted(async () => {
     }
     try{
       const resp = await verifyUserInfo(userName.value, token.value);
-      privilege.value = resp.data.Info.role;
+      privilege.value = resp.data.info.role;
     } catch(error){
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();

@@ -93,5 +93,7 @@ export default{
         enter: "Entra",
         start_date: "Data di inizio",
         end_date: "Data di fine",
+        followRules: "Segui le regole",
+        joinCompetition: "Partecipa al concorso",
     }
 }

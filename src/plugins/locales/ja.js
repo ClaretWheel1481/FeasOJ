@@ -93,5 +93,7 @@ export default{
         enter: "入力",
         start_date: "開始日時",
         end_date: "終了日時",
+        followRules: "ルールを守ってください",
+        joinCompetition: "コンテストに参加",
     }
 }
