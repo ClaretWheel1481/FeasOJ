@@ -1,13 +1,18 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { language } from '../account';
 
 // 注册
 export const registerRequest = async (username, password, email, vcode) => {
     return await axios.post(`${apiUrl}/register`, {
         email: email,
-        username: username,
+        Username: username,
         password: password,
-        vcode: vcode
+        vcode: vcode,
+    },{
+        headers: {
+            "Accept-Language": language.value
+        }
     });
 }
 
@@ -17,6 +22,9 @@ export const loginRequest = async (username, password) => {
         params: {
             username: username,
             password: password
+        },
+        headers: {
+            "Accept-Language": language.value
         }
     })
 }
@@ -28,7 +36,8 @@ export const getCaptchaCode = async (email,iscreate) => {
             email: email
         },
         headers: {
-            iscreate: iscreate
+            iscreate: iscreate,
+            "Accept-Language": language.value
         }
     });
 }
@@ -37,8 +46,9 @@ export const getCaptchaCode = async (email,iscreate) => {
 export const verifyUserInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/verify`, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     });
 }
@@ -54,5 +64,7 @@ export const updatePassword = async (email, vcode, newPassword) => {
         email: email,
         vcode: vcode,
         newpassword: newPassword
+    },{
+        "Accept-Language": language.value
     });
 }

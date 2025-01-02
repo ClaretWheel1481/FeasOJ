@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { language } from '../account';
 
 // 获取题目列表
 export const getAllProblems = async (username, token) => {
     return await axios.get(`${apiUrl}/problems`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     });
@@ -15,7 +16,7 @@ export const getAllProblems = async (username, token) => {
 export const getPbDetails = async (pid, username, token) => {
     return await axios.get(`${apiUrl}/problems/${pid}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     });
@@ -28,8 +29,9 @@ export const uploadCode = async (file, pid, username, token) => {
     return await axios.post(`${apiUrl}/problems/${pid}/code`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         },
     });
 }

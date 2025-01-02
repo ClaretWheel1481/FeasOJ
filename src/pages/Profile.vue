@@ -81,9 +81,12 @@ const fetchSubmitData = async () => {
 // 更新用户简介
 const updateSyn = async () => {
   try {
-    await updateSynopsis(userName.value, token.value, synopsis.value);
-    showAlert(t("message.success") + "!", "reload");
+    networkloading.value = true;
+    const response = await updateSynopsis(userName.value, token.value, synopsis.value);
+    networkloading.value = false;
+    showAlert(response.data.message, "reload");
   } catch (error) {
+    networkloading.value = false;
     showAlert(t("message.failed") + "!", "");
   }
 };

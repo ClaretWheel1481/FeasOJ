@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { language } from '../account';
 
 // 更新用户简介
 export const updateSynopsis = async (username, token, synopsis) => {
@@ -7,8 +8,9 @@ export const updateSynopsis = async (username, token, synopsis) => {
     formData.append('synopsis', synopsis);
     return await axios.put(`${apiUrl}/users/synopsis`, formData, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -20,8 +22,9 @@ export const uploadAvatar = async (file, username, token) => {
     return await axios.put(`${apiUrl}/users/avatar`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         },
     });
 }

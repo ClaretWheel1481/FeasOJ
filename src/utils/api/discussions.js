@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { language } from '../account';
 
 // 获取讨论列表
 export const getAllDis = async (page, itemsPerPage, username, token) => {
@@ -9,7 +10,7 @@ export const getAllDis = async (page, itemsPerPage, username, token) => {
             itemsPerPage: itemsPerPage
         },
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
@@ -19,7 +20,7 @@ export const getAllDis = async (page, itemsPerPage, username, token) => {
 export const getDisDetails = async (did, username, token) => {
     return await axios.get(`${apiUrl}/discussions/${did}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
@@ -29,7 +30,7 @@ export const getDisDetails = async (did, username, token) => {
 export const getComments = async (did, username, token) => {
     return await axios.get(`${apiUrl}/discussions/comments/${did}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
@@ -42,8 +43,9 @@ export const addDiscussion = async (Title, Content, Username, token) => {
     formData.append('content', Content);
     return await axios.post(`${apiUrl}/discussions`, formData, {
         headers: {
-            username: encodeURIComponent(Username),
-            Authorization: token
+            Username: encodeURIComponent(Username),
+            Authorization: token,
+            "Accept-Language": language.value
         },
     });
 }
@@ -54,8 +56,9 @@ export const addComment = async (did, content, username, token) => {
     formData.append('content', content);
     return await axios.post(`${apiUrl}/discussions/comments/${did}`, formData, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         },
     })
 }
@@ -64,8 +67,9 @@ export const addComment = async (did, content, username, token) => {
 export const deleteDiscussion = async (username, token, did) => {
     return await axios.delete(`${apiUrl}/discussions/${did}`, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -74,8 +78,9 @@ export const deleteDiscussion = async (username, token, did) => {
 export const deleteComment = async (username, token, cid) => {
     return await axios.delete(`${apiUrl}/discussions/comments/${cid}`, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         },
     })
 }

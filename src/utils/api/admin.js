@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { language } from '../account';
 
 // 管理员获取竞赛列表
 export const getAllCompetitionsInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/admin/competitions`, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -15,7 +17,7 @@ export const getAllCompetitionsInfo = async (username, token) => {
 export const getCompetitionInfoByIDAdmin = async (username, token, cid) => {
     return await axios.get(`${apiUrl}/admin/competitions/${cid}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
@@ -25,7 +27,7 @@ export const getCompetitionInfoByIDAdmin = async (username, token, cid) => {
 export const getProblemAllInfoByAdmin = async (pid, username, token) => {
     return await axios.get(`${apiUrl}/admin/problems/${pid}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         },
     })
@@ -35,7 +37,7 @@ export const getProblemAllInfoByAdmin = async (pid, username, token) => {
 export const getAllUsersInfo = async (username, token) => {
     return await axios.get(`${apiUrl}/admin/users`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
@@ -45,9 +47,10 @@ export const getAllUsersInfo = async (username, token) => {
 export const updateProblemInfo = async (username, token, problemInfo) => {
     return await axios.post(`${apiUrl}/admin/problems`, problemInfo, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Accept-Language": language.value
         }
     })
 }
@@ -56,8 +59,9 @@ export const updateProblemInfo = async (username, token, problemInfo) => {
 export const deleteProblemAllInfo = async (pid, username, token) => {
     return await axios.delete(`${apiUrl}/admin/problems/${pid}`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -69,8 +73,9 @@ export const banUser = async (username, token, uid) => {
             uid: uid
         },
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -82,8 +87,9 @@ export const unbanUser = async (username, token, uid) => {
             uid: uid
         },
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -95,8 +101,9 @@ export const promoteUser = async (username, token, uid) => {
             uid: uid
         },
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -108,17 +115,18 @@ export const demoteUser = async (username, token, uid) => {
             uid: uid
         },
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
 
-// 管理眼获取题目列表
+// 管理员获取题目列表
 export const getAllProblemsAdmin = async (username, token) => {
     return await axios.get(`${apiUrl}/admin/problems`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     });
@@ -128,8 +136,9 @@ export const getAllProblemsAdmin = async (username, token) => {
 export const deleteCompetition = async (cid, username, token) => {
     return await axios.delete(`${apiUrl}/admin/competitions/${cid}`, {
         headers: {
-            username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(username),
+            Authorization: token,
+            "Accept-Language": language.value
         }
     })
 }
@@ -138,9 +147,10 @@ export const deleteCompetition = async (cid, username, token) => {
 export const updateComInfo = async (username, token, comInfo) => {
     return await axios.post(`${apiUrl}/admin/competitions`, comInfo, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token,
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Accept-Language": language.value
         }
     })
 }

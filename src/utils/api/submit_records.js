@@ -10,7 +10,7 @@ export const getUserSubmitRecords = async (username) => {
 export const getSubmitRecords = async (username, token) => {
     return await axios.get(`${apiUrl}/submitrecords`, {
         headers: {
-            username: encodeURIComponent(username),
+            Username: encodeURIComponent(username),
             Authorization: token
         }
     })
