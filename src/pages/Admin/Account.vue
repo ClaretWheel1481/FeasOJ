@@ -39,7 +39,7 @@ const handleMenuClick = async (menu, item) => {
             networkloading.value = true;
             try {
                 const resp = await banUser(userName.value, token.value, item.uid)
-                networkloading = false;
+                networkloading.value = false;
                 showAlert(resp.data.message, "reload")
             }catch (error) {
                 networkloading.value = false;

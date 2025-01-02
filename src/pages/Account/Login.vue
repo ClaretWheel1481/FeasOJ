@@ -30,6 +30,7 @@ const login = async () => {
     localStorage.setItem('tokenExpiration', expirationTime);
     const response = await verifyUserInfo(forms.username, token);
     localStorage.setItem('username', response.data.info.username);
+    localStorage.setItem('uid', response.data.info.uid);
     networkloading.value = false;
     showAlert(loginResponse.data.message, "/");
     return;

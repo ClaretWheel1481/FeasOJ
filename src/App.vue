@@ -4,12 +4,14 @@ import VNavigation from './components/VNavigation.vue'
 import VFill from './components/VFill.vue';
 import VAlert from './components/VAlert.vue';
 import { RouterView } from 'vue-router';
+import Notification from './components/Notification.vue';
 </script>
 
 <template>
   <v-app>
     <VAlert />
     <VNavigation></VNavigation>
+    <Notification />
     <v-main>
       <RouterView></RouterView>
       <div style="margin-top: 50px"></div>
