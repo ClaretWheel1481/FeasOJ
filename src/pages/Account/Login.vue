@@ -36,7 +36,7 @@ const login = async () => {
     return;
   } catch (error) {
     networkloading.value = false;
-    showAlert(error.response.message, "");
+    showAlert(error.response.data.message, "");
     return;
   }
 }

@@ -66,11 +66,11 @@ const uploadContentAsFile = async () => {
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
         networkloading.value = true;
-        await uploadCode(codefile, route.params.Pid, userName.value, token.value);
+        const resp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
         networkloading.value = false;
-        showAlert(t("message.success") + "!", "reload")
+        showAlert(resp.data.message, "reload")
     } catch (error) {
-        showAlert(t("message.failed") + "!", "");
+        showAlert(error.resp.data.message, "");
     }
 };
 

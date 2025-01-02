@@ -57,12 +57,12 @@ const uploadAvat = async (cropper) => {
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
     networkloading.value = true;
-    await uploadAvatar(newFile, userName.value, token.value);
+    const resp = await uploadAvatar(newFile, userName.value, token.value);
     networkloading.value = false;
-    showAlert(t("message.success") + "!", "reload");
+    showAlert(resp.data.message, "reload");
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed") + "!", "");
+    showAlert(error.resp.data.message, "");
   }
 };
 
@@ -87,7 +87,7 @@ const updateSyn = async () => {
     showAlert(response.data.message, "reload");
   } catch (error) {
     networkloading.value = false;
-    showAlert(t("message.failed") + "!", "");
+    showAlert(error.response.data.message, "");
   }
 };
 

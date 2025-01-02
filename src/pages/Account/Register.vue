@@ -36,15 +36,9 @@ const register = async () => {
   try {
     networkloading.value = true;
     const response = await registerRequest(formState.username, formState.password, formState.userEmail, formState.vcode);
-    if (response.status === 200) {
-      networkloading.value = false;
-      showAlert(response.data.message, "/login");
-      return;
-    } else {
-      networkloading.value = false;
-      showAlert(response.data.message, "");
-      return;
-    }
+    networkloading.value = false;
+    showAlert(response.data.message, "/login");
+    return;
   } catch (error) {
     networkloading.value = false;
     showAlert(error.response.data.message, "");
