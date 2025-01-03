@@ -95,5 +95,6 @@ export default{
         end_date: "Data di fine",
         followRules: "Segui le regole",
         joinCompetition: "Partecipa al concorso",
+        sseError: "Notifica di mancata connessione al servizio, controllare la connessione di rete."
     }
 }

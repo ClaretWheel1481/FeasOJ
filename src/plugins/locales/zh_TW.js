@@ -95,5 +95,6 @@ export default{
         end_date: "結束日期",
         followRules: "請遵守規則",
         joinCompetition: "參加競賽",
+        sseError: "通知服務連接失敗，請檢查網絡連接。"
     }
 }

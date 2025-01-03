@@ -1,4 +1,4 @@
-export default{
+export default {
     message: {
         mainpage: 'Home',
         problemset: 'Problemas',
@@ -95,5 +95,6 @@ export default{
         end_date: "Fecha de finalización",
         followRules: "Siga las normas",
         joinCompetition: "Participar en el concurso",
+        sseError: "Notificación de fallo de conexión del servicio, por favor compruebe la conexión de red."
     }
 }

@@ -119,9 +119,6 @@ onMounted(async () => {
             </v-container>
         </div>
         <div v-else>
-            <div class="title" style="margin: 50px">
-                <h1>{{ t("message.competition") }}</h1>
-            </div>
             <p>{{ t("message.nologin") }}</p>
         </div>
     </div>

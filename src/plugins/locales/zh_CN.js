@@ -95,5 +95,6 @@ export default{
         end_date: "结束日期",
         followRules: "请遵守规则",
         joinCompetition: "参加竞赛",
+        sseError: "通知服务连接失败，请检查网络连接。"
     }
 }

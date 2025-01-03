@@ -95,5 +95,6 @@ export default{
         end_date: "終了日時",
         followRules: "ルールを守ってください",
         joinCompetition: "コンテストに参加",
+        sseError: "サービス接続失敗の通知、ネットワーク接続を確認してください。"
     }
 }
