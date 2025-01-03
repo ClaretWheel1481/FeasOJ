@@ -70,7 +70,8 @@ const uploadContentAsFile = async () => {
         networkloading.value = false;
         showAlert(resp.data.message, "reload")
     } catch (error) {
-        showAlert(error.resp.data.message, "");
+        networkloading.value = false;
+        showAlert(error.response.data.message, "");
     }
 };
 

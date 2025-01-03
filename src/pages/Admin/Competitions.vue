@@ -61,6 +61,7 @@ const delCompetition = async () => {
         networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
+        networkloading.value = false;
         showAlert(t("message.failed") + "!", "");
     }
     dialog.value = false;
@@ -108,6 +109,7 @@ const save = async () => {
         networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
+        networkloading.value = false;
         showAlert(t("message.failed") + "!", "reload");
     }
     dialog.value = false;
@@ -135,6 +137,7 @@ const fetchData = async () => {
         totalCompetitions.value = competitions.value.length
         competitionFields.contest_id = totalCompetitions.value + 1
     } catch (error) {
+        loading.value = false
         showAlert(t("message.failed") + "!", "")
     } finally {
         loading.value = false

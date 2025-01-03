@@ -77,6 +77,7 @@ const save = async () => {
         networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
+        networkloading.value = false;
         showAlert(t("message.failed") + "!", "reload");
     }
     dialog.value = false;
@@ -91,6 +92,7 @@ const fetchData = async () => {
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
     } catch (error) {
+        loading.value = false
         showAlert(t("message.failed") + "!", "")
     } finally {
         loading.value = false
@@ -134,14 +136,14 @@ const goToEditProblem = async (pid) => {
 // 删除题目
 const delProblem = async () => {
     networkloading.value = true;
-    const delProblemResp = await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
-    networkloading.value = false;
-    if (delProblemResp.status === 200) {
+    try{
+        await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
+        networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
-    } else {
+    }catch(error){
         showAlert(t("message.failed") + "!", "");
+        dialog.value = false;
     }
-    dialog.value = false;
 }
 
 onMounted(async () => {

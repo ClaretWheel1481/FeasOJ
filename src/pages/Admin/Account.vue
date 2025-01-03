@@ -43,7 +43,7 @@ const handleMenuClick = async (menu, item) => {
                 showAlert(resp.data.message, "reload")
             }catch (error) {
                 networkloading.value = false;
-                showAlert(error.resp.data.message, "")
+                showAlert(error.response.data.message, "")
             }
             break;
         case t("message.unbanUser"):
@@ -54,7 +54,7 @@ const handleMenuClick = async (menu, item) => {
                 showAlert(resp2.data.message, "reload")
             }catch (error) {
                 networkloading.value = false;
-                showAlert(error.resp.data.message, "")
+                showAlert(error.response.data.message, "")
             }
             break;
         case t("message.demoteUser"):
@@ -65,7 +65,7 @@ const handleMenuClick = async (menu, item) => {
                 showAlert(resp3.data.message, "reload")
             }catch (error) {
                 networkloading.value = false;
-                showAlert(error.resp.data.message, "")
+                showAlert(error.response.data.message, "")
             }
             break;
         case t("message.promoteUser"):
@@ -76,7 +76,7 @@ const handleMenuClick = async (menu, item) => {
                 showAlert(resp4.data.message, "reload")
             }catch (error) {
                 networkloading.value = false;
-                showAlert(error.resp.data.message, "")
+                showAlert(error.response.data.message, "")
             }
             break;
     }
