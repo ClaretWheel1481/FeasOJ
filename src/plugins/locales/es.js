@@ -5,6 +5,7 @@ export default {
         status: 'Estado',
         discussion: 'Discusión',
         about: 'Acerca de',
+        announcement: 'Anuncio',
         usermanagement: 'Gestión de usuarios',
         problemmanagement: 'Gestión de problemas',
         competitionmanagement: 'Gestión de competición',

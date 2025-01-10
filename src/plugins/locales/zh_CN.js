@@ -5,6 +5,7 @@ export default{
         status: '状态',
         discussion: '讨论',
         about: '关于',
+        announcement: '公告',
         usermanagement: '用户管理',
         problemmanagement: '题目管理',
         competitionmanagement: '竞赛管理',

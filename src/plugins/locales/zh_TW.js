@@ -5,6 +5,7 @@ export default{
         status: '狀態',
         discussion: '討論',
         about: '關於',
+        announcement: '公告',
         usermanagement: '用戶管理',
         problemmanagement: '題目管理',
         competitionmanagement: '競賽管理',

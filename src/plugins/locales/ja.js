@@ -5,6 +5,7 @@ export default{
         status: 'ステータス',
         discussion: 'ディスカッション',
         about: 'アバウト',
+        announcement: 'お知らせ',
         usermanagement: 'ユーザー管理',
         problemmanagement: '問題管理',
         competitionmanagement: 'コンペティション管理',

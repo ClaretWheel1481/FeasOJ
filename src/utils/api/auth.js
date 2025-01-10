@@ -24,7 +24,7 @@ export const loginRequest = async (username, password) => {
             password: password
         },
         headers: {
-            "Accept-Language": language.value
+            "Accept-Language": language.value,
         }
     })
 }

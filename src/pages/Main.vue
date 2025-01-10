@@ -1,29 +1,40 @@
-<!-- TODO: 首页待美化 -->
 <script setup>
+import { ref, onMounted } from 'vue';
 
+const panel = ref([0, 1]);
+const announcement = ref('');
+const notice = ref('');
+
+onMounted(async () => {
+  const resp1 = await fetch('https://raw.githubusercontent.com/ClaretWheel1481/FeasOJ/main/Announcement.md');
+  const resp2 = await fetch('https://raw.githubusercontent.com/ClaretWheel1481/FeasOJ/main/Notice.md')
+  const text1 = await resp1.text();
+  const text2 = await resp2.text();
+  announcement.value = text1;
+  notice.value = text2;
+});
 </script>
 
 <template>
-    <div class="title">
-        <v-img src="logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
-        <h1>FeasOJ</h1>
-    </div>
-    <v-card rounded="xl" style="margin: 50px;" elevation="5">
-        <v-expansion-panels>
-            <v-expansion-panel :title="$t('message.notice')" text="1.FeasOJ支持Python、C++、Golang、Java
-                2.若遇到Bug，欢迎来Github提交Issue或者提交PR
-                3.第一次写这种项目，写得不好的地方欢迎指正
-                4.竞赛功能目前不进行分数计算，仅用于统计用户答题情况，更适用于班级内部练习" style="white-space: pre-line;">
-            </v-expansion-panel>
-        </v-expansion-panels>
-    </v-card>
+  <div class="title">
+    <v-img src="logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
+    <h1>FeasOJ</h1>
+  </div>
+  <v-card rounded="xl" style="margin: 50px;" elevation="5">
+    <v-expansion-panels v-model="panel">
+      <v-expansion-panel :title="$t('message.announcement')" :text="announcement" style="white-space: pre-line;">
+      </v-expansion-panel>
+      <v-expansion-panel :title="$t('message.notice')" :text="notice" style="white-space: pre-line;">
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </v-card>
 </template>
 
 <style scoped>
 .title {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 </style>

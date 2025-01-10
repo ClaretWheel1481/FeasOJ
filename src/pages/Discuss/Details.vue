@@ -147,7 +147,7 @@ onMounted(async () => {
             </template>
         </v-app-bar>
         <div style="margin-top: 30px"></div>
-        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10">
+        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10" style="display: grid;">
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>

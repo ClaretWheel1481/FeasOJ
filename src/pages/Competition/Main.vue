@@ -61,8 +61,8 @@ onMounted(async () => {
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="withPwdDialog = false">{{ t("message.cancel") }}</v-btn>
-                    <v-btn color="blue darken-1" text @click="withPwdDialog = false">{{ t("message.ok") }}</v-btn>
+                    <v-btn color="blue darken-1" rounded="xl" text @click="withPwdDialog = false">{{ t("message.cancel") }}</v-btn>
+                    <v-btn color="primary" rounded="xl"  @click="withPwdDialog = false">{{ t("message.ok") }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -74,8 +74,8 @@ onMounted(async () => {
                 <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="noPwdDialog = false">{{ t("message.cancel") }}</v-btn>
-                    <v-btn color="blue darken-1" text @click="noPwdDialog = false">{{ t("message.ok") }}</v-btn>
+                    <v-btn color="blue darken-1" rounded="xl" text @click="noPwdDialog = false">{{ t("message.cancel") }}</v-btn>
+                    <v-btn color="primary" rounded="xl" @click="noPwdDialog = false">{{ t("message.ok") }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -94,7 +94,7 @@ onMounted(async () => {
             <v-container>
                 <v-row>
                     <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
-                        <v-card rounded="xl" elevation="8">
+                        <v-card rounded="xl" elevation="8" style="display: grid;">
                             <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title }}</v-card-title>
                             <v-card-subtitle style="justify-self: left;">{{ contest.subtitle }}</v-card-subtitle>
                             <template v-slot:append>
@@ -103,14 +103,14 @@ onMounted(async () => {
                                 </v-chip>
                                 <br>
                             </template>
-                            <v-card-text>
+                            <v-card-text style="display: grid;">
                                 <p style="justify-self: left;">
                                     {{ moment(contest.start_at).format("MM/DD HH:mm") }} -
                                     {{ moment(contest.end_at).format("MM/DD HH:mm") }}
                                 </p>
                             </v-card-text>
                             <template v-slot:actions>
-                                <v-btn color="primary" append-icon="mdi-chevron-right" @click="contest.have_password ? withPwdDialog = true : noPwdDialog = true">{{ $t("message.enter")
+                                <v-btn color="primary" rounded="xl" append-icon="mdi-chevron-right" @click="contest.have_password ? withPwdDialog = true : noPwdDialog = true">{{ $t("message.enter")
                                     }}</v-btn>
                             </template>
                         </v-card>
