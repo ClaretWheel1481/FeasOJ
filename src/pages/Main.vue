@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { getAnnouncement, getNotification } from '../utils/api/users';
 
 const panel = ref([0, 1]);
 const announcement = ref('');
 const notice = ref('');
 
 onMounted(async () => {
-  const resp1 = await fetch('https://raw.githubusercontent.com/ClaretWheel1481/FeasOJ/main/Announcement.md');
-  const resp2 = await fetch('https://raw.githubusercontent.com/ClaretWheel1481/FeasOJ/main/Notice.md')
+  const resp1 = getAnnouncement();
+  const resp2 = getNotification();
   const text1 = await resp1.text();
   const text2 = await resp2.text();
   announcement.value = text1;
