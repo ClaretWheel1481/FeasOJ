@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { apiUrl } from '../axios';
+import { apiUrl, docsServer } from '../axios';
 import { language } from '../account';
 
 // 获取公告
 export const getAnnouncement = async () => {
-    return await fetch(`${apiUrl}/docs/announcement.md`)
+    return await fetch(`${docsServer}announcement.md`)
 }
 
 // 获取通知
 export const getNotification = async () => {
-    return await fetch(`${apiUrl}/docs/notification.md`)
+    return await fetch(`${docsServer}notification.md`)
 }
 
 // 更新用户简介
