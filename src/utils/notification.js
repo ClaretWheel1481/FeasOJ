@@ -3,13 +3,19 @@ import { i18n } from '../plugins/vue-i18n';
 
 // sse
 export function initSSE(uid, callback) {
-    const eventSource = new EventSource(apiUrl + '/notification/' + uid);
+    function connect() {
+        const eventSource = new EventSource(apiUrl + '/notification/' + uid);
 
-    eventSource.onmessage = function (event) {
-        callback(event.data);
-    };
+        eventSource.onmessage = function (event) {
+            callback(event.data);
+        };
 
-    eventSource.onerror = function () {
-        console.error(i18n.global.t("message.sseError"));
-    };
+        eventSource.onerror = function () {
+            console.error(i18n.global.t("message.sseError"));
+            eventSource.close();
+            setTimeout(connect, 3000);  // 3秒后重连
+        };
+    }
+    
+    connect();
 }
