@@ -4,12 +4,14 @@ import { language } from '../account';
 
 // 获取公告
 export const getAnnouncement = async () => {
-    return await fetch(`${docsServer}announcement.md`)
+    const resp = await fetch(`${docsServer}announcement.md`);
+    return resp.text();
 }
 
 // 获取通知
 export const getNotification = async () => {
-    return await fetch(`${docsServer}notification.md`)
+    const resp = await fetch(`${docsServer}notice.md`);
+    return resp.text();
 }
 
 // 更新用户简介

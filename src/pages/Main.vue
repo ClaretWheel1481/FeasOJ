@@ -7,12 +7,8 @@ const announcement = ref('');
 const notice = ref('');
 
 onMounted(async () => {
-  const resp1 = getAnnouncement();
-  const resp2 = getNotification();
-  const text1 = await resp1.text();
-  const text2 = await resp2.text();
-  announcement.value = text1;
-  notice.value = text2;
+  announcement.value = await getAnnouncement();
+  notice.value = await getNotification();
 });
 </script>
 
