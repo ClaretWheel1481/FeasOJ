@@ -36,7 +36,6 @@ const routes = [
             titleKey: 'message.profile'
         },
         beforeEnter: (to, from, next) => {
-            to.meta.title = to.params.Username;
             next();
         }
     },
@@ -44,10 +43,9 @@ const routes = [
         path: '/problem/:Pid',
         component: () => import('../pages/Problem/Details.vue'),
         meta: {
-            title: 'Problem'
+            titleKey: 'message.problem'
         },
         beforeEnter: (to, from, next) => {
-            to.meta.title = 'Problem ' + to.params.Pid;
             next();
         }
     },
@@ -67,6 +65,16 @@ const routes = [
         path: '/competitions', component: () => import('../pages/Competition/Main.vue'),
         meta: {
             titleKey: 'message.competition'
+        }
+    },
+    {
+        path: '/competitions/:cid',
+        component: () => import('../pages/Competition/Details.vue'),
+        meta: {
+            titleKey: 'message.competition'
+        },
+        beforeEnter: (to, from, next) => {
+            next();
         }
     },
     {

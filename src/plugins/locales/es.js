@@ -96,6 +96,15 @@ export default {
         end_date: "Fecha de finalización",
         followRules: "Siga las normas",
         joinCompetition: "Participar en el concurso",
-        sseError: "Notificación de fallo de conexión del servicio, por favor compruebe la conexión de red."
+        sseError: "Notificación de fallo de conexión del servicio, por favor compruebe la conexión de red.",
+        compenotstarted: "El concurso aún no ha comenzado",
+        compeprogress: "El concurso está en progreso",
+        compeover: "El concurso ha terminado",
+        quit: "Abandonar",
+        participants: "Participantes",
+        easy: "Fácil",
+        medium: "Medio",
+        hard: "Difícil",
+        unavailable: "No disponible",
     }
 }

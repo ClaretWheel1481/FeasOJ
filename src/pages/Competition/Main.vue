@@ -1,19 +1,25 @@
 <script setup>
 import { token, userName } from "../../utils/account";
 import { ref, onMounted, computed } from "vue";
-import { getAllCompetitions } from "../../utils/api/competitions";
+import { getAllCompetitions, isInCompetition, joinCompWithPwd, joinCompetition } from "../../utils/api/competitions";
 import { useI18n } from "vue-i18n";
 import moment from "moment";
+import { showAlert } from "../../utils/alert";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const { t } = useI18n();
 
-const competitions = ref([]);
-const loading = ref(false);
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
+
 const withPwdDialog = ref(false);
 const noPwdDialog = ref(false);
 const password = ref("");
+const selectedId = ref();
+const networkloading = ref(false);
+const competitions = ref([]);
+const loading = ref(false);
 
 // 根据题目难度显示不同字体
 const difficultyColor = (difficulty) => {
@@ -28,10 +34,79 @@ const difficultyColor = (difficulty) => {
             return "";
     }
 };
+const difficultyLang = (difficulty) => {
+    switch (difficulty) {
+        case '简单':
+            return 'message.easy';
+        case '中等':
+            return 'message.medium';
+        case '困难':
+            return 'message.hard';
+        default:
+            return '';
+    }
+}
 
-// TODO: 点击加入竞赛按钮后，先校验用户是否在该竞赛中，再进行后续操作
-const joinCompetition = async (uid,competitionId) => {
+// 加入带密码的竞赛
+const joinCompetitionWithPwd = async (competitionId) => {
+    if (withPwdDialog.value){
+        if(password.value === ""){
+            showAlert(t("message.passwordRequired"),'');
+        }else{
+            try{
+                networkloading.value = true;
+                const resp = await joinCompWithPwd(userName.value,token.value,competitionId,password.value);
+                networkloading.value = false;
+                showAlert(resp.data.message,'reload')
+            }catch(error){
+                networkloading.value = false;
+                showAlert(error.response.data.message,'')
+            }
+        }
+    }
+}
 
+// 加入竞赛
+const joinComp = async(competitionId) => {
+    if (noPwdDialog.value){
+        try{
+            networkloading.value = true;
+            const resp = await joinCompetition(userName.value,token.value,competitionId);
+            networkloading.value = false;
+            showAlert(resp.data.message,'reload')
+        }catch(error){
+            networkloading.value = false;
+            showAlert(error.response.data.message,'')
+        }
+    }
+}
+
+// 选择竞赛并弹出对话框 
+const selectCompetition = async(contest) =>{
+    selectedId.value = contest.contest_id;
+
+    // 检查用户是否在该竞赛中
+    try{
+        networkloading.value = true;
+        const resp = await isInCompetition(userName.value,token.value,selectedId.value);
+        networkloading.value = false;
+        if(resp.data.isIn){
+            router.push({ path: `/competitions/${selectedId.value}` })
+        }else{
+            contest.have_password ? withPwdDialog.value = true : noPwdDialog.value = true;
+        }
+    }catch(error){
+        showAlert(error.response.data.message,'')
+    }
+    
+}
+
+// 关闭对话框
+const closeDialog = () => {
+    withPwdDialog.value = false;
+    noPwdDialog.value = false;
+    password.value = "";
+    selectedId.value = "";
 }
 
 onMounted(async () => {
@@ -51,6 +126,13 @@ onMounted(async () => {
 </script>
 
 <template>
+    <v-dialog v-model="networkloading" max-width="500px">
+        <v-card rounded=xl>
+            <div class="networkloading">
+                <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+            </div>
+        </v-card>
+    </v-dialog>
     <template>
         <v-dialog v-model="withPwdDialog" max-width="500px">
             <v-card rounded=xl>
@@ -61,8 +143,8 @@ onMounted(async () => {
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" rounded="xl" text @click="withPwdDialog = false">{{ t("message.cancel") }}</v-btn>
-                    <v-btn color="primary" rounded="xl"  @click="withPwdDialog = false">{{ t("message.ok") }}</v-btn>
+                    <v-btn color="blue darken-1" rounded="xl" text @click="closeDialog">{{ t("message.cancel") }}</v-btn>
+                    <v-btn color="primary" rounded="xl"  @click="joinCompetitionWithPwd(selectedId)">{{ t("message.ok") }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -74,8 +156,8 @@ onMounted(async () => {
                 <v-card-subtitle>{{ t('message.followRules') }}</v-card-subtitle>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" rounded="xl" text @click="noPwdDialog = false">{{ t("message.cancel") }}</v-btn>
-                    <v-btn color="primary" rounded="xl" @click="noPwdDialog = false">{{ t("message.ok") }}</v-btn>
+                    <v-btn color="blue darken-1" rounded="xl" text @click="closeDialog">{{ t("message.cancel") }}</v-btn>
+                    <v-btn color="primary" rounded="xl" @click="joinComp(selectedId)">{{ t("message.ok") }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -94,23 +176,23 @@ onMounted(async () => {
             <v-container>
                 <v-row>
                     <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
-                        <v-card rounded="xl" elevation="8" style="display: grid;">
+                        <v-card rounded="xl" elevation="3" style="display: grid;">
                             <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title }}</v-card-title>
                             <v-card-subtitle style="justify-self: left;">{{ contest.subtitle }}</v-card-subtitle>
                             <template v-slot:append>
                                 <v-chip :style="difficultyColor(contest.difficulty)">
-                                    {{ contest.difficulty }}
+                                    {{ t(difficultyLang(contest.difficulty)) }}
                                 </v-chip>
                                 <br>
                             </template>
                             <v-card-text style="display: grid;">
                                 <p style="justify-self: left;">
-                                    {{ moment(contest.start_at).format("MM/DD HH:mm") }} -
-                                    {{ moment(contest.end_at).format("MM/DD HH:mm") }}
+                                    {{ moment(contest.start_at).format("YYYY/MM/DD HH:mm") }} -
+                                    {{ moment(contest.end_at).format("YYYY/MM/DD HH:mm") }}
                                 </p>
                             </v-card-text>
                             <template v-slot:actions>
-                                <v-btn color="primary" rounded="xl" append-icon="mdi-chevron-right" @click="contest.have_password ? withPwdDialog = true : noPwdDialog = true">{{ $t("message.enter")
+                                <v-btn color="primary" rounded="xl" append-icon="mdi-chevron-right" @click="selectCompetition(contest)">{{ $t("message.enter")
                                     }}</v-btn>
                             </template>
                         </v-card>
@@ -132,6 +214,13 @@ onMounted(async () => {
     height: 100%;
 }
 .template_loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 100px;
+}
+.networkloading {
     display: flex;
     justify-content: center;
     align-items: center;

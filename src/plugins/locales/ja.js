@@ -96,6 +96,15 @@ export default{
         end_date: "終了日時",
         followRules: "ルールを守ってください",
         joinCompetition: "コンテストに参加",
-        sseError: "サービス接続失敗の通知、ネットワーク接続を確認してください。"
+        sseError: "サービス接続失敗の通知、ネットワーク接続を確認してください。",
+        compenotstarted: "コンテストがまだ始まっていません",
+        compeprogress: "コンテストが進行中です",
+        compeover: "コンテストは終了しました",
+        quit: "アボート",
+        participants: "参加者",
+        easy: "簡単",
+        medium: "中級",
+        hard: "難しい",
+        unavailable: "利用できません"
     }
 }

@@ -96,6 +96,15 @@ export default{
         end_date: "Data di fine",
         followRules: "Segui le regole",
         joinCompetition: "Partecipa al concorso",
-        sseError: "Notifica di mancata connessione al servizio, controllare la connessione di rete."
+        sseError: "Notifica di mancata connessione al servizio, controllare la connessione di rete.",
+        compenotstarted: "Concorso non ancora iniziato",
+        compeprogress: "Concorso in corso",
+        compeover: "Concorso terminato",
+        quit: "Esci",
+        participants: "Partecipanti",
+        easy: "Facile",
+        medium: "Medio",
+        hard: "Difficile",
+        unavailable: "Non disponibile"
     }
 }

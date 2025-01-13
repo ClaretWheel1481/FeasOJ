@@ -5,15 +5,21 @@ import { useI18n } from 'vue-i18n';
 import { getAllCompetitionsInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
+import { MdEditor } from "md-editor-v3";
 import moment from 'moment';
+import "md-editor-v3/lib/style.css";
 
 const { locale } = useI18n();
 const { t } = useI18n();
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
+
 const loading = ref(true)
 const networkloading = ref(false)
+
+const id = "preview-only";
+
 const userPrivilege = ref("")
 const competitions = ref([])
 const totalCompetitions = ref(0)
@@ -32,6 +38,7 @@ const competitionFields = reactive({
     is_visible: true,
     start_at: "",
     end_at: "",
+    announcement: ""
 });
 
 const headers = ref([
@@ -42,8 +49,8 @@ const headers = ref([
 // 字段检查
 const validateFields = () => {
     for (const key in competitionFields) {
-        if (key === "password" && !competitionFields.have_password) {
-            continue; // 跳过 password 检查
+        if (key === "password" && !competitionFields.have_password || key === "announcement") {
+            continue;
         }
         if (competitionFields[key] === "" || (Array.isArray(competitionFields[key]) && competitionFields[key].length === 0)) {
             showAlert(t("message.formCheckfailed") + "!", "");
@@ -88,6 +95,7 @@ const createCompetition = async () => {
     competitionFields.is_visible = true;
     competitionFields.start_at = "";
     competitionFields.end_at = "";
+    competitionFields.announcement = "";
     formatStartDate.value = "";
     formatEndDate.value = "";
 }
@@ -97,7 +105,7 @@ const save = async () => {
     try {
         competitionFields.start_at = new Date(formatStartDate.value).toISOString();
         competitionFields.end_at = new Date(formatEndDate.value).toISOString();
-    }catch(error){
+    } catch (error) {
         showAlert(t('message.formRuleCheckfailed') + "!", "");
         return;
     }
@@ -227,6 +235,8 @@ onMounted(async () => {
                             <v-text-field :label="$t('message.end_date') + '(YYYY-MM-DD HH:mm)'" v-model="formatEndDate"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
+                        <md-editor v-model="competitionFields.announcement" :editorId="id" :noUploadImg="true" :footers="[]"
+                            :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                     </v-form>
                 </v-card-text>
                 <v-card-actions>

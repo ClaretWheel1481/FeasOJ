@@ -96,6 +96,15 @@ export default {
         end_date: "End Date",
         followRules: "Please follow the rules",
         joinCompetition: "Join Competition",
-        sseError: "Notification of service connection failure, please check the network connection."
+        sseError: "Notification of service connection failure, please check the network connection.",
+        compenotstarted: "Competition has not started yet",
+        compeprogress: "Competition is in progress",
+        compeover: "Competition has ended",
+        quit: "Quit",
+        participants: "Participants",
+        easy: "Easy",
+        medium: "Medium",
+        hard: "Hard",
+        unavailable: "Unavailable",
     }
 }

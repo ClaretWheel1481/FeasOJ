@@ -96,6 +96,15 @@ export default {
         end_date: 'Date de fin',
         followRules: 'Veuillez respecter les règles',
         joinCompetition: 'Participer au concours',
-        sseError: "Notification d'échec de la connexion au service, veuillez vérifier la connexion au réseau."
+        sseError: "Notification d'échec de la connexion au service, veuillez vérifier la connexion au réseau.",
+        compenotstarted: "Le concours n’a pas encore commencé",
+        compeprogress: "Le concours est en cours",
+        compeover: "Le concours est terminé",
+        quit: 'Quitter',
+        participants: 'Participants',
+        easy: 'Facile',
+        medium: 'Moyen',
+        hard: 'Difficile',
+        unavailable: 'Indisponible'
     }
 }

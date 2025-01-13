@@ -96,6 +96,15 @@ export default{
         end_date: "结束日期",
         followRules: "请遵守规则",
         joinCompetition: "参加竞赛",
-        sseError: "通知服务连接失败，请检查网络连接。"
+        sseError: "通知服务连接失败，请检查网络连接。",
+        compenotstarted: "竞赛尚未开始",
+        compeprogress: "竞赛进行中",
+        compeover: "竞赛已结束",
+        quit: "退出",
+        participants: "参赛用户",
+        easy: "简单",
+        medium: "中等",
+        hard: "困难",
+        unavailable: "暂不可用"
     }
 }

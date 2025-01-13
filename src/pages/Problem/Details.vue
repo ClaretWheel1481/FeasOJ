@@ -15,7 +15,7 @@ const { t } = useI18n();
 const networkloading = ref(false);
 const id = 'preview-only';
 const route = useRoute();
-const loading = ref(true)
+const loading = ref(true);
 const problemInfo = ref({});
 const content = ref('');
 const lang = ref('python'); // 初始选中语言
@@ -60,6 +60,20 @@ func main() {
         ``
 };
 
+// i18n
+const difficultyLang = (difficulty) => {
+    switch (difficulty) {
+        case '简单':
+            return 'message.easy';
+        case '中等':
+            return 'message.medium';
+        case '困难':
+            return 'message.hard';
+        default:
+            return '';
+    }
+}
+
 // 代码上传
 const uploadContentAsFile = async () => {
     const blob = new Blob([content.value], { type: 'text/plain' });
@@ -83,8 +97,8 @@ onMounted(async () => {
             const resp = await getPbDetails(problemId, userName.value, token.value);
             problemInfo.value = resp.data.problemInfo;
         } catch (error) {
-            showAlert(t("message.failed") + "!", "");
-        } finally {
+            showAlert(error.response.data.message, "");
+        }finally{
             loading.value = false;
         }
     } else {
@@ -119,7 +133,7 @@ onMounted(async () => {
                 <v-col cols="12" md="6">
                     <h1>{{ problemInfo.title }}</h1>
                     <div style="margin: 10px;"></div>
-                    <p class="subtitle">{{ $t("message.difficulty") + ": " + problemInfo.difficulty }}</p>
+                    <p class="subtitle">{{ $t("message.difficulty") + ": " + $t(difficultyLang(problemInfo.difficulty)) }}</p>
                     <p class="subtitle">{{ $t("message.timeLimit") + ": " + problemInfo.time_limit }} S</p>
                     <p class="subtitle">{{ $t("message.memoryLimit") + ": " + problemInfo.memory_limit }} MB</p>
                     <div style="margin: 10px;"></div>
