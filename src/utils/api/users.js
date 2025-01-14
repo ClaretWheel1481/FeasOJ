@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { apiUrl, docsServer } from '../axios';
-import { language } from '../account';
+import { language, userName, token } from '../account';
 
 // 获取公告
 export const getAnnouncement = async () => {
@@ -15,27 +15,27 @@ export const getNotification = async () => {
 }
 
 // 更新用户简介
-export const updateSynopsis = async (username, token, synopsis) => {
+export const updateSynopsis = async (synopsis) => {
     const formData = new FormData();
     formData.append('synopsis', synopsis);
     return await axios.put(`${apiUrl}/users/synopsis`, formData, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 修改头像
-export const uploadAvatar = async (file, username, token) => {
+export const uploadAvatar = async (file) => {
     let formData = new FormData();
     formData.append('avatar', file);
     return await axios.put(`${apiUrl}/users/avatar`, formData, {
         headers: {
             'Content-Type': 'multipart/form-data',
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         },
     });

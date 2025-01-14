@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router';
 import { getPbDetails,uploadCode } from '../../utils/api/problems';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../../utils/alert';
-import { token, userName } from "../../utils/account";
+import { token } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
 import 'md-editor-v3/lib/preview.css';
@@ -80,7 +80,7 @@ const uploadContentAsFile = async () => {
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
         networkloading.value = true;
-        const resp = await uploadCode(codefile, route.params.Pid, userName.value, token.value);
+        const resp = await uploadCode(codefile, route.params.Pid);
         networkloading.value = false;
         showAlert(resp.data.message, "reload")
     } catch (error) {
@@ -94,7 +94,7 @@ onMounted(async () => {
     if (userLoggedIn.value) {
         try {
             const problemId = route.params.Pid;
-            const resp = await getPbDetails(problemId, userName.value, token.value);
+            const resp = await getPbDetails(problemId);
             problemInfo.value = resp.data.problemInfo;
         } catch (error) {
             showAlert(error.response.data.message, "");

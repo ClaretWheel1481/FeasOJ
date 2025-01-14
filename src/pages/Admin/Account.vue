@@ -38,43 +38,43 @@ const handleMenuClick = async (menu, item) => {
         case t("message.banUser"):
             networkloading.value = true;
             try {
-                const resp = await banUser(userName.value, token.value, item.uid)
+                const resp = await banUser(item.uid)
                 networkloading.value = false;
                 showAlert(resp.data.message, "reload")
-            }catch (error) {
+            } catch (error) {
                 networkloading.value = false;
                 showAlert(error.response.data.message, "")
             }
             break;
         case t("message.unbanUser"):
             networkloading.value = true;
-            try{
-                const resp2 = await unbanUser(userName.value, token.value, item.uid)
+            try {
+                const resp2 = await unbanUser(item.uid)
                 networkloading.value = false;
                 showAlert(resp2.data.message, "reload")
-            }catch (error) {
+            } catch (error) {
                 networkloading.value = false;
                 showAlert(error.response.data.message, "")
             }
             break;
         case t("message.demoteUser"):
             networkloading.value = true;
-            try{
-                const resp3 = await demoteUser(userName.value, token.value, item.uid)
+            try {
+                const resp3 = await demoteUser(item.uid)
                 networkloading.value = false;
                 showAlert(resp3.data.message, "reload")
-            }catch (error) {
+            } catch (error) {
                 networkloading.value = false;
                 showAlert(error.response.data.message, "")
             }
             break;
         case t("message.promoteUser"):
             networkloading.value = true;
-            try{
-                const resp4 = await promoteUser(userName.value, token.value, item.uid)
+            try {
+                const resp4 = await promoteUser(item.uid)
                 networkloading.value = false;
                 showAlert(resp4.data.message, "reload")
-            }catch (error) {
+            } catch (error) {
                 networkloading.value = false;
                 showAlert(error.response.data.message, "")
             }
@@ -108,12 +108,12 @@ const getStatusStyle = (status) => {
 const fetchData = async () => {
     loading.value = true;
     try {
-        const usersInfoResp = await getAllUsersInfo(userName.value, token.value)
+        const usersInfoResp = await getAllUsersInfo()
         users.value = usersInfoResp.data.usersInfo;
         totalUsers.value = usersInfoResp.data.usersInfo.length;
-        loading.value = false;
     } catch (error) {
         showAlert(t("message.failed") + "!", "");
+    } finally {
         loading.value = false;
     }
 }

@@ -17,6 +17,7 @@ const userLoggedIn = computed(() => !!token.value)
 
 const loading = ref(true)
 const networkloading = ref(false)
+const delDialog = ref(false)
 
 const id = "preview-only";
 
@@ -64,12 +65,12 @@ const validateFields = () => {
 const delCompetition = async () => {
     networkloading.value = true;
     try {
-        await deleteCompetition(competitionFields.contest_id, userName.value, token.value);
-        networkloading.value = false;
+        await deleteCompetition(competitionFields.contest_id);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
-        networkloading.value = false;
         showAlert(t("message.failed") + "!", "");
+    } finally {
+        networkloading.value = false;
     }
     dialog.value = false;
 }
@@ -113,7 +114,7 @@ const save = async () => {
     networkloading.value = true;
     const comData = { ...competitionFields };
     try {
-        await updateComInfo(userName.value, token.value, comData);
+        await updateComInfo(comData);
         networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
@@ -128,7 +129,7 @@ const goToEditCompetition = async (contest_id) => {
     isCreate.value = false;
     dialog.value = true;
     networkloading.value = true;
-    const comResp = await getCompetitionInfoByIDAdmin(userName.value, token.value, contest_id);
+    const comResp = await getCompetitionInfoByIDAdmin(contest_id);
     networkloading.value = false;
 
     Object.assign(competitionFields, comResp.data.contest);
@@ -140,7 +141,7 @@ const goToEditCompetition = async (contest_id) => {
 const fetchData = async () => {
     loading.value = true
     try {
-        const response = await getAllCompetitionsInfo(userName.value, token.value);
+        const response = await getAllCompetitionsInfo();
         competitions.value = response.data.contests
         totalCompetitions.value = competitions.value.length
         competitionFields.contest_id = totalCompetitions.value + 1
@@ -174,6 +175,18 @@ onMounted(async () => {
 </script>
 
 <template>
+    <template>
+        <v-dialog v-model="delDialog" persistent max-width="290">
+            <v-card rounded="xl">
+                <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
+                <v-card-text>{{ t('message.suredel') }}</v-card-text>
+                <v-card-actions>
+                    <v-btn variant="elevated" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.yes') }}</v-btn>
+                    <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </template>
     <v-app-bar :elevation="0">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -235,18 +248,20 @@ onMounted(async () => {
                             <v-text-field :label="$t('message.end_date') + '(YYYY-MM-DD HH:mm)'" v-model="formatEndDate"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
-                        <md-editor v-model="competitionFields.announcement" :editorId="id" :noUploadImg="true" :footers="[]"
-                            :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                        <md-editor v-model="competitionFields.announcement" :editorId="id" :noUploadImg="true"
+                            :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                     </v-form>
+                    <div style="position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
+                        <v-btn @click="dialog = false" rounded="xl" style="margin-right: 10px;">{{
+                            $t('message.cancel') }}</v-btn>
+                        <v-btn v-if="!isCreate" color="red-lighten-1" @click="delDialog = true" rounded="xl"
+                            style="margin-right: 10px;">{{ $t('message.delete')
+                            }}</v-btn>
+                        <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
+                            $t('message.save')
+                        }}</v-btn>
+                    </div>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
-                        }}</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.delete')
-                        }}</v-btn>
-                    <v-btn color="primary" @click="save" rounded="xl">{{ $t('message.save') }}</v-btn>
-                </v-card-actions>
             </div>
         </v-card>
     </v-dialog>

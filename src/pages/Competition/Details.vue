@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, ref, computed } from 'vue';
 import { useI18n } from "vue-i18n";
-import { token, userName } from '../../utils/account';
+import { token } from '../../utils/account';
 import { showAlert } from '../../utils/alert';
 import { useRoute, useRouter } from 'vue-router';
 import { getCompetitionById, getCompetitionUsers, getCompetitionProblems, isInCompetition, quitCompetition } from '../../utils/api/competitions';
@@ -75,11 +75,11 @@ const id = 'preview-only';
 const quitComp = async () => {
     networkloading.value = true;
     try {
-        const response = await quitCompetition(userName.value, token.value, competitionId);
+        const response = await quitCompetition(competitionId);
         showAlert(response.data.message, "/competitions");
     } catch (error) {
         showAlert(error.response.data.message, "");
-    } finally{
+    } finally {
         networkloading.value = false;
     }
 }
@@ -87,25 +87,25 @@ const quitComp = async () => {
 onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
-        const response = await isInCompetition(userName.value, token.value, competitionId);
+        const response = await isInCompetition(competitionId);
         if (response.data.isIn) {
             try {
                 // 获取该竞赛详细信息
-                const resp = await getCompetitionById(userName.value, token.value, competitionId);
+                const resp = await getCompetitionById(competitionId);
                 contestInfo.value = resp.data.contest;
 
                 // 获取该竞赛参赛人员列表
-                const resp2 = await getCompetitionUsers(userName.value, token.value, competitionId);
+                const resp2 = await getCompetitionUsers(competitionId);
                 usersInfo.value = resp2.data.users;
 
                 // 获取该竞赛题目列表
                 if (contestInfo.value.status != 0) {
-                    const resp3 = await getCompetitionProblems(userName.value, token.value, competitionId);
+                    const resp3 = await getCompetitionProblems(competitionId);
                     problems.value = resp3.data.problems;
                 }
             } catch (error) {
                 showAlert(t("message.failed") + "!", "");
-            }finally{
+            } finally {
                 loading.value = false;
             }
         } else {

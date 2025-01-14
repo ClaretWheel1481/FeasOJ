@@ -67,7 +67,7 @@ const onPageChange = (newPage) => {
 const addComments = async (content) => {
     loading.value = true;
     try {
-        await addComment(Did, content, userName.value, token.value);
+        await addComment(Did, content);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         window.location = "#/403";
@@ -80,7 +80,7 @@ const addComments = async (content) => {
 const deleteCommentByID = async (commentID) => {
     loading.value = true;
     try {
-        await deleteComment(userName.value, token.value, commentID);
+        await deleteComment(commentID);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         window.location = "#/403";
@@ -93,7 +93,7 @@ const deleteCommentByID = async (commentID) => {
 const deleteDis = async () => {
     loading.value = true;
     try {
-        await deleteDiscussion(userName.value, token.value, Did);
+        await deleteDiscussion(Did);
         showAlert(t("message.success") + "!", "/discussion");
     } catch (error) {
         window.location = "#/403";
@@ -106,9 +106,9 @@ onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
         try {
-            const response = await getDisDetails(Did, userName.value, token.value);
+            const response = await getDisDetails(Did);
             // 获取评论
-            const commentsResp = await getComments(Did, userName.value, token.value);
+            const commentsResp = await getComments(Did);
             comments.value = commentsResp.data.comments;
             discussionInfos.value = response.data.discussionInfo;
         } catch (error) {

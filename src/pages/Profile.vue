@@ -57,7 +57,7 @@ const uploadAvat = async (cropper) => {
     // 创建一个新的文件对象，保留原始文件名和类型
     const newFile = new File([file], fileName, { type: fileType });
     networkloading.value = true;
-    const resp = await uploadAvatar(newFile, userName.value, token.value);
+    const resp = await uploadAvatar(newFile);
     networkloading.value = false;
     showAlert(resp.data.message, "reload");
   } catch (error) {
@@ -82,7 +82,7 @@ const fetchSubmitData = async () => {
 const updateSyn = async () => {
   try {
     networkloading.value = true;
-    const response = await updateSynopsis(userName.value, token.value, synopsis.value);
+    const response = await updateSynopsis(synopsis.value);
     networkloading.value = false;
     showAlert(response.data.message, "reload");
   } catch (error) {

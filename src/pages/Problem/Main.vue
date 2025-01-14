@@ -3,7 +3,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { getAllProblems } from '../../utils/api/problems';
 import { showAlert } from '../../utils/alert';
-import { token, userName } from "../../utils/account";
+import { token } from "../../utils/account";
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
 
@@ -34,7 +34,7 @@ const filteredProblems = computed(() => {
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllProblems(userName.value, token.value);
+    const response = await getAllProblems();
     problems.value = response.data.problems
     totalProblems.value = problems.value.length
   } catch (error) {

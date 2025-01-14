@@ -1,85 +1,85 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
-import { language } from '../account';
+import { language, userName, token } from '../account';
 
 // 获取讨论列表
-export const getAllDis = async (page, itemsPerPage, username, token) => {
+export const getAllDis = async (page, itemsPerPage) => {
     return await axios.get(`${apiUrl}/discussions`, {
         params: {
             page: page,
             itemsPerPage: itemsPerPage
         },
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }
 
 // 获取讨论详细信息
-export const getDisDetails = async (did, username, token) => {
+export const getDisDetails = async (did) => {
     return await axios.get(`${apiUrl}/discussions/${did}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }
 
 // 获取指定讨论的所有回复
-export const getComments = async (did, username, token) => {
+export const getComments = async (did) => {
     return await axios.get(`${apiUrl}/discussions/comments/${did}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }
 
 // 添加讨论
-export const addDiscussion = async (Title, Content, Username, token) => {
+export const addDiscussion = async (Title, Content) => {
     const formData = new FormData();
     formData.append('title', Title);
     formData.append('content', Content);
     return await axios.post(`${apiUrl}/discussions`, formData, {
         headers: {
-            Username: encodeURIComponent(Username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         },
     });
 }
 
 // 添加评论
-export const addComment = async (did, content, username, token) => {
+export const addComment = async (did, content) => {
     const formData = new FormData();
     formData.append('content', content);
     return await axios.post(`${apiUrl}/discussions/comments/${did}`, formData, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         },
     })
 }
 
 // 删除讨论
-export const deleteDiscussion = async (username, token, did) => {
+export const deleteDiscussion = async (did) => {
     return await axios.delete(`${apiUrl}/discussions/${did}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 删除讨论评论
-export const deleteComment = async (username, token, cid) => {
+export const deleteComment = async (cid) => {
     return await axios.delete(`${apiUrl}/discussions/comments/${cid}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         },
     })

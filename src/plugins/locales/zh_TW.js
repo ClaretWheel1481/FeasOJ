@@ -105,6 +105,8 @@ export default{
         easy: "簡單",
         medium: "中等",
         hard: "困難",
-        unavailable: "暫不可用"
+        unavailable: "暫不可用",
+        suredel: "確定要刪除嗎？",
+        yes: "是的",
     }
 }

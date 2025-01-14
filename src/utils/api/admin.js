@@ -1,54 +1,54 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
-import { language } from '../account';
+import { language, userName, token } from '../account';
 
 // 管理员获取竞赛列表
-export const getAllCompetitionsInfo = async (username, token) => {
+export const getAllCompetitionsInfo = async () => {
     return await axios.get(`${apiUrl}/admin/competitions`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 管理员获取指定列表信息
-export const getCompetitionInfoByIDAdmin = async (username, token, cid) => {
+export const getCompetitionInfoByIDAdmin = async (cid) => {
     return await axios.get(`${apiUrl}/admin/competitions/${cid}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }
 
 // 管理员获取指定题目所有信息
-export const getProblemAllInfoByAdmin = async (pid, username, token) => {
+export const getProblemAllInfoByAdmin = async (pid) => {
     return await axios.get(`${apiUrl}/admin/problems/${pid}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         },
     })
 }
 
 // 管理员获取所有用户信息
-export const getAllUsersInfo = async (username, token) => {
+export const getAllUsersInfo = async () => {
     return await axios.get(`${apiUrl}/admin/users`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }
 
 // 管理员添加/更新题目信息
-export const updateProblemInfo = async (username, token, problemInfo) => {
+export const updateProblemInfo = async (problemInfo) => {
     return await axios.post(`${apiUrl}/admin/problems`, problemInfo, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Content-Type": "application/json",
             "Accept-Language": language.value
         }
@@ -56,99 +56,99 @@ export const updateProblemInfo = async (username, token, problemInfo) => {
 }
 
 // 管理员删除题目信息
-export const deleteProblemAllInfo = async (pid, username, token) => {
+export const deleteProblemAllInfo = async (pid) => {
     return await axios.delete(`${apiUrl}/admin/problems/${pid}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 封禁用户
-export const banUser = async (username, token, uid) => {
+export const banUser = async (uid) => {
     return await axios.put(`${apiUrl}/admin/users/ban`, {}, {
         params: {
             uid: uid
         },
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 解封用户
-export const unbanUser = async (username, token, uid) => {
+export const unbanUser = async (uid) => {
     return await axios.put(`${apiUrl}/admin/users/unban`, {}, {
         params: {
             uid: uid
         },
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 晋升用户
-export const promoteUser = async (username, token, uid) => {
+export const promoteUser = async (uid) => {
     return await axios.put(`${apiUrl}/admin/users/promote`, {}, {
         params: {
             uid: uid
         },
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 降级用户
-export const demoteUser = async (username, token, uid) => {
+export const demoteUser = async (uid) => {
     return await axios.put(`${apiUrl}/admin/users/demote`, {}, {
         params: {
             uid: uid
         },
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 管理员获取题目列表
-export const getAllProblemsAdmin = async (username, token) => {
+export const getAllProblemsAdmin = async () => {
     return await axios.get(`${apiUrl}/admin/problems`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
         }
     });
 }
 
 // 管理员删除竞赛
-export const deleteCompetition = async (cid, username, token) => {
+export const deleteCompetition = async (cid) => {
     return await axios.delete(`${apiUrl}/admin/competitions/${cid}`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Accept-Language": language.value
         }
     })
 }
 
 // 管理员添加/更新竞赛信息
-export const updateComInfo = async (username, token, comInfo) => {
+export const updateComInfo = async (comInfo) => {
     return await axios.post(`${apiUrl}/admin/competitions`, comInfo, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token,
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
             "Content-Type": "application/json",
             "Accept-Language": language.value
         }

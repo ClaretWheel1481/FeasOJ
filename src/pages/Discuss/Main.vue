@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed, watch } from 'vue';
 import { getAllDis } from '../../utils/api/discussions';
 import { showAlert } from '../../utils/alert';
-import { token, userName } from '../../utils/account';
+import { token } from '../../utils/account';
 import { useI18n } from 'vue-i18n';
 import moment from 'moment';
 
@@ -31,7 +31,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getAllDis(page.value, itemsPerPage.value, userName.value, token.value);
+    const response = await getAllDis(page.value, itemsPerPage.value);
     discuss.value = response.data.discussions ? response.data.discussions : [];
     discussCount.value = response.data.total ? response.data.total : 0;
   } catch (error) {

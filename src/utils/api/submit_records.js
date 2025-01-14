@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { apiUrl } from '../axios';
+import { userName, token } from '../account';
 
 // 获取指定用户提交记录
 export const getUserSubmitRecords = async (username) => {
@@ -7,11 +8,11 @@ export const getUserSubmitRecords = async (username) => {
 }
 
 // 获取30天内的提交记录
-export const getSubmitRecords = async (username, token) => {
+export const getSubmitRecords = async () => {
     return await axios.get(`${apiUrl}/submitrecords`, {
         headers: {
-            Username: encodeURIComponent(username),
-            Authorization: token
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value
         }
     })
 }

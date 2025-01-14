@@ -4,7 +4,7 @@ import { getSubmitRecords } from '../utils/api/submit_records.js';
 import { onMounted, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert.js';
-import { token, userName } from "../utils/account.js";
+import { token } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
 import moment from 'moment';
 
@@ -30,7 +30,7 @@ const userLoggedIn = computed(() => !!token.value)
 const fetchData = async () => {
   loading.value = true
   try {
-    const response = await getSubmitRecords(userName.value, token.value)
+    const response = await getSubmitRecords()
     submitrecords.value = response.data.submitrecords
     submitRecordsLength.value = submitrecords.value.length
   } catch (error) {

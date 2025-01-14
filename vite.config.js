@@ -10,7 +10,9 @@ export default defineConfig({
     compression(),
     vue(),
     legacy(),
-    vuetify({}),
+    vuetify({
+      autoImport: true,
+    }),
   ],
   define: {
     'process.env': { ...process.env }

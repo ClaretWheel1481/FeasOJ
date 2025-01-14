@@ -1,5 +1,5 @@
 <script setup>
-import { token, userName } from "../../utils/account";
+import { token } from "../../utils/account";
 import { ref, onMounted, computed } from "vue";
 import { getAllCompetitions, isInCompetition, joinCompWithPwd, joinCompetition } from "../../utils/api/competitions";
 import { useI18n } from "vue-i18n";
@@ -55,7 +55,7 @@ const joinCompetitionWithPwd = async (competitionId) => {
         }else{
             try{
                 networkloading.value = true;
-                const resp = await joinCompWithPwd(userName.value,token.value,competitionId,password.value);
+                const resp = await joinCompWithPwd(competitionId,password.value);
                 networkloading.value = false;
                 showAlert(resp.data.message,'reload')
             }catch(error){
@@ -71,7 +71,7 @@ const joinComp = async(competitionId) => {
     if (noPwdDialog.value){
         try{
             networkloading.value = true;
-            const resp = await joinCompetition(userName.value,token.value,competitionId);
+            const resp = await joinCompetition(competitionId);
             networkloading.value = false;
             showAlert(resp.data.message,'reload')
         }catch(error){
@@ -88,7 +88,7 @@ const selectCompetition = async(contest) =>{
     // 检查用户是否在该竞赛中
     try{
         networkloading.value = true;
-        const resp = await isInCompetition(userName.value,token.value,selectedId.value);
+        const resp = await isInCompetition(selectedId.value);
         networkloading.value = false;
         if(resp.data.isIn){
             router.push({ path: `/competitions/${selectedId.value}` })
@@ -119,7 +119,7 @@ onMounted(async () => {
         return;
     }
     loading.value = true;
-    const response = await getAllCompetitions(userName.value, token.value);
+    const response = await getAllCompetitions();
     competitions.value = response.data.contests;
     loading.value = false;
 });

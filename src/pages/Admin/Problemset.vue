@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, reactive } from 'vue'
 import { token, userName } from '../../utils/account'
-import { getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin} from '../../utils/api/admin';
+import { getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
@@ -14,8 +14,11 @@ const { t } = useI18n();
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
+
 const loading = ref(true)
 const networkloading = ref(false)
+
+const delDialog = ref(false)
 const userPrivilege = ref("")
 const problems = ref([])
 const totalProblems = ref(0)
@@ -73,12 +76,12 @@ const save = async () => {
     networkloading.value = true;
     const problemData = { ...problemFields };
     try {
-        await updateProblemInfo(userName.value, token.value, problemData);
-        networkloading.value = false;
+        await updateProblemInfo(problemData);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
-        networkloading.value = false;
         showAlert(t("message.failed") + "!", "reload");
+    }finally{
+        networkloading.value = false;
     }
     dialog.value = false;
 };
@@ -87,12 +90,11 @@ const save = async () => {
 const fetchData = async () => {
     loading.value = true
     try {
-        const response = await getAllProblemsAdmin(userName.value, token.value);
+        const response = await getAllProblemsAdmin();
         problems.value = response.data.problems
         totalProblems.value = problems.value.length
         problemFields.pid = totalProblems.value + 1
     } catch (error) {
-        loading.value = false
         showAlert(t("message.failed") + "!", "")
     } finally {
         loading.value = false
@@ -116,7 +118,7 @@ const createProblem = async () => {
     problemFields.contest_id = 0;
     problemFields.is_visible = true;
     problemFields.test_cases = [{ input: '', output: '' }];
-    const compResp = await getAllCompetitionsInfo(userName.value, token.value);
+    const compResp = await getAllCompetitionsInfo();
     competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
     networkloading.value = false;
 }
@@ -126,22 +128,24 @@ const goToEditProblem = async (pid) => {
     isCreate.value = false;
     dialog.value = true;
     networkloading.value = true;
-    const problemResp = await getProblemAllInfoByAdmin(pid, userName.value, token.value);
+    const problemResp = await getProblemAllInfoByAdmin(pid);
     Object.assign(problemFields, problemResp.data.problemInfo);
-    const compResp = await getAllCompetitionsInfo(userName.value, token.value);
+    const compResp = await getAllCompetitionsInfo();
     competitionIds.value = [0, ...compResp.data.contests.map(contest => contest.contest_id)];
     networkloading.value = false;
 };
 
 // 删除题目
 const delProblem = async () => {
+    delDialog.value = false;
     networkloading.value = true;
-    try{
-        await deleteProblemAllInfo(problemFields.pid, userName.value, token.value);
-        networkloading.value = false;
+    try {
+        await deleteProblemAllInfo(problemFields.pid);
         showAlert(t("message.success") + "!", "reload");
-    }catch(error){
+    } catch (error) {
         showAlert(t("message.failed") + "!", "");
+    } finally {
+        networkloading.value = false;
         dialog.value = false;
     }
 }
@@ -172,6 +176,18 @@ onMounted(async () => {
 </script>
 
 <template>
+    <template>
+        <v-dialog v-model="delDialog" persistent max-width="290">
+            <v-card rounded="xl">
+                <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
+                <v-card-text>{{ t('message.suredel') }}</v-card-text>
+                <v-card-actions>
+                    <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes') }}</v-btn>
+                    <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </template>
     <v-app-bar :elevation="0">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -248,15 +264,17 @@ onMounted(async () => {
                         <v-btn @click="addTestCase" color="primary" rounded="xl">{{ $t('message.addTestCase') }}</v-btn>
                         <v-btn @click="removeTestCase" text rounded="xl">{{ $t('message.deleteTestCase') }}</v-btn>
                     </v-form>
+                    <div style="position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
+                        <v-btn @click="dialog = false" rounded="xl" style="margin-right: 10px;">{{
+                            $t('message.cancel') }}</v-btn>
+                        <v-btn v-if="!isCreate" color="red-lighten-1" @click="delDialog = true" rounded="xl"
+                            style="margin-right: 10px;">{{ $t('message.delete')
+                            }}</v-btn>
+                        <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
+                            $t('message.save')
+                            }}</v-btn>
+                    </div>
                 </v-card-text>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
-                        }}</v-btn>
-                    <v-btn v-if="!isCreate" color="primary" @click="delProblem" rounded="xl">{{ $t('message.delete')
-                        }}</v-btn>
-                    <v-btn color="primary" @click="save" rounded="xl">{{ $t('message.save') }}</v-btn>
-                </v-card-actions>
             </div>
         </v-card>
     </v-dialog>

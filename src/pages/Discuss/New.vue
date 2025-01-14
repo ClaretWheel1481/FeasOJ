@@ -3,7 +3,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { addDiscussion } from '../../utils/api/discussions.js';
 import { showAlert } from '../../utils/alert.js';
-import { token, userName } from "../../utils/account.js";
+import { token } from "../../utils/account.js";
 import { MdEditor } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
 import 'md-editor-v3/lib/style.css';
@@ -24,7 +24,7 @@ const submit = async () => {
     }
     loading.value = true;
     try {
-        const response = await addDiscussion(title.value, content.value, userName.value, token.value)
+        const response = await addDiscussion(title.value, content.value)
         showAlert(response.data.message, "/discussion");
         loading.value = false;
     } catch (error) {

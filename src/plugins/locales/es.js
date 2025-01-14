@@ -106,5 +106,7 @@ export default {
         medium: "Medio",
         hard: "Difícil",
         unavailable: "No disponible",
+        suredel: "¿Estás seguro de que quieres eliminarlo?",
+        yes: "Sí",
     }
 }

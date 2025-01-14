@@ -105,6 +105,8 @@ export default{
         easy: "簡単",
         medium: "中級",
         hard: "難しい",
-        unavailable: "利用できません"
+        unavailable: "利用できません",
+        suredel: "削除してもよろしいですか？",
+        yes: "はい",
     }
 }

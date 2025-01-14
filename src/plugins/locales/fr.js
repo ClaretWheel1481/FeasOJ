@@ -105,6 +105,8 @@ export default {
         easy: 'Facile',
         medium: 'Moyen',
         hard: 'Difficile',
-        unavailable: 'Indisponible'
+        unavailable: 'Indisponible',
+        suredel: "Êtes-vous sûr de vouloir le supprimer ?",
+        yes: "Oui",
     }
 }
