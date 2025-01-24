@@ -108,5 +108,6 @@ export default {
         unavailable: "Unavailable",
         suredel: "Are you sure you want to delete?",
         yes: "Yes",
+        scoring: "Scoring",
     }
 }

@@ -33,52 +33,30 @@ const getMenus = (item) => {
     return filteredMenus
 }
 
-const handleMenuClick = async (menu, item) => {
-    switch (menu.title) {
-        case t("message.banUser"):
-            networkloading.value = true;
-            try {
-                const resp = await banUser(item.uid)
-                networkloading.value = false;
-                showAlert(resp.data.message, "reload")
-            } catch (error) {
-                networkloading.value = false;
-                showAlert(error.response.data.message, "")
-            }
-            break;
-        case t("message.unbanUser"):
-            networkloading.value = true;
-            try {
-                const resp2 = await unbanUser(item.uid)
-                networkloading.value = false;
-                showAlert(resp2.data.message, "reload")
-            } catch (error) {
-                networkloading.value = false;
-                showAlert(error.response.data.message, "")
-            }
-            break;
-        case t("message.demoteUser"):
-            networkloading.value = true;
-            try {
-                const resp3 = await demoteUser(item.uid)
-                networkloading.value = false;
-                showAlert(resp3.data.message, "reload")
-            } catch (error) {
-                networkloading.value = false;
-                showAlert(error.response.data.message, "")
-            }
-            break;
-        case t("message.promoteUser"):
-            networkloading.value = true;
-            try {
-                const resp4 = await promoteUser(item.uid)
-                networkloading.value = false;
-                showAlert(resp4.data.message, "reload")
-            } catch (error) {
-                networkloading.value = false;
-                showAlert(error.response.data.message, "")
-            }
-            break;
+// 简化公共处理逻辑
+const handleAction = async (action, item) => {
+    networkloading.value = true;
+    try {
+        const resp = await action(item.uid)
+        networkloading.value = false;
+        showAlert(resp.data.message, "reload")
+    } catch (error) {
+        networkloading.value = false;
+        showAlert(error.response.data.message, "")
+    }
+}
+
+const handleMenuClick = (menu, item) => {
+    const actions = {
+        [t("message.banUser")]: banUser,
+        [t("message.unbanUser")]: unbanUser,
+        [t("message.demoteUser")]: demoteUser,
+        [t("message.promoteUser")]: promoteUser
+    };
+
+    const action = actions[menu.title];
+    if (action) {
+        handleAction(action, item);
     }
 }
 
@@ -173,7 +151,7 @@ onMounted(async () => {
                         <template v-slot:activator="{ props }">
                             <v-btn v-bind="props" variant="text" icon="mdi-dots-horizontal"></v-btn>
                         </template>
-                        <v-list>
+                        <v-list rounded="xl">
                             <v-list-item v-for="(menu, index) in getMenus(item)" :key="index" :value="index"
                                 @click="handleMenuClick(menu, item)">
                                 <template v-slot:default="{ active, toggle }">

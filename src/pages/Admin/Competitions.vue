@@ -45,6 +45,7 @@ const competitionFields = reactive({
 const headers = ref([
     { title: 'ID', value: 'contest_id', align: 'center' },
     { title: t('message.competition'), value: 'title', align: 'center' },
+    { title: t("message.operation"), value: 'actions', align: 'center' }
 ])
 
 // 字段检查
@@ -200,6 +201,24 @@ onMounted(async () => {
                 <td>{{ item.contest_id }}</td>
                 <td class="tabletitle">
                     <v-btn @click="goToEditCompetition(item.contest_id)" variant="text" block>{{ item.title }}</v-btn>
+                </td>
+                <td>
+                    <v-menu>
+                        <template v-slot:activator="{ props }">
+                            <v-btn v-bind="props" variant="text" icon="mdi-dots-horizontal"></v-btn>
+                        </template>
+                        <v-list rounded="xl">
+                            <!-- TODO: 计分系统 -->
+                            <v-list-item :disabled="new Date(item.end_at) < new Date()" @click="">
+                                <template v-slot:default="{ active, toggle }">
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="mdi-calculator" class="me-2"></v-icon>
+                                        <v-list-item-title>{{ t('message.scoring') }}</v-list-item-title>
+                                    </div>
+                                </template>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </td>
             </tr>
         </template>

@@ -108,5 +108,6 @@ export default {
         unavailable: 'Indisponible',
         suredel: "Êtes-vous sûr de vouloir le supprimer ?",
         yes: "Oui",
+        scoring: 'Notation',
     }
 }

@@ -226,8 +226,8 @@ watch(() => route.params.Username, (newUsername) => {
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <v-sheet>
-          <v-sparkline :model-value="sparklineData.map(item => item.count * 10)" color="cyan" height="100" padding="34"
-            line-width="1.2">
+          <v-sparkline smooth :model-value="sparklineData.map(item => item.count * 10)" color="blue" height="120" padding="30"
+            line-width="1.1">
             <template v-slot:label="{ index }">
               {{ sparklineData[index].date.split('-').slice(1).join('-') }}
             </template>

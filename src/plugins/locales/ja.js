@@ -108,5 +108,6 @@ export default{
         unavailable: "利用できません",
         suredel: "削除してもよろしいですか？",
         yes: "はい",
+        scoring: "得点化"
     }
 }

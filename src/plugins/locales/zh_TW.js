@@ -108,5 +108,6 @@ export default{
         unavailable: "暫不可用",
         suredel: "確定要刪除嗎？",
         yes: "是的",
+        scoring: "評分"
     }
 }

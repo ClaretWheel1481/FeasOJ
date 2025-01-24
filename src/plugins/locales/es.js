@@ -108,5 +108,6 @@ export default {
         unavailable: "No disponible",
         suredel: "¿Estás seguro de que quieres eliminarlo?",
         yes: "Sí",
+        scoring: "Puntuación",
     }
 }
