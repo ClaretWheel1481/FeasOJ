@@ -129,11 +129,11 @@ const save = async () => {
     const comData = { ...competitionFields };
     try {
         await updateComInfo(comData);
-        networkloading.value = false;
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
-        networkloading.value = false;
         showAlert(t("message.failed") + "!", "reload");
+    } finally{
+        networkloading.value = false;
     }
     dialog.value = false;
 };

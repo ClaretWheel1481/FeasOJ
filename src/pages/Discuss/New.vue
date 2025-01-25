@@ -26,9 +26,9 @@ const submit = async () => {
     try {
         const response = await addDiscussion(title.value, content.value)
         showAlert(response.data.message, "/discussion");
-        loading.value = false;
     } catch (error) {
-        showAlert(error.response.data.message + "!", "");
+        showAlert(error.response.data.message, "");
+    } finally{
         loading.value = false;
     }
 };
