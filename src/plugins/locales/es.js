@@ -109,5 +109,9 @@ export default {
         suredel: "¿Estás seguro de que quieres eliminarlo?",
         yes: "Sí",
         scoring: "Puntuación",
+        calculating: "La puntuación comenzará, continuará durante un periodo de tiempo y, al final de la puntuación, contará automáticamente los resultados y añadirá la puntuación a la puntuación del usuario.",
+        viewScores: "Ver los resultados de los concursos",
+        rank: "Clasificación",
+        refresh5m: "Actualizar cada 5 minutos"
     }
 }

@@ -9,6 +9,13 @@ const routes = [
         }
     },
     {
+        path: '/rank',
+        component: () => import('../pages/Rank.vue'),
+        meta: {
+            titleKey: 'message.rank'
+        }
+    },
+    {
         path: '/problemset',
         component: () => import('../pages/Problem/Main.vue'),
         meta: {

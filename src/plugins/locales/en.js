@@ -109,5 +109,9 @@ export default {
         suredel: "Are you sure you want to delete?",
         yes: "Yes",
         scoring: "Scoring",
+        calculating: "Scoring will begin, will continue for a period of time, and at the end of the scoring will automatically tally the results and add the score to the user's score.",
+        viewScores: "View competition scores",
+        rank: "Rank",
+        refresh5m: "Refresh every 5 minutes",
     }
 }

@@ -1,8 +1,8 @@
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue'
+import { ref, onMounted, computed, reactive, watch } from 'vue'
 import { token, userName } from '../../utils/account'
 import { useI18n } from 'vue-i18n';
-import { getAllCompetitionsInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo } from '../../utils/api/admin';
+import { getAllCompetitionsInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo, caculateComScore, getScores } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from "md-editor-v3";
@@ -16,11 +16,19 @@ const { t } = useI18n();
 const userLoggedIn = computed(() => !!token.value)
 
 const loading = ref(true)
+const scoreloading = ref(false)
 const networkloading = ref(false)
 const delDialog = ref(false)
+const scoreDialog = ref(false)
 
 const id = "preview-only";
 
+const scores = ref([])
+const totalScores = ref(0)
+const itemsPerPage = ref(10)
+const page = ref(1)
+
+const cid = ref()
 const userPrivilege = ref("")
 const competitions = ref([])
 const totalCompetitions = ref(0)
@@ -46,6 +54,11 @@ const headers = ref([
     { title: 'ID', value: 'contest_id', align: 'center' },
     { title: t('message.competition'), value: 'title', align: 'center' },
     { title: t("message.operation"), value: 'actions', align: 'center' }
+])
+const scoreHeaders = ref([
+    { title: 'ID', value: 'Uid', align: 'center' },
+    { title: t('message.username'), value: 'Username', align: 'center' },
+    { title: 'Score', value: 'Score', align: 'center' },
 ])
 
 // 字段检查
@@ -154,6 +167,37 @@ const fetchData = async () => {
     }
 }
 
+// 竞赛计分
+const calcCompetition = async (competitionId) => {
+    try {
+        const response = await caculateComScore(competitionId);
+        showAlert(t("message.calculating"), "");
+    } catch (error) {
+        showAlert(t("message.failed") + "!", "");
+    }
+}
+
+// 查看竞赛得分情况
+const getScoreBoard = async (competitionId) => {
+    scoreloading.value = true;
+    scoreDialog.value = true;
+    cid.value = competitionId;
+    try {
+        const response = await getScores(competitionId, page.value, itemsPerPage.value);
+        scores.value = response.data.users;
+        totalScores.value = response.data.total;
+    } catch (error) {
+        showAlert(t("message.failed") + "!", "");
+    } finally {
+        scoreloading.value = false;
+    }
+}
+
+// 监听分页变化
+watch(page, async () => {
+    await getScoreBoard(cid.value)
+})
+
 onMounted(async () => {
     loading.value = true;
     try {
@@ -177,12 +221,29 @@ onMounted(async () => {
 
 <template>
     <template>
+        <v-dialog v-model="scoreDialog" persistent max-width="1200px">
+            <v-card rounded="xl">
+                <v-data-table-server :headers="scoreHeaders" :items="scores" :items-length="totalScores"
+                    :loading="scoreloading" :loading-text="$t('message.loading')" :hide-default-footer="true"
+                    :items-per-page="itemsPerPage" v-model:page="page" @update="getScoreBoard(cid.value)">
+                    <template v-slot:bottom>
+                        <v-pagination v-model="page" :length="Math.ceil(totalScores / itemsPerPage)" rounded="xl" />
+                    </template>
+                </v-data-table-server>
+                <v-card-actions>
+                    <v-btn color="primary" @click="scoreDialog = false" rounded="xl">{{ $t('message.ok') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </template>
+    <template>
         <v-dialog v-model="delDialog" persistent max-width="290">
             <v-card rounded="xl">
                 <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
-                    <v-btn variant="elevated" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.yes') }}</v-btn>
+                    <v-btn variant="elevated" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.yes')
+                        }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -208,12 +269,20 @@ onMounted(async () => {
                             <v-btn v-bind="props" variant="text" icon="mdi-dots-horizontal"></v-btn>
                         </template>
                         <v-list rounded="xl">
-                            <!-- TODO: 计分系统 -->
-                            <v-list-item :disabled="new Date(item.end_at) < new Date()" @click="">
+                            <v-list-item :disabled="(item.status != 2) || (item.scored != false)"
+                                @click="calcCompetition(item.contest_id)">
                                 <template v-slot:default="{ active, toggle }">
                                     <div class="d-flex align-center">
                                         <v-icon icon="mdi-calculator" class="me-2"></v-icon>
                                         <v-list-item-title>{{ t('message.scoring') }}</v-list-item-title>
+                                    </div>
+                                </template>
+                            </v-list-item>
+                            <v-list-item @click="getScoreBoard(item.contest_id)" :disabled="item.scored != true">
+                                <template v-slot:default="{ active, toggle }">
+                                    <div class="d-flex align-center">
+                                        <v-icon icon="mdi-note-text" class="me-2"></v-icon>
+                                        <v-list-item-title>{{ t("message.viewScores") }}</v-list-item-title>
                                     </div>
                                 </template>
                             </v-list-item>

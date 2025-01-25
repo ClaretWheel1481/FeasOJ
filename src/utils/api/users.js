@@ -40,3 +40,14 @@ export const uploadAvatar = async (file) => {
         },
     });
 }
+
+// 获取排行榜
+export const getRanking = async () => {
+    return await axios.get(`${apiUrl}/ranking`, {
+        headers: {
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
+            "Accept-Language": language.value
+        }
+    })
+}

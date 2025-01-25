@@ -108,6 +108,10 @@ export default{
         unavailable: "利用できません",
         suredel: "削除してもよろしいですか？",
         yes: "はい",
-        scoring: "得点化"
+        scoring: "得点化",
+        calculating: "採点が始まり、一定時間続けられ、採点が終わると自動的に集計され、ユーザーの得点に加算される。",
+        viewScores: "大会スコアを見る",
+        rank: "順位",
+        refresh5m: "5分後に更新"
     }
 }

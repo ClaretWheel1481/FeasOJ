@@ -154,3 +154,29 @@ export const updateComInfo = async (comInfo) => {
         }
     })
 }
+
+// 管理员启用竞赛计分
+export const caculateComScore = async (cid) => {
+    return await axios.get(`${apiUrl}/admin/competitions/${cid}/score`, {
+        headers: {
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
+            "Accept-Language": language.value
+        }
+    })
+}
+
+// 管理员查看竞赛得分情况
+export const getScores = async (cid, page, itemsPerPage) => {
+    return await axios.get(`${apiUrl}/admin/competitions/${cid}/scoreboard`, {
+        params: {
+            page: page,
+            itemsPerPage: itemsPerPage
+        },
+        headers: {
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
+            "Accept-Language": language.value
+        }
+    })
+}

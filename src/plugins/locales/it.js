@@ -1,4 +1,4 @@
-export default{
+export default {
     message: {
         mainpage: 'Home',
         problemset: 'Problemi',
@@ -108,6 +108,10 @@ export default{
         unavailable: "Non disponibile",
         suredel: "Sei sicuro di voler eliminare?",
         yes: "Sì",
-        scoring: "Punteggio"
+        scoring: "Punteggio",
+        calculating: "Il punteggio inizierà, continuerà per un certo periodo di tempo e alla fine del punteggio conterà automaticamente i risultati e li aggiungerà al punteggio dell'utente.",
+        viewScores: "Visualizza i punteggi della competizione",
+        rank: "Classifica",
+        refresh5m: "Aggiorna ogni 5 minuti"
     }
 }
