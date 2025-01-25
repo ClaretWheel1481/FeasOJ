@@ -7,7 +7,7 @@ English | [简体中文](README_CN.md)
 
 # FeasOJ
 ### Project Description
-FeasOJ is an online programming practice platform based on Vue and Golang, aiming to provide users with a convenient and efficient learning and practice environment.
+FeasOJ is an online programming practice platform based on Vue and Golang, supporting multi-languages, discussion forums, contests and other features, aiming to provide users with a convenient and efficient learning and practice environment.
 <br>
 [FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend)
 [ImageGuard](https://github.com/ClaretWheel1481/ImageGuard)
@@ -29,6 +29,7 @@ FeasOJ
 ### Environment
 - Vue 3
 - pnpm
+- The lastest version of Chromium or Firefox
 
 ### How to run
 1. Clone repository.
@@ -39,14 +40,27 @@ FeasOJ
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
 If you find any bugs, please open an issue.
 
-### Screenshots
-![image](/assets/Screenshot1.png)
-![image](/assets/Screenshot2.png)
+### Localization
+- English
+- Español
+- Français
+- Italiano
+- 日本語
+- 简体中文
+- 繁體中文
 
-### To-do list
-- Competitions
-- Separate and optimize the judge service, realize distributed judge service
-- Optimize the Test data saving method (Make it allow importing data from other Online Judge)
+If you want to contribute adding new language or improving existing language, follow this step:
+- [Fork](https://github.com/ClaretWheel1481/FeasOJ/fork) this repository
+- Copy `src/plugins/locales/en.js` file into `src/plugins/locales` with a new language code as the file name or edit the existing language file
+- Translate all the keys in the new language file
+- Create a [pull request](https://github.com/ClaretWheel1481/FeasOJ/pulls)
+
+### Screenshots
+![Main](/assets/Main.png)
+![Login](/assets/Login.png)
+![Problem](/assets/Problem.png)
+![Profile](/assets/Profile.png)
+More screenshots can be found in the [assets](/assets) folder.
 
 ### Thanks
 - [Vue](https://github.com/vuejs/vue)

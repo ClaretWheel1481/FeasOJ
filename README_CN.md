@@ -7,7 +7,7 @@
 
 # FeasOJ
 ### 项目简介
-FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，旨在为用户提供一个方便、高效的学习和练习环境。
+FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国语言、讨论区、竞赛等功能，旨在为用户提供一个方便、高效的学习和练习环境。
 <br>
 [FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend)
 [ImageGuard](https://github.com/ClaretWheel1481/ImageGuard)
@@ -29,6 +29,7 @@ FeasOJ
 ### 环境
 - Vue 3
 - pnpm
+- 最新版本的Chromium系浏览器或Firefox
 
 ### 如何运行
 1. 克隆此库。
@@ -39,14 +40,27 @@ FeasOJ
 这是我第一次用Vue + Golang写大项目，所以代码会很糟糕，不过我会一直去改进它！
 如果你找到任何Bug请发布Issue告诉我。
 
-### 项目截图
-![image](/assets/Screenshot1.png)
-![image](/assets/Screenshot2.png)
+### 本土化
+- English
+- Español
+- Français
+- Italiano
+- 日本語
+- 简体中文
+- 繁體中文
 
-### 待办事项
-- 竞赛及其附属功能
-- 分离并优化判题服务，实现分布式判题
-- 优化测试数据存放方式（使其支持导入来自其他Online Judge的题目）
+如果您想要增加语言翻译或优化当前的翻译，请按照以下步骤：
+- [Fork](https://github.com/ClaretWheel1481/FeasOJ/fork) 该项目仓库
+- 复制 `src/plugins/locales/en.js` 文件并以您想要的语言代码作为文件名称，粘贴到 `src/plugins/locales`，或者直接修改您想优化的文件
+- 翻译文件中的内容
+- 创建一个 [pull request](https://github.com/ClaretWheel1481/FeasOJ/pulls) 即可
+
+### 项目截图
+![Main](/assets/Main.png)
+![Login](/assets/Login.png)
+![Problem](/assets/Problem.png)
+![Profile](/assets/Profile.png)
+更多图片可在 [assets](/assets) 中查看。
 
 ### 致谢
 - [Vue](https://github.com/vuejs/vue)
