@@ -34,7 +34,8 @@ FeasOJ
 ### 如何运行
 1. 克隆此库。
 2. 运行 `pnpm i` 安装依赖项。
-3. 运行 `pnpm dev` 启动前端服务器。
+3. 配置 `src/utils/axios.js` 中的 `apiUrl` 为你的[FeasOJ-Bakcend](https://github.com/ClaretWheel1481/FeasOJ-Backend)服务器地址。
+4. 运行 `pnpm dev` 启动前端服务器。
 
 ### 注意
 这是我第一次用Vue + Golang写大项目，所以代码会很糟糕，不过我会一直去改进它！

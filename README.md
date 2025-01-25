@@ -34,7 +34,8 @@ FeasOJ
 ### How to run
 1. Clone repository.
 2. Run `pnpm i` Install dependencies.
-3. Run `pnpm dev` to start the front-end server.
+3. Config `src/utils/axios.js` to your [FeasOJ-Backend](https://github.com/ClaretWheel1481/FeasOJ-Backend) address.
+4. Run `pnpm dev` to start the front-end server.
 
 ### Notice
 This is the first time I've written a big project with Vue + Golang, so the code is going to be terrible, but I'll keep going to improve it!
