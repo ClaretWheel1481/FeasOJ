@@ -136,18 +136,6 @@ const getResultStyle = (result) => {
   }
 };
 
-// 预加载头像
-const preloadImage = (url) => {
-  return new Promise((resolve) => {
-    const link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'image';
-    link.href = url;
-    link.onload = resolve;
-    document.head.appendChild(link);
-  });
-};
-
 // 检验获取用户信息
 const verifyAndFetchUserInfo = async () => {
   loading.value = true;
@@ -160,10 +148,6 @@ const verifyAndFetchUserInfo = async () => {
     const userInfoResponse = await getUserInfo(currentUsername.value);
     userInfo.value = userInfoResponse.data.info;
     synopsis.value = userInfo.value.synopsis;
-    // 预加载头像
-    if(userInfo.value.avatar) {
-      await preloadImage(avatarServer + userInfo.value.avatar);
-    }
     await fetchSubmitData();
     loading.value = false;
   } catch (error) {
