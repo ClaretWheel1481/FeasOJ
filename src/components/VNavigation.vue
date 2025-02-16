@@ -133,6 +133,12 @@ onMounted(async () => {
           </v-list-item>
         </v-list>
       </v-menu>
+      <v-list-item v-if="userLoggedIn" rounded="xl" prepend-icon="mdi-bell-ring" @click="router.push('/messages')"
+        value="MESSAGES" base-color="primary" class="list-item">
+        <template v-slot:title>
+          <span class="multi-line-title">{{ $t('message.messages') }}</span>
+        </template>
+      </v-list-item>
       <v-list-item rounded="xl" :prepend-icon="userLoggedIn ? 'mdi-account-circle' : 'mdi-account'" @click="navigate"
         value="PROFILE" base-color="primary" class="list-item">
         <template v-slot:title>

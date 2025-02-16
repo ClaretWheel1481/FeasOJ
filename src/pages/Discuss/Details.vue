@@ -70,7 +70,7 @@ const addComments = async (content) => {
         await addComment(Did, content);
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
-        window.location = "#/403";
+        showAlert(error.response.data.message, "");
     } finally {
         loading.value = false;
     }

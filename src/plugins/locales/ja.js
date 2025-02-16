@@ -112,6 +112,7 @@ export default{
         calculating: "採点が始まり、一定時間続けられ、採点が終わると自動的に集計され、ユーザーの得点に加算される。",
         viewScores: "大会スコアを見る",
         rank: "順位",
-        refresh5m: "5分後に更新"
+        refresh5m: "5分後に更新",
+        messages: "メッセージ"
     }
 }

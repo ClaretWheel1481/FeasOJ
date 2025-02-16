@@ -112,6 +112,7 @@ export default{
         calculating: "開始計分，將持續一段時間，計分結束后將自動統計結果並將分數加到用戶分數中。",
         viewScores: "查看競賽得分情況",
         rank: "排名",
-        refresh5m: "每5分鐘刷新一次"
+        refresh5m: "每5分鐘刷新一次",
+        messages: "消息"
     }
 }

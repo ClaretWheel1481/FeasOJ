@@ -112,6 +112,7 @@ export default {
         calculating: "Il punteggio inizierà, continuerà per un certo periodo di tempo e alla fine del punteggio conterà automaticamente i risultati e li aggiungerà al punteggio dell'utente.",
         viewScores: "Visualizza i punteggi della competizione",
         rank: "Classifica",
-        refresh5m: "Aggiorna ogni 5 minuti"
+        refresh5m: "Aggiorna ogni 5 minuti",
+        messages: "Messaggi"
     }
 }

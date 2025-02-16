@@ -112,6 +112,7 @@ export default{
         calculating: "开始计分，将持续一段时间，计分结束后会自动将结果统计并将分数加到用户分数中。",
         viewScores: "查看竞赛得分情况",
         rank: "排名",
-        refresh5m: "每5分钟刷新一次"
+        refresh5m: "每5分钟刷新一次",
+        messages: "消息"
     }
 }

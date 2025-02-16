@@ -112,6 +112,7 @@ export default {
         calculating: "La notation commence, se poursuit pendant un certain temps et, à la fin de la notation, les résultats sont automatiquement comptabilisés et ajoutés au score de l'utilisateur.",
         viewScores: "Voir les résultats de la compétition",
         rank: 'Classement',
-        refresh5m: "Rafraîchir tous les 5 minutes"
+        refresh5m: "Rafraîchir tous les 5 minutes",
+        messages: 'Messages'
     }
 }
