@@ -1,7 +1,7 @@
 <!-- 讨论帖子详情页 -->
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getDisDetails,deleteDiscussion,getComments,deleteComment,addComment } from "../../utils/api/discussions";
+import { getDisDetails, deleteDiscussion, getComments, deleteComment, addComment } from "../../utils/api/discussions";
 import { avatarServer } from "../../utils/axios";
 import { useRoute, useRouter } from "vue-router";
 import { showAlert } from "../../utils/alert";
@@ -24,12 +24,14 @@ const Did = route.params.Did;
 
 // 用于路由处理
 const router = useRouter();
+
 const loading = ref(true);
 const discussionInfos = ref({});
 const id = "preview-only";
 const page = ref(1);
 const comments = ref([]);
 const commentContent = ref("");
+const profanityExpand = ref(true);
 
 // MDEDITOR工具栏限制
 const editorToolbar = [
@@ -169,7 +171,7 @@ onMounted(async () => {
             </div>
             <div style="margin: 10px">
                 <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{ $t("message.submit")
-                    }}</v-btn>
+                }}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -188,9 +190,14 @@ onMounted(async () => {
                                 </div>
                             </div>
                         </v-list-item-title>
-                        <v-list-item class="comment-content">
+                        <v-list-item style="color: darkblue;" v-if="comment.profanity && profanityExpand"
+                            @click="profanityExpand = false">
+                            {{ $t("message.profanity_expand") }}
+                        </v-list-item>
+                        <v-list-item class="comment-content" v-else>
                             <md-preview :modelValue="comment.content" />
                         </v-list-item>
+
                     </v-list-item>
                     <div class="buttons">
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"

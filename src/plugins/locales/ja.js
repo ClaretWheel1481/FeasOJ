@@ -113,6 +113,7 @@ export default{
         viewScores: "大会スコアを見る",
         rank: "順位",
         refresh5m: "5分後に更新",
-        messages: "メッセージ"
+        messages: "メッセージ",
+        profanity_expand: "このコンテンツは表示に適していません"
     }
 }

@@ -113,6 +113,7 @@ export default{
         viewScores: "查看競賽得分情況",
         rank: "排名",
         refresh5m: "每5分鐘刷新一次",
-        messages: "消息"
+        messages: "消息",
+        profanity_expand: "此內容不適合顯示，點擊展開"
     }
 }

@@ -113,6 +113,7 @@ export default {
         viewScores: "View competition scores",
         rank: "Rank",
         refresh5m: "Refresh every 5 minutes",
-        messages: "Messages"
+        messages: "Messages",
+        profanity_expand: "This content is not suitable for display, click to expand"
     }
 }

@@ -113,6 +113,7 @@ export default {
         viewScores: "Ver los resultados de los concursos",
         rank: "Clasificación",
         refresh5m: "Actualizar cada 5 minutos",
-        messages: "Mensajes"
+        messages: "Mensajes",
+        profanity_expand: "Este contenido no es adecuado para su visualización, pulse para ampliar"
     }
 }

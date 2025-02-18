@@ -62,7 +62,7 @@ const uploadAvat = async (cropper) => {
     showAlert(resp.data.message, "reload");
   } catch (error) {
     networkloading.value = false;
-    showAlert(error.resp.data.message, "");
+    showAlert(error.response.data.message, "");
   }
 };
 

@@ -113,6 +113,7 @@ export default {
         viewScores: "Voir les résultats de la compétition",
         rank: 'Classement',
         refresh5m: "Rafraîchir tous les 5 minutes",
-        messages: 'Messages'
+        messages: 'Messages',
+        profanity_expand: "Ce contenu n'est pas adapté à l'affichage, cliquez pour agrandir"
     }
 }

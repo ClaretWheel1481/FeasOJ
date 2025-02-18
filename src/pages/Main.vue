@@ -17,20 +17,14 @@ onMounted(async () => {
     <v-img src="logo.png" width="100px" height="100px" style="margin: 20px;"></v-img>
     <h1>FeasOJ</h1>
   </div>
-  <v-row>
-    <!-- TODO: 固定长度分布 -->
-    <v-card rounded="xl" style="margin: 50px;" elevation="5">
-      <v-expansion-panels v-model="panel">
-        <v-expansion-panel :title="$t('message.announcement')" :text="announcement" style="white-space: pre-line;">
-        </v-expansion-panel>
-        <v-expansion-panel :title="$t('message.notice')" :text="notice" style="white-space: pre-line;">
-        </v-expansion-panel>
-      </v-expansion-panels>
-    </v-card>
-    <v-card rounded="xl" style="margin: 50px;" elevation="5">
-      
-    </v-card>
-  </v-row>
+  <v-card rounded="xl" style="margin: 50px;" elevation="5">
+    <v-expansion-panels v-model="panel">
+      <v-expansion-panel :title="$t('message.announcement')" :text="announcement" style="white-space: pre-line;">
+      </v-expansion-panel>
+      <v-expansion-panel :title="$t('message.notice')" :text="notice" style="white-space: pre-line;">
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </v-card>
 </template>
 
 <style scoped>
