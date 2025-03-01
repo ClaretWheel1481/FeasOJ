@@ -114,6 +114,7 @@ export default {
         rank: "Clasificación",
         refresh5m: "Actualizar cada 5 minutos",
         messages: "Mensajes",
-        profanity_expand: "Este contenido no es adecuado para su visualización, pulse para ampliar"
+        profanity_expand: "Este contenido no es adecuado para su visualización, pulse para ampliar",
+        surequit: "¿Estás seguro de que quieres abandonar?"
     }
 }

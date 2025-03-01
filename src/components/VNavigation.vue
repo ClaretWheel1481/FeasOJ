@@ -73,7 +73,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer :width="175" permanent location="left">
+  <v-navigation-drawer :width="175" permanent location="left" :elevation="2">
     <v-list nav style="display: flex; flex-direction: column; height: 100%">
       <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="router.push('/')" color="primary"
         class="list-item">

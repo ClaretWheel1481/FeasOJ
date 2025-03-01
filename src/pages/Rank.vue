@@ -51,10 +51,12 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="title">
-        <h1>{{ $t('message.rank') }}</h1>
-        <h4>{{ $t('message.refresh5m') }}</h4>
-    </div>
+    <v-app-bar :elevation="2">
+      <v-col class="align-left-solo">
+        <p style="font-size: 24px;">{{ $t('message.rank') }}</p>
+        <p style="font-size: 12px;">{{ $t('message.refresh5m') }}</p>
+      </v-col>
+  </v-app-bar>
     <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="rankingData" :items-length="rankingDataLength"
       :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
@@ -76,5 +78,10 @@ onMounted(async () => {
 <style scoped>
 .tabletitle {
   color: #1e65ff;
+}
+
+.align-left-solo {
+  text-align: left;
+  margin-left: 10px;
 }
 </style>

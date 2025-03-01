@@ -48,12 +48,12 @@ onMounted(async () => {
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
-        <v-app-bar :elevation="0">
+        <v-app-bar :elevation="2">
             <template v-slot:prepend>
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
             <v-row style="align-items: center;">
-                <div style="margin-left: 30px;"></div>
+                <div style="margin-left: 15px;"></div>
                 <p class="font-weight-black">{{ $t('message.createDiscussion') }}</p>
             </v-row>
         </v-app-bar>

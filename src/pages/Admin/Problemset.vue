@@ -80,7 +80,7 @@ const save = async () => {
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "reload");
-    }finally{
+    } finally {
         networkloading.value = false;
     }
     dialog.value = false;
@@ -182,16 +182,20 @@ onMounted(async () => {
                 <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
-                    <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes') }}</v-btn>
+                    <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes')
+                        }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </template>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
+        <v-col class="align-left">
+            <p style="font-size: 24px;">{{ t('message.problemmanagement') }}</p>
+        </v-col>
     </v-app-bar>
     <v-data-table-server :headers="headers" :items="problems" :items-length="totalProblems" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
@@ -207,7 +211,7 @@ onMounted(async () => {
     </v-data-table-server>
     <v-dialog v-model="dialog" max-width="1200px">
         <v-card>
-            <div v-if="networkloading" class="loading">
+            <div v-if="networkloading" class="networkloading">
                 <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
             </div>
             <div v-else>
@@ -272,7 +276,7 @@ onMounted(async () => {
                             }}</v-btn>
                         <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.save')
-                            }}</v-btn>
+                        }}</v-btn>
                     </div>
                 </v-card-text>
             </div>
@@ -285,14 +289,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
-}
-
 .tabletitle {
     color: #1e65ff;
 }

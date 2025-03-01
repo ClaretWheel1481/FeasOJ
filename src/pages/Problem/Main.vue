@@ -58,16 +58,16 @@ const difficultyColor = (difficulty) => {
   }
 };
 const difficultyLang = (difficulty) => {
-    switch (difficulty) {
-        case '简单':
-            return 'message.easy';
-        case '中等':
-            return 'message.medium';
-        case '困难':
-            return 'message.hard';
-        default:
-            return '';
-    }
+  switch (difficulty) {
+    case '简单':
+      return 'message.easy';
+    case '中等':
+      return 'message.medium';
+    case '困难':
+      return 'message.hard';
+    default:
+      return '';
+  }
 }
 
 // 初始化数据
@@ -99,7 +99,11 @@ onMounted(async () => {
         <td class="tabletitle">
           <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" block>{{ item.Title }}</v-btn>
         </td>
-        <td :style="difficultyColor(item.Difficulty)">{{ t(difficultyLang(item.Difficulty)) }}</td>
+        <td>
+          <v-chip :style="difficultyColor(item.Difficulty)">
+            {{ t(difficultyLang(item.Difficulty)) }}
+          </v-chip>
+        </td>
       </tr>
     </template>
   </v-data-table-server>

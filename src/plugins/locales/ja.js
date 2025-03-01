@@ -114,6 +114,7 @@ export default{
         rank: "順位",
         refresh5m: "5分後に更新",
         messages: "メッセージ",
-        profanity_expand: "このコンテンツは表示に適していません"
+        profanity_expand: "このコンテンツは表示に適していません",
+        surequit: "コンテストを終了してもよろしいですか？"
     }
 }

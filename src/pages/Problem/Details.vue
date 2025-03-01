@@ -2,7 +2,7 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { getPbDetails,uploadCode } from '../../utils/api/problems';
+import { getPbDetails, uploadCode } from '../../utils/api/problems';
 import { VAceEditor } from 'vue3-ace-editor';
 import { showAlert } from '../../utils/alert';
 import { token } from "../../utils/account";
@@ -60,7 +60,19 @@ func main() {
         ``
 };
 
-// i18n
+// 根据题目难度显示不同字体
+const difficultyColor = (difficulty) => {
+    switch (difficulty) {
+        case "简单":
+            return "font-weight: bold;color: green;";
+        case "中等":
+            return "font-weight: bold;color: orange;";
+        case "困难":
+            return "font-weight: bold;color: red;";
+        default:
+            return "";
+    }
+};
 const difficultyLang = (difficulty) => {
     switch (difficulty) {
         case '简单':
@@ -72,7 +84,7 @@ const difficultyLang = (difficulty) => {
         default:
             return '';
     }
-}
+};
 
 // 代码上传
 const uploadContentAsFile = async () => {
@@ -98,7 +110,7 @@ onMounted(async () => {
             problemInfo.value = resp.data.problemInfo;
         } catch (error) {
             showAlert(error.response.data.message, "");
-        }finally{
+        } finally {
             loading.value = false;
         }
     } else {
@@ -119,10 +131,19 @@ onMounted(async () => {
             </div>
         </v-card>
     </v-dialog>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
+        <v-col class="align-left">
+            <v-row style="align-items: center;">
+                <p style="font-size: 24px;">{{ problemInfo.title }}</p>
+                <div style="margin-left: 10px;"></div>
+                <v-chip :style="difficultyColor(problemInfo.difficulty)">
+                    {{ t(difficultyLang(problemInfo.difficulty)) }}
+                </v-chip>
+            </v-row>
+        </v-col>
     </v-app-bar>
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
@@ -131,12 +152,10 @@ onMounted(async () => {
         <v-container fluid>
             <v-row>
                 <v-col cols="12" md="6">
-                    <h1>{{ problemInfo.title }}</h1>
-                    <div style="margin: 10px;"></div>
-                    <p class="subtitle">{{ $t("message.difficulty") + ": " + $t(difficultyLang(problemInfo.difficulty)) }}</p>
+                    <div style="margin-bottom: 20px;"></div>
                     <p class="subtitle">{{ $t("message.timeLimit") + ": " + problemInfo.time_limit }} S</p>
                     <p class="subtitle">{{ $t("message.memoryLimit") + ": " + problemInfo.memory_limit }} MB</p>
-                    <div style="margin: 10px;"></div>
+                    <div style="margin-bottom: 20px;"></div>
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
                     <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
@@ -147,9 +166,10 @@ onMounted(async () => {
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
-                    <v-card class="mx-auto my-4" width="100%" height="800" elevation="5">
+                    <v-card class="mx-auto my-4" width="100%" height="800" elevation="2">
                         <v-select :label="$t('message.lang')" v-model="lang"
-                            :items="['python', 'c_cpp', 'golang', 'java']" variant="solo-filled"></v-select>
+                            :items="['python', 'c_cpp', 'golang', 'java']" variant="solo-filled"
+                            elevation="2"></v-select>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
                             style="height: 800px;font-size: 14px;" />
                     </v-card>
@@ -161,14 +181,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.networkloading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
-}
-
 .tags {
     font-size: 18px;
     font-weight: bold;
@@ -189,6 +201,8 @@ onMounted(async () => {
 
 .subtitle {
     font-size: 0.9rem;
+    text-align: left;
+    margin-left: 30px;
 }
 
 .loading {

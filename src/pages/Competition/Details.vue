@@ -18,6 +18,8 @@ const userLoggedIn = computed(() => !!token.value);
 const route = useRoute();
 const router = useRouter();
 
+const quitDialog = ref(false);
+
 // 竞赛信息
 const contestInfo = ref({});
 const competitionId = route.params.cid;
@@ -118,14 +120,29 @@ onMounted(async () => {
 </script>
 
 <template>
-    <v-dialog v-model="networkloading" max-width="600px">
-        <v-card rounded="xl">
-            <div class="networkloading">
-                <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
-            </div>
-        </v-card>
-    </v-dialog>
-    <v-app-bar :elevation="0">
+    <template>
+        <v-dialog v-model="networkloading" max-width="600px">
+            <v-card rounded="xl">
+                <div class="networkloading">
+                    <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
+                </div>
+            </v-card>
+        </v-dialog>
+    </template>
+    <template>
+        <v-dialog v-model="quitDialog" persistent max-width="290">
+            <v-card rounded="xl">
+                <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
+                <v-card-text>{{ t('message.surequit') }}</v-card-text>
+                <v-card-actions>
+                    <v-btn variant="elevated" color="primary" @click="quitComp" rounded="xl">{{ $t('message.yes')
+                    }}</v-btn>
+                    <v-btn color="primary" @click="quitDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </template>
+    <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
@@ -134,7 +151,8 @@ onMounted(async () => {
             <p>{{ contestInfo.subtitle }}</p>
         </v-col>
         <template v-slot:append>
-            <v-btn color="primary" variant="flat" rounded="xl" @click="quitComp">{{ t('message.quit') }}</v-btn>
+            <v-btn color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
+                }}</v-btn>
         </template>
     </v-app-bar>
     <div v-if="loading" class="loading">
@@ -180,8 +198,10 @@ onMounted(async () => {
                                         </v-btn>
                                     </v-list-item-title>
                                     <template v-slot:append>
-                                        <p :style="difficultyColor(p.difficulty)">{{ t(difficultyLang(p.difficulty)) }}
-                                        </p>
+                                        <div style="margin-left: 10px;"></div>
+                                        <v-chip :style="difficultyColor(p.difficulty)">
+                                            {{ t(difficultyLang(p.difficulty)) }}
+                                        </v-chip>
                                     </template>
                                 </v-list-item>
                             </v-list>
@@ -228,20 +248,6 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
-}
-
-.networkloading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
-}
-
-.align-left {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
 }
 
 .username-avatar {

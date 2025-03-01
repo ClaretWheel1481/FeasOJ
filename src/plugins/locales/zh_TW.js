@@ -114,6 +114,7 @@ export default{
         rank: "排名",
         refresh5m: "每5分鐘刷新一次",
         messages: "消息",
-        profanity_expand: "此內容不適合顯示，點擊展開"
+        profanity_expand: "此內容不適合顯示，點擊展開",
+        surequit: "確定要退出嗎？"
     }
 }

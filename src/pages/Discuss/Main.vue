@@ -62,10 +62,10 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="title">
-    <h1>{{ $t('message.discussion') }}</h1>
-  </div>
-  <v-card class="mx-auto my-8" width="80%" elevation="10" rounded="xl">
+  <v-app-bar :elevation="2">
+    <p style="font-size: 24px;margin-left: 20px;">{{ t('message.discussion') }}</p>
+  </v-app-bar>
+  <v-card class="mx-auto my-8" width="85%" elevation="10" rounded="xl">
     <v-data-table-server :headers="headers" :items="discuss" :items-length="discussCount" :loading="loading"
       :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :items-per-page="itemsPerPage" v-model:page="page"
@@ -73,7 +73,8 @@ onMounted(async () => {
       <template v-slot:item="{ item }">
         <tr>
           <td class="disctitle">
-            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" block>{{ item.title }}</v-btn>
+            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" block>{{ item.title
+              }}</v-btn>
           </td>
           <td>{{ item.username }}</td>
           <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
@@ -85,7 +86,7 @@ onMounted(async () => {
     </v-data-table-server>
   </v-card>
   <div class="fab">
-    <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="userLoggedIn && !loading"
+    <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="8" v-if="userLoggedIn && !loading"
       @click="$router.push('/discussion/create')"></v-fab>
   </div>
 </template>

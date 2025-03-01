@@ -114,6 +114,7 @@ export default {
         rank: "Rank",
         refresh5m: "Refresh every 5 minutes",
         messages: "Messages",
-        profanity_expand: "This content is not suitable for display, click to expand"
+        profanity_expand: "This content is not suitable for display, click to expand",
+        surequit: "Are you sure you want to quit?"
     }
 }

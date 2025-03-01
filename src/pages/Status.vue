@@ -73,9 +73,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="title">
-    <h1>{{ $t('message.status') }}</h1>
-  </div>
+  <v-app-bar :elevation="2">
+    <p style="font-size: 24px;margin-left: 20px;">{{ t("message.status") }}</p>
+  </v-app-bar>
   <v-card style="margin: 50px;" rounded="xl" elevation="10">
     <v-data-table-server :headers="headers" :items="submitrecords" :items-length="submitRecordsLength"
       :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
@@ -87,7 +87,7 @@ onMounted(async () => {
           </td>
           <td class="tabletitle">
             <v-btn @click="router.push({ path: `/profile/${item.Username}` })" variant="text" block>{{ item.Username
-              }}</v-btn>
+            }}</v-btn>
           </td>
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>

@@ -114,6 +114,7 @@ export default {
         rank: 'Classement',
         refresh5m: "Rafraîchir tous les 5 minutes",
         messages: 'Messages',
-        profanity_expand: "Ce contenu n'est pas adapté à l'affichage, cliquez pour agrandir"
+        profanity_expand: "Ce contenu n'est pas adapté à l'affichage, cliquez pour agrandir",
+        surequit: "Êtes-vous sûr de vouloir quitter ?"
     }
 }

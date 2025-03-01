@@ -31,7 +31,10 @@ const id = "preview-only";
 const page = ref(1);
 const comments = ref([]);
 const commentContent = ref("");
-const profanityExpand = ref(true);
+const expandedComments = ref({});
+const checkDialog = ref(false);
+const isDelComment = ref(false);
+const deleteCommentID = ref("");
 
 // MDEDITOR工具栏限制
 const editorToolbar = [
@@ -104,6 +107,27 @@ const deleteDis = async () => {
     }
 };
 
+// 确认删除讨论
+const showDelDialog = (isComment, commentID) => {
+    checkDialog.value = true;
+    if (isComment && commentID != null) {
+        isDelComment.value = true;
+        deleteCommentID.value = commentID;
+    } else {
+        isDelComment.value = false;
+    }
+}
+
+// 确认删除
+const deleteChecker = async () => {
+    if (isDelComment.value) {
+        deleteCommentByID(deleteCommentID.value);
+    } else {
+        deleteDis();
+    }
+    checkDialog.value = false;
+}
+
 onMounted(async () => {
     loading.value = true;
     if (userLoggedIn.value) {
@@ -126,16 +150,30 @@ onMounted(async () => {
 </script>
 
 <template>
+    <template>
+        <v-dialog v-model="checkDialog" max-width="500px">
+            <v-card rounded=xl>
+                <v-card-title class="text-h5">{{ t('message.notify') }}</v-card-title>
+                <v-card-subtitle>{{ t('message.suredel') }}</v-card-subtitle>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="blue darken-1" rounded="xl" text @click="checkDialog = false">{{ t("message.cancel")
+                        }}</v-btn>
+                    <v-btn color="primary" rounded="xl" @click="deleteChecker">{{ t("message.ok") }}</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+    </template>
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
-        <v-app-bar :elevation="0">
+        <v-app-bar :elevation="2">
             <template v-slot:prepend>
                 <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
             </template>
             <v-row style="align-items: center">
-                <div style="margin-left: 50px"></div>
+                <div style="margin-left: 30px"></div>
                 <v-avatar size="50" color="surface-variant">
                     <v-img :src="avatarServer + discussionInfos.avatar" cover></v-img>
                 </v-avatar>
@@ -145,11 +183,11 @@ onMounted(async () => {
                 </v-btn>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
-                <v-btn icon="mdi-delete" size="x-large" @click="deleteDis"></v-btn>
+                <v-btn icon="mdi-delete" size="x-large" @click="showDelDialog(false,null)"></v-btn>
             </template>
         </v-app-bar>
         <div style="margin-top: 30px"></div>
-        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10" style="display: grid;">
+        <v-card class="mx-auto" width="75%" rounded="xl" elevation="8" style="display: grid;">
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
@@ -161,7 +199,7 @@ onMounted(async () => {
             </v-card-subtitle>
         </v-card>
         <div style="margin-top: 50px"></div>
-        <v-card class="mx-auto" width="75%" rounded="xl" elevation="10">
+        <v-card class="mx-auto" width="75%" rounded="xl" elevation="8">
             <template v-slot:title>
                 <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>
@@ -190,18 +228,17 @@ onMounted(async () => {
                                 </div>
                             </div>
                         </v-list-item-title>
-                        <v-list-item style="color: darkblue;" v-if="comment.profanity && profanityExpand"
-                            @click="profanityExpand = false">
+                        <v-list-item v-if="comment.profanity && !expandedComments[comment.cid]" style="color: darkblue;"
+                            @click="expandedComments[comment.cid] = true">
                             {{ $t("message.profanity_expand") }}
                         </v-list-item>
-                        <v-list-item class="comment-content" v-else>
+                        <v-list-item v-else class="comment-content">
                             <md-preview :modelValue="comment.content" />
                         </v-list-item>
-
                     </v-list-item>
                     <div class="buttons">
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
-                            @click="deleteCommentByID(comment.cid)">{{ $t("message.delete") }}</v-btn>
+                            @click="showDelDialog(true,comment.cid)">{{ $t("message.delete") }}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>

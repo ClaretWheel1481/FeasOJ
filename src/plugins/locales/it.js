@@ -114,6 +114,7 @@ export default {
         rank: "Classifica",
         refresh5m: "Aggiorna ogni 5 minuti",
         messages: "Messaggi",
-        profanity_expand: "Questo contenuto non è adatto alla visualizzazione, fare clic per espandere"
+        profanity_expand: "Questo contenuto non è adatto alla visualizzazione, fare clic per espandere",
+        surequit: "Sei sicuro di voler uscire?"
     }
 }

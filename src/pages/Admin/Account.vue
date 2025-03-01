@@ -119,12 +119,12 @@ onMounted(async () => {
 </script>
 
 <template>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="2" height="55">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
         <div class="searchbar">
-            <v-text-field v-model="searchQuery" variant="solo" :placeholder="$t('message.searchUser')"></v-text-field>
+            <v-text-field v-model="searchQuery" flat variant="solo-filled" :placeholder="$t('message.searchUser')"></v-text-field>
         </div>
     </v-app-bar>
     <v-dialog v-model="networkloading" max-width="500px">
@@ -172,14 +172,6 @@ onMounted(async () => {
 <style scoped>
 .searchbar {
     width: 100%;
-    margin-top: 10px;
-}
-
-.networkloading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
+    margin-top: 20px;
 }
 </style>

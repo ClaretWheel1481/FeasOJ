@@ -29,12 +29,22 @@ h1 {
   line-height: 1.1;
 }
 
-.title {
-  margin: 50px;
-}
-
 #app {
   margin: 0px;
   padding: 0px;
   text-align: center;
+}
+
+.align-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.networkloading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 100px;
 }

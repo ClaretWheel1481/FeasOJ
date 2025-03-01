@@ -36,7 +36,7 @@ const login = async () => {
   } catch (error) {
     showAlert(error.response.data.message, "");
     return;
-  }finally{
+  } finally {
     networkloading.value = false;
   }
 }
@@ -50,9 +50,9 @@ const login = async () => {
       </div>
     </v-card>
   </v-dialog>
-  <div class="title">
-    <h1>{{ $t('message.login') }}</h1>
-  </div>
+  <v-app-bar :elevation="2">
+    <p style="font-size: 24px;margin-left: 20px;">{{ t("message.login") }}</p>
+  </v-app-bar>
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="login" style="margin: 20px;">
       <v-text-field v-model="forms.username" rounded="xl" variant="solo-filled"
@@ -62,20 +62,12 @@ const login = async () => {
       <v-row justify="end">
         <v-btn type="submit" color="primary" rounded="xl">{{ $t('message.login') }}</v-btn>
         <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/register')">{{ $t('message.register')
-          }}</v-btn>
+        }}</v-btn>
         <v-btn color="primary" variant="text" rounded="xl" @click="$router.push('/reset')">{{ $t('message.forget')
-          }}</v-btn>
+        }}</v-btn>
       </v-row>
     </v-form>
   </v-sheet>
 </template>
 
-<style scoped>
-.networkloading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 100px;
-}
-</style>
+<style scoped></style>

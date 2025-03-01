@@ -89,14 +89,14 @@ const getCaptcha = async () => {
       </div>
     </v-card>
   </v-dialog>
-  <v-app-bar :elevation="0">
+  <v-app-bar :elevation="2">
     <template v-slot:prepend>
       <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+      <v-col class="align-left">
+        <p style="font-size: 24px;">{{ t("message.register") }}</p>
+        </v-col>
     </template>
   </v-app-bar>
-  <div class="title">
-    <h1>{{ $t('message.register') }}</h1>
-  </div>
   <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
     <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="register">
       <v-text-field v-model="formState.username" :rules="[rules.username.required]" rounded="xl" variant="solo-filled"
@@ -123,11 +123,5 @@ const getCaptcha = async () => {
 </template>
 
 <style scoped>
-.networkloading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 100px;
-}
+
 </style>

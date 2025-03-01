@@ -210,8 +210,8 @@ watch(() => route.params.Username, (newUsername) => {
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
         <v-sheet>
-          <v-sparkline smooth :model-value="sparklineData.map(item => item.count * 10)" color="blue" height="120" padding="30"
-            line-width="1.1">
+          <v-sparkline smooth :model-value="sparklineData.map(item => item.count * 10)" color="blue" height="120"
+            padding="30" line-width="1.1">
             <template v-slot:label="{ index }">
               {{ sparklineData[index].date.split('-').slice(1).join('-') }}
             </template>
@@ -244,7 +244,7 @@ watch(() => route.params.Username, (newUsername) => {
     :upload-handler="uploadAvat" />
   <v-dialog v-model="dialog" max-width="600px">
     <v-card rounded="xl">
-      <div v-if="networkloading" class="loading">
+      <div v-if="networkloading" class="loading" style="min-width: 600px;min-height: 500px;">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
       </div>
       <div v-else>
@@ -259,7 +259,7 @@ watch(() => route.params.Username, (newUsername) => {
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="blue darken-1" text @click="dialog = false" rounded="xl">{{ $t('message.cancel')
-            }}</v-btn>
+          }}</v-btn>
           <v-btn color="primary" @click="updateSyn" rounded="xl">{{ $t('message.save') }}</v-btn>
         </v-card-actions>
       </div>
@@ -268,14 +268,6 @@ watch(() => route.params.Username, (newUsername) => {
 </template>
 
 <style scoped>
-.networkloading {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  margin: 100px;
-}
-
 .loading {
   display: flex;
   justify-content: center;

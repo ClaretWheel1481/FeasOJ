@@ -249,10 +249,13 @@ onMounted(async () => {
             </v-card>
         </v-dialog>
     </template>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
         </template>
+        <v-col class="align-left">
+            <p style="font-size: 24px;">{{ t('message.competitionmanagement') }}</p>
+        </v-col>
     </v-app-bar>
     <v-data-table-server :headers="headers" :items="competitions" :items-length="totalCompetitions" :loading="loading"
         :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
@@ -294,7 +297,7 @@ onMounted(async () => {
     </v-data-table-server>
     <v-dialog v-model="dialog" max-width="1200px">
         <v-card>
-            <div v-if="networkloading" class="loading">
+            <div v-if="networkloading" class="networkloading">
                 <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
             </div>
             <div v-else>
@@ -364,14 +367,6 @@ onMounted(async () => {
     display: flex;
     justify-content: space-between;
     margin: 5px 0;
-}
-
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    margin: 100px;
 }
 
 .tabletitle {

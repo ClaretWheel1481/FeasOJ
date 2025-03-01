@@ -117,19 +117,19 @@ const routes = [
         }
     },
     {
-        path: '/psm', component: () => import('../pages/Admin/Problemset.vue'),
+        path: '/admin/problem', component: () => import('../pages/Admin/Problemset.vue'),
         meta: {
             titleKey: 'message.problemmanagement'
         }
     },
     {
-        path: '/cm', component: () => import('../pages/Admin/Competitions.vue'),
+        path: '/admin/competition', component: () => import('../pages/Admin/Competitions.vue'),
         meta: {
             titleKey: 'message.competitionmanagement'
         }
     },
     {
-        path: '/am', component: () => import('../pages/Admin/Account.vue'),
+        path: '/admin/user', component: () => import('../pages/Admin/Account.vue'),
         meta: {
             titleKey: 'message.usermanagement'
         }

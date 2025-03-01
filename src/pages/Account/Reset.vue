@@ -74,14 +74,14 @@ const getCaptcha = async () => {
 </script>
 
 <template>
-    <v-app-bar :elevation="0">
+    <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+            <v-col class="align-left">
+                <p style="font-size: 24px;">{{ t("message.resetpwd") }}</p>
+            </v-col>
         </template>
     </v-app-bar>
-    <div class="title">
-        <h1>{{ $t("message.resetpwd") }}</h1>
-    </div>
     <v-sheet class="constrainsheet" rounded="xl" :elevation="10">
         <v-form fast-fail width="400px" class="mx-auto" @submit.prevent="nextStep" style="margin: 20px;">
             <v-text-field v-model="forms.email" :rules="[rules.userEmail.required, rules.userEmail.email]" rounded="xl"
