@@ -4,6 +4,7 @@ import { ref, computed, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getUserSubmitRecords } from '../utils/api/submit_records';
 import { uploadAvatar, updateSynopsis } from '../utils/api/users';
+import { getResultStyle } from '../utils/dynamic_styles';
 import { avatarServer } from '../utils/axios';
 import { verifyUserInfo, getUserInfo } from '../utils/api/auth';
 import { showAlert } from '../utils/alert';
@@ -118,24 +119,6 @@ const processSparklineData = () => {
     .sort((a, b) => new Date(a.date) - new Date(b.date)); // 按日期排序
 };
 
-// 根据结果不同显示不同颜色
-const getResultStyle = (result) => {
-  switch (result) {
-    case 'Compile Failed':
-      return 'color: red; font-weight: bold;';
-    case 'Time Limit Exceeded':
-      return 'color: red; font-weight: bold;';
-    case 'Success':
-      return 'color: green; font-weight: bold;';
-    case 'Failed':
-      return 'color: orange; font-weight: bold;';
-    case 'Wrong Answer':
-      return 'color: orange; font-weight: bold;';
-    default:
-      return '';
-  }
-};
-
 // 检验获取用户信息
 const verifyAndFetchUserInfo = async () => {
   loading.value = true;
@@ -149,9 +132,10 @@ const verifyAndFetchUserInfo = async () => {
     userInfo.value = userInfoResponse.data.info;
     synopsis.value = userInfo.value.synopsis;
     await fetchSubmitData();
-    loading.value = false;
   } catch (error) {
     router.push({ path: '/403' });
+  } finally {
+    loading.value = false;
   }
 };
 

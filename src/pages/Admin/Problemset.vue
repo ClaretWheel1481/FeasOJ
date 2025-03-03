@@ -183,7 +183,7 @@ onMounted(async () => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes')
-                        }}</v-btn>
+                    }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -230,6 +230,7 @@ onMounted(async () => {
                             :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
                         <div style="margin-top: 20px;"></div>
                         <!-- 难易程度 -->
+                        <!-- TODO: 修改items 的i18n -->
                         <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
                             v-model="problemFields.difficulty" variant="solo-filled"></v-select>
                         <!-- 所属竞赛ID及是否可见 -->
@@ -276,7 +277,7 @@ onMounted(async () => {
                             }}</v-btn>
                         <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.save')
-                        }}</v-btn>
+                            }}</v-btn>
                     </div>
                 </v-card-text>
             </div>

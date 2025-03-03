@@ -6,6 +6,7 @@ import { showAlert } from '../../utils/alert';
 import { token } from "../../utils/account";
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
+import { difficultyColor, difficultyLang } from '../../utils/dynamic_styles';
 
 const router = useRouter();
 const { t } = useI18n();
@@ -41,32 +42,6 @@ const fetchData = async () => {
     showAlert(t("message.failed") + "!", "")
   } finally {
     loading.value = false
-  }
-}
-
-// 根据题目难度显示不同字体
-const difficultyColor = (difficulty) => {
-  switch (difficulty) {
-    case '简单':
-      return 'font-weight: bold;color: green;';
-    case '中等':
-      return 'font-weight: bold;color: orange;';
-    case '困难':
-      return 'font-weight: bold;color: red;';
-    default:
-      return '';
-  }
-};
-const difficultyLang = (difficulty) => {
-  switch (difficulty) {
-    case '简单':
-      return 'message.easy';
-    case '中等':
-      return 'message.medium';
-    case '困难':
-      return 'message.hard';
-    default:
-      return '';
   }
 }
 

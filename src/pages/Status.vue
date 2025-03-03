@@ -1,6 +1,7 @@
 <!-- 状态页 -->
 <script setup>
 import { getSubmitRecords } from '../utils/api/submit_records.js';
+import { getResultStyle } from '../utils/dynamic_styles.js';
 import { onMounted, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert.js';
@@ -39,24 +40,6 @@ const fetchData = async () => {
     loading.value = false
   }
 }
-
-// 根据结果不同显示不同颜色
-const getResultStyle = (result) => {
-  switch (result) {
-    case 'Compile Failed':
-      return 'color: red; font-weight: bold;';
-    case 'Time Limit Exceeded':
-      return 'color: red; font-weight: bold;';
-    case 'Success':
-      return 'color: green; font-weight: bold;';
-    case 'Failed':
-      return 'color: orange; font-weight: bold;';
-    case 'Wrong Answer':
-      return 'color: orange; font-weight: bold;';
-    default:
-      return '';
-  }
-};
 
 // 初始化数据
 onMounted(async () => {

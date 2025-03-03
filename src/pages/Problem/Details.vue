@@ -9,6 +9,7 @@ import { token } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
 import 'md-editor-v3/lib/preview.css';
+import { difficultyColor, difficultyLang } from '../../utils/dynamic_styles';
 
 const { t } = useI18n();
 
@@ -58,32 +59,6 @@ func main() {
 }`,
     python:
         ``
-};
-
-// 根据题目难度显示不同字体
-const difficultyColor = (difficulty) => {
-    switch (difficulty) {
-        case "简单":
-            return "font-weight: bold;color: green;";
-        case "中等":
-            return "font-weight: bold;color: orange;";
-        case "困难":
-            return "font-weight: bold;color: red;";
-        default:
-            return "";
-    }
-};
-const difficultyLang = (difficulty) => {
-    switch (difficulty) {
-        case '简单':
-            return 'message.easy';
-        case '中等':
-            return 'message.medium';
-        case '困难':
-            return 'message.hard';
-        default:
-            return '';
-    }
 };
 
 // 代码上传

@@ -151,15 +151,14 @@ onMounted(async () => {
 
 <template>
     <template>
-        <v-dialog v-model="checkDialog" max-width="500px">
-            <v-card rounded=xl>
-                <v-card-title class="text-h5">{{ t('message.notify') }}</v-card-title>
-                <v-card-subtitle>{{ t('message.suredel') }}</v-card-subtitle>
+        <v-dialog v-model="checkDialog" persistent max-width="290">
+            <v-card rounded="xl">
+                <v-card-title class="text-h5">{{ $t('message.notify') }}</v-card-title>
+                <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" rounded="xl" text @click="checkDialog = false">{{ t("message.cancel")
-                        }}</v-btn>
-                    <v-btn color="primary" rounded="xl" @click="deleteChecker">{{ t("message.ok") }}</v-btn>
+                    <v-btn variant="elevated" color="primary" @click="deleteChecker" rounded="xl">{{ $t('message.yes')
+                    }}</v-btn>
+                    <v-btn color="primary" @click="checkDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
