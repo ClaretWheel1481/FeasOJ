@@ -1,5 +1,6 @@
 export default {
     message: {
+        tokenExpired: '登录已过期，请重新登录',
         mainpage: '主页',
         problemset: '题目',
         status: '状态',

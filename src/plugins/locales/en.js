@@ -1,5 +1,6 @@
 export default {
     message: {
+        tokenExpired: 'Token Expired',
         mainpage: 'Home',
         problemset: 'ProblemSet',
         status: 'Status',

@@ -16,13 +16,6 @@ const routes = [
         }
     },
     {
-        path: '/messages',
-        component: () => import('../pages/Messages.vue'),
-        meta: {
-            titleKey: 'message.messages'
-        }
-    },
-    {
         path: '/problemset',
         component: () => import('../pages/Problem/Main.vue'),
         meta: {

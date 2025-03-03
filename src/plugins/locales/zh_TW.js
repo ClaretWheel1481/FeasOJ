@@ -1,5 +1,6 @@
 export default{
     message: {
+        tokenExpired: '登錄過期，請重新登錄',
         mainpage: '主頁',
         problemset: '題目',
         status: '狀態',

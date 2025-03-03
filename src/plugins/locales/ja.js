@@ -1,5 +1,6 @@
 export default{
     message: {
+        tokenExpired: 'トークンが期限切れです',
         mainpage: 'ホームページ',
         problemset: '問題セット',
         status: 'ステータス',

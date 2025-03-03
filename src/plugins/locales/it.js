@@ -1,5 +1,6 @@
 export default {
     message: {
+        tokenExpired: 'Token scaduto, effettua di nuovo il login',
         mainpage: 'Home',
         problemset: 'Problemi',
         status: 'Stato',

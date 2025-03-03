@@ -1,5 +1,6 @@
 export default {
     message: {
+        tokenExpired: 'Votre session a expiré, veuillez vous reconnecter',
         mainpage: 'Page principale',
         problemset: 'Ensembles de problèmes',
         status: 'Statut',
