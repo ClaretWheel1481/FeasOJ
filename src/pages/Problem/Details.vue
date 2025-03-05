@@ -35,7 +35,9 @@ const userLoggedIn = computed(() => !!token.value)
 // 代码模板
 const templates = {
     java:
-        `public class Main {
+        `
+// Please don't edit the 'Main' class name. 请不要编辑 'Main' 类名。
+public class Main {
     public static void main(String[] args) {
         
     }
@@ -115,7 +117,7 @@ onMounted(async () => {
                 <p style="font-size: 24px;">{{ problemInfo.title }}</p>
                 <div style="margin-left: 10px;"></div>
                 <v-chip :style="difficultyColor(problemInfo.difficulty)">
-                    {{ t(difficultyLang(problemInfo.difficulty)) }}
+                    {{ $t(difficultyLang(problemInfo.difficulty)) }}
                 </v-chip>
             </v-row>
         </v-col>

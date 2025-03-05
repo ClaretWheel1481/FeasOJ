@@ -30,7 +30,7 @@ export const difficultyColor = (difficulty) => {
         case '困难':
             return 'font-weight: bold;color: red;';
         default:
-            return '';
+            return 'font-weight: bold;color: green;';
     }
 };
 export const difficultyLang = (difficulty) => {
@@ -42,6 +42,6 @@ export const difficultyLang = (difficulty) => {
         case '困难':
             return 'message.hard';
         default:
-            return '';
+            return 'message.easy';
     }
 }

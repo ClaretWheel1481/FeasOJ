@@ -63,7 +63,7 @@ const validateFields = () => {
             return false;
         }
     }
-    if (problemFields.test_cases.some(testCase => testCase.input === "" || testCase.output === "")) {
+    if (problemFields.test_cases.some(testCase => testCase.output === "")) {
         showAlert(t("message.formCheckfailed") + "!", "");
         return false;
     }
