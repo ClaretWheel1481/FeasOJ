@@ -15,6 +15,7 @@ const langs = ref([
   { title: "Français", value: "fr" },
   { title: "Italiano", value: "it" },
   { title: "日本語", value: "ja" },
+  { title: "Русский", value: "ru" },
   { title: "简体中文", value: "zh_CN" },
   { title: "繁體中文", value: "zh_TW" },
 ]);
@@ -34,7 +35,7 @@ const changeLanguage = (lang) => {
 };
 
 // 根据用户登录状态修改导航目的
-const navigate = async() => {
+const navigate = async () => {
   if (userLoggedIn.value) {
     router.push("/profile/" + userName.value);
   } else {
@@ -60,10 +61,10 @@ onMounted(async () => {
       userLoggedIn.value = false;
       return;
     }
-    try{
+    try {
       const resp = await verifyUserInfo(userName.value, token.value);
       privilege.value = resp.data.info.role;
-    } catch(error){
+    } catch (error) {
       showAlert(t("message.tokenCheckfailed") + "!", "reload");
       localStorage.clear();
       userLoggedIn.value = false;
@@ -99,8 +100,8 @@ onMounted(async () => {
           <span class="multi-line-title">{{ $t('message.discussion') }}</span>
         </template>
       </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-playlist-play" value="RANK"
-        @click="router.push('/rank')" color="primary" class="list-item">
+      <v-list-item rounded="xl" prepend-icon="mdi-playlist-play" value="RANK" @click="router.push('/rank')"
+        color="primary" class="list-item">
         <template v-slot:title>
           <span class="multi-line-title">{{ $t('message.rank') }}</span>
         </template>

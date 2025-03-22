@@ -75,7 +75,10 @@ onMounted(async () => {
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </td>
-          <td v-else :style="getResultStyle(item.Result)">{{ item.Result }}</td>
+          <td v-else :style="getResultStyle(item.Result)" @click="" style="cursor: pointer;">
+            <!-- TODO: 查看代码，但是当该题目属于某个竞赛且在进行时间时不可用 -->
+            {{ item.Result }}
+          </td>
           <td>{{ item.Language }}</td>
           <td>{{ moment(item.Time).format('YYYY-MM-DD HH:mm') }}</td>
         </tr>

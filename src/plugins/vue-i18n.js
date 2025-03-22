@@ -4,6 +4,7 @@ import es from "../plugins/locales/es.js";
 import fr from "../plugins/locales/fr.js";
 import it from "../plugins/locales/it.js";
 import ja from "../plugins/locales/ja.js";
+import ru from "../plugins/locales/ru.js";
 import zh_CN from "../plugins/locales/zh_CN.js";
 import zh_TW from "../plugins/locales/zh_TW.js";
 
@@ -13,6 +14,7 @@ const messages = {
   fr,
   it,
   ja,
+  ru,
   zh_CN,
   zh_TW
 };
