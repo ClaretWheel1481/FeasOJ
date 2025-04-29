@@ -116,6 +116,7 @@ export default{
         refresh5m: "5分後に更新",
         messages: "メッセージ",
         profanity_expand: "このコンテンツは表示に適していません",
-        surequit: "コンテストを終了してもよろしいですか？"
+        surequit: "コンテストを終了してもよろしいですか？",
+        cannotViewCode: "コードを表示できません",
     }
 }

@@ -7,6 +7,8 @@ import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert.js';
 import { token } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
+import { MdPreview } from "md-editor-v3";
+import 'md-editor-v3/lib/preview.css';
 import moment from 'moment';
 
 const { t } = useI18n();
@@ -24,6 +26,12 @@ const submitrecords = ref([])
 const submitRecordsLength = ref(0)
 const loading = ref(true)
 
+const id = 'preview-only';
+const dialog = ref(false);
+
+// 展示代码
+const currentCode = ref('');
+
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
 
@@ -39,6 +47,19 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// 格式化代码
+const formatAsFencedCode = (code, lang = '') =>{
+  return `\`\`\`${lang}
+${code}
+\`\`\``;
+}
+
+// 弹出对话框
+const showCode = (code,lang) => {
+  currentCode.value = formatAsFencedCode(code,lang) || '';
+  dialog.value = true;
 }
 
 // 初始化数据
@@ -75,8 +96,7 @@ onMounted(async () => {
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </td>
-          <td v-else :style="getResultStyle(item.Result)" @click="" style="cursor: pointer;">
-            <!-- TODO: 查看代码，但是当该题目属于某个竞赛且在进行时间时不可用 -->
+          <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code,item.Language)" style="cursor: pointer;">
             {{ item.Result }}
           </td>
           <td>{{ item.Language }}</td>
@@ -85,6 +105,23 @@ onMounted(async () => {
       </template>
     </v-data-table-server>
   </v-card>
+  <!-- 查看代码弹窗 -->
+  <v-dialog v-model="dialog" max-width="800px">
+    <v-card rounded="xl" elevation="10">
+      <v-card-text style="max-height: 70vh; overflow-y: auto;">
+        <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+        <div v-else class="text-center grey--text">
+          {{ t('message.cannotViewCode') }}
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" text @click="dialog = false">
+          {{ t('message.ok') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>

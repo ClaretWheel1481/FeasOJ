@@ -10,6 +10,8 @@ import { verifyUserInfo, getUserInfo } from '../utils/api/auth';
 import { showAlert } from '../utils/alert';
 import { userName, token } from '../utils/account';
 import { useI18n } from 'vue-i18n';
+import { MdPreview } from "md-editor-v3";
+import 'md-editor-v3/lib/preview.css';
 import moment from 'moment';
 
 const { t } = useI18n();
@@ -26,6 +28,11 @@ const sparklineData = ref([]);
 const networkloading = ref(false);
 const dialog = ref(false);
 const synopsis = ref('');
+const id = 'preview-only';
+const codeDialog = ref(false);
+
+// 展示代码
+const currentCode = ref('');
 const headers = ref([
   { title: t('message.problemId'), value: 'Pid', align: 'center' },
   { title: t('message.result'), value: 'Result', align: 'center' },
@@ -35,6 +42,19 @@ const headers = ref([
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
+
+// 格式化代码
+const formatAsFencedCode = (code, lang = '') =>{
+  return `\`\`\`${lang}
+${code}
+\`\`\``;
+}
+
+// 弹出对话框
+const showCode = (code,lang) => {
+  currentCode.value = formatAsFencedCode(code,lang) || '';
+  codeDialog.value = true;
+}
 
 // 登出
 const logout = () => {
@@ -216,8 +236,7 @@ watch(() => route.params.Username, (newUsername) => {
             <td v-if="item.Result === 'Running...'" colspan="1">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </td>
-            <td v-else :style="getResultStyle(item.Result)" @click="" style="cursor: pointer;">
-              <!-- TODO: 查看代码 -->
+            <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code,item.Language)" style="cursor: pointer;">
               {{ item.Result }}
             </td>
             <td>{{ item.Language }}</td>
@@ -250,6 +269,23 @@ watch(() => route.params.Username, (newUsername) => {
           <v-btn color="primary" @click="updateSyn" rounded="xl">{{ $t('message.save') }}</v-btn>
         </v-card-actions>
       </div>
+    </v-card>
+  </v-dialog>
+  <!-- 查看代码弹窗 -->
+  <v-dialog v-model="codeDialog" max-width="800px">
+    <v-card rounded="xl" elevation="10">
+      <v-card-text style="max-height: 70vh; overflow-y: auto;">
+        <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+        <div v-else class="text-center grey--text">
+          {{ t('message.cannotViewCode') }}
+        </div>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer />
+        <v-btn color="primary" text @click="codeDialog = false">
+          {{ t('message.ok') }}
+        </v-btn>
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
