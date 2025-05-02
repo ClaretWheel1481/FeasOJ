@@ -118,6 +118,5 @@ export default {
         profanity_expand: "Este contenido no es adecuado para su visualización, pulse para ampliar",
         surequit: "¿Estás seguro de que quieres abandonar?",
         cannotViewCode: "No puedes ver el código",
-        fontSize: "Tamaño de fuente"
     }
 }

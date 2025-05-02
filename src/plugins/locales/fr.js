@@ -118,6 +118,5 @@ export default {
         profanity_expand: "Ce contenu n'est pas adapté à l'affichage, cliquez pour agrandir",
         surequit: "Êtes-vous sûr de vouloir quitter ?",
         cannotViewCode: "Vous n'avez pas accès au code de cet utilisateur",
-        fontSize: "Taille de la police"
     }
 }

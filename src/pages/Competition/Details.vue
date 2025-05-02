@@ -111,29 +111,29 @@ onMounted(async () => {
                 <v-card-text>{{ t('message.surequit') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="quitComp" rounded="xl">{{ $t('message.yes')
-                    }}</v-btn>
+                        }}</v-btn>
                     <v-btn color="primary" @click="quitDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </template>
-    <v-app-bar :elevation="2">
-        <template v-slot:prepend>
-            <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
-        </template>
-        <v-col class="align-left">
-            <p class="font-weight-black" style="font-size: 24px;">{{ contestInfo.title }}</p>
-            <p>{{ contestInfo.subtitle }}</p>
-        </v-col>
-        <template v-slot:append>
-            <v-btn color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
-                }}</v-btn>
-        </template>
-    </v-app-bar>
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
+        <v-app-bar :elevation="2">
+            <template v-slot:prepend>
+                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+            </template>
+            <v-col class="align-left">
+                <p class="font-weight-black" style="font-size: 24px;">{{ contestInfo.title }}</p>
+                <p>{{ contestInfo.subtitle }}</p>
+            </v-col>
+            <template v-slot:append>
+                <v-btn color="primary" variant="flat" rounded="xl" @click="quitDialog = true">{{ t('message.quit')
+                    }}</v-btn>
+            </template>
+        </v-app-bar>
         <v-container>
             <v-col>
                 <v-row>

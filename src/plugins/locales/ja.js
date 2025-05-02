@@ -118,6 +118,5 @@ export default{
         profanity_expand: "このコンテンツは表示に適していません",
         surequit: "コンテストを終了してもよろしいですか？",
         cannotViewCode: "コードを表示できません",
-        fontSize: "フォントサイズ"
     }
 }

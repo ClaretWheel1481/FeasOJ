@@ -118,6 +118,5 @@ export default{
         profanity_expand: "此內容不適合顯示，點擊展開",
         surequit: "確定要退出嗎？",
         cannotViewCode: "無法查看代碼",
-        fontSize: "字體大小"
     }
 }

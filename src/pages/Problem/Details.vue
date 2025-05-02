@@ -23,7 +23,9 @@ const lang = ref('python'); // 初始选中语言
 
 // Ace Editor字体
 const fontSize = ref(14);
-const fontSizes = [12, 14, 16, 18, 20, 24, 36, 48];
+const minFontSize = 10;
+const maxFontSize = 36;
+const stepFontSize = 1;
 
 // 支持的语言
 const langFileExtension = {
@@ -118,24 +120,24 @@ onMounted(async () => {
             </div>
         </v-card>
     </v-dialog>
-    <v-app-bar :elevation="2">
-        <template v-slot:prepend>
-            <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
-        </template>
-        <v-col class="align-left">
-            <v-row style="align-items: center;">
-                <p style="font-size: 24px;">{{ problemInfo.title }}</p>
-                <div style="margin-left: 10px;"></div>
-                <v-chip :style="difficultyColor(problemInfo.difficulty)">
-                    {{ $t(difficultyLang(problemInfo.difficulty)) }}
-                </v-chip>
-            </v-row>
-        </v-col>
-    </v-app-bar>
     <div v-if="loading" class="loading">
         <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
     </div>
     <div v-else>
+        <v-app-bar :elevation="2">
+            <template v-slot:prepend>
+                <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
+            </template>
+            <v-col class="align-left">
+                <v-row style="align-items: center;">
+                    <p style="font-size: 24px;">{{ problemInfo.title }}</p>
+                    <div style="margin-left: 10px;"></div>
+                    <v-chip :style="difficultyColor(problemInfo.difficulty)">
+                        {{ $t(difficultyLang(problemInfo.difficulty)) }}
+                    </v-chip>
+                </v-row>
+            </v-col>
+        </v-app-bar>
         <v-container fluid>
             <v-row>
                 <v-col cols="12" md="6">
@@ -145,7 +147,7 @@ onMounted(async () => {
                     <div style="margin-bottom: 20px;"></div>
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
-                    <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
+                    <md-preview style="margin-left: 30px;" :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
                     <p class="tags">{{ $t("message.displayInputCase") }}</p>
                     <p class="example">{{ problemInfo.input }}</p>
                     <p class="tags">{{ $t("message.displayOutputCase") }}</p>
@@ -153,13 +155,14 @@ onMounted(async () => {
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
-                    <v-card class="mx-auto my-4" width="100%" height="800" elevation="2">
-                        <v-row style="margin-inline: 0;">
+                    <v-card width="100%" height="800" elevation="0">
+                        <v-row style="margin-inline: 0;margin-top: 0;">
                             <v-select :label="$t('message.lang')" v-model="lang"
-                            :items="['python', 'c_cpp', 'golang', 'java', 'rust']" variant="solo-filled"
-                            elevation="2" class="mt-4"></v-select>
-                        <v-select :label="$t('message.fontSize')" v-model="fontSize" :items="fontSizes"
-                            variant="solo-filled" elevation="2" class="mt-4"></v-select>
+                                :items="['python', 'c_cpp', 'golang', 'java', 'rust']" variant="outlined"
+                                class="mx-auto mt-4" elevation="0"></v-select>
+                            <v-slider class="mt-4" v-model="fontSize" :min="minFontSize"
+                                :max="maxFontSize" :step="stepFontSize" thumb-label prepend-icon="mdi-format-size"
+                                elevation="2"></v-slider>
                         </v-row>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
                             :style="`height:800px; font-size: ${fontSize}px;`" />

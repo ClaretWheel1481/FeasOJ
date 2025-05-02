@@ -6,8 +6,7 @@ import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
 import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n();
-const { locale } = useI18n();
+const { t,locale } = useI18n();
 
 const langs = ref([
   { title: "English", value: "en" },
