@@ -13,6 +13,7 @@ import { useI18n } from 'vue-i18n';
 import { MdPreview } from "md-editor-v3";
 import 'md-editor-v3/lib/preview.css';
 import moment from 'moment';
+import Heatmap from '../components/Profile/Heatmap.vue';
 
 const { t } = useI18n();
 
@@ -24,7 +25,6 @@ const currentUsername = ref(route.params.Username);
 const loading = ref(false);
 const userSubmitRecords = ref([]);
 const userSubmitRecordsLength = ref(0);
-const sparklineData = ref([]);
 const networkloading = ref(false);
 const dialog = ref(false);
 const synopsis = ref('');
@@ -44,15 +44,15 @@ const headers = ref([
 const userLoggedIn = computed(() => !!token.value);
 
 // 格式化代码
-const formatAsFencedCode = (code, lang = '') =>{
+const formatAsFencedCode = (code, lang = '') => {
   return `\`\`\`${lang}
 ${code}
 \`\`\``;
 }
 
 // 弹出对话框
-const showCode = (code,lang) => {
-  currentCode.value = formatAsFencedCode(code,lang) || '';
+const showCode = (code, lang) => {
+  currentCode.value = formatAsFencedCode(code, lang) || '';
   codeDialog.value = true;
 }
 
@@ -72,7 +72,7 @@ const uploadAvat = async (cropper) => {
     // 获取原始文件的名称和类型
     const imageData = cropper.getImageData();
     const originalFile = imageData.src ? imageData.src.split('/').pop() : 'avatar.png';
-    const fileName = originalFile.split('?')[0]; // 去掉可能的查询参数
+    const fileName = originalFile.split('?')[0];
     const fileType = file.type || 'image/png';
 
     // 创建一个新的文件对象，保留原始文件名和类型
@@ -93,7 +93,6 @@ const fetchSubmitData = async () => {
     const submitResponse = await getUserSubmitRecords(currentUsername.value);
     userSubmitRecords.value = submitResponse.data.submitrecords;
     userSubmitRecordsLength.value = userSubmitRecords.value.length;
-    processSparklineData();
   } catch (error) {
     showAlert(t("message.failed") + "!", "");
   }
@@ -110,33 +109,6 @@ const updateSyn = async () => {
     networkloading.value = false;
     showAlert(error.response.data.message, "");
   }
-};
-
-// 图表数据计算
-const processSparklineData = () => {
-  const counts = {};
-  const now = new Date();
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(now.getDate() - 6);
-
-  // 初始化最近7天的日期，包括当天
-  for (let d = new Date(sevenDaysAgo); d <= now; d.setDate(d.getDate() + 1)) {
-    const dateString = d.toISOString().split('T')[0];
-    counts[dateString] = 0;
-  }
-
-  // 统计提交记录
-  userSubmitRecords.value.forEach(record => {
-    const date = new Date(record.Time);
-    if (date >= sevenDaysAgo && date <= now) {
-      const dateString = date.toISOString().split('T')[0];
-      counts[dateString] = (counts[dateString] || 0) + 1;
-    }
-  });
-
-  sparklineData.value = Object.keys(counts)
-    .map(date => ({ date, count: counts[date] }))
-    .sort((a, b) => new Date(a.date) - new Date(b.date)); // 按日期排序
 };
 
 // 检验获取用户信息
@@ -213,14 +185,7 @@ watch(() => route.params.Username, (newUsername) => {
     <v-card class="mx-auto" max-width="60%" min-width="60%" rounded="xl" elevation="10" style="margin-top: 30px;">
       <v-card-text>
         <p class="text-h4 font-weight-black">{{ $t('message.submissions') }}</p>
-        <v-sheet>
-          <v-sparkline smooth :model-value="sparklineData.map(item => item.count * 10)" color="blue" height="120"
-            padding="30" line-width="1.1">
-            <template v-slot:label="{ index }">
-              {{ sparklineData[index].date.split('-').slice(1).join('-') }}
-            </template>
-          </v-sparkline>
-        </v-sheet>
+        <Heatmap :user-submit-records="userSubmitRecords" />
       </v-card-text>
     </v-card>
     <div style="margin: 30px"></div>
@@ -236,7 +201,8 @@ watch(() => route.params.Username, (newUsername) => {
             <td v-if="item.Result === 'Running...'" colspan="1">
               <v-progress-circular indeterminate color="primary"></v-progress-circular>
             </td>
-            <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code,item.Language)" style="cursor: pointer;">
+            <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code, item.Language)"
+              style="cursor: pointer;">
               {{ item.Result }}
             </td>
             <td>{{ item.Language }}</td>
@@ -273,20 +239,10 @@ watch(() => route.params.Username, (newUsername) => {
   </v-dialog>
   <!-- 查看代码弹窗 -->
   <v-dialog v-model="codeDialog" max-width="800px">
-    <v-card rounded="xl" elevation="10">
-      <v-card-text style="max-height: 70vh; overflow-y: auto;">
-        <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
-        <div v-else class="text-center grey--text">
-          {{ t('message.cannotViewCode') }}
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn color="primary" text @click="codeDialog = false">
-          {{ t('message.ok') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+    <div v-else class="text-center grey--text">
+      {{ t('message.cannotViewCode') }}
+    </div>
   </v-dialog>
 </template>
 

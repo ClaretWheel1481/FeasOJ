@@ -50,15 +50,15 @@ const fetchData = async () => {
 }
 
 // 格式化代码
-const formatAsFencedCode = (code, lang = '') =>{
+const formatAsFencedCode = (code, lang = '') => {
   return `\`\`\`${lang}
 ${code}
 \`\`\``;
 }
 
 // 弹出对话框
-const showCode = (code,lang) => {
-  currentCode.value = formatAsFencedCode(code,lang) || '';
+const showCode = (code, lang) => {
+  currentCode.value = formatAsFencedCode(code, lang) || '';
   dialog.value = true;
 }
 
@@ -96,7 +96,8 @@ onMounted(async () => {
           <td v-if="item.Result === 'Running...'" colspan="1">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </td>
-          <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code,item.Language)" style="cursor: pointer;">
+          <td v-else :style="getResultStyle(item.Result)" @click="showCode(item.Code, item.Language)"
+            style="cursor: pointer;">
             {{ item.Result }}
           </td>
           <td>{{ item.Language }}</td>
@@ -107,20 +108,10 @@ onMounted(async () => {
   </v-card>
   <!-- 查看代码弹窗 -->
   <v-dialog v-model="dialog" max-width="800px">
-    <v-card rounded="xl" elevation="10">
-      <v-card-text style="max-height: 70vh; overflow-y: auto;">
-        <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
-        <div v-else class="text-center grey--text">
-          {{ t('message.cannotViewCode') }}
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer />
-        <v-btn color="primary" text @click="dialog = false">
-          {{ t('message.ok') }}
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+    <div v-else class="text-center grey--text">
+      {{ t('message.cannotViewCode') }}
+    </div>
   </v-dialog>
 </template>
 
