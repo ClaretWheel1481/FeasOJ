@@ -8,6 +8,7 @@ import { showAlert } from '../utils/alert.js';
 import { token } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
 import { MdPreview } from "md-editor-v3";
+import { showNotification } from '../utils/notification.js';
 import 'md-editor-v3/lib/preview.css';
 import moment from 'moment';
 
@@ -58,8 +59,12 @@ ${code}
 
 // 弹出对话框
 const showCode = (code, lang) => {
-  currentCode.value = formatAsFencedCode(code, lang) || '';
-  dialog.value = true;
+  if (code === '') {
+    showNotification(t('message.cannotViewCode'))
+  } else {
+    currentCode.value = formatAsFencedCode(code, lang) || '';
+    dialog.value = true;
+  }
 }
 
 // 初始化数据
@@ -107,11 +112,8 @@ onMounted(async () => {
     </v-data-table-server>
   </v-card>
   <!-- 查看代码弹窗 -->
-  <v-dialog v-model="dialog" max-width="800px">
+  <v-dialog v-model="dialog" width="auto">
     <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
-    <div v-else class="text-center grey--text">
-      {{ t('message.cannotViewCode') }}
-    </div>
   </v-dialog>
 </template>
 

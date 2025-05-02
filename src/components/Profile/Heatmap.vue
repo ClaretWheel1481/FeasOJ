@@ -91,6 +91,7 @@ const gridData = computed(() => {
     width: 100%;
     padding-bottom: 4px;
     padding-top: 10px;
+    overflow-x: auto;
 }
 
 .heat-cell {

@@ -8,8 +8,8 @@ import { showAlert } from '../../utils/alert';
 import { token } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
-import 'md-editor-v3/lib/preview.css';
 import { difficultyColor, difficultyLang } from '../../utils/dynamic_styles';
+import 'md-editor-v3/lib/preview.css';
 
 const { t } = useI18n();
 
@@ -21,12 +21,17 @@ const problemInfo = ref({});
 const content = ref('');
 const lang = ref('python'); // 初始选中语言
 
+// Ace Editor字体
+const fontSize = ref(14);
+const fontSizes = [12, 14, 16, 18, 20, 24, 36, 48];
+
 // 支持的语言
 const langFileExtension = {
     java: 'java',
     c_cpp: 'cpp',
     golang: 'go',
-    python: 'py'
+    python: 'py',
+    rust: 'rs'
 };
 
 // 计算属性来判断用户是否已经登录
@@ -60,7 +65,12 @@ func main() {
     
 }`,
     python:
-        ``
+        ``,
+    rust: `
+
+fn main() {
+    
+}`
 };
 
 // 代码上传
@@ -144,11 +154,15 @@ onMounted(async () => {
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
                     <v-card class="mx-auto my-4" width="100%" height="800" elevation="2">
-                        <v-select :label="$t('message.lang')" v-model="lang"
-                            :items="['python', 'c_cpp', 'golang', 'java']" variant="solo-filled"
-                            elevation="2"></v-select>
+                        <v-row style="margin-inline: 0;">
+                            <v-select :label="$t('message.lang')" v-model="lang"
+                            :items="['python', 'c_cpp', 'golang', 'java', 'rust']" variant="solo-filled"
+                            elevation="2" class="mt-4"></v-select>
+                        <v-select :label="$t('message.fontSize')" v-model="fontSize" :items="fontSizes"
+                            variant="solo-filled" elevation="2" class="mt-4"></v-select>
+                        </v-row>
                         <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
-                            style="height: 800px;font-size: 14px;" />
+                            :style="`height:800px; font-size: ${fontSize}px;`" />
                     </v-card>
                     <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">{{ $t("message.submit") }}</v-btn>
                 </v-col>

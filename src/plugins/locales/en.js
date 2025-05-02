@@ -118,5 +118,6 @@ export default {
         profanity_expand: "This content is not suitable for display, click to expand",
         surequit: "Are you sure you want to quit?",
         cannotViewCode: "You cannot view the code of this submission",
+        fontSize: "Font Size"
     }
 }

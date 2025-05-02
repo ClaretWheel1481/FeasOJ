@@ -1,22 +1,58 @@
-import { apiUrl } from "./axios";
+import { ref } from 'vue';
+import { apiUrl } from './axios';
 import { i18n } from '../plugins/vue-i18n';
 
-// sse
-export function initSSE(uid, callback) {
-    function connect() {
-        const language = i18n.global.locale; // 获取当前使用的语言
-        const eventSource = new EventSource(`${apiUrl}/notification/${uid}?lang=${language.value}`);
+const events = ref([]);
+const snackbar = ref(false);
+const snackbarMessage = ref('');
 
-        eventSource.onmessage = function (event) {
-            callback(event.data);
-        };
+export function showNotification(message) {
+  events.value.push(message);
+  snackbarMessage.value = message;
+  snackbar.value = true;
+}
 
-        eventSource.onerror = function () {
-            console.error(i18n.global.t("message.sseError"));
-            eventSource.close();
-            setTimeout(connect, 3000);  // 3秒后重连
-        };
-    }
-    
-    connect();
+export function closeNotification() {
+  snackbar.value = false;
+}
+
+export function useNotificationState() {
+  return {
+    events,
+    snackbar,
+    snackbarMessage,
+    closeNotification,
+  };
+}
+
+//
+// —— SSE 逻辑 ———————————————————————————————————————————————
+//
+let es = null;
+
+export function initSSE(uid) {
+  function connect() {
+    const language = i18n.global.locale;
+    es = new EventSource(`${apiUrl}/notification/${uid}?lang=${language.value}`);
+
+    es.onmessage = (event) => {
+      showNotification(event.data);
+    };
+
+    es.onerror = () => {
+      console.error(i18n.global.t('message.sseError'));
+      es.close();
+      // 3 秒后重连
+      setTimeout(connect, 3000);
+    };
+  }
+
+  connect();
+}
+
+export function closeSSE() {
+  if (es) {
+    es.close();
+    es = null;
+  }
 }

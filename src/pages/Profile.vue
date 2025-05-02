@@ -11,9 +11,10 @@ import { showAlert } from '../utils/alert';
 import { userName, token } from '../utils/account';
 import { useI18n } from 'vue-i18n';
 import { MdPreview } from "md-editor-v3";
-import 'md-editor-v3/lib/preview.css';
+import { showNotification } from '../utils/notification.js';
 import moment from 'moment';
 import Heatmap from '../components/Profile/Heatmap.vue';
+import 'md-editor-v3/lib/preview.css';
 
 const { t } = useI18n();
 
@@ -52,8 +53,12 @@ ${code}
 
 // 弹出对话框
 const showCode = (code, lang) => {
-  currentCode.value = formatAsFencedCode(code, lang) || '';
-  codeDialog.value = true;
+  if (code === '') {
+    showNotification(t('message.cannotViewCode'))
+  } else {
+    currentCode.value = formatAsFencedCode(code, lang) || '';
+    codeDialog.value = true;
+  }
 }
 
 // 登出
@@ -238,11 +243,8 @@ watch(() => route.params.Username, (newUsername) => {
     </v-card>
   </v-dialog>
   <!-- 查看代码弹窗 -->
-  <v-dialog v-model="codeDialog" max-width="800px">
+  <v-dialog v-model="codeDialog" width="auto">
     <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
-    <div v-else class="text-center grey--text">
-      {{ t('message.cannotViewCode') }}
-    </div>
   </v-dialog>
 </template>
 
