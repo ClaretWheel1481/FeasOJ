@@ -1,15 +1,16 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import legacy from '@vitejs/plugin-legacy'
 import vuetify from 'vite-plugin-vuetify'
 import compression from 'vite-plugin-compression';
 
 export default defineConfig({
   base: './',
   plugins: [
-    compression(),
+    compression({
+      algorithm: 'brotliCompress',
+      threshold: 10240
+    }),
     vue(),
-    legacy(),
     vuetify({
       autoImport: true,
     }),
