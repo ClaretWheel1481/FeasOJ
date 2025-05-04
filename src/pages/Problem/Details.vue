@@ -19,7 +19,7 @@ const route = useRoute();
 const loading = ref(true);
 const problemInfo = ref({});
 const content = ref('');
-const lang = ref('python'); // 初始选中语言
+const lang = ref('c_cpp'); // 初始选中语言
 
 // Ace Editor字体
 const fontSize = ref(14);
@@ -36,7 +36,9 @@ const langFileExtension = {
     c_cpp: 'cpp',
     golang: 'go',
     python: 'py',
-    rust: 'rs'
+    rust: 'rs',
+    php: 'php',
+    pascal: 'pas'
 };
 
 // 计算属性来判断用户是否已经登录
@@ -75,7 +77,14 @@ func main() {
 
 fn main() {
     
-}`
+}`,
+    php: `<?php
+
+?>`,
+    pascal: `{ O2 Enabled / O2已启用 }
+begin
+    
+end.`
 };
 
 // 代码上传
@@ -159,19 +168,23 @@ onMounted(async () => {
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
+                    <v-alert 
+                        text="All programming language compilers are up-to-date, except for Java17, so please pay attention to the code you are writing."
+                        title="Attention" align="left" type="info" variant="tonal" border="start" closable></v-alert>
                     <v-card width="100%" height="100vh" elevation="0">
                         <v-row style="margin-inline: 0;margin-top: 0;">
                             <v-select :label="$t('message.lang')" v-model="lang"
-                                :items="['python', 'c_cpp', 'golang', 'java', 'rust']" variant="outlined"
-                                class="mx-auto mt-4" elevation="0"></v-select>
+                                :items="['c_cpp', 'golang', 'java', 'pascal', 'python', 'php', 'rust']"
+                                variant="outlined" class="mx-auto mt-4" elevation="0"></v-select>
                             <v-select :label="$t('message.editor_theme')" v-model="theme"
-                                :items="['ambiance', 'clouds', 'cobalt', 'chaos', 'crimson_editor', 'dawn', 'dracula', 'dreamweaver', 'chrome', 'github','terminal', 'monokai','mono_industrial','pastel_on_dark','sqlserver','solarized_light','solarized_dark']"
+                                :items="['ambiance', 'clouds', 'cobalt', 'chaos', 'crimson_editor', 'dawn', 'dracula', 'dreamweaver', 'chrome', 'github', 'terminal', 'monokai', 'mono_industrial', 'pastel_on_dark', 'sqlserver', 'solarized_light', 'solarized_dark']"
                                 variant="outlined" class="mx-auto mt-4" elevation="0"
                                 style="padding-left: 5px;"></v-select>
                             <v-slider class="mt-4" v-model="fontSize" :min="minFontSize" :max="maxFontSize"
                                 :step="stepFontSize" thumb-label prepend-icon="mdi-format-size"
                                 elevation="2"></v-slider>
                         </v-row>
+
                         <v-ace-editor v-model:value="content" :theme="theme" :lang=lang
                             :style="`height:800px; font-size: ${fontSize}px;`" />
                     </v-card>
