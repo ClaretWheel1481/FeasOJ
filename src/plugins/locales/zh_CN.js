@@ -118,5 +118,6 @@ export default {
         profanity_expand: "此内容不适合显示，点击展开",
         surequit: "确定退出吗？",
         cannotViewCode: "您没有权限查看此代码",
+        editor_theme: "编辑器主题"
     }
 }

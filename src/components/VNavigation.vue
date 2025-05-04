@@ -6,14 +6,16 @@ import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
 import { useI18n } from 'vue-i18n';
 
-const { t,locale } = useI18n();
+const { t, locale } = useI18n();
 
 const langs = ref([
+  { title: "بالعربية", value: "ar" },
   { title: "English", value: "en" },
   { title: "Español", value: "es" },
   { title: "Français", value: "fr" },
   { title: "Italiano", value: "it" },
   { title: "日本語", value: "ja" },
+  { title: "Português", value: "pt" },
   { title: "Русский", value: "ru" },
   { title: "简体中文", value: "zh_CN" },
   { title: "繁體中文", value: "zh_TW" },
@@ -119,7 +121,7 @@ onMounted(async () => {
           <span class="multi-line-title">{{ $t('message.management') }}</span>
         </template>
       </v-list-item>
-      <v-menu location="end">
+      <v-menu location="end" transition="slide-x-transition">
         <template v-slot:activator="{ props }">
           <v-list-item rounded="xl" prepend-icon="mdi-translate" base-color="primary" v-bind="props" class="list-item">
             <template v-slot:title>
@@ -127,11 +129,18 @@ onMounted(async () => {
             </template>
           </v-list-item>
         </template>
-        <v-list rounded="xl">
-          <v-list-item v-for="(item, index) in langs" :key="index" :value="index" @click="changeLanguage(item.value)">
-            <v-list-item-title style="font-size: 13px;font-weight: bold;">{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
+        <v-card max-width="350px" rounded="xl">
+          <v-card-text class="pa-0" style="max-height: 350px; overflow-y: auto;">
+            <v-list rounded="xl">
+              <v-list-item v-for="(item, index) in langs" :key="index" :value="index"
+                @click="changeLanguage(item.value)">
+                <v-list-item-title style="font-size: 13px; font-weight: bold;">
+                  {{ item.title }}
+                </v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-card-text>
+        </v-card>
       </v-menu>
       <v-list-item rounded="xl" :prepend-icon="userLoggedIn ? 'mdi-account-circle' : 'mdi-account'" @click="navigate"
         value="PROFILE" base-color="primary" class="list-item">

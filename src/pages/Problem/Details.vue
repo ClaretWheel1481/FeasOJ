@@ -27,6 +27,9 @@ const minFontSize = 10;
 const maxFontSize = 36;
 const stepFontSize = 1;
 
+// Ace Editor主题
+const theme = ref("chrome")
+
 // 支持的语言
 const langFileExtension = {
     java: 'java',
@@ -147,7 +150,8 @@ onMounted(async () => {
                     <div style="margin-bottom: 20px;"></div>
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
-                    <md-preview style="margin-left: 30px;" :modelValue="problemInfo.content" :editorId="id" class="md_preview" />
+                    <md-preview style="margin-left: 30px;" :modelValue="problemInfo.content" :editorId="id"
+                        class="md_preview" />
                     <p class="tags">{{ $t("message.displayInputCase") }}</p>
                     <p class="example">{{ problemInfo.input }}</p>
                     <p class="tags">{{ $t("message.displayOutputCase") }}</p>
@@ -155,16 +159,20 @@ onMounted(async () => {
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
-                    <v-card width="100%" height="800" elevation="0">
+                    <v-card width="100%" height="100vh" elevation="0">
                         <v-row style="margin-inline: 0;margin-top: 0;">
                             <v-select :label="$t('message.lang')" v-model="lang"
                                 :items="['python', 'c_cpp', 'golang', 'java', 'rust']" variant="outlined"
                                 class="mx-auto mt-4" elevation="0"></v-select>
-                            <v-slider class="mt-4" v-model="fontSize" :min="minFontSize"
-                                :max="maxFontSize" :step="stepFontSize" thumb-label prepend-icon="mdi-format-size"
+                            <v-select :label="$t('message.editor_theme')" v-model="theme"
+                                :items="['ambiance', 'clouds', 'cobalt', 'chaos', 'crimson_editor', 'dawn', 'dracula', 'dreamweaver', 'chrome', 'github','terminal', 'monokai','mono_industrial','pastel_on_dark','sqlserver','solarized_light','solarized_dark']"
+                                variant="outlined" class="mx-auto mt-4" elevation="0"
+                                style="padding-left: 5px;"></v-select>
+                            <v-slider class="mt-4" v-model="fontSize" :min="minFontSize" :max="maxFontSize"
+                                :step="stepFontSize" thumb-label prepend-icon="mdi-format-size"
                                 elevation="2"></v-slider>
                         </v-row>
-                        <v-ace-editor v-model:value="content" theme="chrome" :lang=lang
+                        <v-ace-editor v-model:value="content" :theme="theme" :lang=lang
                             :style="`height:800px; font-size: ${fontSize}px;`" />
                     </v-card>
                     <v-btn color="primary" rounded="xl" @click="uploadContentAsFile">{{ $t("message.submit") }}</v-btn>

@@ -1,7 +1,7 @@
 export default{
     message: {
         tokenExpired: 'トークンが期限切れです',
-        mainpage: 'ホームページ',
+        mainpage: 'ホーム',
         problemset: '問題セット',
         status: 'ステータス',
         discussion: 'ディスカッション',
@@ -9,8 +9,8 @@ export default{
         announcement: 'お知らせ',
         usermanagement: 'ユーザー管理',
         problemmanagement: '問題管理',
-        competitionmanagement: 'コンペティション管理',
-        competition: 'コンペティション',
+        competitionmanagement: 'コンテスト管理',
+        competition: 'コンテスト',
         lang: '言語',
         login: 'ログイン',
         logout: "ログアウト",
@@ -88,11 +88,11 @@ export default{
         passwordLength: "パスワードは8-20文字です。",
         confirmPwdLength: "確認パスワードは8-20文字です。",
         back: "戻る",
-        submissions: "提出記録",
+        submissions: '提出一覧',
         management: "管理",
         isvisible: "公開",
         contestid: "コンテストID",
-        enter: "入力",
+        enter: '参加する',
         start_date: "開始日時",
         end_date: "終了日時",
         followRules: "ルールを守ってください",
@@ -115,8 +115,9 @@ export default{
         rank: "順位",
         refresh5m: "5分後に更新",
         messages: "メッセージ",
-        profanity_expand: "このコンテンツは表示に適していません",
+        profanity_expand: 'このコンテンツは表示できません（クリックして展開）',
         surequit: "コンテストを終了してもよろしいですか？",
         cannotViewCode: "コードを表示できません",
+        editor_theme: "エディタのテーマ"
     }
 }

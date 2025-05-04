@@ -202,7 +202,7 @@ onMounted(async () => {
             <template v-slot:title>
                 <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>
-            <div style="max-height: 300px">
+            <div style="max-height: 300px;">
                 <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true"
                     :preview="false" :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
             </div>
@@ -272,7 +272,7 @@ onMounted(async () => {
     max-width: fit-content;
     max-height: 350px;
     text-align: left;
-    margin-left: -20px;
+    margin-left: 0px;
 }
 
 .timeline {
