@@ -17,7 +17,8 @@ FeasOJ 是一个基于 Vue 和 Golang 的在线编程练习平台，支持多国
 [API Document(EN)](https://claret-feasoj.apifox.cn/en/)
 
 ### 项目特性
-- 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文和繁体中文等。
+- 多语言支持：支持多种语言，包括英语、西班牙语、法语、意大利语、日语、简体中文等。
+- 多编程语言支持：C++、Java、Python、Golang、Rust。
 - 用户认证：支持用户注册、登录、注销等功能。
 - 题目管理：支持题目上传、编辑、删除等功能。
 - 讨论区：支持用户发表、回复、删除评论等功能。
@@ -58,11 +59,14 @@ FeasOJ
 如果你找到任何Bug请发布Issue告诉我。
 
 ### 本土化
+- بالعربية
 - English
 - Español
 - Français
 - Italiano
 - 日本語
+- Português
+- Русский
 - 简体中文
 - 繁體中文
 
@@ -83,6 +87,7 @@ FeasOJ
 - [Vue](https://github.com/vuejs/vue)
 - [Vuetify](https://github.com/vuetifyjs/vuetify)
 - [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
+- [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)

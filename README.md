@@ -17,7 +17,8 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 [API Document(EN)](https://claret-feasoj.apifox.cn/en/)
 
 ### Features
-- Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese and Traditional Chinese.
+- Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc.
+- Multi Programming Language Support: C++, Java, Python, Golang, Rust.
 - User Authentication: Supports user registration, login, logout and other functions.
 - Topic Management: Supports topic uploading, editing, deleting, etc.
 - Discussion Forum: supports users to post, reply, delete comments and so on.
@@ -57,11 +58,14 @@ This is the first time I've written a big project with Vue + Golang, so the code
 If you find any bugs, please open an issue.
 
 ### Localization
+- بالعربية
 - English
 - Español
 - Français
 - Italiano
 - 日本語
+- Português
+- Русский
 - 简体中文
 - 繁體中文
 
@@ -82,6 +86,7 @@ More screenshots can be found in the [assets](/assets) folder.
 - [Vue](https://github.com/vuejs/vue)
 - [Vuetify](https://github.com/vuetifyjs/vuetify)
 - [vue-avatar-cropper](https://github.com/overtrue/vue-avatar-cropper)
+- [vue3-ace-editor](https://github.com/CarterLi/vue3-ace-editor)
 - [md-editor-v3](https://github.com/imzbf/md-editor-v3)
 - [vue-i18n](https://github.com/intlify/vue-i18n)
 - [axios](https://github.com/axios/axios)
