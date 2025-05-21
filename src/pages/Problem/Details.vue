@@ -169,8 +169,8 @@ onMounted(async () => {
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
                     <v-alert 
-                        text="All programming language compilers are up-to-date, except for Java17, so please pay attention to the code you are writing."
-                        title="Attention" align="left" type="info" variant="tonal" border="start" closable></v-alert>
+                        :text="$t('message.a_code')"
+                        :title="$t('message.attention')" align="left" type="info" variant="tonal" border="start" closable></v-alert>
                     <v-card width="100%" height="100vh" elevation="0">
                         <v-row style="margin-inline: 0;margin-top: 0;">
                             <v-select :label="$t('message.lang')" v-model="lang"

@@ -118,6 +118,8 @@ export default {
         profanity_expand: "clicca per espandere",
         surequit: "Sei sicuro di voler uscire?",
         cannotViewCode: "Non puoi visualizzare il codice di questo invio",
-        editor_theme: "Tema dell'editor"
+        editor_theme: "Tema dell'editor",
+        attention: "Attenzione",
+        a_code: "Tutti i compilatori dei linguaggi di programmazione sono aggiornati, ad eccezione di Java17, quindi fate attenzione al codice che state scrivendo."
     }
 }

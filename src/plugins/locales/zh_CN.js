@@ -118,6 +118,8 @@ export default {
         profanity_expand: "此内容不适合显示，点击展开",
         surequit: "确定退出吗？",
         cannotViewCode: "您没有权限查看此代码",
-        editor_theme: "编辑器主题"
+        editor_theme: "编辑器主题",
+        attention: "注意",
+        a_code: "除 Java17 外，所有编程语言的编译器都是最新的，因此请注意您编写的代码。"
     }
 }

@@ -118,6 +118,8 @@ export default{
         profanity_expand: 'このコンテンツは表示できません（クリックして展開）',
         surequit: "コンテストを終了してもよろしいですか？",
         cannotViewCode: "コードを表示できません",
-        editor_theme: "エディタのテーマ"
+        editor_theme: "エディタのテーマ",
+        attention: "注意",
+        a_code: "Java17を除くすべてのプログラミング言語のコンパイラーは最新のものですので、ご自分の書くコードに注意してください。"
     }
 }

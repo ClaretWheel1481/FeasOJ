@@ -118,6 +118,8 @@ export default {
         profanity_expand: "cliquez pour développer",
         surequit: "Êtes-vous sûr de vouloir quitter ?",
         cannotViewCode: "Vous ne pouvez pas voir le code de cette soumission",
-        editor_theme: "Thème de l'éditeur"
+        editor_theme: "Thème de l'éditeur",
+        attention: "Attention",
+        a_code: "Tous les compilateurs des langages de programmation sont à jour, à l'exception de Java17, alors faites attention au code que vous écrivez."
     }
 }
