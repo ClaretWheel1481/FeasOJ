@@ -121,7 +121,7 @@ const verifyAndFetchUserInfo = async () => {
   loading.value = true;
   try {
     if (!userLoggedIn.value) {
-      router.push({ path: '/login' });
+      await router.push({path: '/login'});
       return;
     }
     await verifyUserInfo(userName.value, token.value);
@@ -130,7 +130,7 @@ const verifyAndFetchUserInfo = async () => {
     synopsis.value = userInfo.value.synopsis;
     await fetchSubmitData();
   } catch (error) {
-    router.push({ path: '/403' });
+    await router.push({path: '/403'});
   } finally {
     loading.value = false;
   }

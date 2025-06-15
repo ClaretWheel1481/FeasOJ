@@ -121,9 +121,9 @@ const showDelDialog = (isComment, commentID) => {
 // 确认删除
 const deleteChecker = async () => {
     if (isDelComment.value) {
-        deleteCommentByID(deleteCommentID.value);
+        await deleteCommentByID(deleteCommentID.value);
     } else {
-        deleteDis();
+        await deleteDis();
     }
     checkDialog.value = false;
 }

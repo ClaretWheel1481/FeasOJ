@@ -12,7 +12,7 @@ export const showAlert = (message, path) => {
       dialog.value = false;
     }, 1500);
   } else if (path === "") {
-    return
+
   } else if (path === "/") {
     setTimeout(() => {
       window.location = '#' + path;

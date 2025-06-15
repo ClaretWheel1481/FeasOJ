@@ -66,7 +66,7 @@ const selectCompetition = async (contest) => {
         const resp = await isInCompetition(selectedId.value);
         networkloading.value = false;
         if (resp.data.isIn) {
-            router.push({ path: `/competitions/${selectedId.value}` })
+            await router.push({path: `/competitions/${selectedId.value}`})
         } else {
             contest.have_password ? withPwdDialog.value = true : noPwdDialog.value = true;
         }

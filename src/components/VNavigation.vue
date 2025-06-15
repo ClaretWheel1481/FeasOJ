@@ -38,9 +38,9 @@ const changeLanguage = (lang) => {
 // 根据用户登录状态修改导航目的
 const navigate = async () => {
   if (userLoggedIn.value) {
-    router.push("/profile/" + userName.value);
+    await router.push("/profile/" + userName.value);
   } else {
-    router.push("/login");
+    await router.push("/login");
   }
 };
 

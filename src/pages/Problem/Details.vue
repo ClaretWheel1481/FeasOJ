@@ -89,6 +89,10 @@ end.`
 
 // 代码上传
 const uploadContentAsFile = async () => {
+    if (!content.value) {
+        showAlert(t('message.formCheckfailed'), "");
+        return;
+    }
     const blob = new Blob([content.value], { type: 'text/plain' });
     const codefile = new File([blob], `main.${langFileExtension[lang.value]}`, { type: 'text/plain' });
     try {
@@ -120,7 +124,7 @@ onMounted(async () => {
 
     watch(lang, (newLang) => {
         content.value = templates[newLang];
-    });
+    }, { immediate: true });
 });
 </script>
 
@@ -168,9 +172,8 @@ onMounted(async () => {
                 </v-col>
                 <v-divider vertical></v-divider>
                 <v-col cols="12" md="6">
-                    <v-alert 
-                        :text="$t('message.a_code')"
-                        :title="$t('message.attention')" align="left" type="info" variant="tonal" border="start" closable></v-alert>
+                    <v-alert :text="$t('message.a_code')" :title="$t('message.attention')" align="left" type="info"
+                        variant="tonal" border="start" closable></v-alert>
                     <v-card width="100%" height="100vh" elevation="0">
                         <v-row style="margin-inline: 0;margin-top: 0;">
                             <v-select :label="$t('message.lang')" v-model="lang"
