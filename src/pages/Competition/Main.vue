@@ -155,7 +155,7 @@ onMounted(async () => {
             <v-container>
                 <v-row>
                     <v-col v-for="contest in competitions" :key="contest.contest_id" cols="12" md="4">
-                        <v-card rounded="xl" elevation="2" style="display: grid;">
+                        <v-card rounded="xl" elevation="2" style="display: grid;" class="comp-card">
                             <v-card-title style="font-weight: bold;font-size:28px;justify-self: left;">{{ contest.title
                                 }}</v-card-title>
                             <v-card-subtitle style="justify-self: left;">{{ contest.subtitle }}</v-card-subtitle>
@@ -192,5 +192,15 @@ onMounted(async () => {
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.comp-card {
+  transition: all 0.3s ease;
+  border: 1px solid var(--v-border-color);
+}
+
+.comp-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 </style>

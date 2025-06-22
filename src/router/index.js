@@ -47,7 +47,7 @@ const routes = [
         }
     },
     {
-        path: '/problem/:Pid',
+        path: '/problemset/:Pid',
         component: () => import('../pages/Problem/Details.vue'),
         meta: {
             titleKey: 'message.problem'

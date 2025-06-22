@@ -103,6 +103,13 @@ const uploadContentAsFile = async () => {
   }
 };
 
+// 应用用户偏好语言
+const applyPreferredLanguage = () => {
+  const savedPreferredLanguage = localStorage.getItem('preferredLanguage') || 'c_cpp';
+  lang.value = savedPreferredLanguage;
+  content.value = templates[savedPreferredLanguage];
+};
+
 onMounted(async () => {
   loading.value = true;
   if (userLoggedIn.value) {
@@ -118,6 +125,9 @@ onMounted(async () => {
   } else {
     window.location = "#/login";
   }
+
+  // 应用用户偏好语言
+  applyPreferredLanguage();
 
   watch(
     lang,
@@ -173,7 +183,7 @@ onUnmounted(() => {
               <!-- 题目限制信息 -->
               <v-row class="mb-6">
                 <v-col cols="6">
-                  <v-card variant="outlined" class="limit-card" rounded="md">
+                  <v-card variant="outlined" class="limit-card" rounded="xl">
                     <v-card-text class="text-center pa-4">
                       <v-icon icon="mdi-clock-outline" size="24" color="primary" class="mb-2"></v-icon>
                       <div class="text-h6 font-weight-medium">
@@ -186,7 +196,7 @@ onUnmounted(() => {
                   </v-card>
                 </v-col>
                 <v-col cols="6">
-                  <v-card variant="outlined" class="limit-card" rounded="md">
+                  <v-card variant="outlined" class="limit-card" rounded="xl">
                     <v-card-text class="text-center pa-4">
                       <v-icon icon="mdi-memory" size="24" color="primary" class="mb-2"></v-icon>
                       <div class="text-h6 font-weight-medium">
@@ -294,7 +304,7 @@ onUnmounted(() => {
               <!-- 代码编辑器 -->
               <div class="editor-wrapper mt-4">
                 <v-ace-editor v-model:value="content" :theme="theme" :lang="lang"
-                  :style="`height: 800px; font-size: ${fontSize}px; border-radius: 8px;`" />
+                  :style="`height: 650px; font-size: ${fontSize}px; border-radius: 8px;`" />
               </div>
             </v-card-text>
           </v-card>

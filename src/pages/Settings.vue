@@ -5,11 +5,21 @@ import { useTheme } from 'vuetify';
 
 const { t, locale } = useI18n();
 const theme = ref('system');
+const preferredLanguage = ref('c_cpp');
 const showAboutDialog = ref(false);
 const themes = [
   { title: t('message.light'), value: 'light', icon: 'mdi-white-balance-sunny' },
   { title: t('message.dark'), value: 'dark', icon: 'mdi-weather-night' },
   { title: t('message.system'), value: 'system', icon: 'mdi-monitor' }
+];
+
+const languages = [
+  { title: t('message.c_cpp'), value: 'c_cpp', icon: 'mdi-language-cpp' },
+  { title: t('message.java'), value: 'java', icon: 'mdi-language-java' },
+  { title: t('message.python'), value: 'python', icon: 'mdi-language-python' },
+  { title: t('message.rust'), value: 'rust', icon: 'mdi-language-rust' },
+  { title: t('message.php'), value: 'php', icon: 'mdi-language-php' },
+  { title: t('message.pascal'), value: 'pascal', icon: 'mdi-language-pascal' }
 ];
 
 const vuetifyTheme = useTheme();
@@ -26,6 +36,11 @@ const applyThemeHandler = (selectedTheme) => {
   }
 };
 
+const applyLanguageHandler = (selectedLanguage) => {
+  preferredLanguage.value = selectedLanguage;
+  localStorage.setItem('preferredLanguage', selectedLanguage);
+};
+
 const openAboutDialog = () => {
   showAboutDialog.value = true;
 };
@@ -40,9 +55,11 @@ const handleSystemThemeChange = (e) => {
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme') || 'system';
   const savedLanguage = localStorage.getItem('language') || 'en';
+  const savedPreferredLanguage = localStorage.getItem('preferredLanguage') || 'c_cpp';
 
   theme.value = savedTheme;
   locale.value = savedLanguage;
+  preferredLanguage.value = savedPreferredLanguage;
 
   // 监听系统主题变化
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange);
@@ -57,10 +74,21 @@ watch(theme, (val) => {
   applyThemeHandler(val);
 });
 
+watch(preferredLanguage, (val) => {
+  applyLanguageHandler(val);
+});
+
 watch(locale, (val) => {
   themes[0].title = t('message.light');
   themes[1].title = t('message.dark');
   themes[2].title = t('message.system');
+  
+  languages[0].title = t('message.c_cpp');
+  languages[1].title = t('message.java');
+  languages[2].title = t('message.python');
+  languages[3].title = t('message.rust');
+  languages[4].title = t('message.php');
+  languages[5].title = t('message.pascal');
 });
 </script>
 
@@ -84,6 +112,24 @@ watch(locale, (val) => {
                   <template v-slot:prepend>
                     <v-icon :icon="item.raw.icon" size="20"></v-icon>
                   </template>
+                </v-list-item>
+              </template>
+            </v-select>
+          </div>
+        </template>
+      </v-list-item>
+
+      <v-list-item class="settings-list-item">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-code-braces" size="24"></v-icon>
+        </template>
+        <v-list-item-title class="settings-item-title">{{ t('message.preferredLanguage') }}</v-list-item-title>
+        <template v-slot:append>
+          <div class="select-wrapper" @click.stop>
+            <v-select v-model="preferredLanguage" :items="languages" item-title="title" item-value="value" variant="outlined"
+              density="compact" hide-details @update:model-value="applyLanguageHandler">
+              <template v-slot:item="{ props, item }">
+                <v-list-item v-bind="props" class="language-select-item">
                 </v-list-item>
               </template>
             </v-select>
@@ -171,6 +217,19 @@ watch(locale, (val) => {
 
 .select-wrapper {
   pointer-events: auto;
+}
+
+.theme-select-item,
+.language-select-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  transition: all 0.2s ease;
+}
+
+.theme-select-item:hover,
+.language-select-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
 }
 
 /* 关于对话框样式 */

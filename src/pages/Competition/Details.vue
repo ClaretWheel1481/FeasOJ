@@ -183,7 +183,7 @@ onUnmounted(() => {
                                 <v-list-item v-for="p in problems" :key="p.pid">
                                     <v-list-item-title>
                                         <v-btn variant="text" color="primary" block
-                                            @click="router.push({ path: `/problem/${p.pid}` })">
+                                            @click="router.push({ path: `/problemset/${p.pid}` })">
                                             {{ p.title }}
                                         </v-btn>
                                     </v-list-item-title>

@@ -91,91 +91,48 @@ onMounted(async () => {
     <v-list nav class="nav-list">
       <!-- 主导航项目 -->
       <div class="nav-section">
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-home-outline" 
-          value="HOME" 
-          @click="router.push('/')" 
-          color="primary"
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/') }"
-          :active="isCurrentPage('/')"
-        >
+        <v-list-item rounded="lg" prepend-icon="mdi-home-outline" value="HOME" @click="router.push('/')" color="primary"
+          class="nav-item" :class="{ 'nav-item-active': isCurrentPage('/') }" :active="isCurrentPage('/')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.mainpage') }}</span>
           </template>
         </v-list-item>
-        
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-book-open-page-variant-outline" 
-          value="PROBLEMSET" 
-          @click="router.push('/problemset')"
-          color="primary" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/problemset') }"
-          :active="isCurrentPage('/problemset')"
-        >
+
+        <v-list-item rounded="lg" prepend-icon="mdi-book-open-page-variant-outline" value="PROBLEMSET"
+          @click="router.push('/problemset')" color="primary" class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/problemset') }" :active="isCurrentPage('/problemset')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.problemset') }}</span>
           </template>
         </v-list-item>
-        
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-trophy-outline" 
-          value="COMPETITION" 
-          color="primary"
-          @click="router.push('/competitions')" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/competitions') }"
-          :active="isCurrentPage('/competitions')"
-        >
+
+        <v-list-item rounded="lg" prepend-icon="mdi-trophy-outline" value="COMPETITION" color="primary"
+          @click="router.push('/competitions')" class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/competitions') }" :active="isCurrentPage('/competitions')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.competition') }}</span>
           </template>
         </v-list-item>
-        
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-forum-outline" 
-          value="DISCUSS" 
-          color="primary"
-          @click="router.push('/discussion')" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/discussion') }"
-          :active="isCurrentPage('/discussion')"
-        >
+
+        <v-list-item rounded="lg" prepend-icon="mdi-forum-outline" value="DISCUSS" color="primary"
+          @click="router.push('/discussion')" class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/discussion') }" :active="isCurrentPage('/discussion')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.discussion') }}</span>
           </template>
         </v-list-item>
-        
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-podium-gold" 
-          value="RANK" 
-          @click="router.push('/rank')"
-          color="primary" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/rank') }"
-          :active="isCurrentPage('/rank')"
-        >
+
+        <v-list-item rounded="lg" prepend-icon="mdi-podium-gold" value="RANK" @click="router.push('/rank')"
+          color="primary" class="nav-item" :class="{ 'nav-item-active': isCurrentPage('/rank') }"
+          :active="isCurrentPage('/rank')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.rank') }}</span>
           </template>
         </v-list-item>
-        
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-clipboard-list-outline" 
-          value="STATUS"
-          @click="router.push('/status')" 
-          color="primary" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/status') }"
-          :active="isCurrentPage('/status')"
-        >
+
+        <v-list-item rounded="lg" prepend-icon="mdi-clipboard-list-outline" value="STATUS"
+          @click="router.push('/status')" color="primary" class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/status') }" :active="isCurrentPage('/status')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.status') }}</span>
           </template>
@@ -188,17 +145,9 @@ onMounted(async () => {
       <!-- 底部导航项目 -->
       <div class="nav-section bottom-section">
         <!-- 管理员入口 -->
-        <v-list-item 
-          v-if="privilege === 1" 
-          rounded="lg" 
-          prepend-icon="mdi-shield-crown-outline" 
-          @click="router.push('/admin')"
-          value="admin" 
-          base-color="primary" 
-          class="nav-item admin-item"
-          :class="{ 'nav-item-active': isCurrentPage('/admin') }"
-          :active="isCurrentPage('/admin')"
-        >
+        <v-list-item v-if="privilege === 1" rounded="lg" prepend-icon="mdi-shield-crown-outline"
+          @click="router.push('/admin')" value="admin" base-color="primary" class="nav-item admin-item"
+          :class="{ 'nav-item-active': isCurrentPage('/admin') }" :active="isCurrentPage('/admin')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.management') }}</span>
           </template>
@@ -207,14 +156,8 @@ onMounted(async () => {
         <!-- 语言选择 -->
         <v-menu location="end" transition="slide-x-transition">
           <template v-slot:activator="{ props }">
-            <v-list-item 
-              rounded="lg" 
-              prepend-icon="mdi-translate" 
-              base-color="primary" 
-              v-bind="props" 
-              class="nav-item"
-              :active="false"
-            >
+            <v-list-item rounded="lg" prepend-icon="mdi-translate" base-color="primary" v-bind="props" class="nav-item"
+              :active="false">
               <template v-slot:title>
                 <span class="nav-title">{{ $t('message.lang') }}</span>
               </template>
@@ -223,13 +166,8 @@ onMounted(async () => {
           <v-card max-width="350px" rounded="lg" elevation="8">
             <v-card-text class="pa-0" style="max-height: 350px; overflow-y: auto;">
               <v-list rounded="lg">
-                <v-list-item 
-                  v-for="(item, index) in langs" 
-                  :key="index" 
-                  :value="index"
-                  @click="changeLanguage(item.value)"
-                  class="lang-item"
-                >
+                <v-list-item v-for="(item, index) in langs" :key="index" :value="index"
+                  @click="changeLanguage(item.value)" class="lang-item">
                   <v-list-item-title class="lang-title">
                     {{ item.title }}
                   </v-list-item-title>
@@ -240,32 +178,18 @@ onMounted(async () => {
         </v-menu>
 
         <!-- 设置 -->
-        <v-list-item 
-          rounded="lg" 
-          prepend-icon="mdi-cog-outline" 
-          value="SETTINGS" 
-          base-color="primary" 
-          class="nav-item" 
-          @click="router.push('/settings')"
-          :class="{ 'nav-item-active': isCurrentPage('/settings') }"
-          :active="isCurrentPage('/settings')"
-        >
+        <v-list-item rounded="lg" prepend-icon="mdi-cog-outline" value="SETTINGS" base-color="primary" class="nav-item"
+          @click="router.push('/settings')" :class="{ 'nav-item-active': isCurrentPage('/settings') }"
+          :active="isCurrentPage('/settings')">
           <template v-slot:title>
             <span class="nav-title">{{ $t('message.settings') }}</span>
           </template>
         </v-list-item>
 
         <!-- 用户资料/登录 -->
-        <v-list-item 
-          rounded="lg" 
-          :prepend-icon="userLoggedIn ? 'mdi-account-circle-outline' : 'mdi-login'" 
-          @click="navigate"
-          value="PROFILE" 
-          base-color="primary" 
-          class="nav-item"
-          :class="{ 'nav-item-active': isCurrentPage('/profile') }"
-          :active="isCurrentPage('/profile')"
-        >
+        <v-list-item rounded="lg" :prepend-icon="userLoggedIn ? 'mdi-account-circle-outline' : 'mdi-login'"
+          @click="navigate" value="PROFILE" base-color="primary" class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/profile') }" :active="isCurrentPage('/profile')">
           <template v-slot:title>
             <span class="nav-title">{{ userLoggedIn ? userName : $t('message.login') }}</span>
           </template>

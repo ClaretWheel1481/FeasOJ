@@ -72,7 +72,8 @@ onMounted(async () => {
       <tr>
         <td>{{ item.Pid }}</td>
         <td class="tabletitle">
-          <v-btn @click="router.push({ path: `/problem/${item.Pid}` })" variant="text" block>{{ item.Title }}</v-btn>
+          <v-btn @click="router.push({ path: `/problemset/${item.Pid}` })" rounded="xl" variant="text" block>{{
+            item.Title }}</v-btn>
         </td>
         <td>
           <v-chip :style="difficultyColor(item.Difficulty)">

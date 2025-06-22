@@ -132,6 +132,13 @@ export default {
         developer: "开发者",
         buildTime: "构建时间",
         close: "关闭",
-        realtimeUpdate: "实时更新，需要手动刷新页面"
+        realtimeUpdate: "实时更新，需要手动刷新页面",
+        preferredLanguage: "偏好代码语言",
+        c_cpp: "C++",
+        java: "Java",
+        python: "Python",
+        rust: "Rust",
+        php: "PHP",
+        pascal: "Pascal"
     }
 }

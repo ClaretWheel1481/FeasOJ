@@ -132,6 +132,13 @@ export default{
         developer: "開発者",
         buildTime: "ビルド時間",
         close: "閉じる",
-        realtimeUpdate: "リアルタイム更新，手動で更新する必要があります"
+        realtimeUpdate: "リアルタイム更新，手動で更新する必要があります",
+        preferredLanguage: "優先プログラミング言語",
+        c_cpp: "C++",
+        java: "Java",
+        python: "Python",
+        rust: "Rust",
+        php: "PHP",
+        pascal: "Pascal"
     }
 }

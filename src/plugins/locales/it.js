@@ -132,6 +132,13 @@ export default {
         developer: "Sviluppatore",
         buildTime: "Tempo di compilazione",
         close: "Chiudi",
-        realtimeUpdate: "Aggiornamento in tempo reale, si deve aggiornare manualmente"
+        realtimeUpdate: "Aggiornamento in tempo reale, è necessario aggiornare manualmente la pagina",
+        preferredLanguage: "Linguaggio di Programmazione Preferito",
+        c_cpp: "C++",
+        java: "Java",
+        python: "Python",
+        rust: "Rust",
+        php: "PHP",
+        pascal: "Pascal"
     }
 }
