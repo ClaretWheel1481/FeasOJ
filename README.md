@@ -17,16 +17,16 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 [API Document(EN)](https://claret-feasoj.apifox.cn/en/)
 
 ### Features
-- Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc.
-- Multi Programming Language Support: C++, Java, Python, Golang, Rust, PHP, Pascal.
-- User Authentication: Supports user registration, login, logout and other functions.
-- Topic Management: Supports topic uploading, editing, deleting, etc.
-- Discussion Forum: supports users to post, reply, delete comments and so on.
-- Contests: support the functions of creating, participating and ending contests.
-- Code Editor: Supports Markdown editor, which is convenient for users to write questions and comments.
-- Code Highlighting: Support code highlighting, convenient for users to view and edit code.
-- Code Submission: Support users to submit code and compile and run in the sandbox to return the result.
-- Real-time notification: Support real-time notification of question results and contest messages (SSE).
+- Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc
+- Multi Programming Language Support: C++, Java, Python, Golang, Rust, PHP, Pascal
+- User Authentication: Supports user registration, login, logout and other functions
+- Topic Management: Supports topic uploading, editing, deleting, etc
+- Discussion Forum: supports users to post, reply, delete comments and so on
+- Contests: support the functions of creating, participating and ending contests
+- Code Editor: Supports Markdown editor, which is convenient for users to write questions and comments
+- Code Highlighting: Support code highlighting, convenient for users to view and edit code
+- Code Submission: Support users to submit code and compile and run in the sandbox to return the result
+- Real-time notification: Support real-time notification of question results and contest messages (SSE)
 
 ### Project Structure
 ```
