@@ -51,21 +51,21 @@ onMounted(async () => {
 </script>
 
 <template>
-    <v-app-bar :elevation="2">
-      <v-col class="align-left-solo">
-        <p style="font-size: 24px;">{{ $t('message.rank') }}</p>
-        <p style="font-size: 12px;">{{ $t('message.refresh5m') }}</p>
-      </v-col>
+  <v-app-bar :elevation="2">
+    <v-col class="align-left-solo">
+      <p style="font-size: 24px;">{{ $t('message.rank') }}</p>
+      <p style="font-size: 12px;">{{ $t('message.refresh5m') }}</p>
+    </v-col>
   </v-app-bar>
-    <v-card style="margin: 50px;" rounded="xl" elevation="10">
-    <v-data-table-server :headers="headers" :items="rankingData" :items-length="rankingDataLength"
-      :loading="loading" :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
+  <v-card style="margin: 50px;" rounded="xl" elevation="10">
+    <v-data-table-server :headers="headers" :items="rankingData" :items-length="rankingDataLength" :loading="loading"
+      :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
       <template v-slot:item="{ item }">
         <tr>
           <td class="tabletitle">
             <v-btn @click="router.push({ path: `/profile/${item.username}` })" variant="text" block>{{ item.username
-              }}</v-btn>
+            }}</v-btn>
           </td>
           <td>{{ item.synopsis }}</td>
           <td>{{ item.score }}</td>

@@ -118,6 +118,7 @@ export default{
         profanity_expand: 'このコンテンツは表示できません（クリックして展開）',
         surequit: "コンテストを終了してもよろしいですか？",
         cannotViewCode: "コードを表示できません",
+        codePreview: "コードプレビュー",
         editor_theme: "エディタのテーマ",
         attention: "注意",
         a_code: "Java17を除くすべてのプログラミング言語のコンパイラーは最新のものですので、ご自分の書くコードに注意してください。",
@@ -130,6 +131,7 @@ export default{
         version: "バージョン",
         developer: "開発者",
         buildTime: "ビルド時間",
-        close: "閉じる"
+        close: "閉じる",
+        realtimeUpdate: "リアルタイム更新，手動で更新する必要があります"
     }
 }

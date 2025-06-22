@@ -48,3 +48,73 @@ h1 {
   height: 100%;
   margin: 100px;
 }
+
+/* md-editor-v3 深色模式优化 */
+.v-theme--dark .md-editor,
+.v-theme--dark .md-editor-content,
+.v-theme--dark .md-editor-preview,
+.v-theme--dark .md-editor-toolbar,
+.v-theme--dark .md-editor-toolbar-wrapper,
+.v-theme--dark .md-editor-footer {
+  background-color: rgb(var(--v-theme-surface)) !important;
+  color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+.v-theme--dark .md-editor-content pre,
+.v-theme--dark .md-editor-preview pre {
+  background-color: rgb(var(--v-theme-surface-variant)) !important;
+  color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+.v-theme--dark .md-editor-toolbar {
+  border-bottom: 1px solid rgb(var(--v-theme-outline)) !important;
+}
+
+.v-theme--dark .md-editor-footer {
+  border-top: 1px solid rgb(var(--v-theme-outline)) !important;
+}
+
+.v-theme--dark .md-editor input,
+.v-theme--dark .md-editor textarea {
+  background: rgb(var(--v-theme-surface-variant)) !important;
+  color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+/* 兼容 md-preview 组件 */
+.v-theme--dark .md-preview,
+.v-theme--dark .md-preview-content {
+  background-color: rgb(var(--v-theme-surface)) !important;
+  color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+.v-theme--dark .md-editor .md-editor-content,
+.v-theme--dark .md-editor .md-editor-preview {
+  background-color: rgb(var(--v-theme-surface)) !important;
+}
+
+.v-theme--dark .md-editor .md-editor-toolbar {
+  background-color: rgb(var(--v-theme-surface)) !important;
+  border-bottom: 1px solid rgb(var(--v-theme-outline)) !important;
+}
+
+.v-theme--dark .md-editor .md-editor-footer {
+  background-color: rgb(var(--v-theme-surface)) !important;
+  border-top: 1px solid rgb(var(--v-theme-outline)) !important;
+}
+
+/* 代码块样式 */
+.v-theme--dark .md-editor pre,
+.v-theme--dark .md-preview pre {
+  background-color: rgb(var(--v-theme-surface-variant)) !important;
+  color: rgb(var(--v-theme-on-surface)) !important;
+  border: 1px solid rgb(var(--v-theme-outline)) !important;
+}
+
+/* 工具栏按钮样式 */
+.v-theme--dark .md-editor .md-toolbar-item {
+  color: rgb(var(--v-theme-on-surface)) !important;
+}
+
+.v-theme--dark .md-editor .md-toolbar-item:hover {
+  background-color: rgb(var(--v-theme-surface-variant)) !important;
+}

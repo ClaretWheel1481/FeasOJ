@@ -118,6 +118,7 @@ export default {
         profanity_expand: "This content is not suitable for display, click to expand",
         surequit: "Are you sure you want to quit?",
         cannotViewCode: "You cannot view the code of this submission",
+        codePreview: "Code Preview",
         editor_theme: "Editor Theme",
         attention: "Attention",
         a_code: "All programming language compilers are up-to-date, except for Java17, so please pay attention to the code you are writing.",
@@ -130,6 +131,7 @@ export default {
         version: "Version",
         developer: "Developer",
         buildTime: "Build Time",
-        close: "Close"
+        close: "Close",
+        realtimeUpdate: "Realtime update, you need to manually refresh the page"
     }
 }

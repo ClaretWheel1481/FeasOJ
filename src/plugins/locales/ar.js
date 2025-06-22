@@ -118,6 +118,7 @@ export default {
         profanity_expand: "هذا المحتوى غير مناسب للعرض، انقر للتوسيع",
         surequit: "هل أنت متأكد من الرغبة في الانسحاب؟",
         cannotViewCode: "لا يمكنك عرض كود هذا الإرسال",
+        codePreview: "معاينة الكود",
         editor_theme: "مظهر المحرر",
         attention: "انتباه",
         a_code: "جميع مترجمات لغات البرمجة محدثة، باستثناء Java17، لذا انتبه للكود الذي تكتبه.",
@@ -130,6 +131,7 @@ export default {
         version: "الإصدار",
         developer: "المطور",
         buildTime: "وقت البناء",
-        close: "إغلاق"
+        close: "إغلاق",
+        realtimeUpdate: "تحديث فوري، يجب عليك تحديث الصفحة"
     }
 }

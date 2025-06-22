@@ -118,6 +118,7 @@ export default {
         profanity_expand: "Conteúdo inadequado (clique para expandir)",
         surequit: "Confirmar saída?",
         cannotViewCode: "Você não pode visualizar este código",
+        codePreview: "Visualização do código",
         editor_theme: "Tema do editor",
         attention: "Atenção",
         a_code: "Todos os compiladores de linguagens de programação estão atualizados, exceto Java17, então preste atenção ao código que você está escrevendo.",
@@ -130,6 +131,7 @@ export default {
         version: "Versão",
         developer: "Desenvolvedor",
         buildTime: "Tempo de compilação",
-        close: "Fechar"
+        close: "Fechar",
+        realtimeUpdate: "Atualização em tempo real, se deve atualizar manualmente"
     }
 }

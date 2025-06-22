@@ -17,7 +17,7 @@ const vuetifyTheme = useTheme();
 const applyThemeHandler = (selectedTheme) => {
   theme.value = selectedTheme;
   localStorage.setItem('theme', selectedTheme);
-  
+
   if (selectedTheme === 'system') {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     vuetifyTheme.global.name.value = isDark ? 'dark' : 'light';
@@ -40,10 +40,10 @@ const handleSystemThemeChange = (e) => {
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme') || 'system';
   const savedLanguage = localStorage.getItem('language') || 'en';
-  
+
   theme.value = savedTheme;
   locale.value = savedLanguage;
-  
+
   // 监听系统主题变化
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange);
 });
@@ -78,7 +78,7 @@ watch(locale, (val) => {
         <template v-slot:append>
           <div class="select-wrapper" @click.stop>
             <v-select v-model="theme" :items="themes" item-title="title" item-value="value" variant="outlined"
-              hide-details @update:model-value="applyThemeHandler">
+              density="compact" hide-details @update:model-value="applyThemeHandler">
               <template v-slot:item="{ props, item }">
                 <v-list-item v-bind="props" class="theme-select-item">
                   <template v-slot:prepend>

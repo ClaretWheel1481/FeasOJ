@@ -118,6 +118,7 @@ export default{
         profanity_expand: "此內容不適合顯示，點擊展開",
         surequit: "確定要退出嗎？",
         cannotViewCode: "無法查看代碼",
+        codePreview: "代碼預覽",
         editor_theme: "編輯器主題",
         attention: "注意",
         a_code: "除了 Java17 之外，所有程式語言的編譯器都是最新的，所以請注意您所寫的程式碼。",
@@ -130,6 +131,7 @@ export default{
         version: "版本號",
         developer: "開發者",
         buildTime: "構建時間",
-        close: "關閉"
+        close: "關閉",
+        realtimeUpdate: "實時更新，需要手動刷新頁面"
     }
 }
