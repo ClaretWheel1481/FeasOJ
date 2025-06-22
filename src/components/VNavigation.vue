@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { verifyUserInfo } from "../utils/api/auth";
 import { token, userName } from "../utils/account";
 import { showAlert } from "../utils/alert";
@@ -27,6 +27,18 @@ const userLoggedIn = computed(() => !!token.value);
 
 // 路由实例
 const router = useRouter();
+const route = useRoute();
+
+// 计算当前路由路径，用于高亮
+const currentPath = computed(() => route.path);
+
+// 判断是否为当前页面
+const isCurrentPage = (path) => {
+  if (path === '/') {
+    return currentPath.value === '/';
+  }
+  return currentPath.value.startsWith(path);
+};
 
 // 改变语言
 const changeLanguage = (lang) => {
@@ -75,100 +87,311 @@ onMounted(async () => {
 </script>
 
 <template>
-  <v-navigation-drawer :width="175" permanent location="left" :elevation="2">
-    <v-list nav style="display: flex; flex-direction: column; height: 100%">
-      <v-list-item rounded="xl" prepend-icon="mdi-home" value="HOME" @click="router.push('/')" color="primary"
-        class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.mainpage') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-file" value="PROBLEMSET" @click="router.push('/problemset')"
-        color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.problemset') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-code-array" value="COMPETITION" color="primary"
-        @click="router.push('/competitions')" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.competition') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-chat" value="DISCUSS" color="primary"
-        @click="router.push('/discussion')" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.discussion') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-playlist-play" value="RANK" @click="router.push('/rank')"
-        color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.rank') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" prepend-icon="mdi-checkbox-multiple-marked" value="STATUS"
-        @click="router.push('/status')" color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.status') }}</span>
-        </template>
-      </v-list-item>
-      <v-divider></v-divider>
-      <div class="flex-grow-space"></div>
-      <v-list-item v-if="privilege === 1" rounded="xl" prepend-icon="mdi-tie" @click="router.push('/admin')"
-        value="admin" base-color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.management') }}</span>
-        </template>
-      </v-list-item>
-      <v-menu location="end" transition="slide-x-transition">
-        <template v-slot:activator="{ props }">
-          <v-list-item rounded="xl" prepend-icon="mdi-translate" base-color="primary" v-bind="props" class="list-item">
-            <template v-slot:title>
-              <span class="multi-line-title">{{ $t('message.lang') }}</span>
-            </template>
-          </v-list-item>
-        </template>
-        <v-card max-width="350px" rounded="xl">
-          <v-card-text class="pa-0" style="max-height: 350px; overflow-y: auto;">
-            <v-list rounded="xl">
-              <v-list-item v-for="(item, index) in langs" :key="index" :value="index"
-                @click="changeLanguage(item.value)">
-                <v-list-item-title style="font-size: 13px; font-weight: bold;">
-                  {{ item.title }}
-                </v-list-item-title>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-menu>
-      <v-list-item rounded="xl" prepend-icon="mdi-cog" value="SETTINGS" base-color="primary" class="list-item" @click="router.push('/settings')">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ $t('message.settings') }}</span>
-        </template>
-      </v-list-item>
-      <v-list-item rounded="xl" :prepend-icon="userLoggedIn ? 'mdi-account-circle' : 'mdi-account'" @click="navigate"
-        value="PROFILE" base-color="primary" class="list-item">
-        <template v-slot:title>
-          <span class="multi-line-title">{{ userLoggedIn ? userName : $t('message.login') }}</span>
-        </template>
-      </v-list-item>
+  <v-navigation-drawer :width="200" permanent location="left" :elevation="2" class="modern-nav-drawer">
+    <v-list nav class="nav-list">
+      <!-- 主导航项目 -->
+      <div class="nav-section">
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-home-outline" 
+          value="HOME" 
+          @click="router.push('/')" 
+          color="primary"
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/') }"
+          :active="isCurrentPage('/')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.mainpage') }}</span>
+          </template>
+        </v-list-item>
+        
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-book-open-page-variant-outline" 
+          value="PROBLEMSET" 
+          @click="router.push('/problemset')"
+          color="primary" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/problemset') }"
+          :active="isCurrentPage('/problemset')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.problemset') }}</span>
+          </template>
+        </v-list-item>
+        
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-trophy-outline" 
+          value="COMPETITION" 
+          color="primary"
+          @click="router.push('/competitions')" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/competitions') }"
+          :active="isCurrentPage('/competitions')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.competition') }}</span>
+          </template>
+        </v-list-item>
+        
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-forum-outline" 
+          value="DISCUSS" 
+          color="primary"
+          @click="router.push('/discussion')" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/discussion') }"
+          :active="isCurrentPage('/discussion')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.discussion') }}</span>
+          </template>
+        </v-list-item>
+        
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-podium-gold" 
+          value="RANK" 
+          @click="router.push('/rank')"
+          color="primary" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/rank') }"
+          :active="isCurrentPage('/rank')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.rank') }}</span>
+          </template>
+        </v-list-item>
+        
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-clipboard-list-outline" 
+          value="STATUS"
+          @click="router.push('/status')" 
+          color="primary" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/status') }"
+          :active="isCurrentPage('/status')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.status') }}</span>
+          </template>
+        </v-list-item>
+      </div>
+
+      <!-- 分隔线 -->
+      <v-divider class="nav-divider"></v-divider>
+
+      <!-- 底部导航项目 -->
+      <div class="nav-section bottom-section">
+        <!-- 管理员入口 -->
+        <v-list-item 
+          v-if="privilege === 1" 
+          rounded="lg" 
+          prepend-icon="mdi-shield-crown-outline" 
+          @click="router.push('/admin')"
+          value="admin" 
+          base-color="primary" 
+          class="nav-item admin-item"
+          :class="{ 'nav-item-active': isCurrentPage('/admin') }"
+          :active="isCurrentPage('/admin')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.management') }}</span>
+          </template>
+        </v-list-item>
+
+        <!-- 语言选择 -->
+        <v-menu location="end" transition="slide-x-transition">
+          <template v-slot:activator="{ props }">
+            <v-list-item 
+              rounded="lg" 
+              prepend-icon="mdi-translate" 
+              base-color="primary" 
+              v-bind="props" 
+              class="nav-item"
+              :active="false"
+            >
+              <template v-slot:title>
+                <span class="nav-title">{{ $t('message.lang') }}</span>
+              </template>
+            </v-list-item>
+          </template>
+          <v-card max-width="350px" rounded="lg" elevation="8">
+            <v-card-text class="pa-0" style="max-height: 350px; overflow-y: auto;">
+              <v-list rounded="lg">
+                <v-list-item 
+                  v-for="(item, index) in langs" 
+                  :key="index" 
+                  :value="index"
+                  @click="changeLanguage(item.value)"
+                  class="lang-item"
+                >
+                  <v-list-item-title class="lang-title">
+                    {{ item.title }}
+                  </v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-card-text>
+          </v-card>
+        </v-menu>
+
+        <!-- 设置 -->
+        <v-list-item 
+          rounded="lg" 
+          prepend-icon="mdi-cog-outline" 
+          value="SETTINGS" 
+          base-color="primary" 
+          class="nav-item" 
+          @click="router.push('/settings')"
+          :class="{ 'nav-item-active': isCurrentPage('/settings') }"
+          :active="isCurrentPage('/settings')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ $t('message.settings') }}</span>
+          </template>
+        </v-list-item>
+
+        <!-- 用户资料/登录 -->
+        <v-list-item 
+          rounded="lg" 
+          :prepend-icon="userLoggedIn ? 'mdi-account-circle-outline' : 'mdi-login'" 
+          @click="navigate"
+          value="PROFILE" 
+          base-color="primary" 
+          class="nav-item"
+          :class="{ 'nav-item-active': isCurrentPage('/profile') }"
+          :active="isCurrentPage('/profile')"
+        >
+          <template v-slot:title>
+            <span class="nav-title">{{ userLoggedIn ? userName : $t('message.login') }}</span>
+          </template>
+        </v-list-item>
+      </div>
     </v-list>
   </v-navigation-drawer>
 </template>
 
-<style>
-.flex-grow-space {
-  flex-grow: 1;
+<style scoped>
+.modern-nav-drawer {
+  border-right: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
 }
 
-.list-item {
-  height: 40px;
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px 8px;
+  gap: 1px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bottom-section {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.nav-item {
+  height: 44px;
+  margin: 1px 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px !important;
+  position: relative;
+}
+
+.nav-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
+  transform: translateX(2px);
+}
+
+.nav-item:active {
+  transform: scale(0.98);
+}
+
+.nav-item-active {
+  background-color: rgba(var(--v-theme-primary), 0.12) !important;
+  color: rgb(var(--v-theme-primary)) !important;
+  font-weight: 600;
+}
+
+.nav-item-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background-color: rgb(var(--v-theme-primary));
+  border-radius: 0 2px 2px 0;
+}
+
+.nav-item-active:hover {
+  background-color: rgba(var(--v-theme-primary), 0.16) !important;
+  transform: translateX(2px);
+}
+
+.nav-title {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.multi-line-title {
-  white-space: normal;
-  word-wrap: break-word;
+.nav-divider {
+  margin: 16px 0;
+  opacity: 0.12;
+}
+
+.admin-item {
+  background-color: rgba(var(--v-theme-warning), 0.08);
+}
+
+.admin-item:hover {
+  background-color: rgba(var(--v-theme-warning), 0.12);
+}
+
+.admin-item.nav-item-active {
+  background-color: rgba(var(--v-theme-warning), 0.16) !important;
+  color: rgb(var(--v-theme-warning)) !important;
+}
+
+.admin-item.nav-item-active::before {
+  background-color: rgb(var(--v-theme-warning));
+}
+
+.profile-item {
+  background-color: rgba(var(--v-theme-primary), 0.04);
+}
+
+.profile-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.12);
+}
+
+.lang-item {
+  padding: 12px 16px;
+  transition: background-color 0.2s ease;
+}
+
+.lang-item:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.lang-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(var(--v-theme-on-surface), 0.87);
 }
 </style>
