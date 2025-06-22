@@ -97,6 +97,13 @@ const routes = [
         }
     },
     {
+        path: '/settings', 
+        component: () => import('../pages/Settings.vue'),
+        meta: {
+            titleKey: 'message.settings'
+        }
+    },
+    {
         path: '/discussion/:Did',
         component: () => import('../pages/Discuss/Details.vue'),
         meta: {

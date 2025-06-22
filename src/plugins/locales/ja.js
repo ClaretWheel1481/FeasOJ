@@ -120,6 +120,16 @@ export default{
         cannotViewCode: "コードを表示できません",
         editor_theme: "エディタのテーマ",
         attention: "注意",
-        a_code: "Java17を除くすべてのプログラミング言語のコンパイラーは最新のものですので、ご自分の書くコードに注意してください。"
+        a_code: "Java17を除くすべてのプログラミング言語のコンパイラーは最新のものですので、ご自分の書くコードに注意してください。",
+        settings: "設定",
+        theme: "テーマ",
+        light: "ライト",
+        dark: "ダーク",
+        system: "システム",
+        aboutFeasOJ: "FeasOJについて",
+        version: "バージョン",
+        developer: "開発者",
+        buildTime: "ビルド時間",
+        close: "閉じる"
     }
 }

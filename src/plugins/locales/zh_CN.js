@@ -120,6 +120,16 @@ export default {
         cannotViewCode: "您没有权限查看此代码",
         editor_theme: "编辑器主题",
         attention: "注意",
-        a_code: "除 Java17 外，所有编程语言的编译器都是最新的，因此请注意您编写的代码。"
+        a_code: "除 Java17 外，所有编程语言的编译器都是最新的，因此请注意您编写的代码。",
+        settings: "设置",
+        theme: "主题",
+        light: "浅色",
+        dark: "深色",
+        system: "跟随系统",
+        aboutFeasOJ: "关于 FeasOJ",
+        version: "版本号",
+        developer: "开发者",
+        buildTime: "构建时间",
+        close: "关闭"
     }
 }

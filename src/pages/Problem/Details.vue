@@ -1,6 +1,6 @@
 <!-- 题目详细页 -->
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getPbDetails, uploadCode } from '../../utils/api/problems';
 import { VAceEditor } from 'vue3-ace-editor';
@@ -9,6 +9,7 @@ import { token } from "../../utils/account";
 import { MdPreview } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
 import { difficultyColor, difficultyLang } from '../../utils/dynamic_styles';
+import { getMdPreviewTheme } from '../../utils/theme';
 import 'md-editor-v3/lib/preview.css';
 
 const { t } = useI18n();
@@ -20,6 +21,7 @@ const loading = ref(true);
 const problemInfo = ref({});
 const content = ref('');
 const lang = ref('c_cpp'); // 初始选中语言
+const previewTheme = ref(getMdPreviewTheme());
 
 // Ace Editor字体
 const fontSize = ref(14);
@@ -43,6 +45,11 @@ const langFileExtension = {
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  previewTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 // 代码模板
 const templates = {
@@ -125,6 +132,14 @@ onMounted(async () => {
     watch(lang, (newLang) => {
         content.value = templates[newLang];
     }, { immediate: true });
+    
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
+});
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
 });
 </script>
 
@@ -164,7 +179,7 @@ onMounted(async () => {
                     <v-divider></v-divider>
                     <div style="margin-top: 20px;"></div>
                     <md-preview style="margin-left: 30px;" :modelValue="problemInfo.content" :editorId="id"
-                        class="md_preview" />
+                        class="md_preview" :theme="previewTheme" />
                     <p class="tags">{{ $t("message.displayInputCase") }}</p>
                     <p class="example">{{ problemInfo.input }}</p>
                     <p class="tags">{{ $t("message.displayOutputCase") }}</p>

@@ -1,6 +1,6 @@
 <!-- 个人信息页 -->
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getUserSubmitRecords } from '../utils/api/submit_records';
 import { uploadAvatar, updateSynopsis } from '../utils/api/users';
@@ -15,6 +15,7 @@ import { showNotification } from '../utils/notification.js';
 import moment from 'moment';
 import Heatmap from '../components/Profile/Heatmap.vue';
 import 'md-editor-v3/lib/preview.css';
+import { getMdPreviewTheme } from '../utils/theme';
 
 const { t } = useI18n();
 
@@ -31,6 +32,7 @@ const dialog = ref(false);
 const synopsis = ref('');
 const id = 'preview-only';
 const codeDialog = ref(false);
+const previewTheme = ref(getMdPreviewTheme());
 
 // 展示代码
 const currentCode = ref('');
@@ -43,6 +45,11 @@ const headers = ref([
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  previewTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 // 格式化代码
 const formatAsFencedCode = (code, lang = '') => {
@@ -141,6 +148,16 @@ watch(() => route.params.Username, (newUsername) => {
   currentUsername.value = newUsername;
   verifyAndFetchUserInfo();
 }, { immediate: true });
+
+onMounted(() => {
+  // 监听主题变化
+  window.addEventListener('theme-change', handleThemeChange);
+});
+
+onUnmounted(() => {
+  // 清理事件监听器
+  window.removeEventListener('theme-change', handleThemeChange);
+});
 </script>
 
 <template>
@@ -244,7 +261,7 @@ watch(() => route.params.Username, (newUsername) => {
   </v-dialog>
   <!-- 查看代码弹窗 -->
   <v-dialog v-model="codeDialog" width="auto">
-    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" :theme="previewTheme" />
   </v-dialog>
 </template>
 

@@ -1,6 +1,6 @@
 <!-- 讨论帖子详情页 -->
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
 import { getDisDetails, deleteDiscussion, getComments, deleteComment, addComment } from "../../utils/api/discussions";
 import { avatarServer } from "../../utils/axios";
 import { useRoute, useRouter } from "vue-router";
@@ -10,6 +10,8 @@ import { MdPreview, MdEditor } from "md-editor-v3";
 import { useI18n } from "vue-i18n";
 import moment from "moment";
 import "md-editor-v3/lib/style.css";
+import "md-editor-v3/lib/preview.css";
+import { getMdEditorTheme, getMdPreviewTheme } from '../../utils/theme';
 
 // 用于获取当前语言
 const { locale } = useI18n();
@@ -36,21 +38,15 @@ const checkDialog = ref(false);
 const isDelComment = ref(false);
 const deleteCommentID = ref("");
 
-// MDEDITOR工具栏限制
-const editorToolbar = [
-    "bold",
-    "underline",
-    "italic",
-    "-",
-    "title",
-    "strikeThrough",
-    "quote",
-    "-",
-    "codeRow",
-    "code",
-    "link",
-    "katex",
-];
+const editorTheme = ref(getMdEditorTheme());
+const previewTheme = ref(getMdPreviewTheme());
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+    const theme = event.detail.theme === 'dark' ? 'dark' : 'light';
+    editorTheme.value = theme;
+    previewTheme.value = theme;
+};
 
 // 用作分页
 const itemsPerPage = 5;
@@ -146,6 +142,14 @@ onMounted(async () => {
         window.location = "#/login";
         window.location.reload();
     }
+
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
+});
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
 });
 </script>
 
@@ -157,7 +161,7 @@ onMounted(async () => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="deleteChecker" rounded="xl">{{ $t('message.yes')
-                    }}</v-btn>
+                        }}</v-btn>
                     <v-btn color="primary" @click="checkDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -182,7 +186,7 @@ onMounted(async () => {
                 </v-btn>
             </v-row>
             <template v-if="discussionInfos.username === userName" v-slot:append>
-                <v-btn icon="mdi-delete" size="x-large" @click="showDelDialog(false,null)"></v-btn>
+                <v-btn icon="mdi-delete" size="x-large" @click="showDelDialog(false, null)"></v-btn>
             </template>
         </v-app-bar>
         <div style="margin-top: 30px"></div>
@@ -190,9 +194,9 @@ onMounted(async () => {
             <template v-slot:title>
                 <span class="font-weight-black">{{ discussionInfos.title }}</span>
             </template>
-            <MdPreview :editorId="id" :modelValue="discussionInfos.content" />
+            <MdPreview :editorId="id" :modelValue="discussionInfos.content" :theme="previewTheme" />
             <v-card-subtitle style="justify-self: right">
-                <p style="font-size: 12px">
+                <p style="font-size: 12px;margin: 10px">
                     {{ moment(discussionInfos.create_at).format("YYYY-MM-DD HH:mm") }}
                 </p>
             </v-card-subtitle>
@@ -203,12 +207,12 @@ onMounted(async () => {
                 <span class="font-weight-black">{{ $t("message.comments") }}</span>
             </template>
             <div style="max-height: 300px;">
-                <md-editor v-model="commentContent" :editorId="id" :toolbars="editorToolbar" :noUploadImg="true"
-                    :preview="false" :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                <md-editor v-model="commentContent" :editorId="id" :toolbars="[]" :noUploadImg="true" :preview="false"
+                    :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />
             </div>
             <div style="margin: 10px">
                 <v-btn color="primary" rounded="xl" @click="addComments(commentContent)">{{ $t("message.submit")
-                }}</v-btn>
+                    }}</v-btn>
             </div>
             <v-divider></v-divider>
             <v-list>
@@ -227,17 +231,18 @@ onMounted(async () => {
                                 </div>
                             </div>
                         </v-list-item-title>
-                        <v-list-item v-if="comment.profanity && !expandedComments[comment.cid]" style="color: darkblue;"
+                        <v-chip color="warning" variant="tonal" class="ml-2"
+                            v-if="comment.profanity && !expandedComments[comment.cid]" style="color: darkblue;"
                             @click="expandedComments[comment.cid] = true">
                             {{ $t("message.profanity_expand") }}
-                        </v-list-item>
+                        </v-chip>
                         <v-list-item v-else class="comment-content">
-                            <md-preview :modelValue="comment.content" />
+                            <md-preview :modelValue="comment.content" :theme="previewTheme" />
                         </v-list-item>
                     </v-list-item>
                     <div class="buttons">
                         <v-btn v-if="comment.username === userName" rounded="xl" variant="text" color="primary"
-                            @click="showDelDialog(true,comment.cid)">{{ $t("message.delete") }}</v-btn>
+                            @click="showDelDialog(true, comment.cid)">{{ $t("message.delete") }}</v-btn>
                     </div>
                     <v-divider></v-divider>
                 </v-list-item>

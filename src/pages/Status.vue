@@ -2,13 +2,14 @@
 <script setup>
 import { getSubmitRecords } from '../utils/api/submit_records.js';
 import { getResultStyle } from '../utils/dynamic_styles.js';
-import { onMounted, computed, ref } from 'vue';
+import { onMounted, computed, ref, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { showAlert } from '../utils/alert.js';
 import { token } from "../utils/account.js";
 import { useI18n } from 'vue-i18n';
 import { MdPreview } from "md-editor-v3";
 import { showNotification } from '../utils/notification.js';
+import { getMdPreviewTheme } from '../utils/theme';
 import 'md-editor-v3/lib/preview.css';
 import moment from 'moment';
 
@@ -29,12 +30,18 @@ const loading = ref(true)
 
 const id = 'preview-only';
 const dialog = ref(false);
+const previewTheme = ref(getMdPreviewTheme());
 
 // 展示代码
 const currentCode = ref('');
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  previewTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 // 从后端获取数据
 const fetchData = async () => {
@@ -78,7 +85,15 @@ onMounted(async () => {
     return;
   }
   await fetchData()
+  
+  // 监听主题变化
+  window.addEventListener('theme-change', handleThemeChange);
 })
+
+onUnmounted(() => {
+  // 清理事件监听器
+  window.removeEventListener('theme-change', handleThemeChange);
+});
 </script>
 
 <template>
@@ -113,7 +128,7 @@ onMounted(async () => {
   </v-card>
   <!-- 查看代码弹窗 -->
   <v-dialog v-model="dialog" width="auto">
-    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" />
+    <MdPreview v-if="currentCode" :id="id" :modelValue="currentCode" :theme="previewTheme" />
   </v-dialog>
 </template>
 

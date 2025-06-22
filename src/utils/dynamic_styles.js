@@ -33,6 +33,7 @@ export const difficultyColor = (difficulty) => {
             return 'font-weight: bold;color: green;';
     }
 };
+
 export const difficultyLang = (difficulty) => {
     switch (difficulty) {
         case '简单':

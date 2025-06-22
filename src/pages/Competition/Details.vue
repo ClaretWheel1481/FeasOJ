@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, computed } from 'vue';
+import { onMounted, ref, computed, onUnmounted } from 'vue';
 import { useI18n } from "vue-i18n";
 import { token } from '../../utils/account';
 import { showAlert } from '../../utils/alert';
@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { getCompetitionById, getCompetitionUsers, getCompetitionProblems, isInCompetition, quitCompetition } from '../../utils/api/competitions';
 import { avatarServer } from '../../utils/axios';
 import { MdPreview } from 'md-editor-v3';
+import { getMdPreviewTheme } from '../../utils/theme';
 import 'md-editor-v3/lib/preview.css';
 import moment from "moment";
 import { difficultyColor, difficultyLang } from '../../utils/dynamic_styles';
@@ -48,6 +49,12 @@ const compStatus = (status) => {
 const networkloading = ref(false);
 const loading = ref(false);
 const id = 'preview-only';
+const previewTheme = ref(getMdPreviewTheme());
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  previewTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 const quitComp = async () => {
     networkloading.value = true;
@@ -91,7 +98,15 @@ onMounted(async () => {
     } else {
         window.location = '#/login'
     }
+    
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
 })
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
+});
 </script>
 
 <template>
@@ -154,7 +169,7 @@ onMounted(async () => {
                             <span class="font-weight-black">{{ t('message.announcement') }}</span>
                         </template>
                         <md-preview v-if="contestInfo.announcement" :modelValue="contestInfo.announcement"
-                            :editorId="id" class="md_preview" />
+                            :editorId="id" class="md_preview" :theme="previewTheme" />
                     </v-card>
                 </v-row>
                 <div style="height: 50px;"></div>

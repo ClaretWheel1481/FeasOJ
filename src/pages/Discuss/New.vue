@@ -1,11 +1,12 @@
 <!-- 创建讨论页 -->
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { addDiscussion } from '../../utils/api/discussions.js';
 import { showAlert } from '../../utils/alert.js';
 import { token } from "../../utils/account.js";
 import { MdEditor } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
+import { getMdEditorTheme } from '../../utils/theme';
 import 'md-editor-v3/lib/style.css';
 
 const { t } = useI18n();
@@ -13,9 +14,20 @@ const { locale } = useI18n();
 const title = ref('');
 const content = ref('');
 const loading = ref(false);
+const editorTheme = ref(getMdEditorTheme());
 
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value)
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
+
+// 监听MdEditor主题变化
+const handleMdEditorThemeChange = (event) => {
+  editorTheme.value = event.detail.theme;
+};
 
 const submit = async () => {
     if (!title.value || !content.value) {
@@ -40,6 +52,17 @@ onMounted(async () => {
     } else {
         loading.value = false;
     }
+    
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
+    // 监听MdEditor主题变化
+    window.addEventListener('md-editor-theme-change', handleMdEditorThemeChange);
+});
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
+    window.removeEventListener('md-editor-theme-change', handleMdEditorThemeChange);
 });
 </script>
 
@@ -63,7 +86,7 @@ onMounted(async () => {
                 <v-text-field v-model="title" :label="$t('message.title')" rounded="xl"
                     variant="solo-filled"></v-text-field>
                 <MdEditor v-model="content" :noUploadImg="true" :footers="[]"
-                    :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                    :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />
                 <div style="margin-top: 30px;"></div>
                 <v-btn rounded="xl" type="submit" color="primary">{{ $t('message.submit') }}</v-btn>
             </v-form>

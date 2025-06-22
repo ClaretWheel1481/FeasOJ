@@ -1,11 +1,12 @@
 <script setup>
-import { ref, onMounted, computed, reactive, watch } from 'vue'
+import { ref, onMounted, computed, reactive, watch, onUnmounted } from 'vue'
 import { token, userName } from '../../utils/account'
 import { useI18n } from 'vue-i18n';
 import { getAllCompetitionsInfo, getCompetitionInfoByIDAdmin, deleteCompetition, updateComInfo, caculateComScore, getScores } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from "md-editor-v3";
+import { getMdEditorTheme } from '../../utils/theme';
 import moment from 'moment';
 import "md-editor-v3/lib/style.css";
 
@@ -22,6 +23,7 @@ const delDialog = ref(false)
 const scoreDialog = ref(false)
 
 const id = "preview-only";
+const editorTheme = ref(getMdEditorTheme());
 
 const scores = ref([])
 const totalScores = ref(0)
@@ -60,6 +62,11 @@ const scoreHeaders = ref([
     { title: t('message.username'), value: 'Username', align: 'center' },
     { title: 'Score', value: 'Score', align: 'center' },
 ])
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 // 字段检查
 const validateFields = () => {
@@ -216,6 +223,14 @@ onMounted(async () => {
     } catch (error) {
         window.location = '#/403';
     }
+    
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
+});
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
 });
 </script>
 
@@ -340,7 +355,7 @@ onMounted(async () => {
                                 variant="solo-filled"></v-text-field>
                         </v-row>
                         <md-editor v-model="competitionFields.announcement" :editorId="id" :noUploadImg="true"
-                            :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                            :footers="[]" :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />
                     </v-form>
                     <div style="position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
                         <v-btn @click="dialog = false" rounded="xl" style="margin-right: 10px;">{{

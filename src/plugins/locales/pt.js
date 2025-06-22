@@ -120,6 +120,16 @@ export default {
         cannotViewCode: "Você não pode visualizar este código",
         editor_theme: "Tema do editor",
         attention: "Atenção",
-        a_code: "Todos os compiladores de linguagens de programação estão actualizados, exceto o Java17, pelo que deve prestar atenção ao código que está a escrever."
+        a_code: "Todos os compiladores de linguagens de programação estão atualizados, exceto Java17, então preste atenção ao código que você está escrevendo.",
+        settings: "Configurações",
+        theme: "Tema",
+        light: "Claro",
+        dark: "Escuro",
+        system: "Sistema",
+        aboutFeasOJ: "Sobre o FeasOJ",
+        version: "Versão",
+        developer: "Desenvolvedor",
+        buildTime: "Tempo de compilação",
+        close: "Fechar"
     }
 }

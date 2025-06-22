@@ -120,6 +120,16 @@ export default {
         cannotViewCode: "You cannot view the code of this submission",
         editor_theme: "Editor Theme",
         attention: "Attention",
-        a_code: "All programming language compilers are up-to-date, except for Java17, so please pay attention to the code you are writing."
+        a_code: "All programming language compilers are up-to-date, except for Java17, so please pay attention to the code you are writing.",
+        settings: "Settings",
+        theme: "Theme",
+        light: "Light",
+        dark: "Dark",
+        system: "System",
+        aboutFeasOJ: "About FeasOJ",
+        version: "Version",
+        developer: "Developer",
+        buildTime: "Build Time",
+        close: "Close"
     }
 }

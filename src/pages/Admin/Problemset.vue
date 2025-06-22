@@ -1,12 +1,13 @@
 <!-- 题目后台管理页 -->
 <script setup>
-import { ref, onMounted, computed, reactive } from 'vue'
+import { ref, onMounted, computed, reactive, onUnmounted } from 'vue'
 import { token, userName } from '../../utils/account'
 import { getProblemAllInfoByAdmin, updateProblemInfo, deleteProblemAllInfo, getAllCompetitionsInfo, getAllProblemsAdmin } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
 import { showAlert } from '../../utils/alert';
 import { MdEditor } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
+import { getMdEditorTheme } from '../../utils/theme';
 import 'md-editor-v3/lib/style.css';
 
 const { locale } = useI18n();
@@ -24,6 +25,8 @@ const problems = ref([])
 const totalProblems = ref(0)
 const competitionIds = ref([0])
 const dialog = ref(false)
+const editorTheme = ref(getMdEditorTheme());
+
 const problemFields = reactive({
     pid: null,
     title: "",
@@ -42,6 +45,11 @@ const headers = ref([
     { title: t('message.problem'), value: 'Title', align: 'center' },
 ])
 const isCreate = ref(false)
+
+// 监听主题变化
+const handleThemeChange = (event) => {
+  editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+};
 
 // 添加测试样例
 const addTestCase = () => {
@@ -172,6 +180,14 @@ onMounted(async () => {
     } catch (error) {
         window.location = '#/403';
     }
+    
+    // 监听主题变化
+    window.addEventListener('theme-change', handleThemeChange);
+});
+
+onUnmounted(() => {
+    // 清理事件监听器
+    window.removeEventListener('theme-change', handleThemeChange);
 });
 </script>
 
@@ -227,7 +243,7 @@ onMounted(async () => {
                             variant="solo-filled"></v-text-field>
                         <!-- 题目描述 -->
                         <md-editor v-model="problemFields.content" :footers="[]" :noUploadImg="true" :tabWidth="4"
-                            :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" />
+                            :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />
                         <div style="margin-top: 20px;"></div>
                         <!-- 难易程度 -->
                         <!-- TODO: 修改items 的i18n -->

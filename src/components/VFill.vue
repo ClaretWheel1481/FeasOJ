@@ -8,7 +8,5 @@ const goToICP = () => {
 <!-- TODO: 若需要将站点部署于中国境内服务器，请修改此组件，并在App.vue中启用该组件！ -->
  
 <template>
-  <v-footer>
-    <v-btn variant="text" rounded="xl" style="font-size: 12px" @click="goToICP">闽ICP备**********</v-btn>
-  </v-footer>
+    <v-btn variant="plain" rounded="xl" style="font-size: 12px" @click="goToICP">闽ICP备**********</v-btn>
 </template>

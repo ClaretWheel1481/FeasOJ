@@ -120,6 +120,16 @@ export default{
         cannotViewCode: "無法查看代碼",
         editor_theme: "編輯器主題",
         attention: "注意",
-        a_code: "除了 Java17 之外，所有程式語言的編譯器都是最新的，所以請注意您所寫的程式碼。"
+        a_code: "除了 Java17 之外，所有程式語言的編譯器都是最新的，所以請注意您所寫的程式碼。",
+        settings: "設置",
+        theme: "主題",
+        light: "淺色",
+        dark: "深色",
+        system: "跟隨系統",
+        aboutFeasOJ: "關於 FeasOJ",
+        version: "版本號",
+        developer: "開發者",
+        buildTime: "構建時間",
+        close: "關閉"
     }
 }
