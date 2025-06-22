@@ -36,7 +36,6 @@ const theme = ref("chrome");
 const langFileExtension = {
   java: "java",
   c_cpp: "cpp",
-  golang: "go",
   python: "py",
   rust: "rs",
   php: "php",
@@ -67,13 +66,6 @@ using namespace std;
 int main() {
     
     return 0;
-}`,
-  golang: `package main
-
-import "fmt"
-
-func main() {
-    
 }`,
   python: ``,
   rust: `
@@ -149,31 +141,17 @@ onUnmounted(() => {
   <v-dialog v-model="networkloading" max-width="600px">
     <v-card rounded="xl">
       <div class="networkloading">
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          :width="12"
-          :size="100"
-        ></v-progress-circular>
+        <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
       </div>
     </v-card>
   </v-dialog>
   <div v-if="loading" class="loading">
-    <v-progress-circular
-      indeterminate
-      color="primary"
-      :width="12"
-      :size="100"
-    ></v-progress-circular>
+    <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
   </div>
   <div v-else>
     <v-app-bar :elevation="2">
       <template v-slot:prepend>
-        <v-btn
-          icon="mdi-chevron-left"
-          size="x-large"
-          @click="$router.back"
-        ></v-btn>
+        <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
       </template>
       <v-col class="align-left">
         <v-row style="align-items: center">
@@ -197,12 +175,7 @@ onUnmounted(() => {
                 <v-col cols="6">
                   <v-card variant="outlined" class="limit-card" rounded="md">
                     <v-card-text class="text-center pa-4">
-                      <v-icon
-                        icon="mdi-clock-outline"
-                        size="24"
-                        color="primary"
-                        class="mb-2"
-                      ></v-icon>
+                      <v-icon icon="mdi-clock-outline" size="24" color="primary" class="mb-2"></v-icon>
                       <div class="text-h6 font-weight-medium">
                         {{ problemInfo.time_limit }}s
                       </div>
@@ -215,12 +188,7 @@ onUnmounted(() => {
                 <v-col cols="6">
                   <v-card variant="outlined" class="limit-card" rounded="md">
                     <v-card-text class="text-center pa-4">
-                      <v-icon
-                        icon="mdi-memory"
-                        size="24"
-                        color="primary"
-                        class="mb-2"
-                      ></v-icon>
+                      <v-icon icon="mdi-memory" size="24" color="primary" class="mb-2"></v-icon>
                       <div class="text-h6 font-weight-medium">
                         {{ problemInfo.memory_limit }}MB
                       </div>
@@ -233,23 +201,14 @@ onUnmounted(() => {
               </v-row>
               <!-- 题目内容 -->
               <div class="problem-description">
-                <md-preview
-                  :modelValue="problemInfo.content"
-                  :editorId="id"
-                  class="md_preview"
-                  :theme="previewTheme"
-                />
+                <md-preview :modelValue="problemInfo.content" :editorId="id" class="md_preview" :theme="previewTheme" />
               </div>
               <div style="margin-bottom: 20px;"></div>
               <!-- 输入输出示例 -->
               <div class="example-section">
                 <div class="example-item">
                   <div class="example-label">
-                    <v-icon
-                      icon="mdi-arrow-down"
-                      size="20"
-                      class="me-1"
-                    ></v-icon>
+                    <v-icon icon="mdi-arrow-down" size="20" class="me-1"></v-icon>
                     {{ $t("message.displayInputCase") }}
                   </div>
                   <v-card variant="outlined" class="example-card" rounded="md">
@@ -279,66 +238,43 @@ onUnmounted(() => {
         <v-col cols="12" lg="6" class="code-editor-col">
           <v-card class="editor-card" elevation="2" rounded="lg">
             <v-card-text class="editor-content">
-              <v-alert
-                :text="$t('message.a_code')"
-                :title="$t('message.attention')"
-                type="info"
-                variant="tonal"
-                border="start"
-                closable
-                align="left"
-                class="mb-4"
-              ></v-alert>
+              <v-alert :text="$t('message.a_code')" :title="$t('message.attention')" type="info" variant="tonal"
+                border="start" closable align="left" class="mb-4"></v-alert>
 
               <!-- 编辑器控制面板 -->
               <v-card variant="outlined" class="control-panel" rounded="md">
                 <v-card-text class="pa-4">
                   <v-row>
                     <v-col cols="12" sm="6">
-                      <v-select
-                        :label="$t('message.lang')"
-                        v-model="lang"
-                        :items="[
-                          'c_cpp',
-                          'golang',
-                          'java',
-                          'pascal',
-                          'python',
-                          'php',
-                          'rust',
-                        ]"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                      ></v-select>
+                      <v-select :label="$t('message.lang')" v-model="lang" :items="[
+                        'c_cpp',
+                        'java',
+                        'pascal',
+                        'python',
+                        'php',
+                        'rust',
+                      ]" variant="outlined" density="compact" hide-details></v-select>
                     </v-col>
                     <v-col cols="12" sm="6">
-                      <v-select
-                        :label="$t('message.editor_theme')"
-                        v-model="theme"
-                        :items="[
-                          'ambiance',
-                          'clouds',
-                          'cobalt',
-                          'chaos',
-                          'crimson_editor',
-                          'dawn',
-                          'dracula',
-                          'dreamweaver',
-                          'chrome',
-                          'github',
-                          'terminal',
-                          'monokai',
-                          'mono_industrial',
-                          'pastel_on_dark',
-                          'sqlserver',
-                          'solarized_light',
-                          'solarized_dark',
-                        ]"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                      ></v-select>
+                      <v-select :label="$t('message.editor_theme')" v-model="theme" :items="[
+                        'ambiance',
+                        'clouds',
+                        'cobalt',
+                        'chaos',
+                        'crimson_editor',
+                        'dawn',
+                        'dracula',
+                        'dreamweaver',
+                        'chrome',
+                        'github',
+                        'terminal',
+                        'monokai',
+                        'mono_industrial',
+                        'pastel_on_dark',
+                        'sqlserver',
+                        'solarized_light',
+                        'solarized_dark',
+                      ]" variant="outlined" density="compact" hide-details></v-select>
                     </v-col>
                   </v-row>
 
@@ -346,15 +282,8 @@ onUnmounted(() => {
                     <v-col cols="12">
                       <div class="d-flex align-center">
                         <v-icon icon="mdi-format-size" class="me-2"></v-icon>
-                        <v-slider
-                          v-model="fontSize"
-                          :min="minFontSize"
-                          :max="maxFontSize"
-                          :step="stepFontSize"
-                          thumb-label
-                          hide-details
-                          class="flex-grow-1"
-                        ></v-slider>
+                        <v-slider v-model="fontSize" :min="minFontSize" :max="maxFontSize" :step="stepFontSize"
+                          thumb-label hide-details class="flex-grow-1"></v-slider>
                         <span class="text-caption ml-2">{{ fontSize }}px</span>
                       </div>
                     </v-col>
@@ -364,12 +293,8 @@ onUnmounted(() => {
 
               <!-- 代码编辑器 -->
               <div class="editor-wrapper mt-4">
-                <v-ace-editor
-                  v-model:value="content"
-                  :theme="theme"
-                  :lang="lang"
-                  :style="`height: 800px; font-size: ${fontSize}px; border-radius: 8px;`"
-                />
+                <v-ace-editor v-model:value="content" :theme="theme" :lang="lang"
+                  :style="`height: 800px; font-size: ${fontSize}px; border-radius: 8px;`" />
               </div>
             </v-card-text>
           </v-card>
@@ -377,14 +302,8 @@ onUnmounted(() => {
       </v-row>
       <!-- 提交按钮 -->
       <div class="submit-section mt-4">
-        <v-btn
-          color="primary"
-          size="large"
-          rounded="xl"
-          @click="uploadContentAsFile"
-          :loading="networkloading"
-          class="submit-btn"
-        >
+        <v-btn color="primary" size="large" rounded="xl" @click="uploadContentAsFile" :loading="networkloading"
+          class="submit-btn">
           {{ $t("message.submit") }}
         </v-btn>
       </div>

@@ -2,7 +2,6 @@ import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-json';
 import modeJava from "ace-builds/src-noconflict/mode-java?url";
 import modeCpp from "ace-builds/src-noconflict/mode-c_cpp?url";
-import modeGolang from "ace-builds/src-noconflict/mode-golang?url";
 import modePy from "ace-builds/src-noconflict/mode-python?url";
 import modeRust from "ace-builds/src-noconflict/mode-rust?url";
 import modePHP from "ace-builds/src-noconflict/mode-php?url";
@@ -30,7 +29,6 @@ import 'ace-builds/src-noconflict/theme-pastel_on_dark';
 
 config.setModuleUrl("ace/mode/java", modeJava);
 config.setModuleUrl("ace/mode/c_cpp", modeCpp);
-config.setModuleUrl("ace/mode/golang", modeGolang);
 config.setModuleUrl("ace/mode/python", modePy);
 config.setModuleUrl("ace/mode/rust", modeRust);
 config.setModuleUrl("ace/mode/php", modePHP);
