@@ -152,6 +152,8 @@ export default{
         noSearchResults: "未找到相關題目",
         tryDifferentKeywords: "請嘗試使用其他關鍵詞進行搜索",
         noProblemsAvailable: "目前暫無可用題目。請稍後再來查看。",
-        noDiscussionsAvailable: "目前暫無討論帖子，快來創建第一個討論吧！"
+        noDiscussionsAvailable: "目前暫無討論帖子，快來創建第一個討論吧！",
+        copied: "複製成功",
+        copyFailed: "複製失敗"
     }
 }

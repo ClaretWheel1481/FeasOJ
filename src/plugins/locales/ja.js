@@ -152,6 +152,8 @@ export default{
         noSearchResults: "問題が見つかりませんでした",
         tryDifferentKeywords: "検索に異なるキーワードを使用してみてください",
         noProblemsAvailable: "現在利用可能な問題はありません。後でもう一度お試しください。",
-        noDiscussionsAvailable: "現在利用可能なディスカッションはありません。最初のディスカッションを作成しましょう！"
+        noDiscussionsAvailable: "現在利用可能なディスカッションはありません。最初のディスカッションを作成しましょう！",
+        copied: "コピーに成功しました",
+        copyFailed: "コピーに失敗しました"
     }
 }

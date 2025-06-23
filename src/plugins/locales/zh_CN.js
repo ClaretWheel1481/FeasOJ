@@ -152,6 +152,8 @@ export default {
         noSearchResults: "未找到相关题目",
         tryDifferentKeywords: "请尝试使用其他关键词进行搜索",
         noProblemsAvailable: "当前暂无可用题目，请稍后再来查看",
-        noDiscussionsAvailable: "当前暂无讨论帖子，快来创建第一个讨论吧！"
+        noDiscussionsAvailable: "当前暂无讨论帖子，快来创建第一个讨论吧！",
+        copied: "复制成功",
+        copyFailed: "复制失败"
     }
 }

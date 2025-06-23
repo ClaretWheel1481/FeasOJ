@@ -2,7 +2,7 @@
 import { onMounted, ref, computed } from 'vue';
 import { getIpStat } from '../../utils/api/admin';
 import { verifyUserInfo } from '../../utils/api/auth';
-import { showAlert } from '../../utils/alert';
+import { showNotification } from '../../utils/notification';
 import { token, userName } from '../../utils/account'
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
@@ -72,6 +72,16 @@ const handlePageChange = (page) => {
     currentPage.value = page;
 };
 
+// 复制IP到剪贴板
+const copyIp = async (ip) => {
+    try {
+        await navigator.clipboard.writeText(ip);
+        showNotification(t('message.copied'));
+    } catch (e) {
+        showNotification(t('message.copyFailed'));
+    }
+};
+
 // 初始化
 onMounted(async () => {
     loading.value = true;
@@ -122,44 +132,30 @@ onMounted(async () => {
                     <v-card-text class="pa-6 pb-0">
                         <v-row align="center">
                             <v-col cols="12">
-                                <v-text-field
-                                    v-model="searchQuery"
-                                    :placeholder="t('message.searchIpAddress')"
-                                    prepend-inner-icon="mdi-magnify"
-                                    variant="outlined"
-                                    density="comfortable"
-                                    hide-details
-                                    clearable
-                                    @update:model-value="currentPage = 1"
-                                ></v-text-field>
+                                <v-text-field v-model="searchQuery" :placeholder="t('message.searchIpAddress')"
+                                    prepend-inner-icon="mdi-magnify" variant="outlined" density="comfortable"
+                                    hide-details clearable @update:model-value="currentPage = 1"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-card-text>
 
                     <!-- 数据表格 -->
                     <v-card-text class="pa-0">
-                        <v-data-table
-                            :headers="headers"
-                            :items="paginatedIpStats"
-                            :loading="loading"
-                            :loading-text="t('message.loading')"
-                            :no-data-text="t('message.nodata')"
-                            class="ipstat-table"
-                            density="comfortable"
-                            hover
-                        >
+                        <v-data-table :headers="headers" :items="paginatedIpStats" :loading="loading"
+                            :loading-text="t('message.loading')" :no-data-text="t('message.nodata')"
+                            class="ipstat-table" density="comfortable" hover>
                             <template v-slot:item="{ item }">
                                 <tr class="ipstat-table-row">
                                     <td class="text-center pa-4 font-weight-medium">
-                                        {{ item.IP }}
+                                        <v-chip color="primary" variant="elevated" class="ip-chip font-weight-medium"
+                                            @click.stop="copyIp(item.IP)">
+                                            <v-icon start small>mdi-content-copy</v-icon>
+                                            {{ item.IP }}
+                                        </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-chip
-                                            color="secondary"
-                                            variant="tonal"
-                                            size="small"
-                                            class="font-weight-medium"
-                                        >
+                                        <v-chip color="secondary" variant="tonal" size="small"
+                                            class="font-weight-medium">
                                             {{ item.VisitCount }}
                                         </v-chip>
                                     </td>
@@ -176,13 +172,8 @@ onMounted(async () => {
                     <!-- 分页 -->
                     <v-card-actions class="pa-6 pt-0" v-if="totalPages > 1">
                         <v-spacer></v-spacer>
-                        <v-pagination
-                            v-model="currentPage"
-                            :length="totalPages"
-                            :total-visible="7"
-                            rounded="circle"
-                            @update:model-value="handlePageChange"
-                        ></v-pagination>
+                        <v-pagination v-model="currentPage" :length="totalPages" :total-visible="7" rounded="circle"
+                            @update:model-value="handlePageChange"></v-pagination>
                         <v-spacer></v-spacer>
                     </v-card-actions>
                 </v-card>
@@ -218,5 +209,16 @@ onMounted(async () => {
 .align-left {
     text-align: left;
     margin-left: 10px;
+}
+
+.ip-chip {
+    transition: box-shadow 0.2s, background 0.2s;
+    cursor: pointer;
+    user-select: all;
+}
+
+.ip-chip:active {
+    box-shadow: 0 0 0 4px rgba(var(--v-theme-primary), 0.12);
+    background: rgba(var(--v-theme-primary), 0.08);
 }
 </style>

@@ -152,6 +152,8 @@ export default {
         noSearchResults: "No se encontraron problemas",
         tryDifferentKeywords: "Intenta usar palabras clave diferentes para tu búsqueda",
         noProblemsAvailable: "No hay problemas disponibles en este momento. Por favor, compruebe más tarde.",
-        noDiscussionsAvailable: "No hay discusiones disponibles en este momento. ¡Crea la primera discusión!"
+        noDiscussionsAvailable: "No hay discusiones disponibles en este momento. ¡Crea la primera discusión!",
+        copied: "Copiado correctamente",
+        copyFailed: "Error al copiar"
     }
 }

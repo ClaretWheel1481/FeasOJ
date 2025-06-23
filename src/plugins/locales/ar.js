@@ -152,6 +152,8 @@ export default {
         noSearchResults: "لم يتم العثور على مشاكل",
         tryDifferentKeywords: "جرب استخدام كلمات مفتاحية مختلفة للبحث",
         noProblemsAvailable: "لا توجد مشاكل متاحة في الوقت الحالي. يرجى التحقق لاحقاً.",
-        noDiscussionsAvailable: "لا توجد مناقشات متاحة في الوقت الحالي. أنشئ أول مناقشة!"
+        noDiscussionsAvailable: "لا توجد مناقشات متاحة في الوقت الحالي. أنشئ أول مناقشة!",
+        copied: "تم النسخ بنجاح",
+        copyFailed: "فشل النسخ"
     }
 }
