@@ -18,7 +18,7 @@ FeasOJ is an online programming practice platform based on Vue and Golang, suppo
 
 ### Features
 - Multi-language support: Support multiple languages, including English, Spanish, French, Italian, Japanese, Simplified Chinese etc
-- Multi Programming Language Support: C++, Java, Python, Golang, Rust, PHP, Pascal
+- Multi Programming Language Support: C++, Java, Python, Rust, PHP, Pascal
 - User Authentication: Supports user registration, login, logout and other functions
 - Topic Management: Supports topic uploading, editing, deleting, etc
 - Discussion Forum: supports users to post, reply, delete comments and so on
