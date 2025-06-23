@@ -72,12 +72,13 @@ onMounted(async () => {
       :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
       <template v-slot:item="{ item }">
         <tr>
-          <td class="disctitle">
-            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" block>{{ item.title
+          <td>
+            <v-btn @click="router.push({ path: `/discussion/${item.did}` })" variant="text" color="primary" class="disc-btn">{{ item.title
               }}</v-btn>
           </td>
-          <td>{{ item.username }}</td>
-          <td>{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
+          <td><v-chip class="font-weight-medium author-chip" variant="outlined" color="primary" @click="router.push({ path: `/profile/${item.username}` })"
+            >{{ item.username }}</v-chip></td>
+          <td class="text-body-2 text-medium-emphasis">{{ moment(item.create_at).format('YYYY-MM-DD HH:mm') }}</td>
         </tr>
       </template>
       <template v-slot:bottom>
@@ -92,14 +93,31 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.disctitle {
-  color: #1e65ff;
-  width: 60%;
-}
-
 .fab {
   position: fixed;
   bottom: 80px;
   right: 180px;
+}
+
+.disc-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.disc-btn:hover {
+  background: rgba(var(--v-theme-primary), 0.08);
+  transform: translateX(4px);
+}
+
+.author-chip {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.author-chip:hover {
+  background: rgba(var(--v-theme-primary), 0.08);
+  transform: translateX(4px);
 }
 </style>
