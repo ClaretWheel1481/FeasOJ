@@ -135,6 +135,12 @@ const routes = [
         }
     },
     {
+        path: '/admin/ipstat', component: () => import('../pages/Admin/Ipstat.vue'),
+        meta: {
+            titleKey: 'message.ipstat'
+        }
+    },
+    {
         path: '/403', component: () => import('../pages/403.vue'),
         meta: {
             titleKey: 'message.nopermission'

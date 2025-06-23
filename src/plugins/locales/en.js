@@ -91,6 +91,8 @@ export default {
         submissions: "Submissions",
         management: "Management",
         isvisible: "Visible",
+        visible: "Visible",
+        invisible: "Invisible",
         contestid: "Contest ID",
         enter: "Enter",
         start_date: "Start Date",
@@ -139,6 +141,17 @@ export default {
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "IP Statistics",
+        ipAddress: "IP Address",
+        visitCount: "Visit Count",
+        lastVisitTime: "Last Visit Time",
+        searchIpAddress: "Search IP address...",
+        noCompetitions: "No Competitions",
+        noCompetitionsDesc: "There are no competitions available at the moment. Please check back later.",
+        noSearchResults: "No problems found",
+        tryDifferentKeywords: "Try using different keywords for your search",
+        noProblemsAvailable: "No problems available at the moment. Please check back later.",
+        noDiscussionsAvailable: "No discussions available at the moment. Create the first discussion!"
     }
 }

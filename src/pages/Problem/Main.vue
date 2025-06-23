@@ -107,6 +107,18 @@ onMounted(async () => {
             :loading-text="$t('message.loading')"
             :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')" class="problem-table"
             density="comfortable" hover rounded="lg" elevation="0">
+            <!-- 自定义空状态模板 -->
+            <template v-slot:no-data>
+              <div class="empty-state-container">
+                <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-file-document-outline</v-icon>
+                <h3 class="text-h6 text-grey-darken-1 mb-2">
+                  {{ !userLoggedIn ? t('message.nologin') : (searchQuery ? t('message.noSearchResults') : t('message.nodata')) }}
+                </h3>
+                <p v-if="userLoggedIn" class="text-body-2 text-grey-lighten-1 mb-4">
+                  {{ searchQuery ? t('message.tryDifferentKeywords') : t('message.noProblemsAvailable') }}
+                </p>
+              </div>
+            </template>
             <template v-slot:item.Pid="{ item }">
               <v-chip variant="tonal" size="small" color="primary">
                 {{ item.Pid }}
@@ -152,5 +164,38 @@ onMounted(async () => {
 .problem-table :deep(.v-btn:hover) {
   background: rgba(var(--v-theme-primary), 0.08);
   transform: translateX(4px);
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 300px;
+  background: rgba(var(--v-theme-surface), 0.5);
+  border-radius: 12px;
+  margin: 20px;
+}
+
+.empty-state-container .v-icon {
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.empty-state-container:hover .v-icon {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.empty-state-container h3 {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.empty-state-container p {
+  max-width: 400px;
+  line-height: 1.6;
 }
 </style>

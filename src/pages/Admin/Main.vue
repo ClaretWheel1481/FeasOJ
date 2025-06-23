@@ -59,6 +59,16 @@ onMounted(async () => {
                 </VCard>
             </VCol>
         </VRow>
+        <VRow justify="center" class="my-5">
+            <VCol cols="3">
+                <VCard class="d-flex align-center justify-center bold" variant="outlined" height="15vh"
+                    @click="router.push('/admin/ipstat')">
+                    {{ $t('message.ipstat') }}
+                </VCard>
+            </VCol>
+            <VCol cols="3"></VCol>
+            <VCol cols="3"></VCol>
+        </VRow>
     </div>
 </template>
 

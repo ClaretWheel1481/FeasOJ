@@ -91,6 +91,8 @@ export default{
         submissions: "提交記錄",
         management: "管理",
         isvisible: "是否可見",
+        visible: "可見",
+        invisible: "不可見",
         contestid: "競賽ID",
         enter: "進入",
         start_date: "開始日期",
@@ -139,6 +141,17 @@ export default{
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "IP統計",
+        ipAddress: "IP地址",
+        visitCount: "訪問次數",
+        lastVisitTime: "最後訪問時間",
+        searchIpAddress: "搜索IP地址...",
+        noCompetitions: "沒有競賽",
+        noCompetitionsDesc: "目前沒有可用的競賽。請稍後再試。",
+        noSearchResults: "未找到相關題目",
+        tryDifferentKeywords: "請嘗試使用其他關鍵詞進行搜索",
+        noProblemsAvailable: "目前暫無可用題目。請稍後再來查看。",
+        noDiscussionsAvailable: "目前暫無討論帖子，快來創建第一個討論吧！"
     }
 }

@@ -26,6 +26,9 @@ const totalProblems = ref(0)
 const competitionIds = ref([0])
 const dialog = ref(false)
 const editorTheme = ref(getMdEditorTheme());
+const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = ref(50);
 
 const problemFields = reactive({
     pid: null,
@@ -40,15 +43,49 @@ const problemFields = reactive({
     is_visible: true,
     test_cases: [{ input: '', output: '' }]
 });
+
 const headers = ref([
-    { title: 'ID', value: 'Pid', align: 'center' },
-    { title: t('message.problem'), value: 'Title', align: 'center' },
+    { title: 'ID', value: 'Pid', align: 'center', sortable: false },
+    { title: t('message.problem'), value: 'Title', align: 'center', sortable: false },
+    { title: t('message.difficulty'), value: 'Difficulty', align: 'center', sortable: false },
+    { title: t('message.contestid'), value: 'ContestId', align: 'center', sortable: false },
+    { title: t('message.isvisible'), value: 'IsVisible', align: 'center', sortable: false },
+    { title: t('message.operation'), value: 'actions', align: 'center', sortable: false },
 ])
+
 const isCreate = ref(false)
+
+// 过滤后的数据
+const filteredProblems = computed(() => {
+    if (!searchQuery.value) {
+        return problems.value;
+    }
+    return problems.value.filter((problem) =>
+        problem.Title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+        problem.Pid.toString().includes(searchQuery.value)
+    )
+})
+
+// 分页后的数据
+const paginatedProblems = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredProblems.value.slice(start, end);
+});
+
+// 总页数
+const totalPages = computed(() => {
+    return Math.ceil(filteredProblems.value.length / itemsPerPage.value);
+});
+
+// 页面变化处理
+const handlePageChange = (page) => {
+    currentPage.value = page;
+};
 
 // 监听主题变化
 const handleThemeChange = (event) => {
-  editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+    editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
 };
 
 // 添加测试样例
@@ -180,7 +217,7 @@ onMounted(async () => {
     } catch (error) {
         window.location = '#/403';
     }
-    
+
     // 监听主题变化
     window.addEventListener('theme-change', handleThemeChange);
 });
@@ -199,12 +236,13 @@ onUnmounted(() => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes')
-                    }}</v-btn>
+                        }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </template>
+
     <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -213,18 +251,76 @@ onUnmounted(() => {
             <p style="font-size: 24px;">{{ t('message.problemmanagement') }}</p>
         </v-col>
     </v-app-bar>
-    <v-data-table-server :headers="headers" :items="problems" :items-length="totalProblems" :loading="loading"
-        :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
-        :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
-        <template v-slot:item="{ item }">
-            <tr>
-                <td>{{ item.Pid }}</td>
-                <td class="tabletitle">
-                    <v-btn @click="goToEditProblem(item.Pid)" variant="text" block>{{ item.Title }}</v-btn>
-                </td>
-            </tr>
-        </template>
-    </v-data-table-server>
+
+    <v-container fluid class="pa-6">
+        <v-row justify="center">
+            <v-col cols="12" lg="11" xl="10">
+                <!-- 题目管理卡片 -->
+                <v-card class="problemset-card" rounded="xl" elevation="2">
+                    <!-- 搜索栏 -->
+                    <v-card-text class="pa-6 pb-0">
+                        <v-row align="center">
+                            <v-col cols="12">
+                                <v-text-field v-model="searchQuery" :placeholder="$t('message.searchProblem')"
+                                    prepend-inner-icon="mdi-magnify" variant="outlined" density="comfortable"
+                                    hide-details clearable @update:model-value="currentPage = 1"></v-text-field>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+
+                    <!-- 数据表格 -->
+                    <v-card-text class="pa-0">
+                        <v-data-table :headers="headers" :items="paginatedProblems" :loading="loading"
+                            :loading-text="$t('message.loading')"
+                            :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')"
+                            class="problemset-table" density="comfortable" hover>
+                            <template v-slot:item="{ item }">
+                                <tr class="problemset-table-row">
+                                    <td class="text-center pa-4 font-weight-medium">
+                                        {{ item.Pid }}
+                                    </td>
+                                    <td class="text-center pa-4 font-weight-medium">
+                                        {{ item.Title }}
+                                    </td>
+                                    <td class="text-center pa-4">
+                                        <v-chip
+                                            :color="item.Difficulty === '简单' ? 'success' : item.Difficulty === '中等' ? 'warning' : 'error'"
+                                            variant="tonal" size="small" class="font-weight-medium">
+                                            {{ item.Difficulty }}
+                                        </v-chip>
+                                    </td>
+                                    <td class="text-center pa-4">
+                                        <span class="text-body-2 text-medium-emphasis">
+                                            {{ item.ContestId || 0 }}
+                                        </span>
+                                    </td>
+                                    <td class="text-center pa-4">
+                                        <v-chip :color="item.IsVisible ? 'success' : 'error'" variant="tonal"
+                                            size="small" class="font-weight-medium">
+                                            {{ item.IsVisible ? $t('message.visible') : $t('message.invisible') }}
+                                        </v-chip>
+                                    </td>
+                                    <td class="text-center pa-4">
+                                        <v-btn @click="goToEditProblem(item.Pid)" variant="text" icon="mdi-pencil"
+                                            size="small" color="primary"></v-btn>
+                                    </td>
+                                </tr>
+                            </template>
+                        </v-data-table>
+                    </v-card-text>
+
+                    <!-- 分页 -->
+                    <v-card-actions class="pa-6 pt-0" v-if="totalPages > 1">
+                        <v-spacer></v-spacer>
+                        <v-pagination v-model="currentPage" :length="totalPages" :total-visible="7" rounded="circle"
+                            @update:model-value="handlePageChange"></v-pagination>
+                        <v-spacer></v-spacer>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+    </v-container>
+
     <v-dialog v-model="dialog" max-width="1200px">
         <v-card>
             <div v-if="networkloading" class="networkloading">
@@ -293,12 +389,13 @@ onUnmounted(() => {
                             }}</v-btn>
                         <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.save')
-                            }}</v-btn>
+                        }}</v-btn>
                     </div>
                 </v-card-text>
             </div>
         </v-card>
     </v-dialog>
+
     <div class="fab">
         <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading"
             @click="createProblem"></v-fab>
@@ -306,8 +403,32 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.tabletitle {
-    color: #1e65ff;
+.problemset-card {
+    border-radius: 16px !important;
+}
+
+.problemset-table {
+    border-radius: 0 0 16px 16px;
+}
+
+.problemset-table-row {
+    transition: background-color 0.2s ease;
+}
+
+.problemset-table-row:hover {
+    background-color: rgba(var(--v-theme-primary), 0.04) !important;
+}
+
+.networkloading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.align-left {
+    text-align: left;
+    margin-left: 10px;
 }
 
 .fab {

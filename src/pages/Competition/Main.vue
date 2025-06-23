@@ -149,8 +149,10 @@ onMounted(async () => {
             <p style="font-size: 24px;margin-left: 20px;">{{ t("message.competition") }}</p>
         </v-app-bar>
         <div v-if="userLoggedIn">
-            <div v-if="competitions.length === 0">
-                <p>{{ t("message.nodata") }}</p>
+            <div v-if="competitions.length === 0" class="empty-state">
+                <v-icon size="120" color="grey-lighten-1" class="empty-icon">mdi-trophy-outline</v-icon>
+                <h2 class="empty-title">{{ t("message.noCompetitions") }}</h2>
+                <p class="empty-description">{{ t("message.noCompetitionsDesc") }}</p>
             </div>
             <v-container>
                 <v-row>
@@ -181,7 +183,10 @@ onMounted(async () => {
             </v-container>
         </div>
         <div v-else>
-            <p>{{ t("message.nologin") }}</p>
+            <div class="empty-state">
+                <v-icon size="120" color="grey-lighten-1" class="empty-icon">mdi-login</v-icon>
+                <h2 class="empty-title">{{ t("message.nologin") }}</h2>
+            </div>
         </div>
     </div>
 </template>
@@ -202,5 +207,57 @@ onMounted(async () => {
 .comp-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    margin-bottom: 24px;
+    opacity: 0.6;
+}
+
+.empty-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--v-on-surface-variant);
+    margin-bottom: 16px;
+    line-height: 1.2;
+}
+
+.empty-description {
+    font-size: 16px;
+    color: var(--v-on-surface-variant);
+    opacity: 0.8;
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+    .empty-state {
+        min-height: 50vh;
+        padding: 20px 16px;
+    }
+    
+    .empty-icon {
+        font-size: 80px !important;
+        margin-bottom: 20px;
+    }
+    
+    .empty-title {
+        font-size: 24px;
+        margin-bottom: 12px;
+    }
+    
+    .empty-description {
+        font-size: 14px;
+    }
 }
 </style>

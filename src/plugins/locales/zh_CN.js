@@ -91,6 +91,8 @@ export default {
         submissions: "提交记录",
         management: "管理",
         isvisible: "是否可见",
+        visible: "可见",
+        invisible: "不可见",
         contestid: "竞赛ID",
         enter: "进入",
         start_date: "开始日期",
@@ -139,6 +141,17 @@ export default {
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "IP统计",
+        ipAddress: "IP地址",
+        visitCount: "访问次数",
+        lastVisitTime: "最后访问时间",
+        searchIpAddress: "搜索IP地址...",
+        noCompetitions: "暂无竞赛",
+        noCompetitionsDesc: "当前没有可参加的竞赛，请稍后再来查看",
+        noSearchResults: "未找到相关题目",
+        tryDifferentKeywords: "请尝试使用其他关键词进行搜索",
+        noProblemsAvailable: "当前暂无可用题目，请稍后再来查看",
+        noDiscussionsAvailable: "当前暂无讨论帖子，快来创建第一个讨论吧！"
     }
 }

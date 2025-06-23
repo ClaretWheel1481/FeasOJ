@@ -91,6 +91,8 @@ export default {
         submissions: "Посылки",
         management: "Управление",
         isvisible: "Видимость",
+        visible: "Видимый",
+        invisible: "Невидимый",
         contestid: "ID соревнования",
         enter: "Войти",
         start_date: "Начало",
@@ -139,6 +141,17 @@ export default {
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "IP статистика",
+        ipAddress: "IP адрес",
+        visitCount: "Посещения",
+        lastVisitTime: "Последнее посещение",
+        searchIpAddress: "Поиск IP адреса...",
+        noCompetitions: "Нет соревнований",
+        noCompetitionsDesc: "Нет доступных соревнований на данный момент. Пожалуйста, проверьте позже.",
+        noSearchResults: "Задачи не найдены",
+        tryDifferentKeywords: "Попробуйте использовать другие ключевые слова для поиска",
+        noProblemsAvailable: "В данный момент нет доступных задач. Пожалуйста, проверьте позже.",
+        noDiscussionsAvailable: "В данный момент нет доступных обсуждений. Создайте первое обсуждение!"
     }
 }

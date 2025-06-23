@@ -70,6 +70,20 @@ onMounted(async () => {
       :loading-text="$t('message.loading')" @update="fetchData" :hide-default-footer="true"
       :items-per-page="itemsPerPage" v-model:page="page"
       :no-data-text="!userLoggedIn ? $t('message.nologin') : $t('message.nodata')">
+      <template v-slot:no-data>
+        <div class="empty-state-container">
+          <v-icon size="64" color="grey-lighten-1" class="mb-4">mdi-forum-outline</v-icon>
+          <h3 class="text-h6 text-grey-darken-1 mb-2">
+            {{ !userLoggedIn ? t('message.nologin') : t('message.nodata') }}
+          </h3>
+          <p v-if="userLoggedIn" class="text-body-2 text-grey-lighten-1 mb-4">
+            {{ t('message.noDiscussionsAvailable') }}
+          </p>
+          <v-btn v-if="userLoggedIn" @click="$router.push('/discussion/create')" color="primary" variant="tonal" class="mt-2">
+            {{ t('message.createDiscussion') }}
+          </v-btn>
+        </div>
+      </template>
       <template v-slot:item="{ item }">
         <tr>
           <td>
@@ -119,5 +133,38 @@ onMounted(async () => {
 .author-chip:hover {
   background: rgba(var(--v-theme-primary), 0.08);
   transform: translateX(4px);
+}
+
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 300px;
+  background: rgba(var(--v-theme-surface), 0.5);
+  border-radius: 12px;
+  margin: 20px;
+}
+
+.empty-state-container .v-icon {
+  opacity: 0.6;
+  transition: all 0.3s ease;
+}
+
+.empty-state-container:hover .v-icon {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+.empty-state-container h3 {
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.empty-state-container p {
+  max-width: 400px;
+  line-height: 1.6;
 }
 </style>

@@ -180,3 +180,13 @@ export const getScores = async (cid, page, itemsPerPage) => {
         }
     })
 }
+
+// 管理员获取IP统计
+export const getIpStat = async () => {
+    return await axios.get(`${apiUrl}/admin/ipstats`, {
+        headers: {
+            Username: encodeURIComponent(userName.value),
+            Authorization: token.value,
+        }
+    })
+}

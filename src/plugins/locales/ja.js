@@ -91,6 +91,8 @@ export default{
         submissions: '提出一覧',
         management: "管理",
         isvisible: "公開",
+        visible: "公開",
+        invisible: "非公開",
         contestid: "コンテストID",
         enter: '参加する',
         start_date: "開始日時",
@@ -139,6 +141,17 @@ export default{
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "IP統計",
+        ipAddress: "IPアドレス",
+        visitCount: "訪問数",
+        lastVisitTime: "最終訪問時間",
+        searchIpAddress: "IPアドレスを検索...",
+        noCompetitions: "コンテストがありません",
+        noCompetitionsDesc: "現在、コンテストは利用できません。後で確認してください。",
+        noSearchResults: "問題が見つかりませんでした",
+        tryDifferentKeywords: "検索に異なるキーワードを使用してみてください",
+        noProblemsAvailable: "現在利用可能な問題はありません。後でもう一度お試しください。",
+        noDiscussionsAvailable: "現在利用可能なディスカッションはありません。最初のディスカッションを作成しましょう！"
     }
 }

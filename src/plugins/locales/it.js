@@ -91,6 +91,8 @@ export default {
         submissions: "Record di invio",
         management: "Gestione",
         isvisible: "Visibile",
+        visible: "Visibile",
+        invisible: "Invisibile",
         contestid: "ID Concorso",
         enter: "Entra",
         start_date: "Data di inizio",
@@ -139,6 +141,17 @@ export default {
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "Statistiche IP",
+        ipAddress: "Indirizzo IP",
+        visitCount: "Visite",
+        lastVisitTime: "Ultima visita",
+        searchIpAddress: "Cerca indirizzo IP...",
+        noCompetitions: "Nessun concorso",
+        noCompetitionsDesc: "Nessun concorso disponibile al momento. Controlla più tardi.",
+        noSearchResults: "Nessun problema trovato",
+        tryDifferentKeywords: "Prova a utilizzare parole chiave diverse per la tua ricerca",
+        noProblemsAvailable: "Nessun problema disponibile al momento. Riprova più tardi.",
+        noDiscussionsAvailable: "Nessuna discussione disponibile al momento. Crea la prima discussione!"
     }
 }

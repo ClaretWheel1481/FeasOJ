@@ -91,6 +91,8 @@ export default {
         submissions: "الإرسالات",
         management: "الإدارة",
         isvisible: "ظاهر",
+        visible: "ظاهر",
+        invisible: "غير ظاهر",
         contestid: "معرف المسابقة",
         enter: "دخول",
         start_date: "تاريخ البدء",
@@ -139,6 +141,17 @@ export default {
         python: "Python",
         rust: "Rust",
         php: "PHP",
-        pascal: "Pascal"
+        pascal: "Pascal",
+        ipstat: "إحصائيات IP",
+        ipAddress: "عنوان IP",
+        visitCount: "عدد الزيارات",
+        lastVisitTime: "آخر زيارة",
+        searchIpAddress: "ابحث عن عنوان IP...",
+        noCompetitions: "لا يوجد مسابقات",
+        noCompetitionsDesc: "لا يوجد مسابقات متاحة حالياً. يرجى التحقق مرة أخرى لاحقاً.",
+        noSearchResults: "لم يتم العثور على مشاكل",
+        tryDifferentKeywords: "جرب استخدام كلمات مفتاحية مختلفة للبحث",
+        noProblemsAvailable: "لا توجد مشاكل متاحة في الوقت الحالي. يرجى التحقق لاحقاً.",
+        noDiscussionsAvailable: "لا توجد مناقشات متاحة في الوقت الحالي. أنشئ أول مناقشة!"
     }
 }
