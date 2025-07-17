@@ -17,9 +17,9 @@ const initTheme = () => {
   
   if (savedTheme === 'system') {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    vuetifyTheme.global.name.value = isDark ? 'dark' : 'light';
+    vuetifyTheme.change(isDark ? 'dark' : 'light');
   } else {
-    vuetifyTheme.global.name.value = savedTheme;
+    vuetifyTheme.change(savedTheme);
   }
 };
 
@@ -34,7 +34,7 @@ const emitThemeChange = (theme) => {
 onMounted(() => {
   initTheme();
   cleanup = watchSystemTheme((theme) => {
-    vuetifyTheme.global.name.value = theme;
+    vuetifyTheme.change(theme);
     emitThemeChange(theme);
   });
 });

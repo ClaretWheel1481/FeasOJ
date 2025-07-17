@@ -6,19 +6,16 @@ import { registerPlugins } from './plugins';
 import { i18n } from './plugins/vue-i18n';
 import { nextTick } from 'vue';
 
-// 先检查 localStorage 是否已保存语言设置
 const settingLanguage = localStorage.getItem('language');
 if (settingLanguage) {
     i18n.global.locale.value = settingLanguage;
 } else {
     // 获取浏览器语言，如 "en-US"、"zh-CN"
     let browserLang = navigator.language || navigator.userLanguage;
-
-    // 格式统一
     browserLang = browserLang.replace('-', '_');
 
-    // 定义你支持的语言列表
-    const supportedLanguages = ['en', 'es', 'fr', 'it', 'ja', 'zh_CN', 'zh_TW'];
+    // TODO: 每次增加语言时，需要将语言添加到下方
+    const supportedLanguages = ['ar', 'en', 'es', 'fr', 'it', 'ja','ru', 'zh_CN', 'zh_TW'];
 
     // 如果获取的语言不在支持列表中，则尝试匹配其前两位
     if (!supportedLanguages.includes(browserLang)) {

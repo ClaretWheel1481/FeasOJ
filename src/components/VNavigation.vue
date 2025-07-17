@@ -8,19 +8,6 @@ import { useI18n } from 'vue-i18n';
 
 const { t, locale } = useI18n();
 
-const langs = ref([
-  { title: "بالعربية", value: "ar" },
-  { title: "English", value: "en" },
-  { title: "Español", value: "es" },
-  { title: "Français", value: "fr" },
-  { title: "Italiano", value: "it" },
-  { title: "日本語", value: "ja" },
-  { title: "Português", value: "pt" },
-  { title: "Русский", value: "ru" },
-  { title: "简体中文", value: "zh_CN" },
-  { title: "繁體中文", value: "zh_TW" },
-]);
-
 const privilege = ref("");
 // 计算属性来判断用户是否已经登录
 const userLoggedIn = computed(() => !!token.value);
@@ -38,13 +25,6 @@ const isCurrentPage = (path) => {
     return currentPath.value === '/';
   }
   return currentPath.value.startsWith(path);
-};
-
-// 改变语言
-const changeLanguage = (lang) => {
-  location.reload();
-  locale.value = lang;
-  localStorage.setItem('language', lang);
 };
 
 // 根据用户登录状态修改导航目的
@@ -152,30 +132,6 @@ onMounted(async () => {
             <span class="nav-title">{{ $t('message.management') }}</span>
           </template>
         </v-list-item>
-
-        <!-- 语言选择 -->
-        <v-menu location="end" transition="slide-x-transition">
-          <template v-slot:activator="{ props }">
-            <v-list-item rounded="lg" prepend-icon="mdi-translate" base-color="primary" v-bind="props" class="nav-item"
-              :active="false">
-              <template v-slot:title>
-                <span class="nav-title">{{ $t('message.lang') }}</span>
-              </template>
-            </v-list-item>
-          </template>
-          <v-card max-width="350px" rounded="lg" elevation="8">
-            <v-card-text class="pa-0" style="max-height: 350px; overflow-y: auto;">
-              <v-list rounded="lg">
-                <v-list-item v-for="(item, index) in langs" :key="index" :value="index"
-                  @click="changeLanguage(item.value)" class="lang-item">
-                  <v-list-item-title class="lang-title">
-                    {{ item.title }}
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-card-text>
-          </v-card>
-        </v-menu>
 
         <!-- 设置 -->
         <v-list-item rounded="lg" prepend-icon="mdi-cog-outline" value="SETTINGS" base-color="primary" class="nav-item"

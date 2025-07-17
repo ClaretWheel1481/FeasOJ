@@ -4,9 +4,28 @@ import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
 
 const { t, locale } = useI18n();
+const vuetifyTheme = useTheme();
+
+// TODO: 每次增加语言时，需要将语言添加到下方
+const langs = ref([
+  { title: "بالعربية", value: "ar" },
+  { title: "English", value: "en" },
+  { title: "Español", value: "es" },
+  { title: "Français", value: "fr" },
+  { title: "Italiano", value: "it" },
+  { title: "日本語", value: "ja" },
+  { title: "Português", value: "pt" },
+  { title: "Русский", value: "ru" },
+  { title: "简体中文", value: "zh_CN" },
+  { title: "繁體中文", value: "zh_TW" },
+]);
+
+const currentLocale = ref(locale.value);
+
 const theme = ref('system');
 const preferredLanguage = ref('c_cpp');
 const showAboutDialog = ref(false);
+
 const themes = [
   { title: t('message.light'), value: 'light', icon: 'mdi-white-balance-sunny' },
   { title: t('message.dark'), value: 'dark', icon: 'mdi-weather-night' },
@@ -22,67 +41,63 @@ const languages = [
   { title: t('message.pascal'), value: 'pascal', icon: 'mdi-language-pascal' }
 ];
 
-const vuetifyTheme = useTheme();
-
 const applyThemeHandler = (selectedTheme) => {
-  theme.value = selectedTheme;
-  localStorage.setItem('theme', selectedTheme);
-
   if (selectedTheme === 'system') {
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    vuetifyTheme.global.name.value = isDark ? 'dark' : 'light';
+    vuetifyTheme.change(isDark ? 'dark' : 'light');
   } else {
-    vuetifyTheme.global.name.value = selectedTheme;
+    vuetifyTheme.change(selectedTheme);
   }
 };
 
 const applyLanguageHandler = (selectedLanguage) => {
   preferredLanguage.value = selectedLanguage;
-  localStorage.setItem('preferredLanguage', selectedLanguage);
 };
 
 const openAboutDialog = () => {
   showAboutDialog.value = true;
 };
 
-// 监听系统主题变化
 const handleSystemThemeChange = (e) => {
   if (theme.value === 'system') {
     applyThemeHandler('system');
   }
 };
 
+watch(currentLocale, (val) => {
+  locale.value = val;
+  localStorage.setItem('language', val);
+});
+watch(locale, (val) => {
+  currentLocale.value = val;
+});
+
 onMounted(() => {
-  const savedTheme = localStorage.getItem('theme') || 'system';
-  const savedLanguage = localStorage.getItem('language') || 'en';
-  const savedPreferredLanguage = localStorage.getItem('preferredLanguage') || 'c_cpp';
-
-  theme.value = savedTheme;
-  locale.value = savedLanguage;
-  preferredLanguage.value = savedPreferredLanguage;
-
-  // 监听系统主题变化
+  theme.value = localStorage.getItem('theme') || 'system';
+  locale.value = localStorage.getItem('language') || 'en';
+  preferredLanguage.value = localStorage.getItem('preferredLanguage') || 'c_cpp';
+  currentLocale.value = locale.value;
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', handleSystemThemeChange);
 });
 
 onUnmounted(() => {
-  // 清理事件监听器
   window.matchMedia('(prefers-color-scheme: dark)').removeEventListener('change', handleSystemThemeChange);
 });
 
 watch(theme, (val) => {
+  localStorage.setItem('theme', val);
   applyThemeHandler(val);
 });
 
 watch(preferredLanguage, (val) => {
-  applyLanguageHandler(val);
+  localStorage.setItem('preferredLanguage', val);
 });
 
 watch(locale, (val) => {
+  localStorage.setItem('language', val);
   themes[0].title = t('message.light');
   themes[1].title = t('message.dark');
   themes[2].title = t('message.system');
-  
   languages[0].title = t('message.c_cpp');
   languages[1].title = t('message.java');
   languages[2].title = t('message.python');
@@ -118,7 +133,7 @@ watch(locale, (val) => {
           </div>
         </template>
       </v-list-item>
-
+      <!-- 偏好编程语言 -->
       <v-list-item class="settings-list-item">
         <template v-slot:prepend>
           <v-icon icon="mdi-code-braces" size="24"></v-icon>
@@ -128,6 +143,24 @@ watch(locale, (val) => {
           <div class="select-wrapper" @click.stop>
             <v-select v-model="preferredLanguage" :items="languages" item-title="title" item-value="value" variant="outlined"
               density="compact" hide-details @update:model-value="applyLanguageHandler">
+              <template v-slot:item="{ props, item }">
+                <v-list-item v-bind="props" class="language-select-item">
+                </v-list-item>
+              </template>
+            </v-select>
+          </div>
+        </template>
+      </v-list-item>
+      <!-- 语言 -->
+      <v-list-item class="settings-list-item">
+        <template v-slot:prepend>
+          <v-icon icon="mdi-translate" size="24"></v-icon>
+        </template>
+        <v-list-item-title class="settings-item-title">{{ t('message.lang') }}</v-list-item-title>
+        <template v-slot:append>
+          <div class="select-wrapper" @click.stop>
+            <v-select v-model="currentLocale" :items="langs" item-title="title" item-value="value" variant="outlined"
+              density="compact" hide-details>
               <template v-slot:item="{ props, item }">
                 <v-list-item v-bind="props" class="language-select-item">
                 </v-list-item>
@@ -166,10 +199,6 @@ watch(locale, (val) => {
             <span class="info-label">{{ t('message.developer') }}：</span>
             <span class="info-value">Linxing Huang</span>
           </div>
-          <div class="info-item">
-            <span class="info-label">{{ t('message.buildTime') }}：</span>
-            <span class="info-value">{{ new Date().toLocaleDateString() }}</span>
-          </div>
         </div>
       </v-card-text>
       <v-card-actions>
@@ -194,7 +223,7 @@ watch(locale, (val) => {
   background: transparent;
   padding: 0;
   width: 100%;
-  height: 200px;
+  height: 100%;
 }
 
 .settings-list-item {

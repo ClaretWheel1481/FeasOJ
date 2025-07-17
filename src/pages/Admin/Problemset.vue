@@ -291,7 +291,7 @@ onUnmounted(() => {
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ item.ContestId || 0 }}
+                                            {{ item.ContestId }}
                                         </span>
                                     </td>
                                     <td class="text-center pa-4">
