@@ -2,6 +2,7 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useTheme } from 'vuetify';
+import { ojAuthor, ojVersion } from '../utils/oj_constants';
 
 const { t, locale } = useI18n();
 const vuetifyTheme = useTheme();
@@ -160,7 +161,7 @@ watch(locale, (val) => {
         <template v-slot:append>
           <div class="select-wrapper" @click.stop>
             <v-select v-model="currentLocale" :items="langs" item-title="title" item-value="value" variant="outlined"
-              density="compact" hide-details>
+              density="compact">
               <template v-slot:item="{ props, item }">
                 <v-list-item v-bind="props" class="language-select-item">
                 </v-list-item>
@@ -193,17 +194,17 @@ watch(locale, (val) => {
         <div class="about-info">
           <div class="info-item">
             <span class="info-label">{{ t('message.version') }}：</span>
-            <span class="info-value">v1.2.2</span>
+            <span class="info-value">{{ ojVersion }}</span>
           </div>
           <div class="info-item">
             <span class="info-label">{{ t('message.developer') }}：</span>
-            <span class="info-value">Linxing Huang</span>
+            <span class="info-value">{{ ojAuthor }}</span>
           </div>
         </div>
       </v-card-text>
       <v-card-actions>
         <v-btn color="primary" variant="tonal" rounded="xl" @click="showAboutDialog = false" class="about-close-btn">
-          {{ t('message.close') }}
+          {{ t('message.ok') }}
         </v-btn>
       </v-card-actions>
     </v-card>

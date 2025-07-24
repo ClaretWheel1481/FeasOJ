@@ -154,6 +154,9 @@ export default {
         noProblemsAvailable: "No problems available at the moment. Please check back later.",
         noDiscussionsAvailable: "No discussions available at the moment. Create the first discussion!",
         copied: "Copied successfully",
-        copyFailed: "Copy failed"
+        copyFailed: "Copy failed",
+        batchImportTestCases: "Batch import test cases",
+        batchImportTip: "Every two lines are grouped, the first line is input, the second line is output, and blank lines are automatically skipped.",
+        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput2\n..."
     }
 }

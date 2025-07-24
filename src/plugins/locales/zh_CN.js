@@ -154,6 +154,9 @@ export default {
         noProblemsAvailable: "当前暂无可用题目，请稍后再来查看",
         noDiscussionsAvailable: "当前暂无讨论帖子，快来创建第一个讨论吧！",
         copied: "复制成功",
-        copyFailed: "复制失败"
+        copyFailed: "复制失败",
+        batchImportTestCases: "批量导入测试样例",
+        batchImportTip: "每两行为一组，第一行为输入，第二行为输出，空行自动跳过。",
+        batchImportPlaceholder: "输入1\n输出1\n输入2\n输出2\n..."
     }
 }

@@ -154,6 +154,9 @@ export default {
         noProblemsAvailable: "لا توجد مشاكل متاحة في الوقت الحالي. يرجى التحقق لاحقاً.",
         noDiscussionsAvailable: "لا توجد مناقشات متاحة في الوقت الحالي. أنشئ أول مناقشة!",
         copied: "تم النسخ بنجاح",
-        copyFailed: "فشل النسخ"
+        copyFailed: "فشل النسخ",
+        batchImportTestCases: "دفعة استيراد عينات اختبار الاستيراد",
+        batchImportTip: "يتم تجميع كل صفين، ويتم إدخال الصف الأول وإخراج الصف الثاني، ويتم تخطي الأسطر الفارغة تلقائيًا.",
+        batchImportPlaceholder: "الإدخال 1\nالإخراج 1\nالإدخال 2\nالإخراج 2\n..."
     }
 }

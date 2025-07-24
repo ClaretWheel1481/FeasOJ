@@ -1,4 +1,4 @@
-export default{
+export default {
     message: {
         tokenExpired: 'トークンが期限切れです',
         mainpage: 'ホーム',
@@ -154,6 +154,9 @@ export default{
         noProblemsAvailable: "現在利用可能な問題はありません。後でもう一度お試しください。",
         noDiscussionsAvailable: "現在利用可能なディスカッションはありません。最初のディスカッションを作成しましょう！",
         copied: "コピーに成功しました",
-        copyFailed: "コピーに失敗しました"
+        copyFailed: "コピーに失敗しました",
+        batchImportTestCases: "バッチインポートテストケース",
+        batchImportTip: "グループ内の2行ごとに、1行目は入力、2行目は出力、空白行は自動的にスキップされる。",
+        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput 2\n..."
     }
 }

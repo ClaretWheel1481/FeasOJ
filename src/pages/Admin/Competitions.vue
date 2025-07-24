@@ -9,6 +9,7 @@ import { MdEditor } from "md-editor-v3";
 import { getMdEditorTheme } from '../../utils/theme';
 import moment from 'moment';
 import "md-editor-v3/lib/style.css";
+import { difficultyLang } from '../../utils/dynamic_styles';
 
 const { locale } = useI18n();
 const { t } = useI18n();
@@ -64,6 +65,12 @@ const headers = ref([
     { title: t("message.operation"), value: 'actions', align: 'center', sortable: false }
 ])
 
+const difficultyOptions = [
+    { value: '简单', label: t('message.easy') },
+    { value: '中等', label: t('message.medium') },
+    { value: '困难', label: t('message.hard') }
+];
+
 const scoreHeaders = ref([
     { title: 'ID', value: 'Uid', align: 'center' },
     { title: t('message.username'), value: 'Username', align: 'center' },
@@ -109,7 +116,7 @@ const getStatusColor = (status) => {
 
 // 监听主题变化
 const handleThemeChange = (event) => {
-  editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
+    editorTheme.value = event.detail.theme === 'dark' ? 'dark' : 'light';
 };
 
 // 字段检查
@@ -183,7 +190,7 @@ const save = async () => {
         showAlert(t("message.success") + "!", "reload");
     } catch (error) {
         showAlert(t("message.failed") + "!", "reload");
-    } finally{
+    } finally {
         networkloading.value = false;
     }
     dialog.value = false;
@@ -267,7 +274,7 @@ onMounted(async () => {
     } catch (error) {
         window.location = '#/403';
     }
-    
+
     // 监听主题变化
     window.addEventListener('theme-change', handleThemeChange);
 });
@@ -302,13 +309,13 @@ onUnmounted(() => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="delCompetition" rounded="xl">{{ $t('message.yes')
-                        }}</v-btn>
+                    }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
     </template>
-    
+
     <v-app-bar :elevation="2">
         <template v-slot:prepend>
             <v-btn icon="mdi-chevron-left" size="x-large" @click="$router.back"></v-btn>
@@ -317,7 +324,7 @@ onUnmounted(() => {
             <p style="font-size: 24px;">{{ t('message.competitionmanagement') }}</p>
         </v-col>
     </v-app-bar>
-    
+
     <v-container fluid class="pa-6">
         <v-row justify="center">
             <v-col cols="12" lg="11" xl="10">
@@ -335,8 +342,8 @@ onUnmounted(() => {
                                         {{ item.contest_id }}
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-btn @click="goToEditCompetition(item.contest_id)" variant="text" color="primary"
-                                            class="font-weight-medium">
+                                        <v-btn @click="goToEditCompetition(item.contest_id)" variant="text"
+                                            color="primary" class="font-weight-medium">
                                             {{ item.title }}
                                         </v-btn>
                                     </td>
@@ -344,7 +351,7 @@ onUnmounted(() => {
                                         <v-chip
                                             :color="item.difficulty === '简单' ? 'success' : item.difficulty === '中等' ? 'warning' : 'error'"
                                             variant="tonal" size="small" class="font-weight-medium">
-                                            {{ item.difficulty }}
+                                            {{ $t(difficultyLang(item.difficulty)) }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
@@ -354,8 +361,8 @@ onUnmounted(() => {
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
-                                        <v-chip :color="item.is_visible ? 'success' : 'error'" variant="tonal" size="small"
-                                            class="font-weight-medium">
+                                        <v-chip :color="item.is_visible ? 'success' : 'error'" variant="tonal"
+                                            size="small" class="font-weight-medium">
                                             {{ item.is_visible ? $t('message.visible') : $t('message.invisible') }}
                                         </v-chip>
                                     </td>
@@ -370,15 +377,18 @@ onUnmounted(() => {
                                                     <template v-slot:default="{ active, toggle }">
                                                         <div class="d-flex align-center">
                                                             <v-icon icon="mdi-calculator" class="me-2"></v-icon>
-                                                            <v-list-item-title>{{ t('message.scoring') }}</v-list-item-title>
+                                                            <v-list-item-title>{{ t('message.scoring')
+                                                                }}</v-list-item-title>
                                                         </div>
                                                     </template>
                                                 </v-list-item>
-                                                <v-list-item @click="getScoreBoard(item.contest_id)" :disabled="item.scored != true">
+                                                <v-list-item @click="getScoreBoard(item.contest_id)"
+                                                    :disabled="item.scored != true">
                                                     <template v-slot:default="{ active, toggle }">
                                                         <div class="d-flex align-center">
                                                             <v-icon icon="mdi-note-text" class="me-2"></v-icon>
-                                                            <v-list-item-title>{{ t("message.viewScores") }}</v-list-item-title>
+                                                            <v-list-item-title>{{ t("message.viewScores")
+                                                                }}</v-list-item-title>
                                                         </div>
                                                     </template>
                                                 </v-list-item>
@@ -401,7 +411,7 @@ onUnmounted(() => {
             </v-col>
         </v-row>
     </v-container>
-    
+
     <v-dialog v-model="dialog" max-width="1200px">
         <v-card>
             <div v-if="networkloading" class="networkloading">
@@ -423,8 +433,9 @@ onUnmounted(() => {
                             variant="solo-filled"></v-text-field>
                         <v-row class="limitRow">
                             <!-- 难易程度 -->
-                            <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
-                                v-model="competitionFields.difficulty" variant="solo-filled"></v-select>
+                            <v-select :items="difficultyOptions" item-title="label" item-value="value"
+                                :label="$t('message.difficulty')" v-model="competitionFields.difficulty"
+                                variant="solo-filled" />
                             <div style="margin-inline: 30px;"></div>
                             <!-- 是否可见 -->
                             <v-switch v-model="competitionFields.is_visible" :label="$t('message.isvisible')"
@@ -457,13 +468,13 @@ onUnmounted(() => {
                             }}</v-btn>
                         <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.save')
-                        }}</v-btn>
+                            }}</v-btn>
                     </div>
                 </v-card-text>
             </div>
         </v-card>
     </v-dialog>
-    
+
     <div class="fab">
         <v-fab fixed icon="mdi-plus" size="64" color="primary" elevation="10" v-if="!loading"
             @click="createCompetition"></v-fab>

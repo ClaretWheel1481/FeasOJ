@@ -154,6 +154,9 @@ export default {
         noProblemsAvailable: "Nessun problema disponibile al momento. Riprova più tardi.",
         noDiscussionsAvailable: "Nessuna discussione disponibile al momento. Crea la prima discussione!",
         copied: "Copiato con successo",
-        copyFailed: "Errore durante la copia"
+        copyFailed: "Errore durante la copia",
+        batchImportTestCases: "Campioni di prova per l'importazione di lotti",
+        batchImportTip: "Ogni due righe vengono raggruppate, la prima riga è di input, la seconda di output e le righe vuote vengono saltate automaticamente.",
+        batchImportPlaceholder: "Input 1\nOutput 1\nInput 2\nOutput 2\n..."
     }
 }

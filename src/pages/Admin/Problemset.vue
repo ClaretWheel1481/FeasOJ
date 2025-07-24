@@ -9,6 +9,7 @@ import { MdEditor } from 'md-editor-v3';
 import { useI18n } from 'vue-i18n';
 import { getMdEditorTheme } from '../../utils/theme';
 import 'md-editor-v3/lib/style.css';
+import { difficultyLang } from '../../utils/dynamic_styles';
 
 const { locale } = useI18n();
 const { t } = useI18n();
@@ -29,6 +30,20 @@ const editorTheme = ref(getMdEditorTheme());
 const searchQuery = ref('');
 const currentPage = ref(1);
 const itemsPerPage = ref(50);
+const batchDialog = ref(false)
+const batchInput = ref('')
+
+const testCaseHeaders = [
+    { title: t('message.input'), value: 'input', align: 'center' },
+    { title: t('message.output'), value: 'output', align: 'center' },
+    { title: t('message.operation'), value: 'actions', align: 'center', sortable: false }
+]
+
+const difficultyOptions = [
+    { value: '简单', label: t('message.easy') },
+    { value: '中等', label: t('message.medium') },
+    { value: '困难', label: t('message.hard') }
+];
 
 const problemFields = reactive({
     pid: null,
@@ -91,13 +106,6 @@ const handleThemeChange = (event) => {
 // 添加测试样例
 const addTestCase = () => {
     problemFields.test_cases.push({ input: '', output: '' });
-};
-
-// 删除测试样例
-const removeTestCase = () => {
-    if (problemFields.test_cases.length > 0) {
-        problemFields.test_cases.pop();
-    }
 };
 
 // 字段检查
@@ -194,6 +202,25 @@ const delProblem = async () => {
         dialog.value = false;
     }
 }
+// 批量导入处理
+const handleBatchImport = () => {
+    const lines = batchInput.value.split(/\r?\n/).map(l => l.trim()).filter(l => l !== '')
+    const newCases = []
+    for (let i = 0; i < lines.length; i += 2) {
+        if (lines[i] !== undefined && lines[i + 1] !== undefined) {
+            newCases.push({ input: lines[i], output: lines[i + 1] })
+        }
+    }
+    if (newCases.length > 0) {
+        problemFields.test_cases = newCases
+    }
+    batchDialog.value = false
+    batchInput.value = ''
+}
+// 删除指定测试用例
+const removeTestCaseAt = (index) => {
+    problemFields.test_cases.splice(index, 1)
+}
 
 onMounted(async () => {
     loading.value = true;
@@ -236,7 +263,7 @@ onUnmounted(() => {
                 <v-card-text>{{ t('message.suredel') }}</v-card-text>
                 <v-card-actions>
                     <v-btn variant="elevated" color="primary" @click="delProblem" rounded="xl">{{ $t('message.yes')
-                        }}</v-btn>
+                    }}</v-btn>
                     <v-btn color="primary" @click="delDialog = false" rounded="xl">{{ $t('message.cancel') }}</v-btn>
                 </v-card-actions>
             </v-card>
@@ -286,12 +313,12 @@ onUnmounted(() => {
                                         <v-chip
                                             :color="item.Difficulty === '简单' ? 'success' : item.Difficulty === '中等' ? 'warning' : 'error'"
                                             variant="tonal" size="small" class="font-weight-medium">
-                                            {{ item.Difficulty }}
+                                            {{ $t(difficultyLang(item.Difficulty)) }}
                                         </v-chip>
                                     </td>
                                     <td class="text-center pa-4">
                                         <span class="text-body-2 text-medium-emphasis">
-                                            {{ item.ContestId }}
+                                            {{ item.ContestID }}
                                         </span>
                                     </td>
                                     <td class="text-center pa-4">
@@ -321,7 +348,7 @@ onUnmounted(() => {
         </v-row>
     </v-container>
 
-    <v-dialog v-model="dialog" max-width="1200px">
+    <v-dialog v-model="dialog" max-width="800px">
         <v-card>
             <div v-if="networkloading" class="networkloading">
                 <v-progress-circular indeterminate color="primary" :width="12" :size="100"></v-progress-circular>
@@ -342,9 +369,9 @@ onUnmounted(() => {
                             :language="locale === 'zh_CN' ? 'zh-CN' : 'en-US'" :theme="editorTheme" />
                         <div style="margin-top: 20px;"></div>
                         <!-- 难易程度 -->
-                        <!-- TODO: 修改items 的i18n -->
-                        <v-select :items="['简单', '中等', '困难']" :label="$t('message.difficulty')"
-                            v-model="problemFields.difficulty" variant="solo-filled"></v-select>
+                        <v-select :items="difficultyOptions" item-title="label" item-value="value"
+                            :label="$t('message.difficulty')" v-model="problemFields.difficulty"
+                            variant="solo-filled" />
                         <!-- 所属竞赛ID及是否可见 -->
                         <v-row class="limitRow">
                             <v-select :items="competitionIds" :label="$t('message.contestid')"
@@ -361,7 +388,7 @@ onUnmounted(() => {
                             <v-text-field :label="$t('message.memoryLimit') + '(MB)'"
                                 v-model="problemFields.memory_limit" variant="solo-filled"></v-text-field>
                         </v-row>
-                        <!-- 显示输入输出样例 -->
+                        <!-- 显示给用户的输入输出样例 -->
                         <v-row class="limitRow">
                             <v-text-field :label="$t('message.displayInputCase')" v-model="problemFields.input"
                                 variant="solo-filled"></v-text-field>
@@ -369,18 +396,51 @@ onUnmounted(() => {
                             <v-text-field :label="$t('message.displayOutputCase')" v-model="problemFields.output"
                                 variant="solo-filled"></v-text-field>
                         </v-row>
-                        <!-- 输入输出测试样例 -->
-                        <div v-for="(testCase, index) in problemFields.test_cases" :key="index">
-                            <span>{{ $t('message.testcases') + (index + 1) }}</span>
-                            <v-text-field :label="$t('message.input')" v-model="testCase.input"
-                                variant="solo-filled"></v-text-field>
-                            <v-text-field :label="$t('message.output')" v-model="testCase.output"
-                                variant="solo-filled"></v-text-field>
-                        </div>
-                        <!-- 添加新的输入输出测试样例 -->
-                        <v-btn @click="addTestCase" color="primary" rounded="xl">{{ $t('message.addTestCase') }}</v-btn>
-                        <v-btn @click="removeTestCase" text rounded="xl">{{ $t('message.deleteTestCase') }}</v-btn>
                     </v-form>
+                    <!-- 输入输出测试样例表格与批量导入 -->
+                    <v-row>
+                        <v-col cols="12">
+                            <v-data-table :headers="testCaseHeaders" :items="problemFields.test_cases" class="mb-2"
+                                hide-default-footer>
+                                <template v-slot:item.input="{ item, index }">
+                                    <v-text-field v-model="item.input" variant="solo-filled" density="compact"
+                                        hide-details></v-text-field>
+                                </template>
+                                <template v-slot:item.output="{ item, index }">
+                                    <v-text-field v-model="item.output" variant="solo-filled" density="compact"
+                                        hide-details></v-text-field>
+                                </template>
+                                <template v-slot:item.actions="{ index }">
+                                    <v-btn icon="mdi-delete" color="error" @click="removeTestCaseAt(index)"
+                                        size="small"></v-btn>
+                                </template>
+                            </v-data-table>
+                            <v-btn @click="batchDialog = true" color="primary" rounded="xl" style="margin-right: 10px;">
+                                {{ $t('message.batchImportTestCases') }}
+                            </v-btn>
+                            <v-btn @click="addTestCase" color="primary" rounded="xl">{{ $t('message.addTestCase')
+                                }}</v-btn>
+                        </v-col>
+                    </v-row>
+                    <!-- 批量导入对话框 -->
+                    <v-dialog v-model="batchDialog" max-width="600px">
+                        <v-card>
+                            <v-card-title>{{ $t('message.batchImportTestCases') }}</v-card-title>
+                            <v-card-text>
+                                <div style="margin-bottom: 10px; color: #888; font-size: 14px;">
+                                    {{ $t('message.batchImportTip') }}
+                                </div>
+                                <v-textarea v-model="batchInput" rows="10" auto-grow
+                                    :placeholder="$t('message.batchImportPlaceholder')" />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" rounded="xl" @click="handleBatchImport">{{ $t('message.save')
+                                    }}</v-btn>
+                                <v-btn rounded="xl" @click="batchDialog = false">{{ $t('message.cancel') }}</v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
                     <div style="position: fixed; bottom: 16px; right: 16px; z-index: 1000;">
                         <v-btn @click="dialog = false" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.cancel') }}</v-btn>
@@ -389,7 +449,7 @@ onUnmounted(() => {
                             }}</v-btn>
                         <v-btn color="primary" @click="save" rounded="xl" style="margin-right: 10px;">{{
                             $t('message.save')
-                        }}</v-btn>
+                            }}</v-btn>
                     </div>
                 </v-card-text>
             </div>

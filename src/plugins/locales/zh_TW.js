@@ -154,6 +154,9 @@ export default{
         noProblemsAvailable: "目前暫無可用題目。請稍後再來查看。",
         noDiscussionsAvailable: "目前暫無討論帖子，快來創建第一個討論吧！",
         copied: "複製成功",
-        copyFailed: "複製失敗"
+        copyFailed: "複製失敗",
+        batchImportTestCases: "批量導入測試用例",
+        batchImportTip: "每兩行为一组，第一行为輸入，第二行為輸出，空行自動跳過。",
+        batchImportPlaceholder: "輸入1\n輸出1\n輸入2\n輸出2\n..."
     }
 }
